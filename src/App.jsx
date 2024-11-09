@@ -9,23 +9,25 @@ import {
 } from "./pages/index";
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<AuthPage />} />
-      <Route path="/signup" element={<AuthPage />} />
-      <Route path="/verify-otp" element={<VerifyOTP />} />
-      <Route path="/profile-page-1" element={<ProfilePage1 />} />
+    <div className="font-sans">
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/signup" element={<AuthPage />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/profile-page-1" element={<ProfilePage1 />} />
 
-      {/* Protected Route */}
-      <Route
-        path="/feed"
-        element={
-          <ProtectedRoute>
-            <Feed />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+        {/* Protected Route */}
+        <Route
+          path="/feed"
+          element={
+            <ProtectedRoute>
+              <Feed />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </div>
   );
 }
 
