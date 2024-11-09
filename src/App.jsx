@@ -6,6 +6,7 @@ import {
   Feed,
   VerifyOTP,
   ProfilePage1,
+  ProfilePage2,
 } from "./pages/index";
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/signup" element={<AuthPage />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/profile-page-1" element={<ProfilePage1 />} />
+        <Route path="/profile-page-2" element={<ProfilePage2 />} />
 
         {/* Protected Route */}
         <Route

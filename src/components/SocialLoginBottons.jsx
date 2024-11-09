@@ -39,9 +39,9 @@ const SocialLoginButtons = () => {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-2 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
       <button
-        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2"
+        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2 w-full"
         onClick={() => handleSocialLogin(googleProvider)}
         disabled={!googleProvider}
       >
@@ -50,7 +50,7 @@ const SocialLoginButtons = () => {
       </button>
       <button
         onClick={() => handleSocialLogin(appleProvider)}
-        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2"
+        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2 w-full"
         disabled={!appleProvider}
       >
         <FaApple className="text-black" /> {/* Apple Icon */}
@@ -58,7 +58,7 @@ const SocialLoginButtons = () => {
       </button>
       <button
         onClick={() => handleSocialLogin(twitterProvider)}
-        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2"
+        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2 w-full"
         disabled={!twitterProvider}
       >
         <FaTwitter className="text-blue-400" /> {/* Twitter Icon */}
@@ -66,7 +66,7 @@ const SocialLoginButtons = () => {
       </button>
       <button
         onClick={() => handleSocialLogin(facebookProvider)}
-        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2"
+        className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2 w-full"
         disabled={!facebookProvider}
       >
         <FaFacebook className="text-blue-600" /> {/* Facebook Icon */}

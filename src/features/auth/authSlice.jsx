@@ -8,7 +8,7 @@ export const login = createAsyncThunk(
       console.log("Logging in with user data:", userData);
       return { message: "Login successful", user: userData };
     } catch (error) {
-      return rejectWithValue("Failed to log in", error);
+      return rejectWithValue(error.message); // Send only the error message
     }
   }
 );
@@ -17,11 +17,12 @@ export const login = createAsyncThunk(
 export const signup = createAsyncThunk(
   "auth/signup",
   async (userData, { rejectWithValue }) => {
+    console.log("Inside signup thunk with userData:", userData);
     try {
       console.log("Signing up with user data:", userData);
       return { message: "Signup successful", user: userData };
     } catch (error) {
-      return rejectWithValue("Failed to sign up", error);
+      return rejectWithValue(error.message); // Send only the error message
     }
   }
 );
@@ -49,11 +50,11 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user; // Access user data directly
+        state.user = action.payload.user;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Failed to log in"; // Fallback error message
       })
       .addCase(signup.pending, (state) => {
         state.isLoading = true;
@@ -65,7 +66,7 @@ const authSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Failed to sign up"; // Fallback error message
       });
   },
 });
