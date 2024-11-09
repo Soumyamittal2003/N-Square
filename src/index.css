@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input[type="checkbox"].checked\:bg-black:checked {
+  background-color: black;
+}
+
+input[type="checkbox"].checked\:bg-black:checked::before {
+  content: "✓";
+  display: block;
+  color: white;
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1.2rem;
+}
