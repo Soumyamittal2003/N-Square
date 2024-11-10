@@ -22,18 +22,21 @@ const ProfilePage2 = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans p-4">
       {/* Top Bar */}
-      <div className="flex items-center justify-between w-full px-6 py-4 ">
+      <div className="flex items-center justify-between w-full px-6 py-4">
         <button onClick={() => navigate("/")} className="p-2 flex items-center">
           <img src={NetworkNextLogo} alt="NetworkNext" className="w-36 h-6" />
         </button>
-        <button onClick={() => navigate("/")} className="p-2">
-          <span className="text-2xl font-semibold">✕</span>
+        <button
+          onClick={() => navigate("/")}
+          className="p-2 text-2xl font-semibold"
+        >
+          ✕
         </button>
       </div>
 
       {/* Profile Form Section */}
       <div
-        className="bg-[#F1F1F1] w-auto mx-auto  p-8 rounded-xl shadow-md flex flex-col"
+        className="bg-[#F1F1F1] w-full max-w-md mx-auto p-8 rounded-xl shadow-md flex flex-col"
         style={{ borderRadius: "16px" }}
       >
         <div className="flex justify-between items-center mb-2">
@@ -151,8 +154,8 @@ const ProfilePage2 = () => {
                 </label>
               </div>
 
-              <div className="w-48 h-4 flex  text-neutral-400 text-xs font-normal font-['Open Sans']">
-                <LuInfo className="mx-1" /> All information will be recoded
+              <div className="w-auto h-4 flex text-neutral-400 text-xs font-normal">
+                <LuInfo className="mx-1" /> All information will be recorded
               </div>
 
               {/* Buttons */}
@@ -189,7 +192,7 @@ const ProfilePage2 = () => {
             </button>
 
             {/* Thank You Message */}
-            <h2 className="text-xl font-semibold mb-2 mt-8 text-center">
+            <h2 className="text-xl font-semibold mb-4 mt-8 text-center">
               Thank You!
             </h2>
             <p className="text-center text-gray-600 text-sm mb-8">

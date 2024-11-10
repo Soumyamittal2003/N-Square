@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NetworkNextLogo from "../../assets/icons/Network Next.svg";
 import OnebyTwoLogo from "../../assets/icons/HalfIcon.svg";
@@ -25,7 +25,9 @@ const ProfilePage1 = () => {
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans p-4">
       {/* Top Bar */}
       <div className="flex items-center justify-between w-full px-6 py-4">
-        <img src={NetworkNextLogo} alt="NetworkNext" className="w-36 h-6" />
+        <button onClick={() => navigate("/")} className="p-2 flex items-center">
+          <img src={NetworkNextLogo} alt="NetworkNext" className="w-36 h-6" />
+        </button>
         <button
           onClick={() => navigate("/")}
           className="p-2 text-2xl font-semibold"
@@ -36,7 +38,7 @@ const ProfilePage1 = () => {
 
       {/* Profile Form Section */}
       <div
-        className="bg-[#F1F1F1] w-auto mx-auto p-8 rounded-xl shadow-md flex flex-col"
+        className="bg-[#F1F1F1] w-full max-w-md mx-auto p-8 rounded-xl shadow-md flex flex-col"
         style={{ borderRadius: "16px" }}
       >
         {/* Header Section */}
@@ -46,10 +48,6 @@ const ProfilePage1 = () => {
           </h2>
           <img src={OnebyTwoLogo} alt="1/2 completed" />
         </div>
-
-        <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-5">
-          Basic Information
-        </h3>
 
         <Formik
           initialValues={{
@@ -64,7 +62,7 @@ const ProfilePage1 = () => {
           {() => (
             <Form className="space-y-5">
               {/* Profile Photo Section */}
-              <div className="flex flex-col items-center mb-8">
+              <div className="flex flex-row gap-x-5 items-center mb-8">
                 <label htmlFor="upload-photo" className="cursor-pointer">
                   {profileImage ? (
                     <img
@@ -91,6 +89,9 @@ const ProfilePage1 = () => {
               </div>
 
               {/* Basic Information Fields */}
+              <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-5">
+                Basic Information
+              </h3>
               <div>
                 <Field
                   name="firstName"
