@@ -38,7 +38,7 @@ const VerifyOTP = () => {
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
       {/* Top Bar */}
       <div className="flex items-center justify-between w-full d px-6 py-4 mx-auto">
-        <button onClick={() => navigate(-1)} className="p-2 flex items-center">
+        <button onClick={() => navigate("/")} className="p-2 flex items-center">
           <img
             className="font-extrabold text-2xl leading-tight tracking-wide"
             src={NetworkNextLogo}
