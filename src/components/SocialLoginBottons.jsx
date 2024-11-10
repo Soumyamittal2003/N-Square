@@ -7,7 +7,10 @@ import {
 } from "../config/firebase";
 import { useDispatch } from "react-redux";
 import { login } from "../features/auth/authSlice";
-import { FaGoogle, FaFacebook, FaTwitter, FaApple } from "react-icons/fa";
+import GoogleIcon from "../assets/icons/Google Icon.svg";
+import FacebookIcon from "../assets/icons/FaceBook Icon.svg";
+import XIcon from "../assets/icons/Twitter Icon.svg";
+import AppleIcon from "../assets/icons/Apple Icon.svg";
 
 const SocialLoginButtons = () => {
   const dispatch = useDispatch();
@@ -45,7 +48,7 @@ const SocialLoginButtons = () => {
         onClick={() => handleSocialLogin(googleProvider)}
         disabled={!googleProvider}
       >
-        <FaGoogle className="text-red-500" /> {/* Google Icon */}
+        <img src={GoogleIcon} alt="google-icon" className="" />{" "}
         <span>Sign in with Google</span>
       </button>
       <button
@@ -53,7 +56,7 @@ const SocialLoginButtons = () => {
         className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2 w-full"
         disabled={!appleProvider}
       >
-        <FaApple className="text-black" /> {/* Apple Icon */}
+        <img src={AppleIcon} alt="google-icon" className="" />{" "}
         <span>Sign in with Apple</span>
       </button>
       <button
@@ -61,15 +64,15 @@ const SocialLoginButtons = () => {
         className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2 w-full"
         disabled={!twitterProvider}
       >
-        <FaTwitter className="text-blue-400" /> {/* Twitter Icon */}
-        <span>Sign in with Twitter</span>
+        <img src={XIcon} alt="google-icon" className="" />{" "}
+        <span>Sign in with X</span>
       </button>
       <button
         onClick={() => handleSocialLogin(facebookProvider)}
         className="flex items-center justify-center border border-gray-300 rounded-lg py-2 space-x-2 w-full"
         disabled={!facebookProvider}
       >
-        <FaFacebook className="text-blue-600" /> {/* Facebook Icon */}
+        <img src={FacebookIcon} alt="google-icon" className="" />{" "}
         <span>Sign in with Facebook</span>
       </button>
     </div>

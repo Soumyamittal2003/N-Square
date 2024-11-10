@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { useRef } from "react";
-import AuthFooter from "./AuthFooter";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg"; // Adjust path if needed
+import NetworkNextLogo from "../../assets/icons/Network Next.svg";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
@@ -35,29 +35,39 @@ const VerifyOTP = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-between items-center bg-white">
+    <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
       {/* Top Bar */}
-      <div className="flex items-center justify-between w-5/6 mt-1 mx-2 px-4 py-1 ">
-        <button onClick={() => navigate(-1)} className="p-2">
-          <span className="text-lg font-semibold">{"<"} Network Next</span>
+      <div className="flex items-center justify-between w-full d px-6 py-4 mx-auto">
+        <button onClick={() => navigate(-1)} className="p-2 flex items-center">
+          <img
+            className="font-extrabold text-2xl leading-tight tracking-wide"
+            src={NetworkNextLogo}
+            alt="NetworkNext"
+          />
         </button>
         <button onClick={() => navigate("/")} className="p-2">
-          <span className="text-lg font-semibold">✕</span>
+          <span className="text-2xl font-semibold">✕</span>
         </button>
       </div>
 
       {/* Centered Main Content */}
-      <div className="w-3/4 max-w-md mx-auto flex flex-col items-center justify-start flex-grow p-4">
-        <div className="flex flex-col items-center text-center mb-4">
-          <img src={Nsquare} alt="NetworkNext" className="mb-4 w-16 h-16" />
+      <div className="w-full max-w-md flex flex-col items-center flex-grow px-6 pt-4 pb-8">
+        <div className="text-center mb-8">
+          <img
+            src={Nsquare}
+            alt="NetworkNext"
+            className="w-16 h-16 mx-auto mb-4"
+          />
           <h2 className="text-2xl font-semibold mb-2">Verify your email</h2>
-          <p className="text-center mb-6 text-gray-600 text-sm">
+          <p className="text-center mb-6 text-gray-500 text-base leading-relaxed">
             We've sent a one-time password (OTP) to your registered email
             address. Please check your inbox, including your spam folder, for an
             email from us containing the OTP.
           </p>
         </div>
-
+        <div className="text-black self-start  mb-2 text-base font-semibold font-['Open Sans'] leading-snug tracking-tight">
+          Enter OTP
+        </div>
         <Formik
           initialValues={{
             otp1: "",
@@ -70,8 +80,8 @@ const VerifyOTP = () => {
           onSubmit={(values) => handleVerifyOTP(values)}
         >
           {({ setFieldValue }) => (
-            <Form className="w-full max-w-xs mx-auto flex justify-center gap-2">
-              <div className="flex space-x-2 mb-6">
+            <Form className="w-full  mx-auto flex flex-col items-center">
+              <div className="flex justify-center gap-3 mb-6">
                 {Array.from({ length: 6 }).map((_, index) => (
                   <Field
                     key={index}
@@ -83,13 +93,13 @@ const VerifyOTP = () => {
                       handleChange(event, index, setFieldValue)
                     }
                     onKeyDown={(event) => handleKeyDown(event, index)}
-                    className="w-10 h-10 border border-gray-300 rounded text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-black"
+                    className="w-14 h-14 px-2.5 py-3 text-center rounded-lg border border-gray-400 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-black"
                   />
                 ))}
               </div>
               <button
                 type="submit"
-                className="w-full bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
               >
                 Verify OTP
               </button>
@@ -97,9 +107,6 @@ const VerifyOTP = () => {
           )}
         </Formik>
       </div>
-
-      {/* Bottom Toggle Section */}
-      <AuthFooter />
     </div>
   );
 };

@@ -15,27 +15,26 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Determine if the current mode is login or signup based on path
   const isLogin = location.pathname === "/login";
   const [showPassword, setShowPassword] = useState(false);
 
   const handleFormSubmit = async (values, { resetForm }) => {
-    const { email, password } = values;
-
-    console.log("Form submitted with values:", values); // Check if form values are captured correctly
-
+    const { email } = values;
     try {
       if (isLogin) {
         await dispatch(
-          login({ email, password, rememberMe: values.rememberMe })
+          login({
+            email,
+            password: values.password,
+            rememberMe: values.rememberMe,
+          })
         );
         resetForm();
         navigate("/feed");
       } else {
-        console.log("Signing up with email:", email); // Log email for signup
-        await dispatch(signup({ email })); // Ensure dispatching signup with email
+        await dispatch(signup({ email }));
         resetForm();
-        navigate("/verify-otp"); // Navigate to verify OTP page after signup
+        navigate("/verify-otp");
       }
     } catch (error) {
       console.error("Error during form submission:", error);
@@ -43,24 +42,25 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-between items-center bg-white">
+    <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
       {/* Top Bar */}
-      <div className="flex items-center justify-between w-5/6 mt-1 mx-2 px-4 py-1 ">
-        <Link to={"/"}>
-          <img src={NetworkNext} alt="NetworkNext" className="w-auto h-4" />
+      <div className="flex items-center justify-between w-full  px-6 py-4 mx-auto">
+        {/* "Network Next" Logo */}
+        <Link to="/">
+          <img src={NetworkNext} alt="Network Next" className="h-5" />
         </Link>
-        <Link to={"/"}>
-          <button className="p-2">
-            <X className="w-6 h-6" />
-          </button>
-        </Link>
+
+        {/* Cross Icon */}
+        <button className="p-2 -mr-2">
+          <X className="w-6 h-6 text-gray-800" />
+        </button>
       </div>
 
       {/* Centered Main Content */}
-      <div className="w-3/4 max-w-md mx-auto flex flex-col items-center justify-start flex-grow p-4">
-        <div className="flex flex-col items-center text-center mb-4">
-          <img src={Nsquare} alt="NetworkNext" className="mb-4 w-24 h-24 " />
-          <h1 className="text-2xl font-semibold">
+      <div className="w-full max-w-lg flex flex-col items-center flex-grow px-6 pt-4 pb-8">
+        <div className="text-center mb-8">
+          <img src={Nsquare} alt="Logo" className="w-20 h-20 mx-auto mb-4" />
+          <h1 className="text-xl font-semibold">
             {isLogin ? "Log in using email" : "Sign up using email"}
           </h1>
         </div>
@@ -68,45 +68,47 @@ const AuthPage = () => {
         <Formik
           initialValues={{
             email: "",
-            ...(isLogin ? { password: "", rememberMe: false } : {}),
+            password: "", // Always provide default values
+            rememberMe: false, // Always provide default values
           }}
           validationSchema={authValidationSchema}
           onSubmit={handleFormSubmit}
         >
           {({ errors, touched }) => (
-            <Form className="space-y-4 w-full">
+            <Form className="w-full space-y-6">
+              {/* Email Input */}
               <div>
-                <label className="block text-sm font-semibold mb-1">
+                <label className="block text-sm font-semibold mb-2">
                   Email
                 </label>
                 <Field
                   name="email"
                   type="email"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
                 />
                 {errors.email && touched.email && (
-                  <div className="text-red-500 text-sm mt-1">
+                  <div className="text-red-500 text-xs mt-1">
                     {errors.email}
                   </div>
                 )}
               </div>
 
+              {/* Password Input for Login */}
               {isLogin && (
                 <div>
-                  <label className="block text-sm font-semibold mb-1">
+                  <label className="block text-sm font-semibold mb-2">
                     Password
                   </label>
                   <div className="relative">
                     <Field
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black pr-10"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 pr-10 focus:ring-1 focus:ring-gray-600 focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                      aria-label="Toggle password visibility"
                     >
                       {showPassword ? (
                         <EyeOff className="w-5 h-5 text-gray-400" />
@@ -116,53 +118,54 @@ const AuthPage = () => {
                     </button>
                   </div>
                   {errors.password && touched.password && (
-                    <div className="text-red-500 text-sm mt-1">
+                    <div className="text-red-500 text-xs mt-1">
                       {errors.password}
                     </div>
                   )}
                   <a
                     href="forgot-password"
-                    className="text-sm text-black hover:underline mt-2 float-right"
+                    className="text-xs text-blue-600 hover:underline  float-right mt-2"
                   >
                     Forgot Password?
                   </a>
                 </div>
               )}
 
+              {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-black text-white py-2 rounded-lg font-medium hover:bg-zinc-800 transition-colors"
+                className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
               >
                 {isLogin ? "Log In" : "Next"}
               </button>
 
+              {/* Remember Me Checkbox for Login */}
               {isLogin && (
-                <div className="flex items-center">
-                  <label className="flex items-center cursor-pointer">
-                    <Field
-                      type="checkbox"
-                      name="rememberMe"
-                      className="h-4 w-4 text-white bg-white border-gray-300 rounded focus:ring-0 cursor-pointer checked:bg-black checked:border-transparent"
-                    />
-                    <span className="ml-2 text-sm text-gray-600">
-                      Remember me
-                    </span>
-                  </label>
+                <div className="flex items-center mt-1">
+                  <Field
+                    type="checkbox"
+                    name="rememberMe"
+                    className="h-4 w-4 text-black border-gray-300 rounded"
+                  />
+                  <span className="ml-2 text-sm text-gray-600">
+                    Remember me
+                  </span>
                 </div>
               )}
             </Form>
           )}
         </Formik>
 
-        <div className="flex w-full items-center my-3">
-          <div className="w-full border-t  border-gray-400"></div>
+        {/* Divider */}
+        <div className="flex w-full items-center my-4">
+          <div className="w-full border-t border-gray-300"></div>
           <span className="px-4 text-sm text-gray-500">Or</span>
-          <div className="w-full border-t border-gray-400"></div>
+          <div className="w-full border-t border-gray-300"></div>
         </div>
+
+        {/* Social Login Buttons */}
         <SocialLoginButtons />
       </div>
-
-      {/* Bottom Toggle Section */}
       <AuthFooter />
     </div>
   );

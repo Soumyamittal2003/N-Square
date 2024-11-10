@@ -1,7 +1,8 @@
 import { Formik, Form, Field } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import AuthFooter from "./AuthFooter";
+import NetworkNextLogo from "../../assets/icons/Network Next.svg";
+import HalfIcon from "../../assets/icons/HalfIcon.svg";
 
 const ProfilePage2 = () => {
   const navigate = useNavigate();
@@ -18,23 +19,32 @@ const ProfilePage2 = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-between items-center bg-white">
+    <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans p-4">
       {/* Top Bar */}
-      <div className="flex items-center justify-between w-5/6 mt-1 mx-2 px-4 py-1 ">
-        <button onClick={() => navigate(-1)} className="p-2">
-          <span className="text-lg font-semibold">{"<"} Network Next</span>
+      <div className="flex items-center justify-between w-full px-6 py-4 mb-6">
+        <button onClick={() => navigate(-1)} className="p-2 flex items-center">
+          <img src={NetworkNextLogo} alt="NetworkNext" className="w-36 h-6" />
         </button>
         <button onClick={() => navigate("/")} className="p-2">
-          <span className="text-lg font-semibold">✕</span>
+          <span className="text-2xl font-semibold">✕</span>
         </button>
       </div>
 
       {/* Profile Form Section */}
-      <div className="bg-gray-100 rounded-lg shadow-md p-6 w-11/12 max-w-lg mx-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Profile</h2>
-          <p className="text-sm text-gray-500">2 / 2 Completed</p>
+      <div
+        className="bg-[#F1F1F1] w-1/3  p-8 rounded-3xl shadow-md flex flex-col"
+        style={{ borderRadius: "16px" }}
+      >
+        <div className="flex justify-between items-center mb-10">
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#000000]">
+            Profile
+          </h2>
+          <img src={HalfIcon} alt="2/2 completed" />
         </div>
+
+        <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-6">
+          Address Details
+        </h3>
 
         <Formik
           initialValues={{
@@ -50,56 +60,102 @@ const ProfilePage2 = () => {
           onSubmit={handleFormSubmit}
         >
           {() => (
-            <Form className="space-y-4">
-              {/* Form Fields */}
+            <Form className="space-y-6">
+              {/* Address Fields */}
               <div>
-                <label className="block text-sm font-semibold">
-                  Address Line 1
-                </label>
                 <Field
                   name="addressLine1"
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  placeholder="Address Line 1"
+                  className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold">State</label>
                 <Field
                   as="select"
                   name="state"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000]"
                 >
-                  <option value="">Select State</option>
+                  <option value="" disabled>
+                    State
+                  </option>
                   <option value="State1">State1</option>
                   <option value="State2">State2</option>
                 </Field>
               </div>
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-semibold">City</label>
                   <Field
                     name="city"
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    placeholder="City"
+                    className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="block text-sm font-semibold">
-                    Zip Code
-                  </label>
                   <Field
                     name="zipCode"
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    placeholder="Zip Code"
+                    className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
                   />
                 </div>
               </div>
-              {/* Other Fields... */}
-              <div className="flex justify-between">
+
+              {/* Gender Radio Buttons */}
+              <div className="flex gap-6 items-center">
+                <h4 className="text-lg font-bold">Gender</h4>
+                <label className="flex items-center">
+                  <Field type="radio" name="gender" value="Male" />
+                  <span className="ml-2">Male</span>
+                </label>
+                <label className="flex items-center">
+                  <Field type="radio" name="gender" value="Female" />
+                  <span className="ml-2">Female</span>
+                </label>
+              </div>
+
+              {/* Password Fields */}
+              <div>
+                <Field
+                  name="password"
+                  type="password"
+                  placeholder="Enter Password"
+                  className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
+                />
+              </div>
+              <div>
+                <Field
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Confirm Password"
+                  className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
+                />
+              </div>
+
+              {/* Register As Radio Buttons */}
+              <div className="flex gap-6 items-center">
+                <h4 className="text-lg font-bold">Register as</h4>
+                <label className="flex items-center">
+                  <Field type="radio" name="registerAs" value="Student" />
+                  <span className="ml-2">Student</span>
+                </label>
+                <label className="flex items-center">
+                  <Field type="radio" name="registerAs" value="Alumni" />
+                  <span className="ml-2">Alumni</span>
+                </label>
+                <label className="flex items-center">
+                  <Field type="radio" name="registerAs" value="Faculty" />
+                  <span className="ml-2">Faculty</span>
+                </label>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-between mt-6">
                 <button
                   type="button"
                   onClick={() => navigate("/profile-page-1")}
-                  className="text-black hover:underline"
+                  className="bg-white text-black border border-gray-300 py-2 px-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
                 >
                   {"< Back"}
                 </button>
@@ -118,19 +174,26 @@ const ProfilePage2 = () => {
       {/* Popup Modal */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg shadow-md p-6 w-80 max-w-xs text-center relative">
+          <div className="bg-white rounded-lg shadow-md w-[400px] h-[450px] p-8 flex flex-col items-center justify-end relative">
+            {/* Close Button */}
             <button
               onClick={handleClosePopup}
-              className="absolute top-2 right-2 text-gray-600"
+              className="absolute top-2 right-2 text-gray-600 text-xl"
             >
               ✕
             </button>
-            <h2 className="text-xl font-semibold mb-2">Thank You!</h2>
-            <p className="text-gray-600 mb-4 text-sm">
+
+            {/* Thank You Message */}
+            <h2 className="text-xl font-semibold mb-2 mt-8 text-center">
+              Thank You!
+            </h2>
+            <p className="text-center text-gray-600 text-sm mb-8">
               Thank you for registering with{" "}
-              <span className="font-semibold">Network_Next</span>. Our team will
-              properly verify your account.
+              <span className="font-semibold">Network_Next</span>. <br />
+              Our team will properly verify your account.
             </p>
+
+            {/* Continue Button */}
             <button
               onClick={handleClosePopup}
               className="w-full bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
@@ -140,9 +203,6 @@ const ProfilePage2 = () => {
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <AuthFooter />
     </div>
   );
 };
