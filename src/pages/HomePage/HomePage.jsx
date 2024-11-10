@@ -8,9 +8,7 @@ const HomePage = () => {
           Welcome to Network Next
         </h1>
         <p className="text-gray-600 text-lg mb-8">
-          Join us to experience seamless and secure networking solutions.
-          Whether you're here to stay connected or explore new possibilities,
-          we're here for you.
+          The Home page is yet to come. Please hold on... till then you can try
         </p>
 
         <div className="flex space-x-4 justify-center">

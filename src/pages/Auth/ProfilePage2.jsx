@@ -2,7 +2,8 @@ import { Formik, Form, Field } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NetworkNextLogo from "../../assets/icons/Network Next.svg";
-import HalfIcon from "../../assets/icons/HalfIcon.svg";
+import TwobyTwoLogo from "../../assets/icons/TwobyTwoLogo.svg";
+import { LuInfo } from "react-icons/lu";
 
 const ProfilePage2 = () => {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ const ProfilePage2 = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans p-4">
       {/* Top Bar */}
-      <div className="flex items-center justify-between w-full px-6 py-4 mb-6">
-        <button onClick={() => navigate(-1)} className="p-2 flex items-center">
+      <div className="flex items-center justify-between w-full px-6 py-4 ">
+        <button onClick={() => navigate("/")} className="p-2 flex items-center">
           <img src={NetworkNextLogo} alt="NetworkNext" className="w-36 h-6" />
         </button>
         <button onClick={() => navigate("/")} className="p-2">
@@ -32,17 +33,17 @@ const ProfilePage2 = () => {
 
       {/* Profile Form Section */}
       <div
-        className="bg-[#F1F1F1] w-1/3  p-8 rounded-3xl shadow-md flex flex-col"
+        className="bg-[#F1F1F1] w-auto mx-auto  p-8 rounded-xl shadow-md flex flex-col"
         style={{ borderRadius: "16px" }}
       >
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex justify-between items-center mb-2">
           <h2 className="text-2xl lg:text-3xl font-bold text-[#000000]">
             Profile
           </h2>
-          <img src={HalfIcon} alt="2/2 completed" />
+          <img src={TwobyTwoLogo} alt="2/2 completed" />
         </div>
 
-        <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-6">
+        <h3 className="text-lg lg:text-xl font-bold text-[#000000] mb-5">
           Address Details
         </h3>
 
@@ -60,7 +61,7 @@ const ProfilePage2 = () => {
           onSubmit={handleFormSubmit}
         >
           {() => (
-            <Form className="space-y-6">
+            <Form className="space-y-5">
               {/* Address Fields */}
               <div>
                 <Field
@@ -103,8 +104,8 @@ const ProfilePage2 = () => {
               </div>
 
               {/* Gender Radio Buttons */}
-              <div className="flex gap-6 items-center">
-                <h4 className="text-lg font-bold">Gender</h4>
+              <h4 className="text-lg font-bold">Gender</h4>
+              <div className="flex gap-5 items-center">
                 <label className="flex items-center">
                   <Field type="radio" name="gender" value="Male" />
                   <span className="ml-2">Male</span>
@@ -134,8 +135,8 @@ const ProfilePage2 = () => {
               </div>
 
               {/* Register As Radio Buttons */}
+              <h4 className="text-lg font-bold">Register as</h4>
               <div className="flex gap-6 items-center">
-                <h4 className="text-lg font-bold">Register as</h4>
                 <label className="flex items-center">
                   <Field type="radio" name="registerAs" value="Student" />
                   <span className="ml-2">Student</span>
@@ -150,12 +151,16 @@ const ProfilePage2 = () => {
                 </label>
               </div>
 
+              <div className="w-48 h-4 flex  text-neutral-400 text-xs font-normal font-['Open Sans']">
+                <LuInfo className="mx-1" /> All information will be recoded
+              </div>
+
               {/* Buttons */}
               <div className="flex justify-between mt-6">
                 <button
                   type="button"
                   onClick={() => navigate("/profile-page-1")}
-                  className="bg-white text-black border border-gray-300 py-2 px-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                  className="mx-2 py-2 px-4 rounded-lg font-semibold hover:bg-slate-50 transition-colors"
                 >
                   {"< Back"}
                 </button>
