@@ -60,7 +60,7 @@ const VerifyOTP = () => {
           />
           <h2 className="text-2xl font-semibold mb-2">Verify your email</h2>
           <p className="text-center mb-6 text-gray-500 text-base leading-relaxed">
-            We've sent a one-time password (OTP) to your registered email
+            We&apos;ve sent a one-time password (OTP) to your registered email
             address. Please check your inbox, including your spam folder, for an
             email from us containing the OTP.
           </p>

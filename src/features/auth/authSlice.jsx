@@ -1,14 +1,77 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // Async thunk for login
+export const sendOtp = createAsyncThunk(
+  "auth/sendOtp",
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "https://network-next-backend.onrender.com/api/network-next/v1/otp/send",
+        { email }
+      );
+
+      if (response.data.success) {
+        return response.data; // Return response data if successful
+      } else {
+        return rejectWithValue(response.data.message);
+      }
+    } catch (error) {
+      return rejectWithValue(
+        error.response.data.message || "Failed to send OTP"
+      );
+    }
+  }
+);
+export const verifyOtp = createAsyncThunk(
+  "auth/verifyOtp",
+  async ({ email, otp }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "https://network-next-backend.onrender.com/api/network-next/v1/otp/verify",
+        { email, otp }
+      );
+
+      if (response.data.success) {
+        return response.data; // Return response data if successful
+      } else {
+        return rejectWithValue(response.data.message);
+      }
+    } catch (error) {
+      return rejectWithValue(
+        error.response.data.message || "Failed to verify OTP"
+      );
+    }
+  }
+);
 export const login = createAsyncThunk(
   "auth/login",
-  async (userData, { rejectWithValue }) => {
+  async ({ email, password, rememberMe }, { rejectWithValue }) => {
     try {
-      console.log("Logging in with user data:", userData);
-      return { message: "Login successful", user: userData };
+      const response = await axios.post(
+        "https://network-next-backend.onrender.com/api/network-next/v1/users/login",
+        { email, password }
+      );
+
+      // Check if the response is successful
+      if (response.data.success) {
+        // Store token based on rememberMe
+        if (rememberMe) {
+          localStorage.setItem("token", response.data.token);
+        } else {
+          sessionStorage.setItem("token", response.data.token);
+        }
+
+        return {
+          message: response.data.message,
+          user: response.data.user,
+          token: response.data.token,
+        };
+      } else {
+        return rejectWithValue(response.data.message);
+      }
     } catch (error) {
-      return rejectWithValue(error.message); // Send only the error message
+      return rejectWithValue(error.response.data.message || "Failed to log in");
     }
   }
 );
@@ -20,9 +83,29 @@ export const signup = createAsyncThunk(
     console.log("Inside signup thunk with userData:", userData);
     try {
       console.log("Signing up with user data:", userData);
-      return { message: "Signup successful", user: userData };
+      const response = await axios.post(
+        "https://network-next-backend.onrender.com/api/network-next/v1/users/signup",
+        {
+          email: userData.email,
+          password: userData.password,
+          role: userData.role,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          phone: userData.phone,
+          address: userData.address,
+          gender: userData.gender,
+          dob: userData.dob,
+          state: userData.state,
+          city: userData.city,
+          zipCode: userData.zipCode,
+          imageUrl: userData.imageUrl,
+        }
+      );
+      return { message: "Signup successful", user: response.data.user }; // Adjust based on your API response
     } catch (error) {
-      return rejectWithValue(error.message); // Send only the error message
+      return rejectWithValue(
+        error.response.data.message || "Failed to sign up"
+      ); // Send only the error message
     }
   }
 );
@@ -31,15 +114,21 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
+    token: null,
     isLoading: false,
     error: null,
+    isAuthenticated: false, // Add this line
   },
   reducers: {
     logout: (state) => {
       console.log("Logging out");
       state.user = null;
+      state.token = null;
       state.isLoading = false;
       state.error = null;
+      state.isAuthenticated = false; // Reset authentication status
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
     },
   },
   extraReducers: (builder) => {
@@ -50,23 +139,25 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.user = action.payload.user; // Store user data
+        state.token = action.payload.token; // Store token
+        state.isAuthenticated = true; // Set to true on successful login
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || "Failed to log in"; // Fallback error message
       })
-      .addCase(signup.pending, (state) => {
+      .addCase(sendOtp.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(signup.fulfilled, (state, action) => {
+      .addCase(sendOtp.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
       })
-      .addCase(signup.rejected, (state, action) => {
+      .addCase(sendOtp.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload || "Failed to sign up"; // Fallback error message
+        state.error = action.payload || "Failed to send OTP";
       });
   },
 });

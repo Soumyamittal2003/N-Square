@@ -5,6 +5,8 @@ import { Formik, Form, Field } from "formik";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login, signup } from "../../features/auth/authSlice";
 import { authValidationSchema } from "../../utils/ValidationSchema";
+import useLogin from "../../hooks/useLogin";
+import { sendOtp } from "../../features/auth/authSlice"; // Import sendOtp
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "../../components/SocialLoginBottons";
@@ -14,27 +16,33 @@ const AuthPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const { handleLogin, isLoading, error } = useLogin();
 
   const isLogin = location.pathname === "/login";
   const [showPassword, setShowPassword] = useState(false);
 
   const handleFormSubmit = async (values, { resetForm }) => {
-    const { email } = values;
+    const { email, password, rememberMe } = values;
     try {
       if (isLogin) {
-        await dispatch(
-          login({
-            email,
-            password: values.password,
-            rememberMe: values.rememberMe,
-          })
-        );
-        resetForm();
-        navigate("/feed");
+        await handleLogin(email, password, rememberMe);
+        if (!error) {
+          navigate("/feed");
+          resetForm();
+        }
       } else {
-        await dispatch(signup({ email }));
-        resetForm();
-        navigate("/verify-otp");
+        // Send OTP first before proceeding to signup
+        try {
+          const result = await dispatch(sendOtp(email)).unwrap();
+          console.log("OTP sent successfully:", result);
+          // Handle success, e.g., navigate to OTP verification page
+        } catch (error) {
+          // Handle error
+          console.error("Failed to send OTP:", error);
+
+          navigate("/verify-otp", { state: { email } }); // Pass email to the OTP verification page
+          resetForm();
+        }
       }
     } catch (error) {
       console.error("Error during form submission:", error);
@@ -68,8 +76,8 @@ const AuthPage = () => {
         <Formik
           initialValues={{
             email: "",
-            password: "", // Always provide default values
-            rememberMe: false, // Always provide default values
+            password: isLogin ? "" : undefined, // Only include password if on login page
+            rememberMe: isLogin ? false : undefined, // Only include rememberMe if on login page
           }}
           validationSchema={authValidationSchema}
           onSubmit={handleFormSubmit}
@@ -134,6 +142,7 @@ const AuthPage = () => {
               {/* Submit Button */}
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
               >
                 {isLogin ? "Log In" : "Next"}

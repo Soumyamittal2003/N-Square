@@ -10,7 +10,7 @@ const AuthFooter = () => {
       <div className="border-t border-gray-300 my-2"></div>
 
       {/* Footer Text */}
-      <p className="text-center text-gray-600 text-sm mb-6">
+      <div className="text-center text-gray-600 text-sm mb-6">
         {isLogin ? (
           <>
             Don&apos;t have an account?{" "}
@@ -22,7 +22,7 @@ const AuthFooter = () => {
             </Link>
           </>
         ) : (
-          <div>
+          <>
             <Link
               to="/register-as-origination"
               className="text-blue-600 font-medium hover:underline"
@@ -38,9 +38,9 @@ const AuthFooter = () => {
                 Log In
               </Link>
             </div>
-          </div>
+          </>
         )}
-      </p>
+      </div>
     </div>
   );
 };
