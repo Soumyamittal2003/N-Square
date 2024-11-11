@@ -1,14 +1,11 @@
-import { useDispatch } from "react-redux";
-import { logout } from "../../features/auth/authSlice";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function Feed() {
-  const dispatch = useDispatch();
+const Feed = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/"); // Redirect to home or login page after logout
+    navigate("/");
   };
 
   return (
@@ -25,6 +22,6 @@ function Feed() {
       </div>
     </div>
   );
-}
+};
 
 export default Feed;

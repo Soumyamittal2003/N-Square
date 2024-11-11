@@ -1,33 +1,22 @@
 import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute";
 import {
-  AuthPage,
+  Login,
+  Signup,
   HomePage,
-  Feed,
   VerifyOTP,
-  ProfilePage1,
-  ProfilePage2,
+  Feed,
+  UserDetail,
 } from "./pages/index";
 function App() {
   return (
     <div className="font-sans">
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/signup" element={<AuthPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/profile-page-1" element={<ProfilePage1 />} />
-        <Route path="/profile-page-2" element={<ProfilePage2 />} />
-
-        {/* Protected Route */}
-        <Route
-          path="/feed"
-          element={
-            <ProtectedRoute>
-              <Feed />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/user-detail" element={<UserDetail />} />
+        <Route path="/feed" element={<Feed />} />
       </Routes>
     </div>
   );

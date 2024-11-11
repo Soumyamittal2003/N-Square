@@ -4,41 +4,21 @@ import {
   facebookProvider,
   twitterProvider,
   appleProvider,
-} from "../config/firebase";
-import { useDispatch } from "react-redux";
-import { login } from "../features/auth/authSlice";
-import GoogleIcon from "../assets/icons/Google Icon.svg";
-import FacebookIcon from "../assets/icons/FaceBook Icon.svg";
-import XIcon from "../assets/icons/Twitter Icon.svg";
-import AppleIcon from "../assets/icons/Apple Icon.svg";
+} from "../../config/firebase";
+
+import GoogleIcon from "../../assets/icons/Google Icon.svg";
+import FacebookIcon from "../../assets/icons/FaceBook Icon.svg";
+import XIcon from "../../assets/icons/Twitter Icon.svg";
+import AppleIcon from "../../assets/icons/Apple Icon.svg";
 
 const SocialLoginButtons = () => {
-  const dispatch = useDispatch();
-
   const handleSocialLogin = (provider) => {
-    // Check if Firebase is initialized
     if (!auth || !provider) {
       console.warn(
         "Firebase is not initialized. Please set up Firebase to use social login."
       );
       return;
     }
-
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        dispatch(
-          login({
-            uid: result.user.uid,
-            displayName: result.user.displayName,
-            email: result.user.email,
-            photoURL: result.user.photoURL,
-          })
-        );
-      })
-      .catch((error) => {
-        console.error("Social login error:", error);
-      });
   };
 
   return (

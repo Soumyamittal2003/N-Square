@@ -1,30 +1,35 @@
 import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field } from "formik";
-import { useRef } from "react";
-import Nsquare from "../../assets/icons/logo nsqaure 1.svg"; // Adjust path if needed
+import { useRef, useState } from "react";
+import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import NetworkNextLogo from "../../assets/icons/Network Next.svg";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
 
-  // Create refs for each input field to manage focus
-  const otpRefs = Array.from({ length: 6 }, () => useRef(null));
+  const otpRefs = Array(6)
+    .fill()
+    .map(() => useRef(null));
+  const [otp, setOtp] = useState(Array(6).fill(""));
 
-  const handleVerifyOTP = (values) => {
-    const otp = Object.values(values).join("");
-    console.log("Complete OTP:", otp);
+  const handleVerifyOTP = () => {
+    const completeOtp = otp.join("");
+    console.log("Complete OTP:", completeOtp);
 
     // Handle OTP verification logic (e.g., API call)
-    navigate("/profile-page-1"); // Redirect to the Profile page after verification
+    navigate("/user-detail"); // Redirect to the Profile page after verification
   };
 
   // Function to handle input change and move focus
-  const handleChange = (event, index, setFieldValue) => {
+  const handleChange = (event, index) => {
     const { value } = event.target;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Move focus to next input if filled
     if (value.length === 1 && index < 5) {
       otpRefs[index + 1].current.focus();
     }
-    setFieldValue(`otp${index + 1}`, value);
   };
 
   // Function to handle backspace for focus shift
@@ -65,47 +70,37 @@ const VerifyOTP = () => {
             email from us containing the OTP.
           </p>
         </div>
-        <div className="text-black self-start  mb-2 text-base font-semibold font-['Open Sans'] leading-snug tracking-tight">
+        <div className="text-black self-start mb-2 text-base font-semibold font-['Open Sans'] leading-snug tracking-tight">
           Enter OTP
         </div>
-        <Formik
-          initialValues={{
-            otp1: "",
-            otp2: "",
-            otp3: "",
-            otp4: "",
-            otp5: "",
-            otp6: "",
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleVerifyOTP();
           }}
-          onSubmit={(values) => handleVerifyOTP(values)}
+          className="w-full mx-auto flex flex-col items-center"
         >
-          {({ setFieldValue }) => (
-            <Form className="w-full  mx-auto flex flex-col items-center">
-              <div className="flex justify-center gap-3 mb-6">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <Field
-                    key={index}
-                    name={`otp${index + 1}`}
-                    type="text"
-                    maxLength="1"
-                    innerRef={otpRefs[index]}
-                    onChange={(event) =>
-                      handleChange(event, index, setFieldValue)
-                    }
-                    onKeyDown={(event) => handleKeyDown(event, index)}
-                    className="w-14 h-14 px-2.5 py-3 text-center rounded-lg border border-gray-400 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-black"
-                  />
-                ))}
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
-              >
-                Verify OTP
-              </button>
-            </Form>
-          )}
-        </Formik>
+          <div className="flex justify-center gap-3 mb-6">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength="1"
+                ref={otpRefs[index]}
+                value={otp[index]}
+                onChange={(event) => handleChange(event, index)}
+                onKeyDown={(event) => handleKeyDown(event, index)}
+                className="w-14 h-14 px-2.5 py-3 text-center rounded-lg border border-gray-400 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-black"
+              />
+            ))}
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
+          >
+            Verify OTP
+          </button>
+        </form>
       </div>
     </div>
   );
