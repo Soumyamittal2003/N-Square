@@ -1,9 +1,9 @@
 import { useState } from "react";
-import arrowBlockUp from "../../assets/icons/arrow-block-up.svg";
-import arrowBlockdown from "../../assets/icons/arrow-block-down.svg";
-import bookmark from "../../assets/icons/bookmark.svg";
-import comment from "../../assets/icons/comment.svg";
-import shareArrow from "../../assets/icons/shareArrow.svg";
+import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
+import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
+import bookmark from "../../../assets/icons/bookmark.svg";
+import comment from "../../../assets/icons/comment.svg";
+import shareArrow from "../../../assets/icons/shareArrow.svg";
 
 const PostCard = ({ text = "", images = [] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

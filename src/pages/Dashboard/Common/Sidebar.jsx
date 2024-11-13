@@ -1,12 +1,12 @@
-import briefcase from "../../assets/icons/briefcase-01.svg";
-import messageChat from "../../assets/icons/message-chat-circle.svg";
-import helpCircle from "../../assets/icons/help-circle.svg";
-import newPostLogo from "../../assets/icons/newPostLogo.svg";
-import Connections from "../../assets/icons/user-logo.svg";
+import briefcase from "../../../assets/icons/briefcase-01.svg";
+import messageChat from "../../../assets/icons/message-chat-circle.svg";
+import helpCircle from "../../../assets/icons/help-circle.svg";
+import newPostLogo from "../../../assets/icons/newPostLogo.svg";
+import Connections from "../../../assets/icons/user-logo.svg";
 
 const Sidebar = () => {
   return (
-    <div className=" min-w-[300px] mx-20 my-8 h-5/6  rounded-xl shadow-lg overflow-hidden flex flex-col h-screen">
+    <div className=" min-w-[300px] mx-16 mt-6  h-[calc(100vh-100px)]  rounded-xl shadow-lg overflow-hidden flex flex-col ">
       {/* Profile Info Section */}
       <div className="relative">
         {/* Background Image */}
@@ -53,18 +53,17 @@ const Sidebar = () => {
         <SidebarItem icon={newPostLogo} label="Post" />
         <SidebarItem icon={messageChat} label="Chat" />
         <SidebarItem icon={briefcase} label="Applied" />
+        {/* Footer and Help Section */}
+        <div className=" border-t border-gray-200">
+          {/* <SidebarItem label="Help" /> */}
+        </div>
 
         {/* Expandable Items */}
         <div className="mt-4">
-          <SidebarItem label="Events" expandable />
+          <SidebarItem label="My Events" expandable />
           <SidebarItem label="Mentorship" />
         </div>
       </nav>
-
-      {/* Footer and Help Section */}
-      <div className="px-4 py-2 border-t border-gray-200">
-        {/* <SidebarItem label="Help" /> */}
-      </div>
 
       <div className="px-4 py-4 text-center text-xs text-gray-500 border-t border-gray-200">
         <p>Terms and Conditions</p>

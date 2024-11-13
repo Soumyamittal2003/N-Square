@@ -1,10 +1,8 @@
-import Sidebar from "./Sidebar";
-import MainContent from "./MainContent";
+import HomeContent from "./HomeContent";
 import RightSidebar from "./RightSidebar";
-import Header from "./Header";
 import { useEffect } from "react";
 
-const Feed = () => {
+const Home = () => {
   useEffect(() => {
     document.body.classList.add("overflow-hidden"); // Disable body scrolling
 
@@ -14,14 +12,12 @@ const Feed = () => {
   }, []);
   return (
     <>
-      <Header />
-      <div className="flex w-full h-screen overflow-hidden">
-        <Sidebar />
-        <MainContent />
+      <div className="flex w-full">
+        <HomeContent />
         <RightSidebar />
       </div>
     </>
   );
 };
 
-export default Feed;
+export default Home;

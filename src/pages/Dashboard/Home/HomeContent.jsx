@@ -1,7 +1,7 @@
 import PostCard from "./PostCard";
 import { useState } from "react";
 
-const MainContent = () => {
+const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const tabs = [
     "All",
@@ -22,7 +22,7 @@ const MainContent = () => {
   const postImages = ["https://picsum.photos/900/400/?blur"];
 
   return (
-    <div className="main-content w-1/2">
+    <div className=" w-1/2">
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4  ">
         {tabs.map((tab) => (
           <button
@@ -47,4 +47,4 @@ const MainContent = () => {
   );
 };
 
-export default MainContent;
+export default HomeContent;

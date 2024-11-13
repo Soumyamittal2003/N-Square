@@ -4,8 +4,10 @@ import {
   Signup,
   HomePage,
   VerifyOTP,
-  Feed,
   UserDetail,
+  ForgotPassword,
+  RegisterOrganization,
+  Dashboard,
 } from "./pages/index";
 function App() {
   return (
@@ -13,10 +15,15 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/register-organization"
+          element={<RegisterOrganization />}
+        />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/user-detail" element={<UserDetail />} />
-        <Route path="/feed" element={<Feed />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </div>
   );

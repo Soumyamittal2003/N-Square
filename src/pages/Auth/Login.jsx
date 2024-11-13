@@ -21,6 +21,9 @@ const LoginPage = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setTimeout(() => {
+      navigate("/home");
+    }, 1000);
     setIsLoading(true);
     setError(null);
     setEmailError("");
@@ -57,9 +60,11 @@ const LoginPage = () => {
         <Link to="/">
           <img src={NetworkNext} alt="Network Next" className="h-5" />
         </Link>
-        <button className="p-2 -mr-2">
-          <X className="w-6 h-6 text-gray-800" />
-        </button>
+        <Link to="/">
+          <button className="p-2 -mr-2">
+            <X className="w-6 h-6 text-gray-800" />
+          </button>
+        </Link>
       </div>
 
       <div className="w-full max-w-lg flex flex-col items-center flex-grow px-6 pt-4 pb-8">
@@ -116,12 +121,12 @@ const LoginPage = () => {
             {passwordError && (
               <div className="text-red-500 text-xs mt-1">{passwordError}</div>
             )}
-            <a
-              href="forgot-password"
+            <Link
+              to="/forgot-password"
               className="text-xs text-blue-600 hover:underline float-right mt-2"
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
 
           <button
