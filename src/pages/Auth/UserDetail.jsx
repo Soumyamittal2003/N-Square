@@ -5,6 +5,7 @@ import OnebyTwoLogo from "../../assets/icons/HalfIcon.svg";
 import TwobyTwoLogo from "../../assets/icons/TwobyTwoLogo.svg";
 import { FiPaperclip } from "react-icons/fi";
 import { LuInfo } from "react-icons/lu";
+import CheckmarkAnimation from "../../assets/animations/checkmark.gif";
 
 const UserDetail = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const UserDetail = () => {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    navigate("/"); // Redirect after closing the popup
+    navigate("/dashboard"); // Redirect after closing the popup
   };
 
   return (
@@ -312,8 +313,6 @@ const UserDetail = () => {
           </>
         )}
       </div>
-
-      {/* Popup Modal */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-md w-[400px] h-[450px] p-8 flex flex-col items-center justify-end relative">
@@ -323,7 +322,13 @@ const UserDetail = () => {
             >
               ✕
             </button>
-            <h2 className="text-xl font-semibold mb-4 mt-8 text-center">
+            {/* Checkmark Animation (GIF or MP4) */}
+            <div className="w-36 h-36 mb-4 mt-4">
+              <img src={CheckmarkAnimation} alt="Checkmark Animation" />{" "}
+              {/* For GIF */}
+              {/* Or use <video src={CheckmarkAnimation} autoPlay loop muted className="w-16 h-16" /> for MP4 */}
+            </div>
+            <h2 className="text-xl font-semibold mb-4 text-center">
               Thank You!
             </h2>
             <p className="text-center text-gray-600 text-sm mb-8">

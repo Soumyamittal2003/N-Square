@@ -6,6 +6,8 @@ import { authValidationSchema } from "../../utils/ValidationSchema";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "./SocialLoginBottons";
+import CheckmarkAnimation from "../../assets/animations/checkmark.gif"; // Import GIF animation
+// import CheckmarkAnimation from "../../assets/animations/checkmark.mp4"; // Import MP4 animation if preferred
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,11 +20,24 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPopup, setShowPopup] = useState(false); // State for popup visibility
+
+  // CSS for checkmark animation
+  const checkmarkStyle = `
+    @keyframes draw {
+      0% {
+        stroke-dasharray: 0, 50;
+      }
+      100% {
+        stroke-dasharray: 50, 0;
+      }
+    }
+  `;
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setTimeout(() => {
-      navigate("/home");
+      setShowPopup(true); // Show popup after login
     }, 1000);
     setIsLoading(true);
     setError(null);
@@ -42,8 +57,7 @@ const LoginPage = () => {
         return;
       }
 
-      // Simulate login logic and redirect
-      navigate("/feed");
+      // Simulate login logic and show popup
       setEmail("");
       setPassword("");
     } catch (error) {
@@ -54,8 +68,14 @@ const LoginPage = () => {
     }
   };
 
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    navigate("/dashboard"); // Navigate after closing popup
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
+      <style>{checkmarkStyle}</style> {/* Insert animation CSS */}
       <div className="flex items-center justify-between w-full px-6 py-4 mx-auto">
         <Link to="/">
           <img src={NetworkNext} alt="Network Next" className="h-5" />
@@ -66,7 +86,6 @@ const LoginPage = () => {
           </button>
         </Link>
       </div>
-
       <div className="w-full max-w-lg flex flex-col items-center flex-grow px-6 pt-4 pb-8">
         <div className="text-center mb-8">
           <img src={Nsquare} alt="Logo" className="w-20 h-20 mx-auto mb-4" />
@@ -157,11 +176,8 @@ const LoginPage = () => {
 
         <SocialLoginButtons />
       </div>
-      <div className="w-1/2  mx-auto px-6">
-        {/* Divider Line */}
+      <div className="w-1/2 mx-auto px-6">
         <div className="border-t border-gray-300 my-2"></div>
-
-        {/* Footer Text */}
         <div className="text-center text-gray-600 text-sm mb-6">
           <>
             Don&apos;t have an account?{" "}
@@ -174,6 +190,38 @@ const LoginPage = () => {
           </>
         </div>
       </div>
+      {/* Popup Modal */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-md w-[400px] h-[450px] p-8 flex flex-col items-center justify-end relative">
+            <button
+              onClick={handleClosePopup}
+              className="absolute top-2 right-2 text-gray-600 text-xl"
+            >
+              ✕
+            </button>
+            {/* Checkmark Animation (GIF or MP4) */}
+            <div className="w-36 h-36 mb-4 mt-4">
+              <img src={CheckmarkAnimation} alt="Checkmark Animation" />{" "}
+              {/* For GIF */}
+              {/* Or use <video src={CheckmarkAnimation} autoPlay loop muted className="w-16 h-16" /> for MP4 */}
+            </div>
+            <h2 className="text-xl font-semibold mb-4 text-center">
+              Thank You!
+            </h2>
+            <p className="text-center text-gray-600 text-sm mb-8">
+              Thank you for registering with Network_Next. Our team will verify
+              your account.
+            </p>
+            <button
+              onClick={handleClosePopup}
+              className="w-full bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

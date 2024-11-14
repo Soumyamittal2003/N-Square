@@ -83,7 +83,7 @@ const ForgotPassword = () => {
             disabled={isLoading}
             className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
           >
-            {isLoading ? "Sending Reset Link..." : "Next"}
+            {isLoading ? "Sending Reset OTP..." : "Next"}
           </button>
         </form>
 

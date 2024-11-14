@@ -1,10 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useState } from "react";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import NetworkNextLogo from "../../assets/icons/Network Next.svg";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { from } = location.state || { from: null };
 
   const otpRefs = Array(6)
     .fill()
@@ -12,11 +14,21 @@ const VerifyOTP = () => {
   const [otp, setOtp] = useState(Array(6).fill(""));
 
   const handleVerifyOTP = () => {
+    console.log("-2");
     const completeOtp = otp.join("");
+    console.log("-1");
     console.log("Complete OTP:", completeOtp);
-
+    console.log("0");
     // Handle OTP verification logic (e.g., API call)
-    navigate("/user-detail"); // Redirect to the Profile page after verification
+    if (from === "forgot-password") {
+      console.log("1");
+      navigate("/dashboard"); // Redirect to the Dashboard
+      console.log("2");
+    } else if (from === "signup") {
+      console.log("3");
+      navigate("/user-detail"); // Redirect to User Detail page
+      console.log("4");
+    }
   };
 
   // Function to handle input change and move focus

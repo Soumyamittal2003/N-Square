@@ -8,13 +8,13 @@ import { Link } from "react-router-dom"; // Import Link
 
 const Sidebar = () => {
   return (
-    <div className="min-w-[300px] mx-16 mt-6 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+    <div className="min-w-[300px] mx-16 mt-2 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
       {/* Profile Info Section */}
       <ProfileSection />
       {/* Navigation Items */}
       <nav className="mt-6 flex-grow px-4">
-        <Link to="/dashboard/connections">
-          <SidebarItem icon={Connections} label="Connections" />
+        <Link to="/dashboard/connection">
+          <SidebarItem icon={Connections} label="Connection" />
         </Link>
         <Link to="/dashboard/post">
           <SidebarItem icon={newPostLogo} label="Post" />
@@ -25,10 +25,11 @@ const Sidebar = () => {
         <Link to="/dashboard/applied">
           <SidebarItem icon={briefcase} label="Applied" />
         </Link>
+        <hr className="border-gray-200 my-2" />
         {/* Expandable Items */}
         <ExpandableItems />
         {/* Divider and Help Section */}
-        <hr className="border-gray-200 my-4 mx-4" />
+        <hr className="border-gray-200 my-2" />
         <Link to="/dashboard/help">
           <SidebarItem icon={helpCircle} label="Help" />
         </Link>
@@ -108,13 +109,13 @@ const ExpandableItems = () => {
       </div>
       {expanded && (
         <div className="ml-6 mt-2 space-y-2">
-          <Link to="/dashboard/events/event1">
+          <Link to="/dashboard/event/event1">
             <SidebarItem label="Event 1" />
           </Link>
-          <Link to="/dashboard/events/event2">
+          <Link to="/dashboard/event/event2">
             <SidebarItem label="Event 2" />
           </Link>
-          <Link to="/dashboard/events/event3">
+          <Link to="/dashboard/event/event3">
             <SidebarItem label="Event 3" />
           </Link>
         </div>
@@ -128,7 +129,7 @@ const ExpandableItems = () => {
 
 // Footer Component
 const Footer = () => (
-  <div className="px-4 py-4 text-center text-xs text-gray-500 border-t border-gray-200">
+  <div className="px-4 py-4 text-center text-xs text-gray-500 border-t border-gray-300">
     <p>Terms and Conditions</p>
     <p>©2024 Network_Next</p>
   </div>

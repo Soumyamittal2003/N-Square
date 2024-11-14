@@ -1,68 +1,233 @@
 import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import NsquareLogo from "../../../assets/icons/logo nsqaure 1.svg";
 import notification from "../../../assets/icons/notification-icon.svg";
 import search from "../../../assets/icons/search-icon.svg";
 import setting from "../../../assets/icons/setting-icon.svg";
+import setting1 from "../../../assets/icons/settings/setting1.svg";
+import setting2 from "../../../assets/icons/settings/setting2.svg";
+import setting3 from "../../../assets/icons/settings/setting3.svg";
+import setting4 from "../../../assets/icons/settings/setting4.svg";
+import setting5 from "../../../assets/icons/settings/setting5.svg";
+import setting6 from "../../../assets/icons/settings/setting6.svg";
+import setting7 from "../../../assets/icons/settings/setting7.svg";
+
+// Modal Component for Search
+const SearchModal = () => (
+  <div className="absolute top-full right-52 mt-2 w-1/5 bg-white shadow-lg rounded-lg z-2 p-4">
+    <input
+      type="text"
+      placeholder="Search..."
+      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+    />
+  </div>
+);
+
+// Modal Component for Notifications
+const NotificationsModal = ({ notifications }) => (
+  <div className="absolute top-full right-32 mt-2 w-auto bg-white shadow-lg rounded-lg z-2 p-4">
+    <div className="text-lg font-Bold text-black  m-2">Notifications</div>
+    <ul>
+      {notifications.map((notification, index) => (
+        <li
+          key={index}
+          className="flex gap-4 justify-between m-2 px-4 py-2 text-gray-700 hover:bg-gray-100  rounded"
+        >
+          <span className="text-md text-black">{notification.text}</span>
+          <span className="text-sm text-gray-500">{notification.time}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+// Modal Component for Settings
+const SettingsModal = ({ settingsOptions }) => (
+  <div className="absolute top-full right-12 mt-2 w-64 bg-white shadow-lg rounded-lg z-20">
+    <ul className="py-8">
+      {settingsOptions.map((option) => (
+        <li key={option.name}>
+          <Link
+            to={option.path}
+            className="flex items-center m-2 px-4 py-2 font-semibold text-md text-black hover:text-gray-600"
+          >
+            <img src={option.icon} alt={option.name} className="p-2 mx-2" />
+            {option.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 const Header = () => {
   const location = useLocation();
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
+  const [showSearchMenu, setShowSearchMenu] = useState(false);
+  const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
+  const settingsRef = useRef(null);
+  const searchRef = useRef(null);
+  const notificationsRef = useRef(null);
 
   const navLinks = [
     { name: "Home", path: "/dashboard/home" },
     { name: "Job", path: "/dashboard/job" },
-    { name: "Event", path: "/dashboard/events" },
+    { name: "Event", path: "/dashboard/event" },
     { name: "Project", path: "/dashboard/project" },
     { name: "Inspiring Story", path: "/dashboard/inspiring-story" },
   ];
 
+  const settingsOptions = [
+    { name: "Profile", path: "/profile", icon: [setting1] },
+    {
+      name: "Account Preference",
+      path: "/account-preference",
+      icon: [setting2],
+    },
+    {
+      name: "Account Activity",
+      path: "/account-activity",
+      icon: [setting3],
+    },
+    { name: "Post Saved", path: "/post-saved", icon: [setting4] },
+    { name: "Download", path: "/download", icon: [setting5] },
+    { name: "My Jobs", path: "/my-jobs", icon: [setting6] },
+    { name: "Data Privacy", path: "/data-privacy", icon: [setting7] },
+  ];
+
+  const notifications = [
+    { text: "You have a new follower!", time: "2 mins ago" },
+    { text: "Your post was liked by 10 people", time: "1 hour ago" },
+    { text: "Event reminder: Trading Webinar", time: "Yesterday" },
+  ];
+
+  const closeAllMenus = () => {
+    setShowSearchMenu(false);
+    setShowNotificationsMenu(false);
+    setShowSettingsMenu(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      settingsRef.current &&
+      !settingsRef.current.contains(event.target) &&
+      searchRef.current &&
+      !searchRef.current.contains(event.target) &&
+      notificationsRef.current &&
+      !notificationsRef.current.contains(event.target)
+    ) {
+      closeAllMenus();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <header className="w-full h-16 flex items-center justify-between mt-2 px-6 py-4 bg-white border-b shadow-sm">
-      {/* Logo Section */}
-      <div className="flex items-center">
-        <img src={NsquareLogo} alt="Nsquare Logo" className="w-10 h-10" />
-      </div>
+    <div className="relative">
+      <header className="w-full h-16 flex items-center justify-between px-6 py-4 bg-white border-b shadow-sm">
+        {/* Logo Section */}
+        <div className="flex items-center">
+          <img src={NsquareLogo} alt="Nsquare Logo" className="w-10 h-10" />
+        </div>
 
-      {/* Navigation Section */}
-      <nav className="flex space-x-[97px]">
-        {navLinks.map((link) => (
-          <Link
-            key={link.name}
-            to={link.path}
-            className={`text-xl font-semibold ${
-              location.pathname === link.path ? "text-black" : "text-gray-800"
-            } hover:text-black`}
-            aria-label={`Navigate to ${link.name}`}
+        {/* Navigation Section */}
+        <nav className="flex space-x-[97px]">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              className={`text-xl font-semibold ${
+                location.pathname === link.path ? "text-black" : "text-gray-800"
+              } hover:text-black`}
+              aria-label={`Navigate to ${link.name}`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Icon Section */}
+        <div className="flex items-center space-x-10">
+          {/* Search Icon with Modal */}
+          <button
+            ref={searchRef}
+            aria-label="Search"
+            onClick={() => {
+              closeAllMenus();
+              setShowSearchMenu(true);
+            }}
           >
-            {link.name}
-          </Link>
-        ))}
-      </nav>
+            <img
+              src={search}
+              alt="Search Icon"
+              className="h-12 w-12 hover:opacity-80"
+            />
+          </button>
 
-      {/* Icon Section */}
-      <div className="flex items-center space-x-[10px]">
-        <button aria-label="Search">
-          <img
-            src={search}
-            alt="Search Icon"
-            className="h-12 w-12 hover:opacity-80"
-          />
-        </button>
-        <button aria-label="Notifications">
-          <img
-            src={notification}
-            alt="Notifications Icon"
-            className="h-12 w-12 hover:opacity-80"
-          />
-        </button>
-        <button aria-label="Settings">
-          <img
-            src={setting}
-            alt="Settings Icon"
-            className="h-12 w-12 hover:opacity-80"
-          />
-        </button>
+          {/* Notifications Icon with Modal */}
+          <button
+            ref={notificationsRef}
+            aria-label="Notifications"
+            onClick={() => {
+              closeAllMenus();
+              setShowNotificationsMenu(true);
+            }}
+          >
+            <img
+              src={notification}
+              alt="Notifications Icon"
+              className="h-12 w-12 hover:opacity-80"
+            />
+          </button>
+
+          {/* Settings Icon with Modal */}
+          <button
+            ref={settingsRef}
+            aria-label="Settings"
+            onClick={() => {
+              closeAllMenus();
+              setShowSettingsMenu(true);
+            }}
+          >
+            <img
+              src={setting}
+              alt="Settings Icon"
+              className="h-12 w-12 hover:opacity-80"
+            />
+          </button>
+        </div>
+      </header>
+
+      {/* Background Overlay */}
+      {(showSearchMenu || showNotificationsMenu || showSettingsMenu) && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-10"
+          onClick={closeAllMenus}
+        />
+      )}
+
+      {/* Modals below the header */}
+      <div className="relative z-20">
+        {showSearchMenu && (
+          <div className="relative" ref={searchRef}>
+            <SearchModal />
+          </div>
+        )}
+        {showNotificationsMenu && (
+          <div className="relative" ref={notificationsRef}>
+            <NotificationsModal notifications={notifications} />
+          </div>
+        )}
+        {showSettingsMenu && (
+          <div className="relative" ref={settingsRef}>
+            <SettingsModal settingsOptions={settingsOptions} />
+          </div>
+        )}
       </div>
-    </header>
+    </div>
   );
 };
 
