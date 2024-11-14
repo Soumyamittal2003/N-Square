@@ -7,7 +7,6 @@ import Signup from "./Auth/Signup";
 import UserDetail from "./Auth/UserDetail";
 import ForgotPassword from "./Auth/ForgotPassword";
 import RegisterOrganization from "./Auth/RegisterOrganization";
-import Events from "./Dashboard/Events/Events";
 import Dashboard from "./Dashboard/Dashboard";
 export {
   Login,
@@ -18,6 +17,5 @@ export {
   UserDetail,
   ForgotPassword,
   RegisterOrganization,
-  Events,
   Dashboard,
 };

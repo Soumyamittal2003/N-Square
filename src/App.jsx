@@ -23,7 +23,8 @@ function App() {
         />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/user-detail" element={<UserDetail />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>
     </div>
   );

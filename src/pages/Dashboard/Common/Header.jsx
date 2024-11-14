@@ -8,15 +8,15 @@ const Header = () => {
   const location = useLocation();
 
   const navLinks = [
-    { name: "Home", path: "/home" },
-    { name: "Job", path: "/job" },
-    { name: "Event", path: "/event" },
-    { name: "Project", path: "/project" },
-    { name: "Inspiring Story", path: "/inspiring-story" },
+    { name: "Home", path: "/dashboard/home" },
+    { name: "Job", path: "/dashboard/job" },
+    { name: "Event", path: "/dashboard/events" },
+    { name: "Project", path: "/dashboard/project" },
+    { name: "Inspiring Story", path: "/dashboard/inspiring-story" },
   ];
 
   return (
-    <header className="w-full h-16 flex items-center justify-between px-6 py-4 bg-white border-b shadow-sm">
+    <header className="w-full h-16 flex items-center justify-between mt-2 px-6 py-4 bg-white border-b shadow-sm">
       {/* Logo Section */}
       <div className="flex items-center">
         <img src={NsquareLogo} alt="Nsquare Logo" className="w-10 h-10" />
