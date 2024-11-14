@@ -1,7 +1,13 @@
-import React from "react";
+import ConnectionContent from "./ConnectionContent";
 
-const Connection = () => {
-  return <div>Connection</div>;
+const Home = () => {
+  return (
+    <>
+      <div className="flex w-screen">
+        <ConnectionContent />
+      </div>
+    </>
+  );
 };
 
-export default Connection;
+export default Home;

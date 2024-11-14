@@ -1,11 +1,10 @@
 import HomeContent from "./HomeContent";
 import RightSidebar from "./RightSidebar";
-// import { useEffect } from "react";
 
 const Home = () => {
   return (
     <>
-      <div className="flex min-w-max">
+      <div className="flex w-screen">
         <HomeContent />
         <RightSidebar />
       </div>
