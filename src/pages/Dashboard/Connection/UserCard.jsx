@@ -1,6 +1,6 @@
 const UserCard = () => {
   return (
-    <div className="flex gap-2 w-3/5 items-center justify-between mb-4 mx-auto p-2 border rounded-lg shadow-sm">
+    <div className="flex gap-2 w-3/5 items-center justify-between mb-4 mx-auto p-2  rounded-lg ">
       <div className="flex items-center space-x-4">
         {/* Profile Picture */}
         <img

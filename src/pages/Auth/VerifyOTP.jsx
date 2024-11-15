@@ -20,15 +20,10 @@ const VerifyOTP = () => {
     console.log("Complete OTP:", completeOtp);
     console.log("0");
     // Handle OTP verification logic (e.g., API call)
-    if (from === "forgot-password") {
-      console.log("1");
-      navigate("/dashboard"); // Redirect to the Dashboard
-      console.log("2");
-    } else if (from === "signup") {
-      console.log("3");
-      navigate("/user-detail"); // Redirect to User Detail page
-      console.log("4");
-    }
+
+    console.log("3");
+    navigate("/user-detail"); // Redirect to User Detail page
+    console.log("4");
   };
 
   // Function to handle input change and move focus

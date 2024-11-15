@@ -1,5 +1,4 @@
 // import AuthPage from "./Auth/AuthPage";
-import Home from "./Dashboard/Home/Home";
 import HomePage from "./HomePage/HomePage";
 import VerifyOTP from "./Auth/VerifyOTP";
 import Login from "./Auth/Login";
@@ -11,7 +10,6 @@ import Dashboard from "./Dashboard/Dashboard";
 export {
   Login,
   Signup,
-  Home,
   HomePage,
   VerifyOTP,
   UserDetail,

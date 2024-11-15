@@ -45,7 +45,7 @@ const ProfileSection = () => (
   <div className="relative">
     <img
       alt="University background"
-      className="w-full h-40 object-fill"
+      className="w-full h-60 object-fill"
       src="https://storage.googleapis.com/a1aa/image/LcbznUrFRYKSAFXkFduaNiGQ8RmxRaCLgYXYhLOulwHEOB8E.jpg"
     />
     <div className="absolute inset-x-0 top-4 flex justify-center">
@@ -60,16 +60,18 @@ const ProfileSection = () => (
         src="https://storage.googleapis.com/a1aa/image/Wgr8fBHQmYQKfUedrtkqTOSNhGW5LZqEXGgyYdbMMLndwJgnA.jpg"
       />
     </div>
-    <div className="text-center mt-2">
-      <h2 className="text-lg font-semibold">Aadarsh Soni</h2>
-      <p className="text-sm text-gray-500">@2022, Btech-CSE-3rd Year</p>
+    <div className="absolute insert-x-0 top-32 w-full justify-center text-white text-center  mt-2">
+      <div>
+        <h2 className="text-lg font-semibold">Aadarsh Soni</h2>
+        <p className="text-sm ">@2022, Btech-CSE-3rd Year</p>
+      </div>
     </div>
-    <div className="flex justify-around mt-4 py-2 border-gray-300">
-      <div className="text-center">
+    <div className=" relative flex justify-around rounded-full py-2 border">
+      <div className="text-center border-r w-1/2">
         <span className="block font-semibold text-gray-800">12K</span>
         <span className="text-sm text-gray-500">Follower</span>
       </div>
-      <div className="text-center">
+      <div className="text-center w-1/2">
         <span className="block font-semibold text-gray-800">13K</span>
         <span className="text-sm text-gray-500">Following</span>
       </div>

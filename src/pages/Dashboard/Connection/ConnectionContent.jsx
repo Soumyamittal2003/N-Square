@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ConnectionContent = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -38,14 +38,13 @@ const ConnectionContent = () => {
       </div>
 
       <div className="flex mx-8 mt-6 items-center justify-between px-4 py-2 bg-white ">
-        <div className="flex gap-4 items-center ">
+        <div className="flex mx-28 gap-8 items-center ">
           <Link to={"/dashboard"}>
-            <button className="h-6 w-6">
-              <FaArrowLeft />
-            </button>
+            <FaArrowLeft className="h-6 w-6" />
           </Link>
-          <h2 className="text-xl font-bold">750 Connections</h2>
+          <span className="text-xl ">750 Connections</span>
         </div>
+
         <div className="flex w-1/3 items-center rounded-md border border-gray-700 mx-12 px-3 py-1 bg-white">
           <CiSearch />
           <input
