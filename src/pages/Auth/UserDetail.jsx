@@ -12,7 +12,7 @@ const UserDetail = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [profileImage, setProfileImage] = useState(null);
   const [formData, setFormData] = useState({
-    firstName: "",
+    firstName: '',
     lastName: "",
     mobileNumber: "",
     dateOfBirth: "",
