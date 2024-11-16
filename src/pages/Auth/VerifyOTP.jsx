@@ -1,20 +1,20 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
+import { useAuth } from "../../context/AuthProvider";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { email, isForgotPassword } = location.state || {}; // Determine the purpose of OTP verification
+  const { signupEmail } = useAuth(); // Correct hook usage
+  const [email] = useState(signupEmail || ""); // Ensure signupEmail fallback
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isForgotPassword, setIsForgotPassword] = useState(false); // Initialize as boolean
 
-  const otpRefs = Array(6)
-    .fill()
-    .map(() => useRef(null));
+  const otpRefs = otp.map(() => useRef(null));
 
   const handleVerifyOTP = async () => {
     setIsLoading(true);
@@ -28,16 +28,8 @@ const VerifyOTP = () => {
     }
 
     try {
-      // Send OTP and email to backend for verification
       await axiosInstance.post("/otp/verify", { email, otp: completeOtp });
-
-      if (isForgotPassword) {
-        // Forgot Password Flow
-        navigate("/reset-password", { state: { email } }); // Redirect to Reset Password page
-      } else {
-        // Signup Flow
-        navigate("/user-detail", { state: { email } }); // Redirect to User Detail page
-      }
+      navigate("/user-detail");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Invalid OTP. Please try again.";
@@ -49,18 +41,19 @@ const VerifyOTP = () => {
 
   const handleChange = (event, index) => {
     const { value } = event.target;
+    if (!/^[0-9]?$/.test(value)) return; // Only allow numeric input
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
     if (value.length === 1 && index < 5) {
-      otpRefs[index + 1].current.focus(); // Move to next input
+      otpRefs[index + 1].current.focus();
     }
   };
 
   const handleKeyDown = (event, index) => {
     if (event.key === "Backspace" && index > 0 && !event.target.value) {
-      otpRefs[index - 1].current.focus(); // Move to previous input
+      otpRefs[index - 1].current.focus();
     }
   };
 
@@ -69,7 +62,7 @@ const VerifyOTP = () => {
     setError(null);
 
     try {
-      await axiosInstance.post("/otp/send", { email });
+      await axiosInstance.post("/otp/send", { email }); // Pass email instead of signupEmail
       alert("OTP resent successfully!");
     } catch (error) {
       const errorMessage =
@@ -84,25 +77,25 @@ const VerifyOTP = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
       {/* Top Navigation Bar */}
-      <div className="flex items-center justify-between w-full px-6 py-4 mx-auto">
-        <button onClick={() => navigate("/")} className="p-2">
+      <div className="flex items-center justify-between w-full px-6 py-4">
+        <button onClick={() => navigate("/")} aria-label="Go back">
           <img src={NetworkNext} alt="Network Next" className="h-5" />
         </button>
-        <button onClick={() => navigate("/")} className="p-2">
+        <button onClick={() => navigate("/")} aria-label="Close">
           ✕
         </button>
       </div>
 
       {/* OTP Verification Form */}
-      <div className="w-full max-w-md flex flex-col items-center flex-grow px-6 pt-4 pb-8">
+      <div className="w-full max-w-md flex flex-col items-center px-6 pt-4 pb-8">
         <div className="text-center mb-8">
           <img src={Nsquare} alt="Logo" className="w-16 h-16 mx-auto mb-4" />
           <h2 className="text-2xl font-semibold mb-2">
             {isForgotPassword ? "Reset Your Password" : "Verify Your Email"}
           </h2>
-          <p className="text-gray-500 mb-6">
-            Enter the OTP sent to <span className="font-semibold">{email}</span>
-            .
+          <p className="text-gray-500">
+            Enter the OTP sent to{" "}
+            <span className="font-semibold">{email || "your email"}</span>.
           </p>
         </div>
 
@@ -117,19 +110,20 @@ const VerifyOTP = () => {
             e.preventDefault();
             handleVerifyOTP();
           }}
-          className="w-full mx-auto flex flex-col items-center"
+          className="w-full flex flex-col items-center"
         >
           <div className="flex justify-center gap-3 mb-6">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {otp.map((digit, index) => (
               <input
                 key={index}
                 type="text"
                 maxLength="1"
                 ref={otpRefs[index]}
-                value={otp[index]}
+                value={digit}
                 onChange={(event) => handleChange(event, index)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
-                className="w-14 h-14 px-2.5 py-3 text-center rounded-lg border border-gray-400 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-14 h-14 px-2.5 py-3 text-center rounded-lg border border-gray-400 text-xl font-semibold focus:outline-none"
+                aria-label={`OTP Digit ${index + 1}`}
                 required
               />
             ))}
@@ -137,20 +131,22 @@ const VerifyOTP = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
+            className={`w-full py-3 rounded-lg font-semibold transition ${
+              isLoading
+                ? "bg-gray-900 text-white"
+                : "bg-black text-white hover:bg-gray-900"
+            }`}
           >
             {isLoading ? "Wait..." : "Verify OTP"}
           </button>
         </form>
 
-        <div className="mt-4">
-          <button
-            className="text-blue-600 font-medium hover:underline"
-            onClick={handleResendOTP}
-          >
-            Resend OTP
-          </button>
-        </div>
+        <button
+          className="mt-4 text-blue-600 font-medium hover:underline"
+          onClick={handleResendOTP}
+        >
+          Resend OTP
+        </button>
       </div>
     </div>
   );

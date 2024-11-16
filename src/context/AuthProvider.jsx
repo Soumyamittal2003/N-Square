@@ -14,6 +14,7 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => {
     return sessionStorage.getItem("token") || localStorage.getItem("token");
   });
+  const [signupEmail, setSignupEmail] = useState(null);
 
   const navigate = useNavigate();
 
@@ -47,6 +48,9 @@ const AuthProvider = ({ children }) => {
       return { success: false, message: errorMessage };
     }
   };
+  const setEmailAction = (userEmail) => {
+    setSignupEmail(userEmail); // Function to set email
+  };
 
   const logOut = () => {
     setUser(null);
@@ -66,7 +70,9 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, loginAction, logOut }}>
+    <AuthContext.Provider
+      value={{ user, token, loginAction, logOut, signupEmail, setEmailAction }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -6,59 +6,118 @@ import TwobyTwoLogo from "../../assets/icons/TwobyTwoLogo.svg";
 import { FiPaperclip } from "react-icons/fi";
 import { LuInfo } from "react-icons/lu";
 import CheckmarkAnimation from "../../assets/animations/checkmark.gif";
-import axiosInstance from "../../utils/axiosInstance";
+import axios from "axios";
+import { useAuth } from "../../context/AuthProvider";
 
 const UserDetail = () => {
+  const { signupEmail } = useAuth();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [profileImage, setProfileImage] = useState(null);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState("");
+  const [profileImage, setProfileImage] = useState("");
   const [formData, setFormData] = useState({
-    firstName: '',
+    email: signupEmail || "",
+    firstName: "",
     lastName: "",
-    mobileNumber: "",
+    phone: "",
     dob: "",
-    origination: "",
-    addressLine1: "",
+    address: "",
     state: "",
     city: "",
     zipCode: "",
     gender: "",
     password: "",
     confirmPassword: "",
-    registerAs: "",
+    role: "",
+    imageUrl: "",
   });
+  const [error, setError] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfileImage(URL.createObjectURL(file));
-    }
+  // Handle Input Changes
+  const formatDateForInput = (isoDate) => {
+    if (!isoDate) return ""; // Handle empty date
+    const date = new Date(isoDate);
+    return date.toISOString().split("T")[0]; // Extract yyyy-MM-dd
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value, // Store dob directly in yyyy-MM-dd format
+    }));
+  };
+
+  // Handle Image Upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+      setFormData((prev) => ({ ...prev, imageUrl: file.name })); // Replace with actual upload logic
+    }
+  };
+
+  // Form Validation
+  const validateStep1 = () => {
+    const { firstName, lastName, phone, dob } = formData;
+    const errors = {};
+    if (!firstName) errors.firstName = "First Name is required.";
+    if (!lastName) errors.lastName = "Last Name is required.";
+    if (!phone || isNaN(phone))
+      errors.phone = "Valid phone number is required.";
+    if (!dob) errors.dob = "Date of Birth is required.";
+    return errors;
+  };
+
+  const validateStep2 = () => {
+    const { address, state, city, zipCode, password, confirmPassword } =
+      formData;
+    const errors = {};
+    if (!address) errors.address = "Address is required.";
+    if (!state) errors.state = "State is required.";
+    if (!city) errors.city = "City is required.";
+    if (!zipCode || isNaN(zipCode))
+      errors.zipCode = "Valid Zip Code is required.";
+    if (!password) errors.password = "Password is required.";
+    if (password !== confirmPassword)
+      errors.confirmPassword = "Passwords must match.";
+    return errors;
   };
 
   const handleSubmitStep1 = (e) => {
     e.preventDefault();
-    setCurrentStep(2); // Move to ProfilePage2
+    const validationErrors = validateStep1();
+    if (Object.keys(validationErrors).length > 0) {
+      setError(validationErrors);
+    } else {
+      setError({});
+      setCurrentStep(2); // Proceed to Step 2
+    }
   };
 
   const handleSubmitStep2 = async (e) => {
     e.preventDefault();
+    const validationErrors = validateStep2();
+    if (Object.keys(validationErrors).length > 0) {
+      setError(validationErrors);
+      return;
+    }
+
     setIsLoading(true);
+    setError({});
     try {
-      await axiosInstance.post("/users/signup", formData);
+      const { confirmPassword, dob, ...dataToSubmit } = formData;
+      dataToSubmit.dob = new Date(dob).toISOString(); // Convert dob to ISO format
+
+      await axios.post(
+        "https://network-next-backend.onrender.com/api/network-next/v1/users/signup",
+        dataToSubmit
+      );
       setShowPopup(true); // Show confirmation popup
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        "Failed to complete signup. Please try again.";
-      setError(errorMessage);
+    } catch (err) {
+      setError({ global: "Failed to complete signup. Please try again.", err });
     } finally {
       setIsLoading(false);
     }
@@ -66,30 +125,23 @@ const UserDetail = () => {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    navigate("/dashboard"); // Redirect after closing the popup
+    navigate("/login");
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
       {/* Top Bar */}
-      <div className="flex items-center justify-between w-full px-6 py-4 mx-auto">
+      <div className="flex items-center justify-between w-full px-6 py-4">
         <button onClick={() => navigate("/")} className="p-2 flex items-center">
-          <img
-            className="font-extrabold text-2xl leading-tight tracking-wide"
-            src={NetworkNextLogo}
-            alt="NetworkNext"
-          />
+          <img src={NetworkNextLogo} alt="NetworkNext" className="h-6" />
         </button>
         <button onClick={() => navigate("/")} className="p-2">
           <span className="text-2xl font-semibold">✕</span>
         </button>
       </div>
 
-      {/* Profile Form Section */}
-      <div
-        className="bg-[#F1F1F1] w-full  max-w-lg mx-auto p-8 rounded-xl shadow-md flex flex-col"
-        style={{ borderRadius: "16px" }}
-      >
+      {/* Form Section */}
+      <div className="bg-[#F1F1F1] w-full max-w-lg p-8 rounded-xl shadow-md">
         {currentStep === 1 ? (
           <>
             {/* ProfilePage1 */}
@@ -135,7 +187,7 @@ const UserDetail = () => {
                 placeholder="First Name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
+                className={`w-full px-4 py-3 border rounded-lg ${error.firstName ? "border-red-500" : "border-gray-300"}`}
               />
               <input
                 name="lastName"
@@ -143,35 +195,38 @@ const UserDetail = () => {
                 placeholder="Last Name"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
+                className={`w-full px-4 py-3 border rounded-lg ${error.lastName ? "border-red-500" : "border-gray-300"}`}
               />
               <input
-                name="mobileNumber"
+                name="phone"
                 type="text"
                 placeholder="Mobile Number"
-                value={formData.mobileNumber}
+                value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
+                className={`w-full px-4 py-3 border rounded-lg ${error.phone ? "border-red-500" : "border-gray-300"}`}
               />
               <input
-                name="dateOfBirth"
+                name="dob"
                 type="date"
                 placeholder="Date of Birth"
-                value={formData.dateOfBirth}
+                value={formatDateForInput(formData.dob)} // Format dob for input display
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.dob ? "border-red-500" : "border-gray-300"
+                }`}
               />
+
               <select
                 name="origination"
-                value={formData.origination}
+                value={formData.organization}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9] text-base lg:text-lg text-[#000000] placeholder-gray-400"
+                className={`w-full px-4 py-3 border rounded-lg ${error.organization ? "border-red-500" : "border-gray-300"}`}
               >
-                <option value="" disabled>
+                <option value="option1" disabled>
                   Select Origination
                 </option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
+                <option value="option1">Gujarat Technical University</option>
+                <option value="option2">OP Jindal University</option>
               </select>
               <div className="flex justify-end mt-6">
                 <button
@@ -194,33 +249,33 @@ const UserDetail = () => {
             </div>
             <form onSubmit={handleSubmitStep2} className="space-y-5">
               <input
-                name="addressLine1"
+                name="address"
                 type="text"
                 placeholder="Address Line 1"
-                value={formData.addressLine1}
+                value={formData.address}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9]"
+                className={`w-full px-4 py-3 border rounded-lg ${error.address ? "border-red-500" : "border-gray-300"}`}
               />
               <select
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9]"
+                className={`w-full px-4 py-3 border rounded-lg ${error.state ? "border-red-500" : "border-gray-300"}`}
               >
                 <option value="" disabled>
                   State
                 </option>
-                <option value="State1">State1</option>
-                <option value="State2">State2</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
               </select>
-              <div className="flex">
+              <div className="flex justify-between gap-4">
                 <input
                   name="city"
                   type="text"
                   placeholder="City"
                   value={formData.city}
                   onChange={handleChange}
-                  className="flex-1 px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9]"
+                  className={`w-full px-4 py-3 border rounded-lg ${error.city ? "border-red-500" : "border-gray-300"}`}
                 />
                 <input
                   name="zipCode"
@@ -228,7 +283,7 @@ const UserDetail = () => {
                   placeholder="Zip Code"
                   value={formData.zipCode}
                   onChange={handleChange}
-                  className="flex-1 px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9]"
+                  className={`w-full px-4 py-3 border rounded-lg ${error.zipCode ? "border-red-500" : "border-gray-300"}`}
                 />
               </div>
               <div className="text-lg font-bold">Gender</div>
@@ -237,8 +292,8 @@ const UserDetail = () => {
                   <input
                     type="radio"
                     name="gender"
-                    value="Male"
-                    checked={formData.gender === "Male"}
+                    value="male"
+                    checked={formData.gender === "male"}
                     onChange={handleChange}
                   />
                   <span className="ml-2">Male</span>
@@ -247,8 +302,8 @@ const UserDetail = () => {
                   <input
                     type="radio"
                     name="gender"
-                    value="Female"
-                    checked={formData.gender === "Female"}
+                    value="female"
+                    checked={formData.gender === "female"}
                     onChange={handleChange}
                   />
                   <span className="ml-2">Female</span>
@@ -260,7 +315,7 @@ const UserDetail = () => {
                 placeholder="Enter Password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9]"
+                className={`w-full px-4 py-3 border rounded-lg ${error.password ? "border-red-500" : "border-gray-300"}`}
               />
               <input
                 name="confirmPassword"
@@ -268,16 +323,16 @@ const UserDetail = () => {
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-[#EEEEEE] rounded-lg bg-[#FBF8F9]"
+                className={`w-full px-4 py-3 border rounded-lg ${error.confirmPassword ? "border-red-500" : "border-gray-300"}`}
               />
               <div className="text-lg font-bold">Register as</div>
               <div className="flex gap-6">
                 <label>
                   <input
                     type="radio"
-                    name="registerAs"
-                    value="Student"
-                    checked={formData.registerAs === "Student"}
+                    name="role"
+                    value="student"
+                    checked={formData.role === "student"}
                     onChange={handleChange}
                   />
                   <span className="ml-2">Student</span>
@@ -285,9 +340,9 @@ const UserDetail = () => {
                 <label>
                   <input
                     type="radio"
-                    name="registerAs"
-                    value="Alumni"
-                    checked={formData.registerAs === "Alumni"}
+                    name="role"
+                    value="alumni"
+                    checked={formData.role === "alumni"}
                     onChange={handleChange}
                   />
                   <span className="ml-2">Alumni</span>
@@ -295,9 +350,9 @@ const UserDetail = () => {
                 <label>
                   <input
                     type="radio"
-                    name="registerAs"
-                    value="Faculty"
-                    checked={formData.registerAs === "Faculty"}
+                    name="role"
+                    value="faculty"
+                    checked={formData.role === "faculty"}
                     onChange={handleChange}
                   />
                   <span className="ml-2">Faculty</span>
@@ -318,8 +373,9 @@ const UserDetail = () => {
                 <button
                   type="submit"
                   className="bg-black text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                  disabled={isLoading}
                 >
-                  Done
+                  {isLoading ? "Loading..." : "Done"}
                 </button>
               </div>
             </form>
