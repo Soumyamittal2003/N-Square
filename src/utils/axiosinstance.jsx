@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://network-next-backend.onrender.com/api/network-next/v1", // Your base URL
+  baseURL: "https://n-square.onrender.com/api/network-next/v1", // Your base URL
   headers: {
     "Content-Type": "application/json",
   },
