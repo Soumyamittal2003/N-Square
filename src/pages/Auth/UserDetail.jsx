@@ -15,7 +15,7 @@ const UserDetail = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState("");
   const [formData, setFormData] = useState({
-    firstName: "",
+    firstName: '',
     lastName: "",
     mobileNumber: "",
     dob: "",
