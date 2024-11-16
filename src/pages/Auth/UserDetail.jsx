@@ -112,7 +112,7 @@ const UserDetail = () => {
       dataToSubmit.dob = new Date(dob).toISOString(); // Convert dob to ISO format
 
       await axios.post(
-        "https://network-next-backend.onrender.com/api/network-next/v1/users/signup",
+        " https://n-square.onrender.com/api/network-next/v1/users/signup",
         dataToSubmit
       );
       setShowPopup(true); // Show confirmation popup
