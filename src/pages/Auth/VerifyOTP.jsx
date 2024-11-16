@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosinstance.jsx";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import { useAuth } from "../../context/AuthProvider";
