@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosinstance.jsx";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
@@ -9,7 +9,7 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [email, setEmail] = useState("");
+  const [isForgotPassword, setIsForgotPassword] = useState("");
   const [emailError, setEmailError] = useState("");
 
   const handleFormSubmit = async (e) => {
@@ -20,9 +20,9 @@ const ForgotPassword = () => {
 
     try {
       // Send email to the backend to generate OTP
-      await axiosInstance.post("/otp/send", { email });
-      navigate("/verify-otp", { state: { email } }); // Navigate to Verify OTP page with email
-      setEmail(""); // Reset email field
+      await axiosInstance.post("/otp/send", { isForgotPassword });
+      navigate("/verify-otp", { state: { isForgotPassword } }); // Navigate to Verify OTP page with email
+      setIsForgotPassword;
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
@@ -62,8 +62,8 @@ const ForgotPassword = () => {
             <input
               type="email"
               name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={isForgotPassword}
+              onChange={(e) => setIsForgotPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
               placeholder="Enter your email"
               required

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import JobCard from './JobCard';
+import { useState } from "react";
+import JobCard from "./JobCard";
 
 const JobContent = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -12,8 +12,10 @@ const JobContent = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`text-sm px-4 py-2 rounded-full font-semibold ${
-              activeTab === tab ? "text-black font-bold" : "text-gray-500"
+            className={`px-4 py-2 rounded-full font-semibold ${
+              activeTab === tab
+                ? "text-black font-bold bg-gray-200"
+                : "text-gray-500"
             }`}
           >
             {tab}
