@@ -1,81 +1,72 @@
-// src/pages/LoginPage.js
 import { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import { authValidationSchema } from "../../utils/ValidationSchema";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "./SocialLoginBottons";
 import CheckmarkAnimation from "../../assets/animations/checkmark.gif"; // Import GIF animation
-// import CheckmarkAnimation from "../../assets/animations/checkmark.mp4"; // Import MP4 animation if preferred
+import { useAuth } from "../../context/AuthProvider";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // State for popup visibility
+  const [rememberMe, setRememberMe] = useState(false); // Track Remember Me
+  const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState("");
+  const [showPopup, setShowPopup] = useState(false); // Popup state
+  const navigate = useNavigate();
+  const auth = useAuth();
 
-  // CSS for checkmark animation
-  const checkmarkStyle = `
-    @keyframes draw {
-      0% {
-        stroke-dasharray: 0, 50;
-      }
-      100% {
-        stroke-dasharray: 50, 0;
-      }
+  // Validate fields
+  const validateFields = () => {
+    const errors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email) {
+      errors.email = "Email is required.";
+    } else if (!emailRegex.test(email)) {
+      errors.email = "Invalid email format.";
     }
-  `;
 
+    if (!password) {
+      errors.password = "Password is required.";
+    } else if (password.length < 6) {
+      errors.password = "Password must be at least 6 characters long.";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Form submission handler
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setTimeout(() => {
-      setShowPopup(true); // Show popup after login
-    }, 1000);
-    setIsLoading(true);
-    setError(null);
-    setEmailError("");
-    setPasswordError("");
+    if (!validateFields()) return;
 
-    // Manual validation
     try {
-      const isValid = await authValidationSchema.isValid({ email, password });
-      if (!isValid) {
-        if (!authValidationSchema.fields.email.isValidSync(email)) {
-          setEmailError("Please enter a valid email.");
-        }
-        if (!authValidationSchema.fields.password.isValidSync(password)) {
-          setPasswordError("Password is required.");
-        }
-        return;
-      }
+      const loginData = { email, password };
+      const response = await auth.loginAction(loginData, rememberMe);
 
-      // Simulate login logic and show popup
-      setEmail("");
-      setPassword("");
-    } catch (error) {
-      console.error("Login error:", error);
-      setError("An error occurred");
-    } finally {
-      setIsLoading(false);
+      if (response.success) {
+        setShowPopup(true); // Show popup on successful login
+      } else {
+        setServerError(response.message);
+      }
+    } catch (err) {
+      setServerError("An unexpected error occurred. Please try again.");
+      console.error(err);
     }
   };
 
+  // Handle popup close and navigate to dashboard
   const handleClosePopup = () => {
     setShowPopup(false);
-    navigate("/dashboard"); // Navigate after closing popup
+    navigate("/dashboard"); // Navigate to dashboard after closing popup
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
-      <style>{checkmarkStyle}</style> {/* Insert animation CSS */}
       <div className="flex items-center justify-between w-full px-6 py-4 mx-auto">
         <Link to="/">
           <img src={NetworkNext} alt="Network Next" className="h-5" />
@@ -92,12 +83,6 @@ const LoginPage = () => {
           <h1 className="text-xl font-semibold">Log in using email</h1>
         </div>
 
-        {error && (
-          <div className="w-full bg-red-500 text-white text-center p-2 rounded mb-4">
-            {error}
-          </div>
-        )}
-
         <form onSubmit={handleFormSubmit} className="w-full space-y-6">
           <div>
             <label className="block text-sm font-semibold mb-2">Email</label>
@@ -106,11 +91,13 @@ const LoginPage = () => {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
+              className={`w-full px-4 py-2 border ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              } rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none`}
               placeholder="Enter your email"
             />
-            {emailError && (
-              <div className="text-red-500 text-xs mt-1">{emailError}</div>
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email}</p>
             )}
           </div>
 
@@ -122,7 +109,9 @@ const LoginPage = () => {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 pr-10 focus:ring-1 focus:ring-gray-600 focus:outline-none"
+                className={`w-full px-4 py-2 border ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } rounded-lg text-black placeholder-gray-400 pr-10 focus:ring-1 focus:ring-gray-600 focus:outline-none`}
                 placeholder="Enter your password"
               />
               <button
@@ -137,8 +126,8 @@ const LoginPage = () => {
                 )}
               </button>
             </div>
-            {passwordError && (
-              <div className="text-red-500 text-xs mt-1">{passwordError}</div>
+            {errors.password && (
+              <p className="text-sm text-red-500">{errors.password}</p>
             )}
             <Link
               to="/forgot-password"
@@ -147,14 +136,6 @@ const LoginPage = () => {
               Forgot Password?
             </Link>
           </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
-          >
-            {isLoading ? "Logging in..." : "Log In"}
-          </button>
 
           <div className="flex items-center mt-1">
             <input
@@ -166,6 +147,17 @@ const LoginPage = () => {
             />
             <span className="ml-2 text-sm text-gray-600">Remember me</span>
           </div>
+
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+          >
+            Log In
+          </button>
+
+          {serverError && (
+            <p className="text-center text-red-500 mt-4">{serverError}</p>
+          )}
         </form>
 
         <div className="flex w-full items-center my-4">
@@ -190,28 +182,30 @@ const LoginPage = () => {
           </>
         </div>
       </div>
+
       {/* Popup Modal */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg shadow-md w-[400px] h-[450px] p-8 flex flex-col items-center justify-end relative">
+          <div className="bg-white rounded-lg shadow-md w-[400px] h-[450px] p-8 flex flex-col items-center justify-center relative">
             <button
               onClick={handleClosePopup}
               className="absolute top-2 right-2 text-gray-600 text-xl"
             >
               ✕
             </button>
-            {/* Checkmark Animation (GIF or MP4) */}
-            <div className="w-36 h-36 mb-4 mt-4">
-              <img src={CheckmarkAnimation} alt="Checkmark Animation" />{" "}
-              {/* For GIF */}
-              {/* Or use <video src={CheckmarkAnimation} autoPlay loop muted className="w-16 h-16" /> for MP4 */}
+            {/* Checkmark Animation GIF */}
+            <div className="w-36 h-36 mb-6">
+              <img
+                src={CheckmarkAnimation}
+                alt="Checkmark Animation"
+                className="w-full h-full"
+              />
             </div>
             <h2 className="text-xl font-semibold mb-4 text-center">
-              Thank You!
+              Welcome Back!
             </h2>
             <p className="text-center text-gray-600 text-sm mb-8">
-              Thank you for registering with Network_Next. Our team will verify
-              your account.
+              Login successful. Redirecting to your dashboard.
             </p>
             <button
               onClick={handleClosePopup}

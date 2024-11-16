@@ -1,8 +1,7 @@
-// src/pages/ForgotPasswordPage.js
 import { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import { authValidationSchema } from "../../utils/ValidationSchema";
+import axiosInstance from "../../utils/axiosInstance";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
@@ -15,25 +14,20 @@ const ForgotPassword = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    navigate("/verify-otp");
     setIsLoading(true);
     setError(null);
     setEmailError("");
 
     try {
-      // Validate email manually
-      const isValid = await authValidationSchema.isValid({ email });
-      if (!isValid) {
-        setEmailError("Please enter a valid email.");
-        return;
-      }
-
-      // Navigate to password reset verification page
-      navigate("/reset-password", { state: { email } });
+      // Send email to the backend to generate OTP
+      await axiosInstance.post("/otp/send", { email });
+      navigate("/verify-otp", { state: { email } }); // Navigate to Verify OTP page with email
       setEmail(""); // Reset email field
     } catch (error) {
-      console.error("Password reset error:", error);
-      setError("An error occurred");
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to send OTP. Please try again.";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -72,6 +66,7 @@ const ForgotPassword = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
               placeholder="Enter your email"
+              required
             />
             {emailError && (
               <div className="text-red-500 text-xs mt-1">{emailError}</div>
@@ -94,24 +89,6 @@ const ForgotPassword = () => {
           >
             Back to Login
           </Link>
-        </div>
-      </div>
-
-      <div className="w-1/2 mx-auto px-6">
-        {/* Divider Line */}
-        <div className="border-t border-gray-300 my-2"></div>
-
-        {/* Footer Text */}
-        <div className="text-center text-gray-600 text-sm mb-6">
-          <div>
-            Don’t have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-blue-600 font-medium hover:underline"
-            >
-              Sign Up
-            </Link>
-          </div>
         </div>
       </div>
     </div>

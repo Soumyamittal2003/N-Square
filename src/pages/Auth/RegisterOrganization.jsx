@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import { authValidationSchema } from "../../utils/ValidationSchema";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
@@ -21,11 +20,6 @@ const RegisterOrganization = () => {
 
     try {
       // Validate email manually
-      const isValid = await authValidationSchema.isValid({ email });
-      if (!isValid) {
-        setEmailError("Please enter a valid email.");
-        return;
-      }
 
       // Navigate to the verification page with email and organizationName
       navigate("/verify-otp", { state: { email, organizationName } });

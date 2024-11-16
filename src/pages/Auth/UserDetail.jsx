@@ -6,16 +6,19 @@ import TwobyTwoLogo from "../../assets/icons/TwobyTwoLogo.svg";
 import { FiPaperclip } from "react-icons/fi";
 import { LuInfo } from "react-icons/lu";
 import CheckmarkAnimation from "../../assets/animations/checkmark.gif";
+import axiosInstance from "../../utils/axiosInstance";
 
 const UserDetail = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [profileImage, setProfileImage] = useState(null);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     mobileNumber: "",
-    dateOfBirth: "",
+    dob: "",
     origination: "",
     addressLine1: "",
     state: "",
@@ -45,10 +48,20 @@ const UserDetail = () => {
     setCurrentStep(2); // Move to ProfilePage2
   };
 
-  const handleSubmitStep2 = (e) => {
+  const handleSubmitStep2 = async (e) => {
     e.preventDefault();
-    console.log("Final Profile Data:", formData);
-    setShowPopup(true); // Show the popup after completing step 2
+    setIsLoading(true);
+    try {
+      await axiosInstance.post("/users/signup", formData);
+      setShowPopup(true); // Show confirmation popup
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to complete signup. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClosePopup = () => {

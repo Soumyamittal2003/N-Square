@@ -10,12 +10,15 @@ import {
   Dashboard,
 } from "./pages/index";
 import AuthProvider from "./context/AuthProvider";
+import PrivateRoute from "./utils/PrivateRoute";
+import { UserProvider } from "./context/UserProvider";
 
 function App() {
   return (
     <div className="font-sans">
       <AuthProvider>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -26,7 +29,20 @@ function App() {
           />
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/user-detail" element={<UserDetail />} />
-          <Route path="/dashboard/*" element={<Dashboard />} />
+
+          {/* Private Routes */}
+          <Route
+            path="/dashboard/*"
+            element={
+              <PrivateRoute>
+                <UserProvider>
+                  <Dashboard />
+                </UserProvider>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Fallback Route */}
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </AuthProvider>

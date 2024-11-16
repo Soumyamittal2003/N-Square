@@ -1,44 +1,72 @@
-import { useContext, createContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("site") || "");
+  const [user, setUser] = useState(() => {
+    const storedUser =
+      sessionStorage.getItem("user") || localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  const [token, setToken] = useState(() => {
+    return sessionStorage.getItem("token") || localStorage.getItem("token");
+  });
+
   const navigate = useNavigate();
-  const loginAction = async (data) => {
+
+  const loginAction = async (loginData, rememberMe) => {
     try {
-      const response = await fetch("your-api-endpoint/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const res = await response.json();
-      if (res.data) {
-        setUser(res.data.user);
-        setToken(res.token);
-        localStorage.setItem("site", res.token);
-        navigate("/dashboard");
-        return;
+      const response = await axiosInstance.post("/users/login", loginData);
+      const { user: userData, token: userToken } = response.data;
+
+      setToken(userToken); // Set token in state
+      setUser(userData); // Set user data in state
+
+      const storage = rememberMe ? localStorage : sessionStorage;
+
+      // Store token and user data
+      storage.setItem("token", userToken);
+      storage.setItem("user", JSON.stringify(userData));
+
+      if (rememberMe) {
+        const expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + 20); // Token expiry for "Remember Me"
+        localStorage.setItem("tokenExpiry", expiryDate.toISOString());
+      } else {
+        sessionStorage.removeItem("tokenExpiry"); // Clear expiry for session-only login
       }
-      throw new Error(res.message);
-    } catch (err) {
-      console.error(err);
+
+      return { success: true };
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Login failed. Please try again.";
+      console.error("Login error:", errorMessage);
+      return { success: false, message: errorMessage };
     }
   };
 
   const logOut = () => {
     setUser(null);
-    setToken("");
-    localStorage.removeItem("site");
+    setToken(null);
+    sessionStorage.clear();
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpiry");
     navigate("/login");
   };
 
+  useEffect(() => {
+    const expiry = localStorage.getItem("tokenExpiry");
+    if (expiry && new Date(expiry) <= new Date()) {
+      logOut(); // Logout if token has expired
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
+    <AuthContext.Provider value={{ user, token, loginAction, logOut }}>
       {children}
     </AuthContext.Provider>
   );
@@ -46,6 +74,4 @@ const AuthProvider = ({ children }) => {
 
 export default AuthProvider;
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

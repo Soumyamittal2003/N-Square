@@ -1,8 +1,7 @@
-// src/pages/SignupPage.js
 import { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import { authValidationSchema } from "../../utils/ValidationSchema";
+import axiosInstance from "../../utils/axiosInstance";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "./SocialLoginBottons";
@@ -12,29 +11,21 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    setEmailError("");
-    navigate("/verify-otp");
 
     try {
-      // Validate email manually
-      const isValid = await authValidationSchema.isValid({ email });
-      if (!isValid) {
-        setEmailError("Please enter a valid email.");
-        return;
-      }
-
-      // Navigate to OTP verification page with email state
-      navigate("/verify-otp", { state: { email } });
-      setEmail(""); // Reset email field
+      // Send email to the OTP generation endpoint
+      await axiosInstance.post("/otp/send", { email });
+      navigate("/verify-otp", { state: { email } }); // Redirect to Verify OTP page with email
     } catch (error) {
-      console.error("Signup error:", error);
-      setError("An error occurred");
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to send OTP. Please try again.";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -42,6 +33,7 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
+      {/* Top Navigation Bar */}
       <div className="flex items-center justify-between w-full px-6 py-4 mx-auto">
         <Link to="/">
           <img src={NetworkNext} alt="Network Next" className="h-5" />
@@ -51,6 +43,7 @@ const Signup = () => {
         </button>
       </div>
 
+      {/* Signup Form */}
       <div className="w-full max-w-lg flex flex-col items-center flex-grow px-6 pt-4 pb-8">
         <div className="text-center mb-8">
           <img src={Nsquare} alt="Logo" className="w-20 h-20 mx-auto mb-4" />
@@ -73,10 +66,8 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
               placeholder="Enter your email"
+              required
             />
-            {emailError && (
-              <div className="text-red-500 text-xs mt-1">{emailError}</div>
-            )}
           </div>
 
           <button
@@ -96,29 +87,26 @@ const Signup = () => {
 
         <SocialLoginButtons />
       </div>
-      <div className="w-1/2  mx-auto px-6">
-        {/* Divider Line */}
-        <div className="border-t border-gray-300 my-2"></div>
 
-        {/* Footer Text */}
+      {/* Footer Links */}
+      <div className="w-1/2 mx-auto px-6">
+        <div className="border-t border-gray-300 my-2"></div>
         <div className="text-center text-gray-600 text-sm mb-6">
-          <>
+          <Link
+            to="/register-organization"
+            className="text-blue-600 font-medium hover:underline"
+          >
+            Register Your Organization
+          </Link>
+          <div>
+            Already have an account?{" "}
             <Link
-              to="/register-organization"
+              to="/login"
               className="text-blue-600 font-medium hover:underline"
             >
-              Register Your Origination
+              Log In
             </Link>
-            <div>
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-blue-600 font-medium hover:underline"
-              >
-                Log In
-              </Link>
-            </div>
-          </>
+          </div>
         </div>
       </div>
     </div>
