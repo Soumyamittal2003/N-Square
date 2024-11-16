@@ -5,7 +5,7 @@ import jobImage from "../../../assets/icons/job-image.svg";
 
 const JobCard = () => {
   return (
-    <div className="w-[300px] border border-gray-300 rounded-lg shadow-sm bg-white p-4">
+    <div className="w-[350px] border border-gray-300 rounded-lg shadow-lg bg-white p-4">
       {/* Job Image with Badge */}
       <div className="relative">
         <img
@@ -27,23 +27,25 @@ const JobCard = () => {
           since the 1500s.
         </p>
         <p className="text-xs text-gray-500 mt-2">
-          Posted By - <span className="font-semibold">Aadarsh</span>
+          Posted By - <span className="self-end leading-none">Aadarsh</span>
         </p>
       </div>
 
-      {/* Apply Button */}
-      <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 text-sm font-medium">
-        Apply
-      </button>
+      <div className="flex gap-5 justify-between items-start self-center mt-2 w-full">
+        <button className="overflow-hidden gap-2.5 self-stretch px-5 py-1.5 text-xs font-bold tracking-normal leading-none text-white whitespace-nowrap bg-blue-600 rounded-xl">
+          Apply
+        </button>
+      
 
       {/* Interaction Icons */}
-      <div className="flex justify-between items-center mt-4 text-gray-400 text-lg">
-        <button className="hover:text-gray-600">
-          <img src={shareArrow} alt="Share" className="w-5 h-5" />
+      <div className="flex gap-4 items-center">
+        <button className="flex gap-1.5 items-start self-stretch py-1.5 my-auto w-[18px]">
+          <img src={shareArrow} alt="Share" className="object-contain rounded-sm aspect-square w-[18px]" />
         </button>
-        <button className="hover:text-gray-600">
-          <img src={bookmark} alt="Bookmark" className="w-5 h-5" />
+        <button className="flex gap-2.5 items-start self-stretch py-1.5 my-auto w-[15px]">
+          <img src={bookmark} alt="Bookmark" className="object-contain rounded-none aspect-[0.83] w-[15px]" />
         </button>
+      </div>
       </div>
     </div>
   );
