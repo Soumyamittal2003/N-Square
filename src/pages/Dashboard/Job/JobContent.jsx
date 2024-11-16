@@ -6,9 +6,8 @@ const JobContent = () => {
   const tabs = ["All", "Alumni", "Faculty"];
 
   return (
-    <div className="p-4">
-      {/* Tab Navigation */}
-      <div className="flex justify-around border border-gray-300 bg-white rounded-lg shadow-md p-2 mb-4">
+    <div className="w-90%">
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4 ">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -25,11 +24,17 @@ const JobContent = () => {
       </div>
 
       {/* Scrollable Job Cards Section */}
-      <div className="flex space-x-4  p-4">
-        {Array.from({ length: 3 }).map((_, index) => (
+      <div className="flex space-x-10  p-4">
+        {Array.from({ length: 3}).map((_, index) => (
           <JobCard key={index} />
         ))}
       </div>
+      <div className="flex space-x-10  p-4">
+        {Array.from({ length: 3}).map((_, index) => (
+          <JobCard key={index} />
+        ))}
+      </div>
+      
     </div>
   );
 };
