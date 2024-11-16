@@ -9,8 +9,6 @@ import { useUser } from "../../../context/UserProvider";
 
 const Sidebar = () => {
   const { userData } = useUser();
-  console.log(userData);
-
   return (
     <div className="min-w-[300px] mx-16 mt-2 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
       {/* Profile Info Section */}
