@@ -1,26 +1,30 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosinstance.jsx";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "./SocialLoginBottons";
+import { useAuth } from "../../context/AuthProvider";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { setEmailAction } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setEmailAction(email);
     setIsLoading(true);
     setError(null);
 
     try {
       // Send email to the OTP generation endpoint
+
       await axiosInstance.post("/otp/send", { email });
-      navigate("/verify-otp", { state: { email } }); // Redirect to Verify OTP page with email
+      navigate("/verify-otp"); // Redirect to Verify OTP page with email
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
