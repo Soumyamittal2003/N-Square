@@ -24,7 +24,7 @@ const JobContent = () => {
 
       {/* Scrollable Job Cards Section */}
       <div className="flex space-x-4  p-4">
-        {Array.from({ length: 6 }).map((_, index) => (
+        {Array.from({ length: 3 }).map((_, index) => (
           <JobCard key={index} />
         ))}
       </div>
