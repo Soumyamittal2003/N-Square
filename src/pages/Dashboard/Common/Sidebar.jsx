@@ -10,9 +10,11 @@ import { useUser } from "../../../context/UserProvider";
 const Sidebar = () => {
   const { userData } = useUser();
   return (
-    <div className="min-w-[300px] mx-16 mt-2 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+    <div className="min-w-[275px] mx-12 mt-2 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
       {/* Profile Info Section */}
-      <ProfileSection userData={userData} />
+      <Link to={"/dashboard/profile"}>
+        <ProfileSection userData={userData} />
+      </Link>
       {/* Navigation Items */}
       <nav className="mt-6 flex-grow px-4">
         <Link to="/dashboard/connection">
@@ -47,7 +49,7 @@ const ProfileSection = ({ userData }) => (
   <div className="relative">
     <img
       alt="University background"
-      className="w-full h-60 object-fill"
+      className="w-full h-52 object-fill"
       src="https://storage.googleapis.com/a1aa/image/LcbznUrFRYKSAFXkFduaNiGQ8RmxRaCLgYXYhLOulwHEOB8E.jpg"
     />
     <div className="absolute inset-x-0 top-4 flex justify-center">

@@ -1,4 +1,4 @@
-import PostCard from "./PostCard";
+import PostCard from "../Common/PostCard";
 import { useState } from "react";
 
 const HomeContent = () => {
@@ -36,7 +36,7 @@ const HomeContent = () => {
           </button>
         ))}
       </div>
-      <div className="w-full bg-[#ffffff] p-4  h-[calc(100vh-200px)] overflow-y-auto hide-scrollbar">
+      <div className="w-full bg-[#ffffff] p-4  h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
         <PostCard text={postText} images={postImages} />
         <PostCard text={postText} images={postImages} />
         <PostCard text={postText} images={postImages} />
