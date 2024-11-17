@@ -39,11 +39,11 @@ const UserProfile = () => {
   const handleImageChange = (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
+      const profileimageUrl = URL.createObjectURL(file);
       if (type === "profile") {
-        setProfileImage(imageUrl);
+        setProfileImage(profileimageUrl);
       } else {
-        setBannerImage(imageUrl);
+        setBannerImage(profileimageUrl);
       }
     }
   };

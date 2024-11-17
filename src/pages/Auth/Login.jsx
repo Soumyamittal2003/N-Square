@@ -15,6 +15,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [showPopup, setShowPopup] = useState(false); // Popup state
+  const [loading, setLoading] = useState(false); // Added loader state
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -44,6 +45,8 @@ const LoginPage = () => {
     e.preventDefault();
     if (!validateFields()) return;
 
+    setLoading(true); // Show loader before starting login process
+
     try {
       const loginData = { email, password };
       const response = await auth.loginAction(loginData, rememberMe);
@@ -56,6 +59,8 @@ const LoginPage = () => {
     } catch (err) {
       setServerError("An unexpected error occurred. Please try again.");
       console.error(err);
+    } finally {
+      setLoading(false); // Hide loader after processing
     }
   };
 
@@ -150,9 +155,12 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+            className={`w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading} // Disable button while loading
           >
-            Log In
+            {loading ? "Processing..." : "Log In"}
           </button>
 
           {serverError && (

@@ -28,7 +28,7 @@ const UserDetail = () => {
     password: "",
     confirmPassword: "",
     role: "",
-    imageUrl: "",
+    profileimageUrl: "",
   });
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -54,8 +54,11 @@ const UserDetail = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfileImage(URL.createObjectURL(file));
-      setFormData((prev) => ({ ...prev, imageUrl: file.name })); // Replace with actual upload logic
+      setProfileImage(URL.createObjectURL(file)); // For preview
+      setFormData((prev) => ({
+        ...prev,
+        profileimageUrl: file, // Store the actual File object
+      }));
     }
   };
 
@@ -107,14 +110,33 @@ const UserDetail = () => {
 
     setIsLoading(true);
     setError({});
+
     try {
       const { confirmPassword, dob, ...dataToSubmit } = formData;
       dataToSubmit.dob = new Date(dob).toISOString(); // Convert dob to ISO format
 
+      // Create FormData to send the image and other fields
+      const formDataToSend = new FormData();
+      Object.entries(dataToSubmit).forEach(([key, value]) => {
+        formDataToSend.append(key, value);
+      });
+
+      // Append the profile image file
+      if (formData.profileimageUrl) {
+        formDataToSend.append("profileimageUrl", formData.profileimageUrl);
+      }
+
+      // Make the API request with FormData
       await axios.post(
-        " https://n-square.onrender.com/api/network-next/v1/users/signup",
-        dataToSubmit
+        "http://localhost:5000/api/network-next/v1/users/signup",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Let axios handle the boundary
+          },
+        }
       );
+
       setShowPopup(true); // Show confirmation popup
     } catch (err) {
       setError({ global: "Failed to complete signup. Please try again.", err });
@@ -187,7 +209,9 @@ const UserDetail = () => {
                 placeholder="First Name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.firstName ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.firstName ? "border-red-500" : "border-gray-300"
+                }`}
               />
               <input
                 name="lastName"
@@ -195,7 +219,9 @@ const UserDetail = () => {
                 placeholder="Last Name"
                 value={formData.lastName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.lastName ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.lastName ? "border-red-500" : "border-gray-300"
+                }`}
               />
               <input
                 name="phone"
@@ -203,7 +229,9 @@ const UserDetail = () => {
                 placeholder="Mobile Number"
                 value={formData.phone}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.phone ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.phone ? "border-red-500" : "border-gray-300"
+                }`}
               />
               <input
                 name="dob"
@@ -215,19 +243,6 @@ const UserDetail = () => {
                   error.dob ? "border-red-500" : "border-gray-300"
                 }`}
               />
-
-              <select
-                name="origination"
-                value={formData.organization}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.organization ? "border-red-500" : "border-gray-300"}`}
-              >
-                <option value="option1" disabled>
-                  Select Origination
-                </option>
-                <option value="option1">Gujarat Technical University</option>
-                <option value="option2">OP Jindal University</option>
-              </select>
               <div className="flex justify-end mt-6">
                 <button
                   type="submit"
@@ -241,12 +256,6 @@ const UserDetail = () => {
         ) : (
           <>
             {/* ProfilePage2 */}
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-2xl lg:text-3xl font-bold text-[#000000]">
-                Profile
-              </h2>
-              <img src={TwobyTwoLogo} alt="2/2 completed" />
-            </div>
             <form onSubmit={handleSubmitStep2} className="space-y-5">
               <input
                 name="address"
@@ -254,114 +263,10 @@ const UserDetail = () => {
                 placeholder="Address Line 1"
                 value={formData.address}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.address ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.address ? "border-red-500" : "border-gray-300"
+                }`}
               />
-              <select
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.state ? "border-red-500" : "border-gray-300"}`}
-              >
-                <option value="" disabled>
-                  State
-                </option>
-                <option value="Gujarat">Gujarat</option>
-                <option value="Chhattisgarh">Chhattisgarh</option>
-              </select>
-              <div className="flex justify-between gap-4">
-                <input
-                  name="city"
-                  type="text"
-                  placeholder="City"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg ${error.city ? "border-red-500" : "border-gray-300"}`}
-                />
-                <input
-                  name="zipCode"
-                  type="text"
-                  placeholder="Zip Code"
-                  value={formData.zipCode}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg ${error.zipCode ? "border-red-500" : "border-gray-300"}`}
-                />
-              </div>
-              <div className="text-lg font-bold">Gender</div>
-              <div className="flex gap-5">
-                <label>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    checked={formData.gender === "male"}
-                    onChange={handleChange}
-                  />
-                  <span className="ml-2">Male</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    checked={formData.gender === "female"}
-                    onChange={handleChange}
-                  />
-                  <span className="ml-2">Female</span>
-                </label>
-              </div>
-              <input
-                name="password"
-                type="password"
-                placeholder="Enter Password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.password ? "border-red-500" : "border-gray-300"}`}
-              />
-              <input
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.confirmPassword ? "border-red-500" : "border-gray-300"}`}
-              />
-              <div className="text-lg font-bold">Register as</div>
-              <div className="flex gap-6">
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="student"
-                    checked={formData.role === "student"}
-                    onChange={handleChange}
-                  />
-                  <span className="ml-2">Student</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="alumni"
-                    checked={formData.role === "alumni"}
-                    onChange={handleChange}
-                  />
-                  <span className="ml-2">Alumni</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="faculty"
-                    checked={formData.role === "faculty"}
-                    onChange={handleChange}
-                  />
-                  <span className="ml-2">Faculty</span>
-                </label>
-              </div>
-              <div className="w-auto flex items-center h-4 text-neutral-400 text-xs font-normal">
-                <LuInfo className="mx-1" />
-                <span>All information will be recorded</span>
-              </div>
               <div className="flex justify-between mt-6">
                 <button
                   type="button"
@@ -391,11 +296,8 @@ const UserDetail = () => {
             >
               ✕
             </button>
-            {/* Checkmark Animation (GIF or MP4) */}
             <div className="w-36 h-36 mb-4 mt-4">
-              <img src={CheckmarkAnimation} alt="Checkmark Animation" />{" "}
-              {/* For GIF */}
-              {/* Or use <video src={CheckmarkAnimation} autoPlay loop muted className="w-16 h-16" /> for MP4 */}
+              <img src={CheckmarkAnimation} alt="Checkmark Animation" />
             </div>
             <h2 className="text-xl font-semibold mb-4 text-center">
               Thank You!
