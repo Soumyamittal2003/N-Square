@@ -1,13 +1,12 @@
-import Jobcontent from "./JobContent";
-
-const Job = () => {
+import JobContent from "./JobContent";
+const Home = () => {
   return (
     <>
       <div className="flex w-screen">
-        <Jobcontent />
+        <JobContent />
       </div>
     </>
   );
 };
 
-export default Job;
+export default Home;

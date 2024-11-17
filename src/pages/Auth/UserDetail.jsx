@@ -28,7 +28,7 @@ const UserDetail = () => {
     password: "",
     confirmPassword: "",
     role: "",
-    imageUrl: "",
+    profileimageUrl: "",
   });
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -54,8 +54,11 @@ const UserDetail = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfileImage(URL.createObjectURL(file));
-      setFormData((prev) => ({ ...prev, imageUrl: file.name })); // Replace with actual upload logic
+      setProfileImage(URL.createObjectURL(file)); // For preview
+      setFormData((prev) => ({
+        ...prev,
+        profileimageUrl: file, // Store the actual File object
+      }));
     }
   };
 
@@ -107,14 +110,33 @@ const UserDetail = () => {
 
     setIsLoading(true);
     setError({});
+
     try {
       const { confirmPassword, dob, ...dataToSubmit } = formData;
       dataToSubmit.dob = new Date(dob).toISOString(); // Convert dob to ISO format
 
+      // Create FormData to send the image and other fields
+      const formDataToSend = new FormData();
+      Object.entries(dataToSubmit).forEach(([key, value]) => {
+        formDataToSend.append(key, value);
+      });
+
+      // Append the profile image file
+      if (formData.profileimageUrl) {
+        formDataToSend.append("profileimageUrl", formData.profileimageUrl);
+      }
+
+      // Make the API request with FormData
       await axios.post(
-        " https://n-square.onrender.com/api/network-next/v1/users/signup",
-        dataToSubmit
+        "https://n-square.onrender.com/api/network-next/v1/users/signup",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Let axios handle the boundary
+          },
+        }
       );
+
       setShowPopup(true); // Show confirmation popup
     } catch (err) {
       setError({ global: "Failed to complete signup. Please try again.", err });
@@ -187,7 +209,9 @@ const UserDetail = () => {
                 placeholder="First Name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.firstName ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.firstName ? "border-red-500" : "border-gray-300"
+                }`}
               />
               <input
                 name="lastName"
@@ -195,7 +219,9 @@ const UserDetail = () => {
                 placeholder="Last Name"
                 value={formData.lastName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.lastName ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.lastName ? "border-red-500" : "border-gray-300"
+                }`}
               />
               <input
                 name="phone"
@@ -203,7 +229,9 @@ const UserDetail = () => {
                 placeholder="Mobile Number"
                 value={formData.phone}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.phone ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${
+                  error.phone ? "border-red-500" : "border-gray-300"
+                }`}
               />
               <input
                 name="dob"
@@ -215,7 +243,6 @@ const UserDetail = () => {
                   error.dob ? "border-red-500" : "border-gray-300"
                 }`}
               />
-
               <select
                 name="origination"
                 value={formData.organization}
@@ -391,11 +418,8 @@ const UserDetail = () => {
             >
               ✕
             </button>
-            {/* Checkmark Animation (GIF or MP4) */}
             <div className="w-36 h-36 mb-4 mt-4">
-              <img src={CheckmarkAnimation} alt="Checkmark Animation" />{" "}
-              {/* For GIF */}
-              {/* Or use <video src={CheckmarkAnimation} autoPlay loop muted className="w-16 h-16" /> for MP4 */}
+              <img src={CheckmarkAnimation} alt="Checkmark Animation" />
             </div>
             <h2 className="text-xl font-semibold mb-4 text-center">
               Thank You!
