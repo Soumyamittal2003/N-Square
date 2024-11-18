@@ -55,8 +55,8 @@ const LoginPage = () => {
           password,
         }),
         {
-          pending: "Logging in...",
-          success: "Login successful! Redirecting...",
+          pending: "Logging in",
+          success: "Login successful! Redirecting",
           error: {
             render({ data }) {
               // Access error data from the promise
@@ -173,7 +173,7 @@ const LoginPage = () => {
             }`}
             disabled={loading} // Disable button while loading
           >
-            {loading ? "Processing..." : "Log In"}
+            {loading ? "Wait" : "Log In"}
           </button>
         </form>
 
@@ -222,7 +222,7 @@ const LoginPage = () => {
               Welcome Back!
             </h2>
             <p className="text-center text-gray-600 text-sm mb-8">
-              Login successful. Redirecting to your dashboard.
+              Login successful. Go to your dashboard.
             </p>
             <button
               onClick={handleClosePopup}

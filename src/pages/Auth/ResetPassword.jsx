@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosinstance";
+import NetworkNext from "../../assets/icons/logo nsqaure 1.svg";
 
 const ResetPassword = () => {
   const { tempToken } = useParams(); // Extract token from the URL
@@ -36,9 +37,10 @@ const ResetPassword = () => {
     try {
       // Make API call to reset password with token
       await toast.promise(
-        axiosInstance.post("/reset-password/confirm", {
+        axiosInstance.post("/users/reset-password", {
           tempToken,
           password,
+          confirmPassword,
         }),
         {
           pending: "Resetting password...",
@@ -63,6 +65,9 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
+      <div className="flex items-center justify-center w-full py-4">
+        <img src={NetworkNext} alt="Network Next Logo" className="h-24" />
+      </div>
       {/* Top Bar */}
       <div className="w-full max-w-lg flex flex-col items-center px-6 pt-4 pb-8">
         <h1 className="text-xl font-semibold mb-6">Reset Your Password</h1>

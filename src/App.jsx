@@ -11,6 +11,7 @@ import {
   RegisterOrganization,
   Dashboard,
   ResetPassword,
+  Error404,
 } from "./pages/index";
 
 import PrivateRoute from "./utils/PrivateRoute";
@@ -54,7 +55,7 @@ function App() {
         />
 
         {/* Fallback Route */}
-        <Route path="*" element={<div>Page Not Found</div>} />
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </div>
   );

@@ -29,17 +29,20 @@ const ForgotPassword = () => {
 
     try {
       // Send email to the backend to generate OTP
-      await toast.promise(axiosInstance.post("/reset-password", { email }), {
-        pending: "Sending reset link",
-        success: "Reset link sent successfully. Please check your email.",
-        error: {
-          render({ data }) {
-            return (
-              data.response?.data?.message || "Failed to send the reset link."
-            );
+      await toast.promise(
+        axiosInstance.post("/users/reset-password-token", { email }),
+        {
+          pending: "Sending reset link",
+          success: "Reset link sent successfully. Please check your email.",
+          error: {
+            render({ data }) {
+              return (
+                data.response?.data?.message || "Failed to send the reset link."
+              );
+            },
           },
-        },
-      });
+        }
+      );
 
       navigate("/login"); // Redirect to the login page
     } catch (error) {
@@ -87,7 +90,7 @@ const ForgotPassword = () => {
             disabled={isLoading}
             className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
           >
-            {isLoading ? "Sending Reset Link" : "Next"}
+            {isLoading ? "Wait" : "Next"}
           </button>
         </form>
 
