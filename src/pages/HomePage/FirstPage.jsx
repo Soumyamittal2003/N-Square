@@ -4,7 +4,7 @@ import backgroundImage from '../../assets/images/graduationImage.png'; // Replac
 const FirstPage = () => {
   return (
     <div
-      className="h-[700px] bg-cover bg-center flex flex-col items-center justify-center text-center px-4"
+      className="h-[850px] bg-cover bg-center flex flex-col items-center justify-center text-center px-4 "
       style={{
         backgroundImage: `url(${backgroundImage})`,
       }}

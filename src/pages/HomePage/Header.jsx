@@ -4,19 +4,18 @@ import NetworkNext from "../../assets/icons/Network Next.svg";
 
 const Header = () => {
   return (
-    <header className="flex items-center justify-between px-4 py-2 border-b border-gray-200 shadow-lg">
+    <header className="fixed top-0 left-0 w-full flex items-center justify-between px-4 py-2 border-b border-gray-200 shadow-lg bg-white z-50">
       {/* Logo Section */}
       <div className="flex items-center">
-      <img src={NsquareLogo} alt="Network Next " className="w-15 h-15 " />
-        <img src={NetworkNext} alt="Network Next " className="px-4 w-15 h-15 " />
-        
+        <img src={NsquareLogo} alt="Nsquare Logo" className="w-15 h-15" />
+        <img src={NetworkNext} alt="Network Next" className="px-4 w-15 h-15" />
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex gap-10 space-x-5">
+      <nav className="items-center flex gap-20 space-x-5">
         <a
           href="#home"
-          className=" font-semibold text-gray-600 hover:text-black transition"
+          className="font-semibold text-gray-600 hover:text-black transition"
         >
           Home
         </a>
@@ -42,16 +41,16 @@ const Header = () => {
 
       {/* Buttons */}
       <div className="flex space-x-4">
-        <Link
-            to="/login">
-        <button className="px-6 py-2 rounded-full bg-black text-white font-semibold hover:bg-gray-800">
-          Log IN
-        </button></Link>
-        <Link
-            to="/signup">
-        <button className="px-5 py-2 rounded-full bg-black text-white font-semibold hover:bg-gray-800">
-          Sign UP
-        </button></Link>
+        <Link to="/login">
+          <button className="px-6 py-2 rounded-full bg-black text-white font-semibold hover:bg-gray-800">
+            Log IN
+          </button>
+        </Link>
+        <Link to="/signup">
+          <button className="px-5 py-2 rounded-full bg-black text-white font-semibold hover:bg-gray-800">
+            Sign UP
+          </button>
+        </Link>
       </div>
     </header>
   );
