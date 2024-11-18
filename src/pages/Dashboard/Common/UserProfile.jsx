@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/axiosinstance";
 import PostCard from "./PostCard";
 
@@ -44,7 +43,6 @@ const UserProfile = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        toast.error("Failed to fetch profile data.");
       }
     };
 
@@ -68,12 +66,7 @@ const UserProfile = () => {
             ? `/profile/updateProfileImage/${userId}`
             : `/profile/updateBackgroundImage/${userId}`;
 
-        await toast.promise(axiosInstance.patch(url, formData), {
-          pending: "Uploading image...",
-          success: "Image uploaded successfully!",
-          error: "Failed to upload image.",
-        });
-
+        await axiosInstance.patch(url, formData);
         const imagePreview = URL.createObjectURL(file);
         if (type === "profile") setProfileImage(imagePreview);
         else setBannerImage(imagePreview);
@@ -96,14 +89,7 @@ const UserProfile = () => {
         tagline: profileInfo.tagline,
       };
 
-      await toast.promise(
-        axiosInstance.put(`/users/update/${userId}`, updatedProfile),
-        {
-          pending: "Saving profile changes...",
-          success: "Profile updated successfully!",
-          error: "Failed to update profile.",
-        }
-      );
+      axiosInstance.put(`/users/update/${userId}`, updatedProfile);
 
       setIsEditing(false);
     } catch (error) {

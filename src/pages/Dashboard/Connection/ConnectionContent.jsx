@@ -4,7 +4,6 @@ import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosinstance";
-import { toast } from "react-toastify";
 
 const ConnectionContent = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -35,11 +34,8 @@ const ConnectionContent = () => {
           `/users/${currentUserId}`
         );
         setFollowing(currentUserResponse.data.data.following);
-
-        toast.success("Users and following loaded successfully!");
       } catch (error) {
         console.error("Error fetching data:", error);
-        toast.error("Failed to load data.");
       } finally {
         setLoading(false);
       }
@@ -76,10 +72,8 @@ const ConnectionContent = () => {
     try {
       await axiosInstance.post(`/users/follow-user/${id}`, { currentUserId });
       setFollowing((prev) => [...prev, id]);
-      toast.success("User followed successfully!");
     } catch (error) {
       console.error("Error following user:", error);
-      toast.error("Failed to follow the user.");
     }
   };
 
@@ -88,10 +82,8 @@ const ConnectionContent = () => {
     try {
       await axiosInstance.post(`/users/unfollow-user/${id}`, { currentUserId });
       setFollowing((prev) => prev.filter((userId) => userId !== id));
-      toast.success("User unfollowed successfully!");
     } catch (error) {
       console.error("Error unfollowing user:", error);
-      toast.error("Failed to unfollow the user.");
     }
   };
 

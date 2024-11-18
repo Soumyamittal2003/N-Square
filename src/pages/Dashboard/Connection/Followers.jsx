@@ -4,7 +4,6 @@ import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosinstance";
-import { toast } from "react-toastify";
 
 const Followers = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,10 +40,8 @@ const Followers = () => {
           }))
         );
         setFollowing(followingIds);
-        toast.success("Followers loaded successfully!");
       } catch (error) {
         console.error("Error fetching followers:", error);
-        toast.error("Failed to load followers.");
       } finally {
         setLoading(false);
       }
@@ -76,10 +73,8 @@ const Followers = () => {
           follower._id === id ? { ...follower, isFollowing: true } : follower
         )
       );
-      toast.success("User followed successfully!");
     } catch (error) {
       console.error("Error following user:", error);
-      toast.error("Failed to follow the user.");
     }
   };
 
@@ -92,10 +87,8 @@ const Followers = () => {
           follower._id === id ? { ...follower, isFollowing: false } : follower
         )
       );
-      toast.success("User unfollowed successfully!");
     } catch (error) {
       console.error("Error unfollowing user:", error);
-      toast.error("Failed to unfollow the user.");
     }
   };
 
