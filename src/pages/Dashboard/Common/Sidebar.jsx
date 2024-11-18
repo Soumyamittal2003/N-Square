@@ -7,7 +7,6 @@ import Connections from "../../../assets/icons/user-logo.svg";
 import { Link } from "react-router-dom"; // Import Link
 import ProfileSection from "./ProfileSection"; // Import the ProfileSection component
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/axiosinstance";
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
@@ -20,7 +19,6 @@ const Sidebar = () => {
         setUserData(response?.data?.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        toast.error("Failed to load profile. Please try again.");
       } finally {
         setLoading(false);
       }

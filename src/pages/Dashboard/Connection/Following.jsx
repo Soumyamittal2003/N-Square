@@ -4,7 +4,6 @@ import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosinstance";
-import { toast } from "react-toastify";
 
 const Following = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,10 +32,8 @@ const Following = () => {
         );
 
         setFollowingUsers(userDetails); // Set only followed users
-        toast.success("Following loaded successfully!");
       } catch (error) {
         console.error("Error fetching following users:", error);
-        toast.error("Failed to load following users.");
       } finally {
         setLoading(false);
       }
@@ -64,10 +61,8 @@ const Following = () => {
     try {
       await axiosInstance.post(`/users/unfollow-user/${id}`, { currentUserId });
       setFollowingUsers((prev) => prev.filter((user) => user._id !== id)); // Remove unfollowed user
-      toast.success("User unfollowed successfully!");
     } catch (error) {
       console.error("Error unfollowing user:", error);
-      toast.error("Failed to unfollow the user.");
     }
   };
 
