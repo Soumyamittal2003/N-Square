@@ -10,6 +10,8 @@ import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import UserProfile from "./Common/UserProfile";
 import Error404 from "../Error404";
+import Followers from "./Connection/Followers";
+import Following from "./Connection/Following";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -31,6 +33,8 @@ const Dashboard = () => {
             <Route path="project" element={<Project />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
             <Route path="connection" element={<Connection />} />
+            <Route path="followers" element={<Followers />} />
+            <Route path="following" element={<Following />} />
             <Route path="*" element={<Error404 />} />
           </Routes>
         </div>
