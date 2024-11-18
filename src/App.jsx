@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Login,
   Signup,
@@ -8,44 +10,53 @@ import {
   ForgotPassword,
   RegisterOrganization,
   Dashboard,
+  ResetPassword,
+  Error404,
 } from "./pages/index";
-import AuthProvider from "./context/AuthProvider";
+
 import PrivateRoute from "./utils/PrivateRoute";
-import { UserProvider } from "./context/UserProvider";
 
 function App() {
   return (
     <div className="font-sans">
-      <AuthProvider>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/register-organization"
-            element={<RegisterOrganization />}
-          />
-          <Route path="/verify-otp" element={<VerifyOTP />} />
-          <Route path="/user-detail" element={<UserDetail />} />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/register-organization"
+          element={<RegisterOrganization />}
+        />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/user-detail" element={<UserDetail />} />
+        <Route path="/reset-password/:tempToken" element={<ResetPassword />} />
 
-          {/* Private Routes */}
-          <Route
-            path="/dashboard/*"
-            element={
-              <PrivateRoute>
-                <UserProvider>
-                  <Dashboard />
-                </UserProvider>
-              </PrivateRoute>
-            }
-          />
+        {/* Private Routes */}
+        <Route
+          path="/dashboard/*"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
 
-          {/* Fallback Route */}
-          <Route path="*" element={<div>Page Not Found</div>} />
-        </Routes>
-      </AuthProvider>
+        {/* Fallback Route */}
+        <Route path="*" element={<Error404 />} />
+      </Routes>
     </div>
   );
 }

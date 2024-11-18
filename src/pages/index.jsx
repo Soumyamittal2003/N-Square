@@ -7,6 +7,8 @@ import UserDetail from "./Auth/UserDetail";
 import ForgotPassword from "./Auth/ForgotPassword";
 import RegisterOrganization from "./Auth/RegisterOrganization";
 import Dashboard from "./Dashboard/Dashboard";
+import ResetPassword from "./Auth/ResetPassword";
+import Error404 from "./Error404";
 export {
   Login,
   Signup,
@@ -16,4 +18,6 @@ export {
   ForgotPassword,
   RegisterOrganization,
   Dashboard,
+  ResetPassword,
+  Error404,
 };

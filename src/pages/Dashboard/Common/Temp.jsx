@@ -1,20 +1,18 @@
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import axiosInstance from "../../../utils/axiosinstance";
+import { useState } from "react";
 import PostCard from "./PostCard";
-
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  //     const [userData, setUserData] = useState(null);
+  //   const [posts, setPosts] = useState([]);
   const [activeTab, setActiveTab] = useState("My Posts");
+  //   const [isLoading, setIsLoading] = useState(true);
   const tabs = ["My Posts", "My Projects", "My Events", "My Job"];
   const [profileInfo, setProfileInfo] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    address: "",
-    city: "",
-    about: "",
-    tagline: "",
+    tagline: "@2022, Btech-CSE-3rd Year",
+    about: "This is demo text. This is demo text. This is demo text.",
+    education: "This is demo text. This is demo text. This is demo text.",
+    experience: "This is demo text. This is demo text. This is demo text.",
+    skills: "This is demo text. This is demo text. This is demo text.",
   });
   const [profileImage, setProfileImage] = useState(
     "https://via.placeholder.com/150"
@@ -22,109 +20,33 @@ const UserProfile = () => {
   const [bannerImage, setBannerImage] = useState(
     "https://via.placeholder.com/800x200"
   );
-  const [loading, setLoading] = useState(true);
+  const postText = `
+  In this extensive post, we delve deep into the crucial aspect of risk
+  management in trading and investing. From understanding risk types to
+  implementing effective risk mitigation strategies, we cover everything you
+  need to know to safeguard your investments and optimize your portfolio's
+  performance. Don't miss out on this invaluable resource for traders and
+  investors alike! #RiskManagement #InvestingInsights #PortfolioProtection
+`;
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userId = localStorage.getItem("id");
-        const response = await axiosInstance.get(`/users/${userId}`);
-        const userData = response.data.data;
-        setProfileInfo({
-          firstName: userData.firstName || "",
-          lastName: userData.lastName || "",
-          phone: userData.phone || "",
-          address: userData.address || "",
-          city: userData.city || "",
-          about: userData.about || "",
-          tagline: userData.tagline || "",
-        });
-        setProfileImage(userData.profileimageUrl || profileImage);
-        setBannerImage(userData.backgroundimageUrl || bannerImage);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        toast.error("Failed to fetch profile data.");
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const postImages = ["https://picsum.photos/900/400/?blur"];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfileInfo({ ...profileInfo, [name]: value });
   };
 
-  const handleImageChange = async (e, type) => {
+  const handleImageChange = (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      try {
-        const userId = localStorage.getItem("id");
-        const url =
-          type === "profile"
-            ? `/profile/updateProfileImage/${userId}`
-            : `/profile/updateBackgroundImage/${userId}`;
-
-        await toast.promise(axiosInstance.patch(url, formData), {
-          pending: "Uploading image...",
-          success: "Image uploaded successfully!",
-          error: "Failed to upload image.",
-        });
-
-        const imagePreview = URL.createObjectURL(file);
-        if (type === "profile") setProfileImage(imagePreview);
-        else setBannerImage(imagePreview);
-      } catch (error) {
-        console.error("Error uploading image:", error);
+      const profileimageUrl = URL.createObjectURL(file);
+      if (type === "profile") {
+        setProfileImage(profileimageUrl);
+      } else {
+        setBannerImage(profileimageUrl);
       }
     }
   };
-
-  const saveProfileEdits = async () => {
-    try {
-      const userId = localStorage.getItem("id");
-      const updatedProfile = {
-        firstName: profileInfo.firstName,
-        lastName: profileInfo.lastName,
-        phone: profileInfo.phone,
-        address: profileInfo.address,
-        city: profileInfo.city,
-        about: profileInfo.about,
-        tagline: profileInfo.tagline,
-      };
-
-      await toast.promise(
-        axiosInstance.put(`/users/update/${userId}`, updatedProfile),
-        {
-          pending: "Saving profile changes...",
-          success: "Profile updated successfully!",
-          error: "Failed to update profile.",
-        }
-      );
-
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error saving profile edits:", error);
-    }
-  };
-
-  if (loading) {
-    return <div className="text-center py-6">Loading profile...</div>;
-  }
-
-  const postText = `
-    In this extensive post, we delve deep into the crucial aspect of risk
-    management in trading and investing. From understanding risk types to
-    implementing effective risk mitigation strategies, we cover everything you
-    need to know to safeguard your investments and optimize your portfolio's
-    performance. Don't miss out on this invaluable resource for traders and
-    investors alike! #RiskManagement #InvestingInsights #PortfolioProtection
-  `;
-  const postImages = ["https://picsum.photos/900/400/?blur"];
-
   return (
     <div className="flex w-full min-h-screen">
       {/* Left Section */}
@@ -147,9 +69,8 @@ const UserProfile = () => {
               onChange={(e) => handleImageChange(e, "profile")}
             />
           )}
-          <h1 className="m-3 text-4xl font-bold">
-            {profileInfo.firstName} {profileInfo.lastName}
-          </h1>
+          <h1 className="m-3 text-4xl font-bold">Aadarsh Soni</h1>
+
           <div className="flex space-x-6 gap-2 m-3 p-5 px-10 border rounded-3xl">
             <div className="text-center">
               <p className="font-bold text-lg">12K</p>
@@ -191,16 +112,38 @@ const UserProfile = () => {
           ) : (
             <p className="text-gray-700 mt-2">{profileInfo.about}</p>
           )}
-          <h3 className="text-lg font-bold mt-4">Address</h3>
+          <h3 className="text-lg font-bold mt-4">Education</h3>
           {isEditing ? (
             <textarea
-              name="address"
-              value={profileInfo.address}
+              name="education"
+              value={profileInfo.education}
               onChange={handleInputChange}
               className="w-full mt-2 border p-2 rounded"
             />
           ) : (
-            <p className="text-gray-700 mt-2">{profileInfo.address}</p>
+            <p className="text-gray-700 mt-2">{profileInfo.education}</p>
+          )}
+          <h3 className="text-lg font-bold mt-4">Experience</h3>
+          {isEditing ? (
+            <textarea
+              name="experience"
+              value={profileInfo.experience}
+              onChange={handleInputChange}
+              className="w-full mt-2 border p-2 rounded"
+            />
+          ) : (
+            <p className="text-gray-700 mt-2">{profileInfo.experience}</p>
+          )}
+          <h3 className="text-lg font-bold mt-4">Skills</h3>
+          {isEditing ? (
+            <textarea
+              name="skills"
+              value={profileInfo.skills}
+              onChange={handleInputChange}
+              className="w-full mt-2 border p-2 rounded"
+            />
+          ) : (
+            <p className="text-gray-700 mt-2">{profileInfo.skills}</p>
           )}
         </div>
       </div>
@@ -226,13 +169,31 @@ const UserProfile = () => {
             />
           )}
           <button
-            onClick={() =>
-              isEditing ? saveProfileEdits() : setIsEditing(true)
-            }
+            onClick={() => setIsEditing(!isEditing)}
             className="absolute bottom-2 left-2 bg-white px-3 py-1 rounded-lg shadow text-gray-700 font-semibold"
           >
             {isEditing ? "Save" : "Edit"}
           </button>
+          <div className="absolute bottom-2 right-2 flex justify-center mt-4 space-x-4">
+            <a
+              href="#"
+              className="bg-gray-100 px-4 py-2 rounded-lg shadow hover:bg-gray-200"
+            >
+              Instagram
+            </a>
+            <a
+              href="#"
+              className="bg-gray-100 px-4 py-2 rounded-lg shadow hover:bg-gray-200"
+            >
+              YouTube
+            </a>
+            <a
+              href="#"
+              className="bg-gray-100 px-4 py-2 rounded-lg shadow hover:bg-gray-200"
+            >
+              LinkedIn
+            </a>
+          </div>
         </div>
 
         {/* Tab Navigation */}
@@ -255,6 +216,10 @@ const UserProfile = () => {
           {activeTab === "My Posts" && (
             <div className="w-full bg-[#ffffff] h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
               <PostCard text={postText} images={postImages} />
+              <PostCard text={postText} images={postImages} />
+              <PostCard text={postText} images={postImages} />
+              <PostCard text={postText} images={postImages} />
+              {/* Add more PostCard components as needed */}
             </div>
           )}
           {activeTab === "My Projects" && (
@@ -271,5 +236,4 @@ const UserProfile = () => {
     </div>
   );
 };
-
 export default UserProfile;

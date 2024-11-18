@@ -1,25 +1,23 @@
 import { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "./SocialLoginBottons";
-import CheckmarkAnimation from "../../assets/animations/checkmark.gif"; // Import GIF animation
-import { useAuth } from "../../context/AuthProvider";
+import CheckmarkAnimation from "../../assets/animations/checkmark.gif";
+import axiosInstance from "../../utils/axiosinstance";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false); // Track Remember Me
   const [errors, setErrors] = useState({});
-  const [serverError, setServerError] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // Popup state
-  const [loading, setLoading] = useState(false); // Added loader state
+  const [loading, setLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-  const auth = useAuth();
 
-  // Validate fields
   const validateFields = () => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,28 +38,46 @@ const LoginPage = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Form submission handler
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (!validateFields()) return;
-
-    setLoading(true); // Show loader before starting login process
-
-    try {
-      const loginData = { email, password };
-      const response = await auth.loginAction(loginData, rememberMe);
-
-      if (response.success) {
-        setShowPopup(true); // Show popup on successful login
-      } else {
-        setServerError(response.message);
-      }
-    } catch (err) {
-      setServerError("An unexpected error occurred. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false); // Hide loader after processing
+    if (!validateFields()) {
+      toast.error("Please fix the errors in the form.");
+      return;
     }
+
+    setLoading(true);
+
+    // Use toast.promise
+    await toast
+      .promise(
+        axiosInstance.post("/users/Login", {
+          email,
+          password,
+        }),
+        {
+          pending: "Logging in",
+          success: "Login successful! Redirecting",
+          error: {
+            render({ data }) {
+              // Access error data from the promise
+              return (
+                data?.response?.data?.message || "An unexpected error occurred."
+              );
+            },
+          },
+        }
+      )
+      .then((response) => {
+        localStorage.setItem("token", response?.data?.token);
+        localStorage.setItem("id", response?.data?.user?._id);
+        setShowPopup(true); // Show popup on successful login
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Handle popup close and navigate to dashboard
@@ -145,9 +161,6 @@ const LoginPage = () => {
           <div className="flex items-center mt-1">
             <input
               type="checkbox"
-              name="rememberMe"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
               className="h-4 w-4 text-black border-gray-300 rounded"
             />
             <span className="ml-2 text-sm text-gray-600">Remember me</span>
@@ -160,12 +173,8 @@ const LoginPage = () => {
             }`}
             disabled={loading} // Disable button while loading
           >
-            {loading ? "Processing..." : "Log In"}
+            {loading ? "Wait" : "Log In"}
           </button>
-
-          {serverError && (
-            <p className="text-center text-red-500 mt-4">{serverError}</p>
-          )}
         </form>
 
         <div className="flex w-full items-center my-4">
@@ -213,7 +222,7 @@ const LoginPage = () => {
               Welcome Back!
             </h2>
             <p className="text-center text-gray-600 text-sm mb-8">
-              Login successful. Redirecting to your dashboard.
+              Login successful. Go to your dashboard.
             </p>
             <button
               onClick={handleClosePopup}
@@ -227,5 +236,5 @@ const LoginPage = () => {
     </div>
   );
 };
-
+//deploye commect
 export default LoginPage;

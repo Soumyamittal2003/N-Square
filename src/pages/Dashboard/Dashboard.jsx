@@ -2,8 +2,6 @@ import Sidebar from "./Common/Sidebar";
 import Header from "./Common/Header";
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useUser } from "../../context/UserProvider";
-
 import Home from "./Home/Home";
 import Event from "./Event/Event";
 import Job from "./Job/Job";
@@ -11,21 +9,12 @@ import Project from "./Project/Project";
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import UserProfile from "./Common/UserProfile";
+import Error404 from "../Error404";
 
 const Dashboard = () => {
-  const { userData, loading } = useUser();
-
   useEffect(() => {
     document.body.classList.add("overflow-hidden"); // Disable body scrolling
   }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!userData) {
-    return <div>Failed to load user data.</div>;
-  }
 
   return (
     <>
@@ -42,7 +31,7 @@ const Dashboard = () => {
             <Route path="project" element={<Project />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
             <Route path="connection" element={<Connection />} />
-            <Route path="*" element={<div>Page Not Found</div>} />
+            <Route path="*" element={<Error404 />} />
           </Routes>
         </div>
       </div>

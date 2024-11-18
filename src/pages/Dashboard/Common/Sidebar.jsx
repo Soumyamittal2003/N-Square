@@ -3,17 +3,17 @@ import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Import Link
-import { useUser } from "../../../context/UserProvider";
+import { toast } from "react-toastify";
+import axiosInstance from "../../../utils/axiosinstance"; // Axios instance for API calls
 
 const Sidebar = () => {
-  const { userData } = useUser();
   return (
-    <div className="min-w-[275px] mx-12 mt-2 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+    <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
       {/* Profile Info Section */}
       <Link to={"/dashboard/profile"}>
-        <ProfileSection userData={userData} />
+        <ProfileSection />
       </Link>
       {/* Navigation Items */}
       <nav className="mt-6 flex-grow px-4">
@@ -45,45 +45,81 @@ const Sidebar = () => {
 };
 
 // Profile Section Component
-const ProfileSection = ({ userData }) => (
-  <div className="relative">
-    <img
-      alt="University background"
-      className="w-full h-52 object-fill"
-      src="https://storage.googleapis.com/a1aa/image/LcbznUrFRYKSAFXkFduaNiGQ8RmxRaCLgYXYhLOulwHEOB8E.jpg"
-    />
-    <div className="absolute inset-x-0 top-4 flex justify-center">
-      <div className="bg-white px-3 py-1 rounded-full text-xs font-semibold text-gray-800 shadow-md">
-        OP Jindal University
+const ProfileSection = () => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const id = localStorage.getItem("id");
+        const response = await axiosInstance.get(`/users/${id}`);
+        setUserData(response?.data?.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        toast.error("Failed to load profile. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="relative">
+        <p className="text-center py-6 text-gray-500">Loading profile</p>
       </div>
-    </div>
-    <div className="absolute inset-x-0 top-14 flex justify-center">
+    );
+  }
+
+  return (
+    <div className="relative">
       <img
-        alt="Profile of Aadarsh Soni"
-        className="w-16 h-16 rounded-full border-4 border-white"
-        src="https://storage.googleapis.com/a1aa/image/Wgr8fBHQmYQKfUedrtkqTOSNhGW5LZqEXGgyYdbMMLndwJgnA.jpg"
+        alt="University background"
+        className="w-full h-52 object-fill"
+        src={
+          userData.backgroundimageUrl || "https://via.placeholder.com/400x200"
+        }
       />
-    </div>
-    <div className="absolute insert-x-0 top-32 w-full justify-center text-white text-center  mt-2">
-      <div>
-        <h2 className="text-lg font-semibold">
-          {userData.firstName + " " + userData.lastName}
-        </h2>
-        <p className="text-sm ">@2022, Btech-CSE-3rd Year</p>
+      <div className="absolute inset-x-0 top-4 flex justify-center">
+        <div className="bg-white px-3 py-1 rounded-full text-xs font-semibold text-gray-800 shadow-md">
+          {userData.organization || "No Organization"}
+        </div>
+      </div>
+      <div className="absolute inset-x-0 top-14 flex justify-center">
+        <img
+          alt={`Profile of ${userData.firstName} ${userData.lastName}`}
+          className="w-20 h-20 rounded-full border-4 border-white"
+          src={userData.profileimageUrl || "https://via.placeholder.com/64"}
+        />
+      </div>
+      <div className="absolute insert-x-0 top-32 w-full justify-center text-white text-center mt-2">
+        <div>
+          <h2 className="text-lg font-semibold">
+            {userData.firstName} {userData.lastName}
+          </h2>
+          <p className="text-sm ">{userData.tagLine || "@2022 Btech-CSE"}</p>
+        </div>
+      </div>
+      <div className="relative flex justify-around rounded-full py-2 border">
+        <div className="text-center border-r w-1/2">
+          <span className="block font-semibold text-gray-800">
+            {userData.followers || 0}
+          </span>
+          <span className="text-sm text-gray-500">Follower</span>
+        </div>
+        <div className="text-center w-1/2">
+          <span className="block font-semibold text-gray-800">
+            {userData.following || 0}
+          </span>
+          <span className="text-sm text-gray-500">Following</span>
+        </div>
       </div>
     </div>
-    <div className=" relative flex justify-around rounded-full py-2 border">
-      <div className="text-center border-r w-1/2">
-        <span className="block font-semibold text-gray-800">12K</span>
-        <span className="text-sm text-gray-500">Follower</span>
-      </div>
-      <div className="text-center w-1/2">
-        <span className="block font-semibold text-gray-800">13K</span>
-        <span className="text-sm text-gray-500">Following</span>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 // Sidebar Item Component with icon and expandable option
 const SidebarItem = ({ icon, label, expandable = false }) => (

@@ -1,9 +1,12 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef ,useCallback } from "react";
+import { toast } from "react-toastify";
 import NsquareLogo from "../../../assets/icons/logo nsqaure 1.svg";
 import notification from "../../../assets/icons/notification-icon.svg";
 import search from "../../../assets/icons/search-icon.svg";
 import setting from "../../../assets/icons/setting-icon.svg";
+import alumniresourceicon from "../../../assets/icons/alumniresourceicon.svg";
+import volunteer from "../../../assets/icons/handicon.svg";
 import setting1 from "../../../assets/icons/settings/setting1.svg";
 import setting2 from "../../../assets/icons/settings/setting2.svg";
 import setting3 from "../../../assets/icons/settings/setting3.svg";
@@ -11,13 +14,19 @@ import setting4 from "../../../assets/icons/settings/setting4.svg";
 import setting5 from "../../../assets/icons/settings/setting5.svg";
 import setting6 from "../../../assets/icons/settings/setting6.svg";
 import setting7 from "../../../assets/icons/settings/setting7.svg";
+import setting8 from "../../../assets/icons/settings/setting8.svg";
+import setting9 from "../../../assets/icons/settings/setting9.svg";
+import setting10 from "../../../assets/icons/settings/setting10.svg";
+import setting11 from "../../../assets/icons/settings/setting11.svg";
+import setting12 from "../../../assets/icons/settings/setting12.svg";
+import logouticon from "../../../assets/icons/settings/logout.svg";
 
 // Modal Component for Search
 const SearchModal = () => (
   <div className="absolute top-full right-52 mt-2 w-1/5 bg-white shadow-lg rounded-lg z-2 p-4">
     <input
       type="text"
-      placeholder="Search..."
+      placeholder="search"
       className="w-full px-4 py-2 border rounded-lg focus:outline-none"
     />
   </div>
@@ -42,26 +51,44 @@ const NotificationsModal = ({ notifications }) => (
 );
 
 // Modal Component for Settings
-const SettingsModal = ({ settingsOptions }) => (
-  <div className="absolute top-full right-12 mt-2 w-64 bg-white shadow-lg rounded-lg z-20">
-    <ul className="py-8">
-      {settingsOptions.map((option) => (
-        <li key={option.name}>
-          <Link
-            to={option.path}
-            className="flex items-center m-2 px-4 py-2 font-semibold text-md text-black hover:text-gray-600"
+const SettingsModal = ({ settingsOptions }) => {
+  const navigate = useNavigate();
+  return (
+    <div className="absolute top-full right-12 mt-2 w-72 bg-white shadow-lg rounded-lg z-20">
+      <ul className="py-8">
+        {settingsOptions.map((option) => (
+          <li key={option.name}>
+            <Link
+              to={option.path}
+              className="flex items-center m-2 px-4 py-2 font-semibold text-md text-black hover:text-gray-600"
+            >
+              <img src={option.icon} alt={option.name} className="p-2 mx-2" />
+              {option.name}
+            </Link>
+          </li>
+        ))}
+        <li>
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("id");
+              toast.success("Logged out successfully!");
+              navigate("/login"); // Redirect after logout
+            }}
+            className="flex w-[90%] items-center m-2 px-4 py-2 font-semibold text-md text-black hover:text-gray-600"
           >
-            <img src={option.icon} alt={option.name} className="p-2 mx-2" />
-            {option.name}
-          </Link>
+            <img src={logouticon} alt="logout-button" className="p-2 mx-2" />
+            Logout
+          </button>
         </li>
-      ))}
-    </ul>
-  </div>
-);
+      </ul>
+    </div>
+  );
+};
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
@@ -93,6 +120,15 @@ const Header = () => {
     { name: "Download", path: "/download", icon: [setting5] },
     { name: "My Jobs", path: "/my-jobs", icon: [setting6] },
     { name: "Data Privacy", path: "/data-privacy", icon: [setting7] },
+    { name: "Privacy & Security", path: "/privacy-security", icon: [setting8] },
+    { name: "Device Permission", path: "/device-permission", icon: [setting9] },
+    {
+      name: "Data Usage & Media Quality",
+      path: "/data-usage-media-quality",
+      icon: [setting10],
+    },
+    { name: "Language", path: "/language", icon: [setting11] },
+    { name: "About", path: "/about", icon: [setting12] },
   ];
 
   const notifications = [
@@ -150,7 +186,31 @@ const Header = () => {
         </nav>
 
         {/* Icon Section */}
-        <div className="flex items-center space-x-10">
+        <div className="flex items-center space-x-2">
+          <button
+            aria-label="Volunteer"
+            onClick={() => {
+              navigate("/dashboard/volunteer");
+            }}
+          >
+            <img
+              src={volunteer}
+              alt="volunteer"
+              className="h-12 w-12 hover:opacity-80"
+            />
+          </button>
+          <button
+            aria-label="Alumni Resources "
+            onClick={() => {
+              navigate("/dashboard/alumni-resources");
+            }}
+          >
+            <img
+              src={alumniresourceicon}
+              alt="AlmaResourceicon"
+              className="h-12 w-12 hover:opacity-80"
+            />
+          </button>
           {/* Search Icon with Modal */}
           <button
             ref={searchRef}
