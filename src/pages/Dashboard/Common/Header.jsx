@@ -31,7 +31,7 @@ const SearchModal = () => (
     />
   </div>
 );
-
+//model
 // Modal Component for Notifications
 const NotificationsModal = ({ notifications }) => (
   <div className="absolute top-full right-32 mt-2 w-auto bg-white shadow-lg rounded-lg z-2 p-4">
