@@ -9,17 +9,17 @@ const PopularProjectCard = () => {
     ];
   
     return (
-      <div className="w-[380px] flex flex-col  text-black max-md:mt-5.5">
-        <button className="gap-2 self-end px-4 py-1.5 text-sm font-semibold tracking-normal leading-none text-black rounded-2xl border border-black border-solid max-md:mr-1.5">
+      <div className="w-[450px] flex flex-col text-black  px-42 ">
+        <button className="gap-2 self-end px-4 py-1.5 text-sm font-semibold tracking-normal leading-none text-black rounded-2xl border border-black border-solid max-md:mr-2">
           Create Project
         </button>
-        <h2 className="self-start mt-7 text-lg font-bold tracking-wide leading-none">
+        <h2 className="self-start mt-9 text-lg font-bold tracking-wide leading-none mb-0 p-4 ">
           Popular Project
         </h2>
         {popularProjects.map((project, index) => (
-          <div key={index} className="flex overflow-hidden flex-col py-2 pr-2.5 pl-0.5 mt-4 w-full bg-white rounded-xl border border-solid border-stone-300">
+          <div key={index} className="flex overflow-hidden shadow-lg flex-col py-2 pr-2.5 pl-0.5 mt-4 w-full bg-white rounded-xl border border-solid border-stone-300">
             <div className="flex gap-5 self-start text-xl font-semibold tracking-wide leading-none whitespace-nowrap">
-              <img loading="lazy" src={project.image} alt={project.title} className="object-contain shrink-2 rounded-none aspect-[0.9] w-[81px]" />
+              <img loading="lazy" src={project.image} alt={project.title} className="object-contain shrink-2 rounded-none aspect-[0.9] w-[91px] p-3" />
               <h3 className="my-auto">{project.title}</h3>
             </div>
             <div className="flex gap-10 mt-3.5 item-start">
@@ -36,5 +36,8 @@ const PopularProjectCard = () => {
       </div>
   );
 };
+
+
+
 
 export default PopularProjectCard;

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import NsquareLogo from "../../../assets/icons/logo nsqaure 1.svg";
 import notification from "../../../assets/icons/notification-icon.svg";
 import search from "../../../assets/icons/search-icon.svg";
@@ -107,7 +107,7 @@ const Header = () => {
     setShowSettingsMenu(false);
   };
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = useCallback((event) => {
     if (
       settingsRef.current &&
       !settingsRef.current.contains(event.target) &&
@@ -118,12 +118,12 @@ const Header = () => {
     ) {
       closeAllMenus();
     }
-  };
+  }, []);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <div className="relative">

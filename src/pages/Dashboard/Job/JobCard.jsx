@@ -31,10 +31,11 @@ const JobCard = () => {
         </p>
       </div>
 
-      {/* Apply Button */}
-      <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 text-sm font-medium">
+      <div className="flex gap-5 justify-between items-start self-center mt-2 w-full">
+        <button className="overflow-hidden gap-2.5 self-stretch px-5 py-1.5 text-xs font-bold tracking-normal leading-none text-white whitespace-nowrap bg-blue-600 rounded-xl">
         Apply
       </button>
+
 
       {/* Interaction Icons */}
       <div className="flex gap-4 items-center">
@@ -45,6 +46,7 @@ const JobCard = () => {
           <img src={bookmark} alt="Bookmark" className="object-contain rounded-none aspect-[0.83] w-[15px]" />
         </button>
       </div>
+    </div>
     </div>
   );
 };

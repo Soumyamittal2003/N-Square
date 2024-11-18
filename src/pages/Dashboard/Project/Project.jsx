@@ -1,24 +1,21 @@
 
 import ProjectList from './ProjectList';
-// import PopularProjectCard from './PopularProjectCard';
+import PopularProjectCard from './PopularProjectCard';
 
 const Project = () => {
   
 
   return (
-    <div className="p-4 flex">
+    <div className="p-0 flex ml-1 ">
       {/* Main Content */}
-      <div className="w-2/3 pr-4">
+      <div className="w-2/3 pr-0 p-3">
         <ProjectList />
       </div>
 
       {/* Sidebar: Popular Projects */}
-      {/* <div className="w-1/3">
-        <h2 className="text-lg font-bold mb-4">Popular Project</h2>
-        {popularProjects.map((project, index) => (
-          <PopularProjectCard key={index} {...project} />
-        ))}
-      </div> */}
+      <div className="p-5 flex w-1/3">
+        <PopularProjectCard />
+      </div>
     </div>
   );
 };

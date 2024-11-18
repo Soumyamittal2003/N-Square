@@ -1,8 +1,13 @@
-
+import { useState } from "react";
 import ProjectCard from './ProjectCard';
-import PopularProjects from './PopularProjectCard';
+
+
+
+  
 
 const ProjectList = () => {
+  const [activeTab, setActiveTab] = useState("All");
+  const tabs = ["All", "Alumni", "Faculty", "Student"];
     const projects = [
         {
           title: "E-Krishak",
@@ -28,11 +33,25 @@ const ProjectList = () => {
       ];
     
       return (
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-[77%] max-md:ml-0 max-md:w-full">
+        <div className="w-80%">
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4 ">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`text-sm px-4 py-2 rounded-full font-semibold ${
+              activeTab === tab ? "text-black font-bold" : "text-gray-500"
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+        <div className="flex gap-5 max-md:flex-col m-5 p-2">
+          <div className="flex flex-col w-[95%] max-md:ml-0 max-md:w-full">
             <div className="flex flex-col items-start w-full text-black max-md:mt-3 max-md:max-w-full">
               {/* <ProjectFilter /> */}
-              <h2 className="mt-7 text-lg font-bold tracking-wide leading-none">Projects</h2>
+              <h2 className="mt-0 text-lg font-bold tracking-wide leading-none p-2">Projects</h2>
               <div className="flex flex-col self-stretch mt-3.5 w-full max-md:max-w-full">
                 {projects.map((project, index) => (
                   <ProjectCard key={index} {...project} />
@@ -40,10 +59,9 @@ const ProjectList = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col mx-10 ml-5 w-[30%] max-md:ml-0 max-md:w-full">
-            <PopularProjects />
-          </div>
+          
         </div>
+      </div>
   );
 };
 

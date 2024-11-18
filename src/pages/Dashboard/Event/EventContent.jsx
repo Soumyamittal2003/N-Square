@@ -66,7 +66,7 @@ const EventContent = () => {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Sessions</h2>
-          <button className="text-blue-600 text-sm font-medium">View All</button>
+          <button className=" text-sm font-semibold">Explore All</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sessions.map((event, index) => (
@@ -79,7 +79,7 @@ const EventContent = () => {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Workshop</h2>
-          <button className="text-blue-600 text-sm font-medium">View All</button>
+          <button className=" text-sm font-semibold">Explore All</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sessions.map((event, index) => (
