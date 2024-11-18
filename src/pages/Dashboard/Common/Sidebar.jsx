@@ -1,54 +1,17 @@
+// Sidebar.jsx
 import briefcase from "../../../assets/icons/briefcase-01.svg";
 import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Import Link
+import ProfileSection from "./ProfileSection"; // Import the ProfileSection component
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import axiosInstance from "../../../utils/axiosinstance"; // Axios instance for API calls
-
+import axiosInstance from "../../../utils/axiosinstance";
 const Sidebar = () => {
-  return (
-    <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
-      {/* Profile Info Section */}
-      <Link to={"/dashboard/profile"}>
-        <ProfileSection />
-      </Link>
-      {/* Navigation Items */}
-      <nav className="mt-6 flex-grow px-4">
-        <Link to="/dashboard/connection">
-          <SidebarItem icon={Connections} label="Connection" />
-        </Link>
-        <Link to="/dashboard/post">
-          <SidebarItem icon={newPostLogo} label="Post" />
-        </Link>
-        <Link to="/dashboard/chat">
-          <SidebarItem icon={messageChat} label="Chat" />
-        </Link>
-        <Link to="/dashboard/applied">
-          <SidebarItem icon={briefcase} label="Applied" />
-        </Link>
-        <hr className="border-gray-200 my-2" />
-        {/* Expandable Items */}
-        <ExpandableItems />
-        {/* Divider and Help Section */}
-        <hr className="border-gray-200 my-2" />
-        <Link to="/dashboard/help">
-          <SidebarItem icon={helpCircle} label="Help" />
-        </Link>
-      </nav>
-
-      <Footer />
-    </div>
-  );
-};
-
-// Profile Section Component
-const ProfileSection = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -73,50 +36,59 @@ const ProfileSection = () => {
       </div>
     );
   }
-
   return (
-    <div className="relative">
-      <img
-        alt="University background"
-        className="w-full h-52 object-fill"
-        src={
-          userData.backgroundimageUrl || "https://via.placeholder.com/400x200"
-        }
-      />
-      <div className="absolute inset-x-0 top-4 flex justify-center">
-        <div className="bg-white px-3 py-1 rounded-full text-xs font-semibold text-gray-800 shadow-md">
-          {userData.organization || "No Organization"}
-        </div>
+    <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+      {/* Profile Info Section */}
+      <Link to={"/dashboard/profile"}>
+        <ProfileSection userData={userData} />
+      </Link>
+      {/* Navigation Items */}
+      <div className="relative flex items-center justify-center h-10 rounded-full py-2 mx-4 border">
+        <Link to={"/dashboard/followers"} className="flex-1 text-center">
+          <div>
+            <span className="block font-semibold text-gray-800">
+              {userData.followers.length}
+            </span>
+            <span className="text-sm text-gray-500">Follower</span>
+          </div>
+        </Link>
+
+        {/* Vertical Divider */}
+        <div className="border-l border-gray-300 h-8 mx-2"></div>
+
+        <Link to={"/dashboard/following"} className="flex-1 text-center">
+          <div>
+            <span className="block font-semibold text-gray-800">
+              {userData.following.length}
+            </span>
+            <span className="text-sm text-gray-500">Following</span>
+          </div>
+        </Link>
       </div>
-      <div className="absolute inset-x-0 top-14 flex justify-center">
-        <img
-          alt={`Profile of ${userData.firstName} ${userData.lastName}`}
-          className="w-20 h-20 rounded-full border-4 border-white"
-          src={userData.profileimageUrl || "https://via.placeholder.com/64"}
-        />
-      </div>
-      <div className="absolute insert-x-0 top-32 w-full justify-center text-white text-center mt-2">
-        <div>
-          <h2 className="text-lg font-semibold">
-            {userData.firstName} {userData.lastName}
-          </h2>
-          <p className="text-sm ">{userData.tagLine || "@2022 Btech-CSE"}</p>
-        </div>
-      </div>
-      <div className="relative flex justify-around rounded-full py-2 border">
-        <div className="text-center border-r w-1/2">
-          <span className="block font-semibold text-gray-800">
-            {userData.followers || 0}
-          </span>
-          <span className="text-sm text-gray-500">Follower</span>
-        </div>
-        <div className="text-center w-1/2">
-          <span className="block font-semibold text-gray-800">
-            {userData.following || 0}
-          </span>
-          <span className="text-sm text-gray-500">Following</span>
-        </div>
-      </div>
+      <nav className="mt-6 flex-grow px-4">
+        <Link to="/dashboard/connection">
+          <SidebarItem icon={Connections} label="Connection" />
+        </Link>
+        <Link to="/dashboard/post">
+          <SidebarItem icon={newPostLogo} label="Post" />
+        </Link>
+        <Link to="/dashboard/chat">
+          <SidebarItem icon={messageChat} label="Chat" />
+        </Link>
+        <Link to="/dashboard/applied">
+          <SidebarItem icon={briefcase} label="Applied" />
+        </Link>
+        <hr className="border-gray-200 my-2" />
+        {/* Expandable Items */}
+        <ExpandableItems />
+        {/* Divider and Help Section */}
+        <hr className="border-gray-200 my-2" />
+        <Link to="/dashboard/help">
+          <SidebarItem icon={helpCircle} label="Help" />
+        </Link>
+      </nav>
+
+      <Footer />
     </div>
   );
 };

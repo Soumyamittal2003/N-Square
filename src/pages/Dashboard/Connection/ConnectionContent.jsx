@@ -1,27 +1,107 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../../utils/axiosinstance";
+import { toast } from "react-toastify";
 
 const ConnectionContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const tabs = ["All", "Existing Faculty", "Alma Connection", "Student"];
 
+  useEffect(() => {
+    const fetchUsersAndFollowing = async () => {
+      setLoading(true);
+      const currentUserId = localStorage.getItem("id");
+
+      try {
+        // Fetch all users
+        const usersResponse = await axiosInstance.get("/users/get-all-users");
+        // Exclude the current user
+        const allUsers = usersResponse.data.filter(
+          (user) => user._id !== currentUserId
+        );
+        setUsers(allUsers);
+
+        // Fetch the current user's following list
+        const currentUserResponse = await axiosInstance.get(
+          `/users/${currentUserId}`
+        );
+        setFollowing(currentUserResponse.data.data.following);
+
+        toast.success("Users and following loaded successfully!");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Failed to load data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsersAndFollowing();
+  }, []);
+
+  useEffect(() => {
+    const filterUsers = () => {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      const filtered = users
+        .map((user) => ({
+          ...user,
+          isFollowing: following.includes(user._id),
+        }))
+        .filter((user) => {
+          const matchesTab =
+            activeTab === "All" || user.role === activeTab.toLowerCase();
+          const matchesSearch =
+            user.firstName.toLowerCase().includes(lowercasedQuery) ||
+            user.lastName.toLowerCase().includes(lowercasedQuery);
+          return matchesTab && matchesSearch;
+        });
+
+      setFilteredUsers(filtered);
+    };
+
+    filterUsers();
+  }, [activeTab, searchQuery, users, following]);
+
+  const handleFollow = async (id) => {
+    const currentUserId = localStorage.getItem("id");
+    try {
+      await axiosInstance.post(`/users/follow-user/${id}`, { currentUserId });
+      setFollowing((prev) => [...prev, id]);
+      toast.success("User followed successfully!");
+    } catch (error) {
+      console.error("Error following user:", error);
+      toast.error("Failed to follow the user.");
+    }
+  };
+
+  const handleUnfollow = async (id) => {
+    const currentUserId = localStorage.getItem("id");
+    try {
+      await axiosInstance.post(`/users/unfollow-user/${id}`, { currentUserId });
+      setFollowing((prev) => prev.filter((userId) => userId !== id));
+      toast.success("User unfollowed successfully!");
+    } catch (error) {
+      console.error("Error unfollowing user:", error);
+      toast.error("Failed to unfollow the user.");
+    }
+  };
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    // Reset the search when changing tabs if needed
     setSearchQuery("");
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
   return (
-    <div className="w-1/2">
+    <div className="w-3/4">
       {/* Tab Navigation */}
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
         {tabs.map((tab) => (
@@ -37,21 +117,24 @@ const ConnectionContent = () => {
         ))}
       </div>
 
-      <div className="flex mx-8 mt-6 items-center justify-between px-4 py-2 bg-white ">
-        <div className="flex mx-28 gap-8 items-center ">
+      {/* Header Section */}
+      <div className="flex mx-8 mt-6 items-center justify-between px-4 py-2 bg-white">
+        <div className="flex mx-28 gap-8 items-center">
           <Link to={"/dashboard"}>
             <FaArrowLeft className="h-6 w-6" />
           </Link>
-          <span className="text-xl ">750 Connections</span>
+          <span className="text-2xl font-semibold">
+            {filteredUsers.length} Users
+          </span>
         </div>
 
-        <div className="flex w-1/3 items-center rounded-md border border-gray-700 mx-12 px-3 py-1 bg-white">
+        <div className="flex w-1/4 items-center rounded-md border border-gray-700 mx-12 px-3 py-1 bg-white">
           <CiSearch />
           <input
             type="text"
             placeholder="Search"
             value={searchQuery}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full text-sm py-1 px-2 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none"
           />
         </div>
@@ -59,10 +142,21 @@ const ConnectionContent = () => {
 
       {/* Connections List */}
       <div className="w-full bg-white p-4 h-[calc(100vh-260px)] overflow-y-auto hide-scrollbar">
-        {/* Filtered User Cards based on Search and Active Tab */}
-        {[...Array(10)].map((_, index) => (
-          <UserCard key={index} />
-        ))}
+        {loading ? (
+          <p>Loading...</p>
+        ) : filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <UserCard
+              key={user._id}
+              user={user}
+              isFollowing={user.isFollowing}
+              onFollow={() => handleFollow(user._id)}
+              onUnfollow={() => handleUnfollow(user._id)}
+            />
+          ))
+        ) : (
+          <p>No users found.</p>
+        )}
       </div>
     </div>
   );
