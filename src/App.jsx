@@ -42,7 +42,7 @@ function App() {
         />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/user-detail" element={<UserDetail />} />
-        <Route path="/reset-password/:tempToken" element={<ResetPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Private Routes */}
         <Route

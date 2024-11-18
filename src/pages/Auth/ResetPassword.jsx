@@ -5,7 +5,7 @@ import axiosInstance from "../../utils/axiosinstance";
 import NetworkNext from "../../assets/icons/logo nsqaure 1.svg";
 
 const ResetPassword = () => {
-  const { tempToken } = useParams(); // Extract token from the URL
+  const { token } = useParams(); // Extract token from the URL
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,9 +36,10 @@ const ResetPassword = () => {
 
     try {
       // Make API call to reset password with token
+      console.log(token);
       await toast.promise(
         axiosInstance.post("/users/reset-password", {
-          tempToken,
+          token,
           password,
           confirmPassword,
         }),
