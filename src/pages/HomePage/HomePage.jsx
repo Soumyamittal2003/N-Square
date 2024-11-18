@@ -5,6 +5,7 @@ import SecondPage from "./SecondPage";
 import Footer from "./Footer";
 import Testimonials from "./Testimonials";
 import FAQSection from "./FAQSection";
+import JoinCommunitySection from "./joincomminunity";
 
 const HomePage = () => {
   return (
@@ -12,6 +13,7 @@ const HomePage = () => {
       <Header />
       <FirstPage />
       <SecondPage />
+      <JoinCommunitySection/>
       <FAQSection/>
       <Testimonials/>
       <Footer/>
