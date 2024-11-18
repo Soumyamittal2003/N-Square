@@ -1,38 +1,41 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import axiosInstance from "../../utils/axiosinstance.jsx";
+import { toast } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
+import axiosInstance from "../../utils/axiosinstance";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "./SocialLoginBottons";
-import { useAuth } from "../../context/AuthProvider";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { setEmailAction } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setEmailAction(email);
-    setIsLoading(true);
-    setError(null);
 
-    try {
-      // Send email to the OTP generation endpoint
-
-      await axiosInstance.post("/otp/send", { email });
-      navigate("/verify-otp"); // Redirect to Verify OTP page with email
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        "Failed to send OTP. Please try again.";
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+    // Show promise-based toast while the request is being processed
+    toast
+      .promise(axiosInstance.post("/otp/send", { email }), {
+        pending: "Sending OTP...",
+        success: "OTP sent successfully!",
+        error: {
+          render({ data }) {
+            return data.response?.data?.message || "Failed to send OTP.";
+          },
+        },
+      })
+      .then(() => {
+        navigate("/verify-otp", { state: { email } }); // Redirect to Verify OTP page with email
+      })
+      .catch((error) => {
+        console.error("Error sending OTP:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -54,12 +57,6 @@ const Signup = () => {
           <h1 className="text-xl font-semibold">Sign up using email</h1>
         </div>
 
-        {error && (
-          <div className="w-full bg-red-500 text-white text-center p-2 rounded mb-4">
-            {error}
-          </div>
-        )}
-
         <form onSubmit={handleFormSubmit} className="w-full space-y-6">
           <div>
             <label className="block text-sm font-semibold mb-2">Email</label>
@@ -77,7 +74,9 @@ const Signup = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+            className={`w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             {isLoading ? "Sending OTP..." : "Next"}
           </button>

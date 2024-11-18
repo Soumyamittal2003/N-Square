@@ -2,7 +2,6 @@ import Sidebar from "./Common/Sidebar";
 import Header from "./Common/Header";
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useUser } from "../../context/UserProvider";
 
 import Home from "./Home/Home";
 import Event from "./Event/Event";
@@ -13,19 +12,9 @@ import Connection from "./Connection/Connection";
 import UserProfile from "./Common/UserProfile";
 
 const Dashboard = () => {
-  const { userData, loading } = useUser();
-
   useEffect(() => {
     document.body.classList.add("overflow-hidden"); // Disable body scrolling
   }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!userData) {
-    return <div>Failed to load user data.</div>;
-  }
 
   return (
     <>

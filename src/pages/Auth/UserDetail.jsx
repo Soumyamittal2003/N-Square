@@ -1,21 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import NetworkNextLogo from "../../assets/icons/Network Next.svg";
 import OnebyTwoLogo from "../../assets/icons/HalfIcon.svg";
 import TwobyTwoLogo from "../../assets/icons/TwobyTwoLogo.svg";
 import { FiPaperclip } from "react-icons/fi";
 import { LuInfo } from "react-icons/lu";
 import CheckmarkAnimation from "../../assets/animations/checkmark.gif";
-import axios from "axios";
-import { useAuth } from "../../context/AuthProvider";
+import axiosInstance from "../../utils/axiosinstance";
 
 const UserDetail = () => {
-  const { signupEmail } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [profileImage, setProfileImage] = useState("");
   const [formData, setFormData] = useState({
-    email: signupEmail || "",
+    email: location.state?.email || "",
     firstName: "",
     lastName: "",
     phone: "",
@@ -29,7 +30,38 @@ const UserDetail = () => {
     confirmPassword: "",
     role: "",
     profileimageUrl: "",
+    organization: "",
   });
+  const states = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+  ];
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -94,6 +126,7 @@ const UserDetail = () => {
     const validationErrors = validateStep1();
     if (Object.keys(validationErrors).length > 0) {
       setError(validationErrors);
+      toast.error("Please fill out all required fields.");
     } else {
       setError({});
       setCurrentStep(2); // Proceed to Step 2
@@ -127,19 +160,22 @@ const UserDetail = () => {
       }
 
       // Make the API request with FormData
-      await axios.post(
-        "https://n-square.onrender.com/api/network-next/v1/users/signup",
-        formDataToSend,
-        {
+      await toast.promise(
+        axiosInstance.post("/users/signup", formDataToSend, {
           headers: {
-            "Content-Type": "multipart/form-data", // Let axios handle the boundary
+            "Content-Type": "multipart/form-data",
           },
+        }),
+        {
+          pending: "Submitting your details...",
+          success: "Signup completed successfully!",
+          error: "Failed to complete signup. Please try again.",
         }
       );
 
       setShowPopup(true); // Show confirmation popup
     } catch (err) {
-      setError({ global: "Failed to complete signup. Please try again.", err });
+      toast.error(err.response?.data?.message || "An error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -243,18 +279,14 @@ const UserDetail = () => {
                   error.dob ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              <select
-                name="origination"
+              <input
+                name="organization"
+                type="text"
+                placeholder="Organization"
                 value={formData.organization}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.organization ? "border-red-500" : "border-gray-300"}`}
-              >
-                <option value="option1" disabled>
-                  Select Origination
-                </option>
-                <option value="option1">Gujarat Technical University</option>
-                <option value="option2">OP Jindal University</option>
-              </select>
+                className={`w-full px-4 py-3 border rounded-lg ${error.address ? "border-red-500" : "border-gray-300"}`}
+              />
               <div className="flex justify-end mt-6">
                 <button
                   type="submit"
@@ -283,18 +315,21 @@ const UserDetail = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg ${error.address ? "border-red-500" : "border-gray-300"}`}
               />
+
               <select
-                name="state"
                 value={formData.state}
+                name="state"
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${error.state ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-4 py-3 border rounded-lg ${error.address ? "border-red-500" : "border-gray-300"}`}
               >
-                <option value="" disabled>
-                  State
-                </option>
-                <option value="Gujarat">Gujarat</option>
-                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="">Select a state</option>
+                {states.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
               </select>
+
               <div className="flex justify-between gap-4">
                 <input
                   name="city"

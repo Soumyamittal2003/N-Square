@@ -106,6 +106,10 @@ const Header = () => {
     setShowNotificationsMenu(false);
     setShowSettingsMenu(false);
   };
+  const logOut = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   const handleClickOutside = (event) => {
     if (

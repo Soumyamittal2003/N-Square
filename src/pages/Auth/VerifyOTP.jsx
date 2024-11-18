@@ -1,42 +1,52 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef } from "react";
-import axiosInstance from "../../utils/axiosinstance.jsx";
+import { toast } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
+import axiosInstance from "../../utils/axiosinstance";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
-import { useAuth } from "../../context/AuthProvider";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
-  const { signupEmail } = useAuth(); // Correct hook usage
-  const [email] = useState(signupEmail || ""); // Ensure signupEmail fallback
+  const location = useLocation();
+  const email = location.state?.email || ""; // Retrieve email from location state
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [isForgotPassword, setIsForgotPassword] = useState(false); // Initialize as boolean
 
   const otpRefs = otp.map(() => useRef(null));
 
   const handleVerifyOTP = async () => {
     setIsLoading(true);
-    setError(null);
 
     const completeOtp = otp.join("");
     if (completeOtp.length !== 6) {
-      setError("Please enter a valid 6-digit OTP.");
+      toast.error("Please enter a valid 6-digit OTP.");
       setIsLoading(false);
       return;
     }
 
-    try {
-      await axiosInstance.post("/otp/verify", { email, otp: completeOtp });
-      navigate("/user-detail");
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Invalid OTP. Please try again.";
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+    // Use toast.promise for verifying OTP
+    await toast
+      .promise(axiosInstance.post("/otp/verify", { email, otp: completeOtp }), {
+        pending: "Verifying OTP...",
+        success: "OTP verified successfully!",
+        error: {
+          render({ data }) {
+            return (
+              data.response?.data?.message || "Invalid OTP. Please try again."
+            );
+          },
+        },
+      })
+      .then(() => {
+        navigate("/user-detail", { state: { email } });
+      })
+      .catch((error) => {
+        console.error("Error verifying OTP:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleChange = (event, index) => {
@@ -50,6 +60,21 @@ const VerifyOTP = () => {
       otpRefs[index + 1].current.focus();
     }
   };
+  const handlePaste = (event) => {
+    event.preventDefault();
+    const pastedData = event.clipboardData.getData("text");
+
+    if (!/^\d{6}$/.test(pastedData)) {
+      toast.error("Please paste a valid 6-digit OTP.");
+      return;
+    }
+
+    const newOtp = pastedData.split("");
+    setOtp(newOtp);
+
+    // Automatically focus on the last field
+    otpRefs[newOtp.length - 1].current.focus();
+  };
 
   const handleKeyDown = (event, index) => {
     if (event.key === "Backspace" && index > 0 && !event.target.value) {
@@ -59,19 +84,24 @@ const VerifyOTP = () => {
 
   const handleResendOTP = async () => {
     setIsLoading(true);
-    setError(null);
 
-    try {
-      await axiosInstance.post("/otp/send", { email }); // Pass email instead of signupEmail
-      alert("OTP resent successfully!");
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        "Failed to resend OTP. Please try again.";
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+    // Use toast.promise for resending OTP
+    await toast
+      .promise(axiosInstance.post("/otp/send", { email }), {
+        pending: "Resending OTP...",
+        success: "OTP resent successfully!",
+        error: {
+          render({ data }) {
+            return (
+              data.response?.data?.message ||
+              "Failed to resend OTP. Please try again."
+            );
+          },
+        },
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -90,20 +120,12 @@ const VerifyOTP = () => {
       <div className="w-full max-w-md flex flex-col items-center px-6 pt-4 pb-8">
         <div className="text-center mb-8">
           <img src={Nsquare} alt="Logo" className="w-16 h-16 mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold mb-2">
-            {isForgotPassword ? "Reset Your Password" : "Verify Your Email"}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-2">Verify Your Email</h2>
           <p className="text-gray-500">
             Enter the OTP sent to{" "}
             <span className="font-semibold">{email || "your email"}</span>.
           </p>
         </div>
-
-        {error && (
-          <div className="w-full bg-red-500 text-white text-center p-2 rounded mb-4">
-            {error}
-          </div>
-        )}
 
         <form
           onSubmit={(e) => {
@@ -122,6 +144,7 @@ const VerifyOTP = () => {
                 value={digit}
                 onChange={(event) => handleChange(event, index)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
+                onPaste={index === 0 ? handlePaste : undefined}
                 className="w-14 h-14 px-2.5 py-3 text-center rounded-lg border border-gray-400 text-xl font-semibold focus:outline-none"
                 aria-label={`OTP Digit ${index + 1}`}
                 required
@@ -137,7 +160,7 @@ const VerifyOTP = () => {
                 : "bg-black text-white hover:bg-gray-900"
             }`}
           >
-            {isLoading ? "Wait..." : "Verify OTP"}
+            {isLoading ? "Wait" : "Verify OTP"}
           </button>
         </form>
 

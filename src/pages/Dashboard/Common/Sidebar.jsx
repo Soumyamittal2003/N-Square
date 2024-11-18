@@ -5,15 +5,13 @@ import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
 import { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link
-import { useUser } from "../../../context/UserProvider";
 
 const Sidebar = () => {
-  const { userData } = useUser();
   return (
     <div className="min-w-[275px] mx-12 mt-2 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
       {/* Profile Info Section */}
       <Link to={"/dashboard/profile"}>
-        <ProfileSection userData={userData} />
+        <ProfileSection />
       </Link>
       {/* Navigation Items */}
       <nav className="mt-6 flex-grow px-4">
@@ -45,7 +43,7 @@ const Sidebar = () => {
 };
 
 // Profile Section Component
-const ProfileSection = ({ userData }) => (
+const ProfileSection = () => (
   <div className="relative">
     <img
       alt="University background"
@@ -66,9 +64,7 @@ const ProfileSection = ({ userData }) => (
     </div>
     <div className="absolute insert-x-0 top-32 w-full justify-center text-white text-center  mt-2">
       <div>
-        <h2 className="text-lg font-semibold">
-          {userData.firstName + " " + userData.lastName}
-        </h2>
+        <h2 className="text-lg font-semibold">Aadarsh Soni</h2>
         <p className="text-sm ">@2022, Btech-CSE-3rd Year</p>
       </div>
     </div>

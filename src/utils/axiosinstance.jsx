@@ -1,23 +1,18 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://n-square.onrender.com/api/network-next/v1", // Your base URL
+  baseURL: "https://n-square.onrender.com/api/network-next/v1",
   headers: {
     "Content-Type": "application/json",
   },
 });
-
-// Add a request interceptor to attach the token (if available)
 axiosInstance.interceptors.request.use((config) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 });
-
-// Add a response interceptor to handle errors globally (optional)
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
