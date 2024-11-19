@@ -12,7 +12,7 @@ const SixthPage = () => {
             >
           Digital Engagement Platform
         </h2>
-        <p className="text-lg text-blue-600 font-normal md:text-3xl mb-6">
+        <p className="text-lg text-blue-600 font-semibold md:text-3xl mb-6">
           Discover Core Supporters to drive <br className='gap-4'/>engagement, exceed event goals, and
           <br/>manage volunteers.
         </p>
