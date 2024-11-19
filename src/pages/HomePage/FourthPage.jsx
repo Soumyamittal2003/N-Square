@@ -2,12 +2,14 @@ import backgroundImage from '../../assets/images/Background4.png'; // Replace wi
 
 const FourthPage = () => {
   return (
-    <div className="px-10 py-1 bg-white flex flex-col md:flex-row items-center justify-between gap-8 mx-16">
+    <div className="px-10 py-1 bg-white flex flex-col md:flex-row items-center justify-between gap-6 mx-16">
       {/* Left Section: Text Content */}
       <div className="w-full md:w-2/3">
-        <h2 className="text-2xl md:text-4xl font-bold mb-8">
-          Elevate Your Connection, Job Journey with <br />
-          <span className="text-blue-600">Network_Next!</span>
+        <h2 className="text-4xl md:text-6xl font-bold mb-8" style={{
+                textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)', // Adding shadow effect
+            }}>
+          Elevate Your Connection,<br/> Job Journey with <br /> 
+          <span className="text-blue-600 p-40">Network_Next!</span>
         </h2>
 
         {/* Features Section */}
@@ -44,13 +46,13 @@ const FourthPage = () => {
         </div>
 
         {/* Learn More Button */}
-        <button className="mt-8 px-6 py-2 border border-black text-black rounded-full hover:bg-black hover:text-white transition">
+        <button className=" border border-black text-black font-semibold px-6 py-2 rounded-full hover:bg-black hover:text-white transition ">
           Learn More
         </button>
       </div>
 
       {/* Right Section: Image */}
-      <div className="w-full md:w-1/3 flex justify-center">
+      <div className="w-full md:w-2/4 flex justify-center ">
         <img
           src={backgroundImage}
           alt="User working on a laptop"

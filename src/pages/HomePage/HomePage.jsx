@@ -8,6 +8,10 @@ import Footer from "./Footer";
 import Testimonials from "./Testimonials";
 import FAQSection from "./FAQSection";
 import JoinCommunitySection from "./joincomminunity";
+import FifthPage from "./FifthPage";
+import SixthPage from "./SixthPage";
+import SeventhPage from "./SeventhPage";
+import EighthPage from "./EighthPage";
 
 const HomePage = () => {
   return (
@@ -17,6 +21,10 @@ const HomePage = () => {
       <SecondPage />
       <ThirdPage />
       <FourthPage />
+      <FifthPage />
+      <SixthPage />
+      <SeventhPage />
+      <EighthPage />
       <JoinCommunitySection/>
       <FAQSection/>
       <Testimonials/>
