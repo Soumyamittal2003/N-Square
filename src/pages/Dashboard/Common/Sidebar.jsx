@@ -36,27 +36,23 @@ const Sidebar = () => {
   }
   return (
     <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
-      {/* Profile Info Section */}
       <Link to={"/dashboard/profile"}>
         <ProfileSection userData={userData} />
       </Link>
-      {/* Navigation Items */}
-      <div className="relative flex items-center justify-center h-10 rounded-full py-2 mx-4 border">
+
+      <div className="relative inset-x-0 -top-6 flex items-center justify-center h-10 mx-2 rounded-3xl py-8 border">
         <Link to={"/dashboard/followers"} className="flex-1 text-center">
           <div>
-            <span className="block font-semibold text-gray-800">
+            <span className="block text-2xl font-semibold text-gray-800">
               {userData.followers.length}
             </span>
             <span className="text-sm text-gray-500">Follower</span>
           </div>
         </Link>
-
-        {/* Vertical Divider */}
-        <div className="border-l border-gray-300 h-8 mx-2"></div>
-
+        <div className="border-l border-gray-200 h-12 mx-1"></div>
         <Link to={"/dashboard/following"} className="flex-1 text-center">
           <div>
-            <span className="block font-semibold text-gray-800">
+            <span className="block text-2xl font-semibold text-gray-800">
               {userData.following.length}
             </span>
             <span className="text-sm text-gray-500">Following</span>
