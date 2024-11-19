@@ -13,6 +13,7 @@ import Error404 from "../Error404";
 import Followers from "./Connection/Followers";
 import Following from "./Connection/Following";
 import PostPopup from "./Connection/Postpage";
+import CreateProject from "./Project/CreateProject";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -32,6 +33,7 @@ const Dashboard = () => {
             <Route path="job" element={<Job />} />
             <Route path="event" element={<Event />} />
             <Route path="project" element={<Project />} />
+            <Route path="project/create-project" element={<CreateProject />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
             <Route path="connection" element={<Connection />} />
             <Route path="followers" element={<Followers />} />

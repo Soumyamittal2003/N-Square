@@ -40,59 +40,61 @@ const Sidebar = () => {
   }
   return (
     <>
-    <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
-      <Link to={"/dashboard/profile"}>
-        <ProfileSection userData={userData} />
-      </Link>
+      <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+        <Link to={"/dashboard/profile"}>
+          <ProfileSection userData={userData} />
+        </Link>
 
-      <div className="relative inset-x-0 -top-6 flex items-center justify-center h-10 mx-2 rounded-3xl py-8 border">
-        <Link to={"/dashboard/followers"} className="flex-1 text-center">
-          <div>
-            <span className="block text-2xl font-semibold text-gray-800">
-              {userData.followers.length}
-            </span>
-            <span className="text-sm text-gray-500">Follower</span>
-          </div>
-        </Link>
-        <div className="border-l border-gray-200 h-12 mx-1"></div>
-        <Link to={"/dashboard/following"} className="flex-1 text-center">
-          <div>
-            <span className="block text-2xl font-semibold text-gray-800">
-              {userData.following.length}
-            </span>
-            <span className="text-sm text-gray-500">Following</span>
-          </div>
-        </Link>
-      </div>
-      <nav className="mt-6 flex-grow px-4">
-        <Link to="/dashboard/connection">
-          <SidebarItem icon={Connections} label="Connection" />
-        </Link>
-        
-        <div onClick={togglePopup}> {/* Open the popup */}
+        <div className="relative inset-x-0 -top-6 flex items-center justify-center h-10 mx-2 rounded-3xl py-8 border">
+          <Link to={"/dashboard/followers"} className="flex-1 text-center">
+            <div>
+              <span className="block text-2xl font-semibold text-gray-800">
+                {userData.followers.length}
+              </span>
+              <span className="text-sm text-gray-500">Follower</span>
+            </div>
+          </Link>
+          <div className="border-l border-gray-200 h-12 mx-1"></div>
+          <Link to={"/dashboard/following"} className="flex-1 text-center">
+            <div>
+              <span className="block text-2xl font-semibold text-gray-800">
+                {userData.following.length}
+              </span>
+              <span className="text-sm text-gray-500">Following</span>
+            </div>
+          </Link>
+        </div>
+        <nav className="flex-grow px-4">
+          <Link to="/dashboard/connection">
+            <SidebarItem icon={Connections} label="Connection" />
+          </Link>
+
+          <div onClick={togglePopup}>
+            {" "}
+            {/* Open the popup */}
             <SidebarItem icon={newPostLogo} label="Post" />
           </div>
-        <Link to="/dashboard/chat">
-          <SidebarItem icon={messageChat} label="Chat" />
-        </Link>
-        <Link to="/dashboard/applied">
-          <SidebarItem icon={briefcase} label="Applied" />
-        </Link>
-        <hr className="border-gray-200 my-2" />
-        {/* Expandable Items */}
-        <ExpandableItems />
-        {/* Divider and Help Section */}
-        <hr className="border-gray-200 my-2" />
-        <Link to="/dashboard/help">
-          <SidebarItem icon={helpCircle} label="Help" />
-        </Link>
-      </nav>
+          <Link to="/dashboard/chat">
+            <SidebarItem icon={messageChat} label="Chat" />
+          </Link>
+          <Link to="/dashboard/applied">
+            <SidebarItem icon={briefcase} label="Applied" />
+          </Link>
+          <hr className="border-gray-200 my-2" />
+          {/* Expandable Items */}
+          <ExpandableItems />
+          {/* Divider and Help Section */}
+          <hr className="border-gray-200 my-2" />
+          <Link to="/dashboard/help">
+            <SidebarItem icon={helpCircle} label="Help" />
+          </Link>
+        </nav>
 
-      <Footer />
-    </div>
-     {/* Render the PostPopup if open */}
-     {isPopupOpen && <PostPopup setPopupOpen={setIsPopupOpen} />}
-     </>
+        <Footer />
+      </div>
+      {/* Render the PostPopup if open */}
+      {isPopupOpen && <PostPopup setPopupOpen={setIsPopupOpen} />}
+    </>
   );
 };
 

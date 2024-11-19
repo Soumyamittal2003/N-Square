@@ -70,6 +70,7 @@ const LoginPage = () => {
       .then((response) => {
         localStorage.setItem("token", response?.data?.token);
         localStorage.setItem("id", response?.data?.user?._id);
+        localStorage.setItem("role", response?.data?.user?.role);
         setShowPopup(true); // Show popup on successful login
       })
       .catch((err) => {
