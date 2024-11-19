@@ -7,10 +7,14 @@ import Connections from "../../../assets/icons/user-logo.svg";
 import { Link } from "react-router-dom"; // Import Link
 import ProfileSection from "./ProfileSection"; // Import the ProfileSection component
 import { useState, useEffect } from "react";
+import PostPopup from "../Connection/Postpage.jsx";
 import axiosInstance from "../../../utils/axiosinstance";
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // State for popup
+  const togglePopup = () => setIsPopupOpen((prev) => !prev);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -35,6 +39,7 @@ const Sidebar = () => {
     );
   }
   return (
+    <>
     <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
       {/* Profile Info Section */}
       <Link to={"/dashboard/profile"}>
@@ -67,9 +72,10 @@ const Sidebar = () => {
         <Link to="/dashboard/connection">
           <SidebarItem icon={Connections} label="Connection" />
         </Link>
-        <Link to="/dashboard/post">
-          <SidebarItem icon={newPostLogo} label="Post" />
-        </Link>
+        
+        <div onClick={togglePopup}> {/* Open the popup */}
+            <SidebarItem icon={newPostLogo} label="Post" />
+          </div>
         <Link to="/dashboard/chat">
           <SidebarItem icon={messageChat} label="Chat" />
         </Link>
@@ -88,6 +94,9 @@ const Sidebar = () => {
 
       <Footer />
     </div>
+     {/* Render the PostPopup if open */}
+     {isPopupOpen && <PostPopup setPopupOpen={setIsPopupOpen} />}
+     </>
   );
 };
 
