@@ -3,6 +3,8 @@ import NsquareLogo from "../../assets/icons/nsqure.svg";
 
 const JoinCommunitySection = () => {
   return (
+    <>
+    <div className="py-6"></div>
     <div className="max-w-7xl mx-auto mt-8 mb-12 px-8 py-6 bg-white border border-gray-300 rounded-lg shadow-md flex items-center justify-between">
       {/* Left Section */}
       <div className="flex items-center space-x-6">
@@ -45,6 +47,8 @@ const JoinCommunitySection = () => {
         </button>
       </div>
     </div>
+    <div className="py-6"></div>
+    </>
   );
 };
 
