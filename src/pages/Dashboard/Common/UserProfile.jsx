@@ -9,18 +9,14 @@ const UserProfile = () => {
   const [profileInfo, setProfileInfo] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
-    address: "",
-    city: "",
     about: "",
+    education: "",
+    experience: "",
+    skills: "",
     tagline: "",
   });
-  const [profileImage, setProfileImage] = useState(
-    "https://via.placeholder.com/150"
-  );
-  const [bannerImage, setBannerImage] = useState(
-    "https://via.placeholder.com/800x200"
-  );
+  const [profileImage, setProfileImage] = useState("");
+  const [bannerImage, setBannerImage] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

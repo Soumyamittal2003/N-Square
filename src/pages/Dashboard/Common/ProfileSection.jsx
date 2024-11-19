@@ -17,7 +17,7 @@ const ProfileSection = ({ userData }) => {
       <div className="absolute inset-x-0 top-14 flex justify-center">
         <img
           alt={`Profile of ${userData.firstName} ${userData.lastName}`}
-          className="w-20 h-20 rounded-full border-4 border-white"
+          className="w-20 h-20 rounded-full border-6 border-white"
           src={userData.profileimageUrl}
         />
       </div>
