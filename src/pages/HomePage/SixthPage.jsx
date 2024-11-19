@@ -1,4 +1,4 @@
-import backgroundImage from '../../assets/images/background6.png';
+import backgroundImage from '../../assets/images/Background6.png';
  // Replace with the actual image path
 
 const SixthPage = () => {
