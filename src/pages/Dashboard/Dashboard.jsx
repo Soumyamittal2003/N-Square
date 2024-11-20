@@ -12,6 +12,7 @@ import UserProfile from "./Common/UserProfile";
 import Error404 from "../Error404";
 import Followers from "./Connection/Followers";
 import Following from "./Connection/Following";
+import CreateJob  from "./Job/RightSideBar";
 //import PostPopup from "./Connection/Postpage";
 import CreateProject from "./Project/CreateProject";
 
@@ -35,6 +36,7 @@ const Dashboard = () => {
             <Route path="project" element={<Project />} />
             <Route path="project/create-project" element={<CreateProject />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
+            <Route path="job/create-job" element={<CreateJob />} />
             <Route path="connection" element={<Connection />} />
             <Route path="followers" element={<Followers />} />
             <Route path="following" element={<Following />} />

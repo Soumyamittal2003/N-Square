@@ -1,14 +1,32 @@
+import { useState } from "react";
+import CreateJob from "./CreateJob";
 
 const RightSidebar = () => {
-    return (
-      <div className="w-full p-4 space-y-2 bg-gray-50">
-        {/* Create Story Button */}
-        <div className="flex justify-center">
-          <button className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white">
-            Create Job
-          </button>
-        </div>
-        </div>
+  const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
+
+  const handleOpenCreateJob = () => {
+    setIsCreateJobOpen(true);
+  };
+
+  const handleCloseCreateJob = () => {
+    setIsCreateJobOpen(false);
+  };
+
+  return (
+    <div className="w-full p-4 space-y-2 bg-white">
+      {/* Create Job Button */}
+      <div className="flex justify-center">
+        <button
+          onClick={handleOpenCreateJob}
+          className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
+        >
+          Create Job
+        </button>
+      </div>
+
+      {/* Create Job Popup */}
+      {isCreateJobOpen && <CreateJob onClose={handleCloseCreateJob} />}
+    </div>
   );
 };
 
