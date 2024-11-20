@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import PostCard from "../Common/PostCard";
+import axiosInstance from "../../../utils/axiosinstance";
 
 const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -17,9 +17,7 @@ const HomeContent = () => {
     // Fetch posts from the API
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
-          "https://n-square.onrender.com/api/network-next/v1/post/"
-        );
+        const response = await axiosInstance.get("/post");
         setPosts(response.data); // Assuming API response returns an array of posts
       } catch (error) {
         console.error("Error fetching posts:", error);
