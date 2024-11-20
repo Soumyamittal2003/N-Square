@@ -1,12 +1,13 @@
 import bookmark from "../../../assets/icons/bookmark.svg";
-
+import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
+import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 import shareArrow from "../../../assets/icons/shareArrow.svg";
 import jobImage from "../../../assets/icons/job-image.svg";
 
 const JobCard = () => {
   return (
-    <div className="w-[350px] border border-gray-300 rounded-lg shadow-lg bg-white p-4">
-      {/* Job Image with Badge */}
+    <div className="w-[350px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between">
+      {/* Job Image */}
       <div className="relative">
         <img
           src={jobImage}
@@ -16,10 +17,10 @@ const JobCard = () => {
       </div>
 
       {/* Job Details */}
-      <div className="mt-4">
+      <div className="mt-4 flex-1">
         <h4 className="text-md font-semibold">Software Engineer Intern</h4>
         <p className="text-sm text-gray-500">
-          DocuVille <span className="text-blue-600">India</span>
+          DocuVille <span className="text-blue-600 font-semibold">India</span><span className="text-green-600 font-semilbold"> Elegibility</span><span className="text-red-600 font-semibold"> Job</span>
         </p>
         <p className="text-sm text-gray-600 mt-2">
           Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -31,22 +32,39 @@ const JobCard = () => {
         </p>
       </div>
 
-      <div className="flex gap-5 justify-between items-start self-center mt-2 w-full">
-        <button className="overflow-hidden gap-2.5 self-stretch px-5 py-1.5 text-xs font-bold tracking-normal leading-none text-white whitespace-nowrap bg-blue-600 rounded-xl">
-        Apply
-      </button>
+      {/* Bottom Section */}
+      <div className="flex justify-between items-center mt-4">
+        {/* Left Icons */}
+        <div className="flex gap-4">
+          <button className="w-5 h-5">
+            <img src={shareArrow} alt="Share" className="w-full h-full" />
+          </button>
+          <button className="w-5 h-5">
+            <img src={bookmark} alt="Bookmark" className="w-full h-full" />
+          </button>
+          <button className="flex items-center gap-0">
+            <img
+              src={arrowBlockUp}
+              alt="Up arrow"
+              className="w-5 h-5 object-contain"
+            />
+            <span className="text-sm font-semibold">63K</span>
+          </button>
+          <button className="flex items-center gap-0">
+            <img
+              src={arrowBlockdown}
+              alt="Down arrow"
+              className="w-5 h-5 object-contain"
+            />
+            <span className="text-sm font-semibold">13K</span>
+          </button>
+        </div>
 
-
-      {/* Interaction Icons */}
-      <div className="flex gap-4 items-center">
-        <button className="flex gap-1.5 items-start self-stretch py-1.5 my-auto w-[18px]">
-          <img src={shareArrow} alt="Share" className="object-contain rounded-sm aspect-square w-[18px]" />
-        </button>
-        <button className="flex gap-2.5 items-start self-stretch py-1.5 my-auto w-[15px]">
-          <img src={bookmark} alt="Bookmark" className="object-contain rounded-none aspect-[0.83] w-[15px]" />
+        {/* Apply Button */}
+        <button className="px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-2xl">
+          Apply
         </button>
       </div>
-    </div>
     </div>
   );
 };

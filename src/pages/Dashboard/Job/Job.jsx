@@ -1,11 +1,18 @@
 import JobContent from "./JobContent";
+import RightSidebar from "./RightSideBar";
 const Home = () => {
   return (
-    <>
-      <div className="flex w-screen">
+    
+      <div className="flex w-full bg-white">
+      {/* Main Content */}
+      <div className="w-[80%] p-2">
         <JobContent />
       </div>
-    </>
+      <div className="w-[30%] p-2">
+        <RightSidebar />
+      </div>
+      </div>
+    
   );
 };
 

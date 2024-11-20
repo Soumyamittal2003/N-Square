@@ -6,9 +6,9 @@ const JobContent = () => {
   const tabs = ["All", "Alumni", "Faculty"];
 
   return (
-    <div className="w-100%">
+    <div className="w-80%">
       
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4 ">
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4 scroll-m-11">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -39,6 +39,7 @@ const JobContent = () => {
           <JobCard key={index} />
         ))}
       </div>
+      
       
     </div>
   );
