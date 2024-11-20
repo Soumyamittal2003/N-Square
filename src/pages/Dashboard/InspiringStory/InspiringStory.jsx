@@ -60,7 +60,7 @@ const InspiringStory = () => {
         <section className="my-8">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold">Short Inspiring Stories</h2>
-            <a href="#view-all" className="text-blue-600">
+            <a href="#view-all" className="text-black font-semibold">
               View All
             </a>
           </div>

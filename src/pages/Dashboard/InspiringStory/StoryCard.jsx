@@ -1,4 +1,5 @@
-
+import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
+import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
 const StoryCard = ({ title, description }) => {
   return (
@@ -9,15 +10,19 @@ const StoryCard = ({ title, description }) => {
       </div>
       <h3 className="mt-2 text-lg font-semibold">{title}</h3>
       <p className="mt-2 text-sm text-gray-600">{description}</p>
-      <div className="flex mt-4 space-x-4">
-        <button className="text-gray-500 hover:text-black">
-          👍
-        </button>
-        <button className="text-gray-500 hover:text-black">
-          👎
-        </button>
-        <button className="text-blue-500 hover:text-blue-600">Follow</button>
+      <div className="flex justify-between mt-4 p-2 text-sm ">
+        <div className="flex items-center gap-3">
+          <button className="flex gap-1 font-semibold justify-center">
+            <img src={arrowBlockUp}></img>
+            <span>63K</span>
+          </button>
+          <button className="flex gap-1 font-semibold justify-center">
+            <img src={arrowBlockdown}></img>
+            <span>13K</span>
+          </button>
+        <button className="px-4 py-1 ml-2 bg-blue-600 text-white  rounded-full text-xs font-semibold">Follow</button>
       </div>
+    </div>
     </div>
   );
 };
