@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import PostCard from "../Common/PostCard";
-import { useState } from "react";
 
 const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("All");
+  const [posts, setPosts] = useState([]);
   const tabs = [
     "All",
     "Origination Post",
@@ -10,16 +12,32 @@ const HomeContent = () => {
     "Student Post",
     "Facility Post",
   ];
-  const postText = `
-  In this extensive post, we delve deep into the crucial aspect of risk
-  management in trading and investing. From understanding risk types to
-  implementing effective risk mitigation strategies, we cover everything you
-  need to know to safeguard your investments and optimize your portfolio's
-  performance. Don't miss out on this invaluable resource for traders and
-  investors alike! #RiskManagement #InvestingInsights #PortfolioProtection
-`;
 
-  const postImages = ["https://picsum.photos/900/400/?blur"];
+  useEffect(() => {
+    // Fetch posts from the API
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(
+          "https://n-square.onrender.com/api/network-next/v1/post/"
+        );
+        setPosts(response.data); // Assuming API response returns an array of posts
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  // Filter posts based on the active tab
+  const filteredPosts = posts.filter((post) => {
+    if (activeTab === "All") return true;
+    if (activeTab === "Origination Post") return post.createdBy === "ORIGIN_ID"; // Replace with actual filter logic
+    if (activeTab === "Alumni Post") return post.createdBy === "ALUMNI_ID"; // Replace with actual filter logic
+    if (activeTab === "Student Post") return post.createdBy === "STUDENT_ID"; // Replace with actual filter logic
+    if (activeTab === "Facility Post") return post.createdBy === "FACILITY_ID"; // Replace with actual filter logic
+    return true;
+  });
 
   return (
     <div className="w-1/2">
@@ -36,12 +54,14 @@ const HomeContent = () => {
           </button>
         ))}
       </div>
-      <div className="w-full bg-[#ffffff] p-4  h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
-        <PostCard text={postText} images={postImages} />
-        <PostCard text={postText} images={postImages} />
-        <PostCard text={postText} images={postImages} />
-        <PostCard text={postText} images={postImages} />
-        {/* Add more PostCard components as needed */}
+      <div className="w-full bg-[#ffffff] p-4 h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
+        {filteredPosts.map((post) => (
+          <PostCard
+            key={post._id}
+            text={post.description}
+            images={[post.postPhoto]}
+          />
+        ))}
       </div>
     </div>
   );

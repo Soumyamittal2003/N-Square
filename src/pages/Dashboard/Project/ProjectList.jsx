@@ -17,6 +17,7 @@ const ProjectList = ({ activeTab }) => {
         );
         if (response.data.success) {
           setProjects(response.data.data);
+          console.log(response);
         }
       } catch (err) {
         setError("Failed to fetch projects.");
