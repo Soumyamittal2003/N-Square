@@ -45,7 +45,7 @@ const CreateProject = () => {
   };
 
   return (
-    <div className=" flex">
+    <div className=" flex ">
       <form
         onSubmit={handleSubmit}
         className="bg-white mx-auto p-8 border rounded-lg shadow-lg w-full max-w-6xl"

@@ -12,7 +12,7 @@ import UserProfile from "./Common/UserProfile";
 import Error404 from "../Error404";
 import Followers from "./Connection/Followers";
 import Following from "./Connection/Following";
-import PostPopup from "./Connection/Postpage";
+//import PostPopup from "./Connection/Postpage";
 import CreateProject from "./Project/CreateProject";
 
 const Dashboard = () => {

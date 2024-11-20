@@ -6,16 +6,16 @@ import shareIcon from "../../../assets/icons/shareArrow.svg";
 
 const EventCard = ({ image, title, speaker, date, time, tags, attending, verified }) => {
   return (
-    <div className=" w-[350px] border border-gray-300 rounded-lg shadow-lg bg-white p-4">
+    <div className=" w-[270px] border border-gray-300 rounded-lg shadow-lg bg-white p-4">
       {/* Event Image */}
       <div className="relative">
-        <img src={image} alt={title} className="w-full h-40 rounded-lg object-cover" />
+        <img src={image} alt={title} className="w-45 h-30 rounded-lg object-cover" />
         {/* <img src={badgeIcon} alt="Badge" className="absolute top-2 left-2 w-8 h-8" /> */}
       </div>
       
       {/* Event Details */}
       <div>
-      <div className="flex gap-5 justify-between items-start self-center mt-2 w-full">
+      <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
         <p className="text-sm text-gray-500">{date} • {time}</p>
         
       <button aria-label="Share event" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square">

@@ -46,8 +46,8 @@ const EventContent = () => {
   ];
 
   return (
-    <div className="w-80%">
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4 ">
+    <div className="w-[65%]">
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4 ">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -63,7 +63,7 @@ const EventContent = () => {
       
     <div className="p-4">
       {/* Section: Sessions */}
-      <div className="mb-8">
+      <div className="mb-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Sessions</h2>
           <button className=" text-sm font-semibold">Explore All</button>

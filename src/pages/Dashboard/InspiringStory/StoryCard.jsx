@@ -1,20 +1,25 @@
-// StoryCard.js
 
-export default function StoryCard({ name, description }) {
+
+const StoryCard = ({ title, description }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg w-64">
-      <div className="bg-gray-200 h-32 w-full rounded-t-lg"></div>
-      <div className="p-4">
-        <h3 className="text-lg font-bold">{name}</h3>
-        <p className="text-sm text-gray-500">{description}</p>
-        <div className="flex items-center mt-4">
-          <button className="mr-2">👍</button>
-          <button className="mr-2">👎</button>
-          <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded">
-            Follow
-          </button>
-        </div>
+    <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center text-center">
+      <div className="bg-gray-300 rounded-full w-16 h-16 flex items-center justify-center">
+        {/* Placeholder for a logo or avatar */}
+        <span className="text-white font-bold text-lg">{title.charAt(0)}</span>
+      </div>
+      <h3 className="mt-2 text-lg font-semibold">{title}</h3>
+      <p className="mt-2 text-sm text-gray-600">{description}</p>
+      <div className="flex mt-4 space-x-4">
+        <button className="text-gray-500 hover:text-black">
+          👍
+        </button>
+        <button className="text-gray-500 hover:text-black">
+          👎
+        </button>
+        <button className="text-blue-500 hover:text-blue-600">Follow</button>
       </div>
     </div>
   );
-}
+};
+
+export default StoryCard;

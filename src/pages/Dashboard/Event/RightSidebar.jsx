@@ -1,6 +1,7 @@
 const RightSidebar = () => {
     return (
-      <div className="w-1/3 mt-12 mb-auto bg-white px-10  rounded-lg p-10">
+      
+      <div className="w-1/3 mt-6 mb-auto bg-white px-10  rounded-lg p-11">
         <div className="mb-6">
           {/* Upcoming Events Section */}
           <div className="border p-2 rounded-lg shadow-md">
@@ -14,7 +15,7 @@ const RightSidebar = () => {
             {/* Event Card */}
   
             {[1, 2].map((event, index) => (
-              <div key={index} className=" p-4 rounded-lg my-2  flex">
+              <div key={index} className=" p-2 rounded-lg my-2  flex">
                 <img
                   src="https://via.placeholder.com/60"
                   alt="Event Thumbnail"
@@ -23,7 +24,7 @@ const RightSidebar = () => {
                 <div className="ml-3 flex-1">
                   <p className="text-sm font-semibold">
                     Investing Live: Opportunities and Risk Management
-                    #investingtips #live #riskmanagement
+                    #investingtips 
                   </p>
                   <div className="flex justify-evenly mx-auto mt-2">
                     <button className="bg-[#1F6BFF] text-white font-semibold px-4 mx-4 w-1/2 py-1 rounded-lg text-sm">
