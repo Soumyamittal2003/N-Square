@@ -1,15 +1,26 @@
-
+import  { useState } from "react";
+import CreateStory from "./CreateStory";
+ // Import the CreateStory component
 
 const RightSidebar = () => {
+  const [isCreateStoryOpen, setIsCreateStoryOpen] = useState(false);
+
+  // Handlers to open and close the Create Story popup
+  const handleOpenCreateStory = () => setIsCreateStoryOpen(true);
+  const handleCloseCreateStory = () => setIsCreateStoryOpen(false);
+
   return (
-    <div className="w-full p-4 space-y-6 bg-gray-50">
+    <div className="w-full p-4 space-y-6 bg-gray-50 ">
       {/* Create Story Button */}
-      <div className="flex justify-center">
-        <button className="px-6 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white">
+      <div className="flex justify-center mb-2">
+        <button
+          onClick={handleOpenCreateStory}
+          className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
+        >
           Create Story
         </button>
       </div>
-
+      {isCreateStoryOpen && <CreateStory onClose={handleCloseCreateStory} />}
       {/* Trending Stories Section */}
       <div>
         <h2 className="text-lg font-semibold text-gray-800">Trending Stories</h2>
@@ -43,6 +54,9 @@ const RightSidebar = () => {
           </div>
         </div>
       </div>
+
+      {/* CreateStory Popup */}
+      
     </div>
   );
 };
