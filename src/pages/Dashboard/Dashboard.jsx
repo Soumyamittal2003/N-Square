@@ -15,6 +15,7 @@ import Following from "./Connection/Following";
 import CreateJob  from "./Job/RightSideBar";
 //import PostPopup from "./Connection/Postpage";
 import CreateProject from "./Project/CreateProject";
+import AlmaResource from "./AlmaResource/AlmaResource";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -37,6 +38,7 @@ const Dashboard = () => {
             <Route path="project/create-project" element={<CreateProject />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
             <Route path="job/create-job" element={<CreateJob />} />
+            <Route path="alumni-resources" element={<AlmaResource />} />
             <Route path="connection" element={<Connection />} />
             <Route path="followers" element={<Followers />} />
             <Route path="following" element={<Following />} />
