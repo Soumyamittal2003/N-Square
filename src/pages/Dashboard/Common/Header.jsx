@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef ,useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 import NsquareLogo from "../../../assets/icons/logo nsqaure 1.svg";
 import notification from "../../../assets/icons/notification-icon.svg";
 import search from "../../../assets/icons/search-icon.svg";
@@ -70,8 +71,9 @@ const SettingsModal = ({ settingsOptions }) => {
         <li>
           <button
             onClick={() => {
-              localStorage.removeItem("token");
-              localStorage.removeItem("id");
+              Cookies.remove("token");
+              Cookies.remove("id");
+              Cookies.remove("role");
               toast.success("Logged out successfully!");
               navigate("/login"); // Redirect after logout
             }}

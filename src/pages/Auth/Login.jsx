@@ -8,6 +8,7 @@ import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 import SocialLoginButtons from "./SocialLoginBottons";
 import CheckmarkAnimation from "../../assets/animations/checkmark.gif";
 import axiosInstance from "../../utils/axiosinstance";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -68,9 +69,9 @@ const LoginPage = () => {
         }
       )
       .then((response) => {
-        localStorage.setItem("token", response?.data?.token);
-        localStorage.setItem("id", response?.data?.user?._id);
-        localStorage.setItem("role", response?.data?.user?.role);
+        Cookies.set("token", response?.data?.token, { expires: 7 }); // expires in 7 days
+        Cookies.set("id", response?.data?.user?._id, { expires: 7 });
+        Cookies.set("role", response?.data?.user?.role, { expires: 7 });
         setShowPopup(true); // Show popup on successful login
       })
       .catch((err) => {

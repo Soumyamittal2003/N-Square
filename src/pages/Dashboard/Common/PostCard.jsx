@@ -1,11 +1,16 @@
 import { useState } from "react";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
-import bookmark from "../../../assets/icons/bookmark.svg";
 import comment from "../../../assets/icons/comment.svg";
-import shareArrow from "../../../assets/icons/shareArrow.svg";
 
-const PostCard = ({ text = "", images = [] }) => {
+const PostCard = ({
+  post,
+  user,
+  currentUserId,
+  onLikePost,
+  onDislikePost,
+  onFollowUser,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,7 +25,11 @@ const PostCard = ({ text = "", images = [] }) => {
     setIsModalOpen(false);
   };
 
-  // Function to split text into hashtags and regular text
+  // Check if the current user has liked or disliked the post
+  const isLiked = post.likes.includes(currentUserId);
+  const isDisliked = post.dislikes.includes(currentUserId);
+
+  // Parse hashtags in text
   const parseTextWithHashtags = (text) => {
     return text.split(/(#[a-zA-Z0-9_]+)/g).map((part, index) => {
       if (part.startsWith("#")) {
@@ -34,10 +43,11 @@ const PostCard = ({ text = "", images = [] }) => {
     });
   };
 
-  // Truncated text for preview, checking if text exists
-  const truncatedText = text
-    ? text.slice(0, 150) + (text.length > 150 ? "..." : "")
-    : "";
+  // Truncate the text for preview
+  const truncatedText =
+    post.description.length > 150
+      ? post.description.slice(0, 150) + "..."
+      : post.description;
 
   return (
     <div className="bg-white m-6 p-4 w-5/6 mx-auto rounded-lg shadow mb-4 border border-gray-200">
@@ -45,47 +55,38 @@ const PostCard = ({ text = "", images = [] }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src="https://via.placeholder.com/40"
-            alt="Author"
+            src={user?.profileimageUrl || "https://via.placeholder.com/40"}
+            alt={`${user?.firstName || "User"}'s Avatar`}
             className="rounded-full w-10 h-10"
           />
           <div className="ml-3">
             <div className="flex items-center">
-              <h4 className="font-semibold">Lauy Rahil</h4>
-              <button className="ml-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
+              <h4 className="font-semibold text-gray-800">
+                {user ? `${user.firstName} ${user.lastName}` : "Unknown User"}
+              </h4>
+              <button
+                onClick={() => onFollowUser(user?._id)}
+                className="ml-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold hover:bg-blue-700 transition"
+              >
                 Follow
               </button>
             </div>
-            <p className="text-sm text-gray-500">Studied at Trading Strategy</p>
+            <p className="text-sm text-gray-500">
+              {user?.role || "Unknown Role"}
+            </p>
           </div>
         </div>
         <div className="flex self-start text-gray-500">
-          <p className="text-sm">2 hours ago</p>
-          <button className="ml-3 text-gray-900 hover:text-gray-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+          <p className="text-sm">{new Date(post.createdAt).toLocaleString()}</p>
         </div>
       </div>
 
       {/* Content Section */}
       <p className="text-sm mx-2 text-gray-800 mt-2">
         {isExpanded
-          ? parseTextWithHashtags(text)
+          ? parseTextWithHashtags(post.description)
           : parseTextWithHashtags(truncatedText)}
-        {text.length > 150 && (
+        {post.description.length > 150 && (
           <span
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-blue-600 font-bold cursor-pointer ml-1"
@@ -96,22 +97,13 @@ const PostCard = ({ text = "", images = [] }) => {
       </p>
 
       {/* Uploaded Images Section */}
-      {images.length > 0 && (
-        <div
-          className={`mt-4 grid gap-2 ${
-            images.length === 1 ? "grid-cols-1" : "grid-cols-2 sm:grid-cols-2"
-          }`}
-        >
-          {images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`Uploaded ${index + 1}`}
-              onClick={() => openImageModal(image)}
-              className=" aspect-video rounded-lg object-scale-down cursor-pointer"
-            />
-          ))}
-        </div>
+      {post.postPhoto && (
+        <img
+          src={post.postPhoto}
+          alt="Post"
+          onClick={() => openImageModal(post.postPhoto)}
+          className="mt-4 rounded-lg object-scale-down cursor-pointer"
+        />
       )}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
@@ -132,27 +124,37 @@ const PostCard = ({ text = "", images = [] }) => {
       )}
 
       {/* Interaction Section */}
-      <div className="flex justify-between mt-4 p-2 text-sm ">
-        <div className="flex items-center gap-3">
-          <button className="flex gap-1 font-semibold justify-center">
-            <img src={arrowBlockUp}></img>
-            <span>63K</span>
+      <div className="flex justify-between mt-4 p-2 text-sm border-t border-gray-200 pt-3">
+        {/* Left Section: Interactions */}
+        <div className="flex items-center gap-6">
+          {/* Like Button */}
+          <button
+            onClick={() => onLikePost(post._id)}
+            className={`flex items-center gap-1 font-semibold ${
+              isLiked ? "text-blue-500" : "text-gray-600"
+            } hover:text-blue-500 transition`}
+          >
+            <img src={arrowBlockUp} alt="Upvote" className="w-6 h-6" />
+            <span className="font-semibold text-xl">{post.likes.length}</span>
           </button>
-          <button className="flex gap-1 font-semibold justify-center">
-            <img src={arrowBlockdown}></img>
-            <span>13K</span>
+
+          {/* Dislike Button */}
+          <button
+            onClick={() => onDislikePost(post._id)}
+            className={`flex items-center gap-1 font-semibold ${
+              isDisliked ? "text-blue-500" : "text-gray-600"
+            } hover:text-blue-500 transition`}
+          >
+            <img src={arrowBlockdown} alt="Downvote" className="w-6 h-6 " />
+            <span className="font-semibold text-xl">
+              {post.dislikes.length}
+            </span>
           </button>
-          <button className="flex gap-1 font-semibold justify-center">
-            <img src={comment}></img>
-            <span>13K</span>
-          </button>
-        </div>
-        <div className="flex justify-center items-center gap-3">
-          <button className="flex font-semibold">
-            <img src={shareArrow}></img>
-          </button>
-          <button className="flex font-semibold">
-            <img src={bookmark}></img>
+
+          {/* Comments Button */}
+          <button className="flex items-center gap-1 font-semibold text-gray-600 hover:text-blue-500 transition">
+            <img src={comment} alt="Comment" className="w-5 h-5" />
+            <span>{post.comments?.length || 0}</span>
           </button>
         </div>
       </div>

@@ -4,7 +4,7 @@ import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosinstance";
-
+import Cookies from "js-cookie";
 const ConnectionContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +18,7 @@ const ConnectionContent = () => {
   useEffect(() => {
     const fetchUsersAndFollowing = async () => {
       setLoading(true);
-      const currentUserId = localStorage.getItem("id");
+      const currentUserId = Cookies.get("id");
 
       try {
         // Fetch all users
@@ -68,7 +68,7 @@ const ConnectionContent = () => {
   }, [activeTab, searchQuery, users, following]);
 
   const handleFollow = async (id) => {
-    const currentUserId = localStorage.getItem("id");
+    const currentUserId = Cookies.get("id");
     try {
       await axiosInstance.post(`/users/follow-user/${id}`, { currentUserId });
       setFollowing((prev) => [...prev, id]);
@@ -78,7 +78,7 @@ const ConnectionContent = () => {
   };
 
   const handleUnfollow = async (id) => {
-    const currentUserId = localStorage.getItem("id");
+    const currentUserId = Cookies.get("id");
     try {
       await axiosInstance.post(`/users/unfollow-user/${id}`, { currentUserId });
       setFollowing((prev) => prev.filter((userId) => userId !== id));

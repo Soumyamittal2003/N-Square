@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import PostCard from "./PostCard";
+import Cookies from "js-cookie";
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,33 +18,82 @@ const UserProfile = () => {
   });
   const [profileImage, setProfileImage] = useState("");
   const [bannerImage, setBannerImage] = useState("");
+  const [userPosts, setUserPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userId = localStorage.getItem("id");
-        const response = await axiosInstance.get(`/users/${userId}`);
-        const userData = response.data.data;
+        const userId = Cookies.get("id");
+        const [userResponse, postsResponse] = await Promise.all([
+          axiosInstance.get(`/users/${userId}`),
+          axiosInstance.get(`/post/user/${userId}`),
+        ]);
+
+        const userData = userResponse.data.data;
         setProfileInfo({
           firstName: userData.firstName || "",
           lastName: userData.lastName || "",
+          role: userData.role || "", // Add role
+          profileImage: userData.profileimageUrl || "", // Add profile image
           phone: userData.phone || "",
           address: userData.address || "",
           city: userData.city || "",
           about: userData.about || "",
           tagline: userData.tagline || "",
         });
-        setProfileImage(userData.profileimageUrl || profileImage);
-        setBannerImage(userData.backgroundimageUrl || bannerImage);
+        setUserPosts(postsResponse.data || []);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching user data or posts:", error);
       }
     };
 
     fetchUserData();
   }, []);
+  const handleLikePost = async (postId) => {
+    try {
+      await axiosInstance.post(`/post/${postId}/like`);
+      setUserPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: post.likes.includes(Cookies.get("id"))
+                  ? post.likes.filter((id) => id !== Cookies.get("id"))
+                  : [...post.likes, Cookies.get("id")],
+                dislikes: post.dislikes.filter(
+                  (id) => id !== Cookies.get("id")
+                ), // Remove dislike
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error liking the post:", error);
+    }
+  };
+
+  const handleDislikePost = async (postId) => {
+    try {
+      await axiosInstance.post(`/post/${postId}/dislike`);
+      setUserPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                dislikes: post.dislikes.includes(Cookies.get("id"))
+                  ? post.dislikes.filter((id) => id !== Cookies.get("id"))
+                  : [...post.dislikes, Cookies.get("id")],
+                likes: post.likes.filter((id) => id !== Cookies.get("id")), // Remove like
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error disliking the post:", error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +106,7 @@ const UserProfile = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const userId = localStorage.getItem("id");
+        const userId = Cookies.get("id");
         const url =
           type === "profile"
             ? `/profile/updateProfileImage/${userId}`
@@ -74,7 +124,7 @@ const UserProfile = () => {
 
   const saveProfileEdits = async () => {
     try {
-      const userId = localStorage.getItem("id");
+      const userId = Cookies.get("id");
       const updatedProfile = {
         firstName: profileInfo.firstName,
         lastName: profileInfo.lastName,
@@ -85,7 +135,7 @@ const UserProfile = () => {
         tagline: profileInfo.tagline,
       };
 
-      axiosInstance.put(`/users/update/${userId}`, updatedProfile);
+      await axiosInstance.put(`/users/update/${userId}`, updatedProfile);
 
       setIsEditing(false);
     } catch (error) {
@@ -96,16 +146,6 @@ const UserProfile = () => {
   if (loading) {
     return <div className="text-center py-6">Loading profile...</div>;
   }
-
-  const postText = `
-    In this extensive post, we delve deep into the crucial aspect of risk
-    management in trading and investing. From understanding risk types to
-    implementing effective risk mitigation strategies, we cover everything you
-    need to know to safeguard your investments and optimize your portfolio's
-    performance. Don't miss out on this invaluable resource for traders and
-    investors alike! #RiskManagement #InvestingInsights #PortfolioProtection
-  `;
-  const postImages = ["https://picsum.photos/900/400/?blur"];
 
   return (
     <div className="flex w-full min-h-screen">
@@ -142,7 +182,7 @@ const UserProfile = () => {
               <p className="text-gray-500">Following</p>
             </div>
             <div className="text-center">
-              <p className="font-bold text-lg">13K</p>
+              <p className="font-bold text-lg">{userPosts.length}</p>
               <p className="text-gray-500">Posts</p>
             </div>
           </div>
@@ -236,7 +276,25 @@ const UserProfile = () => {
         <div className="mt-6 mx-4">
           {activeTab === "My Posts" && (
             <div className="w-full bg-[#ffffff] h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
-              <PostCard text={postText} images={postImages} />
+              {userPosts.length > 0 ? (
+                userPosts.map((post) => (
+                  <PostCard
+                    key={post._id}
+                    post={post}
+                    user={{
+                      firstName: profileInfo.firstName,
+                      lastName: profileInfo.lastName,
+                      role: profileInfo.role,
+                      profileimageUrl: profileInfo.profileImage,
+                    }}
+                    currentUserId={Cookies.get("id")} // Pass the current user ID
+                    onLikePost={handleLikePost} // Pass like handler
+                    onDislikePost={handleDislikePost} // Pass dislike handler
+                  />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No posts to show.</p>
+              )}
             </div>
           )}
           {activeTab === "My Projects" && (

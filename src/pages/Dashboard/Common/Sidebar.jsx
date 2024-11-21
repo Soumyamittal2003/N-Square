@@ -9,6 +9,7 @@ import ProfileSection from "./ProfileSection"; // Import the ProfileSection comp
 import { useState, useEffect } from "react";
 import PostPopup from "../Connection/Postpage.jsx";
 import axiosInstance from "../../../utils/axiosinstance";
+import Cookies from "js-cookie";
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const id = localStorage.getItem("id");
+        const id = Cookies.get("id");
         const response = await axiosInstance.get(`/users/${id}`);
         setUserData(response?.data?.data);
       } catch (error) {

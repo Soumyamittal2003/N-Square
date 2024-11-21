@@ -4,7 +4,7 @@ import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosinstance";
-
+import Cookies from "js-cookie";
 const Following = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [followingUsers, setFollowingUsers] = useState([]); // List of followed users
@@ -14,7 +14,7 @@ const Following = () => {
   useEffect(() => {
     const fetchFollowingUsers = async () => {
       setLoading(true);
-      const currentUserId = localStorage.getItem("id");
+      const currentUserId = Cookies.get("id");
 
       try {
         // Fetch current user's following list
@@ -57,7 +57,7 @@ const Following = () => {
   }, [searchQuery, followingUsers]);
 
   const handleUnfollow = async (id) => {
-    const currentUserId = localStorage.getItem("id");
+    const currentUserId = Cookies.get("id");
     try {
       await axiosInstance.post(`/users/unfollow-user/${id}`, { currentUserId });
       setFollowingUsers((prev) => prev.filter((user) => user._id !== id)); // Remove unfollowed user

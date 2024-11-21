@@ -5,6 +5,9 @@ import axiosInstance from "../../../utils/axiosinstance";
 const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState({});
+  const currentUserId = "67363daf6410c39c2629897b"; // Example current user ID
+
   const tabs = [
     "All",
     "Origination Post",
@@ -13,33 +16,114 @@ const HomeContent = () => {
     "Facility Post",
   ];
 
+  // Fetch posts and user data
   useEffect(() => {
-    // Fetch posts from the API
-    const fetchPosts = async () => {
+    const fetchPostsAndUsers = async () => {
       try {
         const response = await axiosInstance.get("/post");
-        setPosts(response.data); // Assuming API response returns an array of posts
+        const postsData = response.data;
+        setPosts(postsData);
+
+        const userIds = [...new Set(postsData.map((post) => post.createdBy))];
+        const userResponses = await Promise.all(
+          userIds.map((id) =>
+            axiosInstance
+              .get(`/users/${id}`)
+              .then((res) => ({ id, data: res.data.data }))
+              .catch((err) => {
+                console.error(`Error fetching user ${id}:`, err);
+                return null;
+              })
+          )
+        );
+
+        const usersData = userResponses
+          .filter((response) => response !== null)
+          .reduce((acc, { id, data }) => ({ ...acc, [id]: data }), {});
+
+        setUsers(usersData);
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching posts or users:", error);
       }
     };
 
-    fetchPosts();
+    fetchPostsAndUsers();
   }, []);
 
-  // Filter posts based on the active tab
+  // Handle like post
+  const handleLikePost = async (postId) => {
+    try {
+      await axiosInstance.post(`/post/${postId}/like`);
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: post.likes.includes(currentUserId)
+                  ? post.likes.filter((id) => id !== currentUserId)
+                  : [...post.likes, currentUserId],
+                dislikes: post.dislikes.filter((id) => id !== currentUserId),
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error liking the post:", error);
+    }
+  };
+
+  // Handle dislike post
+  const handleDislikePost = async (postId) => {
+    try {
+      await axiosInstance.post(`/post/${postId}/dislike`);
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                dislikes: post.dislikes.includes(currentUserId)
+                  ? post.dislikes.filter((id) => id !== currentUserId)
+                  : [...post.dislikes, currentUserId],
+                likes: post.likes.filter((id) => id !== currentUserId),
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error disliking the post:", error);
+    }
+  };
+
+  // Handle follow user
+  const handleFollowUser = async (userId) => {
+    try {
+      await axiosInstance.post(`/users/follow-user/${userId}`, {
+        currentUserId,
+      });
+      console.log(`Successfully followed user: ${userId}`);
+    } catch (error) {
+      console.error("Error following user:", error);
+    }
+  };
+
+  // Filter posts based on active tab
   const filteredPosts = posts.filter((post) => {
+    const user = users[post.createdBy];
+    if (!user) return false;
+
     if (activeTab === "All") return true;
-    if (activeTab === "Origination Post") return post.createdBy === "ORIGIN_ID"; // Replace with actual filter logic
-    if (activeTab === "Alumni Post") return post.createdBy === "ALUMNI_ID"; // Replace with actual filter logic
-    if (activeTab === "Student Post") return post.createdBy === "STUDENT_ID"; // Replace with actual filter logic
-    if (activeTab === "Facility Post") return post.createdBy === "FACILITY_ID"; // Replace with actual filter logic
-    return true;
+    if (activeTab === "Origination Post") return user.role === "organization";
+    if (activeTab === "Alumni Post") return user.role === "alumni";
+    if (activeTab === "Student Post") return user.role === "student";
+    if (activeTab === "Facility Post") return user.role === "faculty";
+
+    return false;
   });
 
   return (
     <div className="w-1/2">
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4 ">
+      {/* Tabs Section */}
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -52,14 +136,27 @@ const HomeContent = () => {
           </button>
         ))}
       </div>
+
+      {/* Posts Section */}
       <div className="w-full bg-[#ffffff] p-4 h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
-        {filteredPosts.map((post) => (
-          <PostCard
-            key={post._id}
-            text={post.description}
-            images={[post.postPhoto]}
-          />
-        ))}
+        {filteredPosts.length > 0 ? (
+          filteredPosts.map((post) => {
+            const user = users[post.createdBy];
+            return (
+              <PostCard
+                key={post._id}
+                post={post}
+                user={user}
+                currentUserId={currentUserId}
+                onLikePost={handleLikePost}
+                onDislikePost={handleDislikePost}
+                onFollowUser={handleFollowUser}
+              />
+            );
+          })
+        ) : (
+          <p className="text-gray-500 text-center">No posts available.</p>
+        )}
       </div>
     </div>
   );

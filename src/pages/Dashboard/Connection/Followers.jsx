@@ -4,7 +4,7 @@ import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosinstance";
-
+import Cookies from "js-cookie";
 const Followers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [followers, setFollowers] = useState([]);
@@ -15,7 +15,7 @@ const Followers = () => {
   useEffect(() => {
     const fetchFollowersAndFollowing = async () => {
       setLoading(true);
-      const currentUserId = localStorage.getItem("id");
+      const currentUserId = Cookies.get("id");
 
       try {
         // Fetch current user's followers and following lists
@@ -65,7 +65,7 @@ const Followers = () => {
   }, [searchQuery, followers]);
 
   const handleFollow = async (id) => {
-    const currentUserId = localStorage.getItem("id");
+    const currentUserId = Cookies.get("id");
     try {
       await axiosInstance.post(`/users/follow-user/${id}`, { currentUserId });
       setFollowers((prev) =>
@@ -79,7 +79,7 @@ const Followers = () => {
   };
 
   const handleUnfollow = async (id) => {
-    const currentUserId = localStorage.getItem("id");
+    const currentUserId = Cookies.get("id");
     try {
       await axiosInstance.post(`/users/unfollow-user/${id}`, { currentUserId });
       setFollowers((prev) =>
