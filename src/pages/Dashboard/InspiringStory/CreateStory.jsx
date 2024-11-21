@@ -59,7 +59,8 @@ const CreateStory = () => {
                 className="relative cursor-pointer mt-1 text-gray-500"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                {formData.storyType} <span className="ml-1 text-sm">&#x25BC;</span>
+                {formData.storyType}{" "}
+                <span className="ml-1 text-sm">&#x25BC;</span>
               </div>
               {dropdownOpen && (
                 <div className="absolute bg-white border border-gray-300 rounded mt-2 shadow-lg w-48 z-10">
@@ -121,21 +122,18 @@ const CreateStory = () => {
             {/* Emoji Picker */}
             <button
               type="button"
-              
               onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
               className="flex items-center text-gray-500 hover:text-gray-800"
             >
-              <img
-                src={emoji}
-                alt="Attach File"
-                className="w-5 h-5 mr-1"
-              />
+              <img src={emoji} alt="Attach File" className="w-5 h-5 mr-1" />
               <span className="ml-1">Emoji</span>
             </button>
             {emojiPickerOpen && (
               <div className="absolute mt-12">
                 <EmojiPicker
-                  onEmojiClick={(event, emojiObject) => handleEmojiClick(emojiObject)}
+                  onEmojiClick={(event, emojiObject) =>
+                    handleEmojiClick(emojiObject)
+                  }
                 />
               </div>
             )}

@@ -12,10 +12,11 @@ import UserProfile from "./Common/UserProfile";
 import Error404 from "../Error404";
 import Followers from "./Connection/Followers";
 import Following from "./Connection/Following";
-import CreateJob  from "./Job/RightSideBar";
+import CreateJob from "./Job/RightSideBar";
 //import PostPopup from "./Connection/Postpage";
 import CreateProject from "./Project/CreateProject";
 import AlmaResource from "./AlmaResource/AlmaResource";
+import Chat from "./Chat/Chat";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -34,6 +35,7 @@ const Dashboard = () => {
             <Route path="profile" element={<UserProfile />} />
             <Route path="job" element={<Job />} />
             <Route path="event" element={<Event />} />
+            <Route path="chat" element={<Chat />} />
             <Route path="project" element={<Project />} />
             <Route path="project/create-project" element={<CreateProject />} />
             <Route path="inspiring-story" element={<InspiringStory />} />

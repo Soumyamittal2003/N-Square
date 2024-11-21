@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify"; // Import toast
@@ -18,6 +18,12 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      navigate("/dashboard"); // Redirect to dashboard if token exists
+    }
+  }, [navigate]);
 
   const validateFields = () => {
     const errors = {};
@@ -72,6 +78,12 @@ const LoginPage = () => {
         Cookies.set("token", response?.data?.token, { expires: 7 }); // expires in 7 days
         Cookies.set("id", response?.data?.user?._id, { expires: 7 });
         Cookies.set("role", response?.data?.user?.role, { expires: 7 });
+
+        localStorage.setItem(
+          "chat-app-current-user",
+          JSON.stringify(response?.data?.user)
+        );
+
         setShowPopup(true); // Show popup on successful login
       })
       .catch((err) => {
