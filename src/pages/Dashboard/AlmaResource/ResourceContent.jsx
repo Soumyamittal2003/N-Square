@@ -4,7 +4,7 @@ const ResourceContent = () => {
   const resources = new Array(10).fill({
     title: "Learn C++ Programing With DSA Skils",
     location: "India",
-    uploader: "Batman",
+    uploader: "Unknwon",
     fileType: "PDF",
   });
 

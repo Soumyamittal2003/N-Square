@@ -16,6 +16,8 @@ import CreateJob from "./Job/RightSideBar";
 //import PostPopup from "./Connection/Postpage";
 import CreateProject from "./Project/CreateProject";
 import AlmaResource from "./AlmaResource/AlmaResource";
+import AboutEvent from "./Event/AboutEvent";
+
 import Chat from "./Chat/Chat";
 
 const Dashboard = () => {
@@ -35,6 +37,7 @@ const Dashboard = () => {
             <Route path="profile" element={<UserProfile />} />
             <Route path="job" element={<Job />} />
             <Route path="event" element={<Event />} />
+            <Route path="event/about-event" element={<AboutEvent />} />
             <Route path="chat" element={<Chat />} />
             <Route path="project" element={<Project />} />
             <Route path="project/create-project" element={<CreateProject />} />
