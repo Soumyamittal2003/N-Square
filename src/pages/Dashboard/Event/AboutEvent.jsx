@@ -11,7 +11,7 @@ const AboutEvent = () => {
     time,
     tags,
     attending,
-
+    // verified,
     
   } = location.state || {};
 

@@ -8,7 +8,7 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, verifie
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`/about-event`, {
+    navigate(`/dashboard/event/about-event`, {
       state: {
         image,
         title,
@@ -77,7 +77,7 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, verifie
           onClick={(e) => {
             e.stopPropagation(); // Prevent navigation from the card click
             handleNavigate();
-            navigate("/dashboard/event/about-event");
+            
           }}
         >
           Register
