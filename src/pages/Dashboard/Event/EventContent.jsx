@@ -20,7 +20,7 @@ const EventContent = () => {
       date: "Mar 1, 2024",
       time: "12:00 PM",
       tags: ["Indices", "Stocks", "Crypto"],
-      attending: "18,76,788 attending",
+      attending: "18,76,788 ",
       link:"https://www.youtube.com/watch?v=ZieW_OSkuiQ"
     },
     {
@@ -30,7 +30,7 @@ const EventContent = () => {
       date: "Mar 1, 2024",
       time: "12:00 PM",
       tags: ["Indices", "Stocks", "Crypto"],
-      attending: "18,76,788 attending",
+      attending: "18,76,788 ",
       link:"https://www.youtube.com/watch?v=ZieW_OSkuiQ"
     },
     {
@@ -40,13 +40,13 @@ const EventContent = () => {
       date: "Mar 1, 2024",
       time: "12:00 PM",
       tags: ["Indices", "Stocks", "Crypto"],
-      attending: "18,76,788 attending",
+      attending: "18,76,788 ",
       link:"https://www.youtube.com/watch?v=ZieW_OSkuiQ"
     },
   ];
 
   return (
-    <div className="w-[65%]">
+    <div className="w-[72%]">
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4 ">
         {tabs.map((tab) => (
           <button

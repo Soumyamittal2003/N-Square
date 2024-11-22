@@ -23,8 +23,8 @@ const AboutEvent = () => {
   return (
     <div className="flex justify-center p-8 ">
       {/* Event Content */}
-      <div className="bg-white shadow-lg rounded-lg max-w-4xl w-full p-6">
-        <img src={image} alt={title} className="w-full h-64 object-cover rounded-lg" />
+      <div className="bg-white shadow-lg rounded-lg max-w-6xl w-full p-6">
+        <img src={image}  className="w-full h-[300px] object-cover rounded-lg" />
         <p className="mt-2 text-gray-500">{date} {time}</p>
         
         <h1 className="mt-4 text-2xl font-bold">{title}</h1>
