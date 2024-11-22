@@ -4,7 +4,7 @@ import CheckmarkAnimation from "../../../assets/animations/checkmark.gif";
 const CreateEvent = () => {
   const [step, setStep] = useState(1);
   const [reminder, setReminder] = useState("");
-  const [tags, setTags] = useState(["Resume Building", "Web Development", "AI", "ML"]);
+  const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
 
   // Initialize formData state
@@ -28,7 +28,6 @@ const CreateEvent = () => {
     reminder: "",
   });
 
-  // Handle input changes dynamically
   const handleInputChange = (e) => {
     const { name, value, type, files, checked } = e.target;
     if (type === "file") {
@@ -52,28 +51,34 @@ const CreateEvent = () => {
     }
   };
 
-  // Add new tag
-  const handleAddTag = (e) => {
-    e.preventDefault();
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+  // Add tag to the tags array
+  const handleAddTag = () => {
+    if (tagInput.trim() && tags.length < 7 && !tags.includes(tagInput)) {
       setTags([...tags, tagInput.trim()]);
       setTagInput("");
     }
   };
 
-  // Remove tag
-  const handleRemoveTag = (tag) => {
-    setTags(tags.filter((t) => t !== tag));
+  // Remove tag from the tags array
+  const handleRemoveTag = (tagToRemove) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    console.log("Tags Submitted:", tags);
+    if (tags.length < 2 || tags.length > 7) {
+      alert("Please add between 2 and 7 tags.");
+      return;
+    }
+    console.log("Form Data Submitted:", { ...formData, tags });
   };
 
   const handleNext = () => {
+    // if (step === 3 && (tags.length < 2 || tags.length > 7)) {
+    //   alert("Please add between 2 and 7 tags before proceeding.");
+    //   return;
+    // }
     setStep((prevStep) => prevStep + 1);
   };
 
@@ -280,42 +285,61 @@ const CreateEvent = () => {
               className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            <label className="block text-sm font-semibold mb-2 mt-4">Tags / Topics</label>
-            <div className="w-full border border-gray-300 rounded-lg p-3">
-              <div className="flex flex-wrap gap-2 mb-3">
-                {tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full flex items-center gap-2"
+              <div className="mt-4">
+                <label className="block text-sm font-semibold mb-2 mt-4">Tags / Topics</label> 
+                <div className="w-full border border-gray-300 rounded-lg p-3">
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full flex items-center gap-2"
+                      >
+                        {tag}
+                        <button
+                          onClick={() => handleRemoveTag(tag)}
+                          className="text-red-500 font-bold"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleAddTag();
+                    }}
+                    className="flex gap-2"
                   >
-                    {tag}
+                    <input
+                      type="text"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      placeholder="Add a tag"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                     <button
-                      onClick={() => handleRemoveTag(tag)}
-                      className="text-red-500 font-bold"
+                      type="submit"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      disabled={tags.length >= 7}
                     >
-                      ×
+                      Add
                     </button>
-                  </span>
-                ))}
-              </div>
-              <form onSubmit={handleAddTag} className="flex gap-2">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  placeholder="Add a tag"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  Add
-                </button>
-              </form>
-            </div>
+                  </form>
 
-            <label className="block text-sm font-semibold mb-2">Eligibility</label>
+                  {/* Error Message */}
+                  {tags.length < 2 || tags.length > 7 ? (
+                    <p className="mt-2 text-sm text-red-500">
+                      {tags.length < 2
+                        ? "Please add at least 2 tags before proceeding."
+                        : "You cannot add more than 7 tags."}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+
+
+            <label className="block text-sm font-semibold mb-2 mt-4">Eligibility</label>
             <select
               name="eligibility"
               value={formData.eligibility}
