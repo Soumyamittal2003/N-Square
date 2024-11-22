@@ -21,7 +21,7 @@ const EventContent = () => {
       time: "12:00 PM",
       tags: ["Indices", "Stocks", "Crypto"],
       attending: "18,76,788 attending",
-      verified: true,
+      link:"https://www.youtube.com/watch?v=ZieW_OSkuiQ"
     },
     {
       image: event1,
@@ -31,7 +31,7 @@ const EventContent = () => {
       time: "12:00 PM",
       tags: ["Indices", "Stocks", "Crypto"],
       attending: "18,76,788 attending",
-      verified: true,
+      link:"https://www.youtube.com/watch?v=ZieW_OSkuiQ"
     },
     {
       image: event1,
@@ -41,7 +41,7 @@ const EventContent = () => {
       time: "12:00 PM",
       tags: ["Indices", "Stocks", "Crypto"],
       attending: "18,76,788 attending",
-      verified: false,
+      link:"https://www.youtube.com/watch?v=ZieW_OSkuiQ"
     },
   ];
 

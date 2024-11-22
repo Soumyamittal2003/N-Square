@@ -4,7 +4,7 @@ import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 import shareIcon from "../../../assets/icons/shareArrow.svg";
 
-const EventCard = ({ image, title, speaker, date, time, tags, attending, verified }) => {
+const EventCard = ({ image, title, speaker, date, time, tags, attending, link }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -17,7 +17,7 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, verifie
         time,
         tags,
         attending,
-        verified,
+        link,
       },
     });
   };
@@ -42,7 +42,7 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, verifie
         </div>
         <h4 className="text-md font-semibold mt-1">{title}</h4>
         <p className="text-sm text-gray-500 flex items-center">
-          {speaker} {verified && <span className="text-blue-600 ml-1">✔</span>}
+          {speaker}
         </p>
 
         {/* Tags */}
@@ -53,7 +53,10 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, verifie
             </span>
           ))}
         </div>
-
+        <div className="flex gap-3 items-center mt-2 text-sm text-gray-500">
+          <span>{link}</span>
+        </div>
+          
         {/* Attending */}
         <div className="flex gap-3 items-center mt-2 text-sm text-gray-500">
           <span>{attending}</span>
