@@ -4,6 +4,8 @@ import CheckmarkAnimation from "../../../assets/animations/checkmark.gif";
 const CreateEvent = () => {
   const [step, setStep] = useState(1);
   const [reminder, setReminder] = useState("");
+  const [tags, setTags] = useState(["Resume Building", "Web Development", "AI", "ML"]);
+  const [tagInput, setTagInput] = useState("");
 
   // Initialize formData state
   const [formData, setFormData] = useState({
@@ -16,13 +18,13 @@ const CreateEvent = () => {
     enterVenue: "",
     eventLink: "",
     eventDescription: "",
-    facultyCoordinator: "",
-    studentCoordinator: "",
-    alumniCoordinator: "",
+    eventCoordinator: "",
+    tagAndTopics: "",
+    contactDetails: "",
     eligibility: "",
     speaker: "",
     organizedBy: "",
-    comments: "",
+    
     reminder: "",
   });
 
@@ -44,13 +46,31 @@ const CreateEvent = () => {
         ...prevData,
         [name]: value,
       }));
-    }setReminder(e.target.value);
+    }
+    if (name === "reminder") {
+      setReminder(value);
+    }
+  };
+
+  // Add new tag
+  const handleAddTag = (e) => {
+    e.preventDefault();
+    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+      setTags([...tags, tagInput.trim()]);
+      setTagInput("");
+    }
+  };
+
+  // Remove tag
+  const handleRemoveTag = (tag) => {
+    setTags(tags.filter((t) => t !== tag));
   };
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
+    console.log("Tags Submitted:", tags);
   };
 
   const handleNext = () => {
@@ -127,7 +147,7 @@ const CreateEvent = () => {
               <option value="Training">Training</option>
             </select>
             <div className="flex gap-4 mt-4">
-            <label className="block text-sm font-semibold mb-1">Event Mode: </label>
+              <label className="block text-sm font-semibold mb-1">Event Mode: </label>
               <label className="flex items-center gap-2">
                 <input
                   type="radio"
@@ -151,6 +171,36 @@ const CreateEvent = () => {
                 Offline
               </label>
             </div>
+
+            {/* Conditional Fields */}
+            {formData.eventMode === "Offline" && (
+              <div className="mt-4">
+                <label className="block text-sm font-semibold mb-2">Enter Venue</label>
+                <input
+                  type="text"
+                  name="enterVenue"
+                  value={formData.enterVenue}
+                  onChange={handleInputChange}
+                  placeholder="Enter Venue"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+
+            {formData.eventMode === "Online" && (
+              <div className="mt-4">
+                <label className="block text-sm font-semibold mb-2">Event Link</label>
+                <input
+                  type="url"
+                  name="eventLink"
+                  value={formData.eventLink}
+                  onChange={handleInputChange}
+                  placeholder="Event Link"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">Date</label>
               <input
@@ -171,47 +221,19 @@ const CreateEvent = () => {
                 className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
             <div className="mt-4">
-            <label className="block text-sm font-semibold mb-2">Enter Venue</label>
-            <input
-              type="text"
-              name="Enter Venue"
-              value={formData.enterVenue}
-              onChange={handleInputChange}
-              placeholder="Enter Venue"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+              <label className="block text-sm font-semibold mb-2">Event Description</label>
+              <textarea
+                name="eventDescription"
+                value={formData.eventDescription}
+                onChange={handleInputChange}
+                rows="2"
+                placeholder="Add a description"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
+            </div>
 
-          {/* Apply Link */}
-          <div className="mt-4">
-            <label className="block text-sm font-semibold mb-2">
-              Event Link (This Will be provided to all registered Users)
-            </label>
-            <input
-              type="url"
-              name="eventLink"
-              value={formData.eventLink}
-              onChange={handleInputChange}
-              placeholder="Event Link"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Event Description */}
-          <div className="mt-4">
-            <label className="block text-sm font-semibold mb-2">
-              Event Description
-            </label>
-            <textarea
-              name="Add a Event Description"
-              value={formData.eventDescription}
-              onChange={handleInputChange}
-              rows="2"
-              placeholder="Add a description"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            ></textarea>
-          </div>
             <div className="flex justify-between items-center mt-6">
               <button
                 onClick={handleBack}
@@ -229,57 +251,86 @@ const CreateEvent = () => {
           </div>
         )}
 
+
         {/* Remaining Steps */}
         {/* Step 3: Coordinators */}
         {step === 3 && (
           <div className="mt-4">
             <label className="block text-sm font-semibold mb-2">
-              Faculty Coordinator
+              Event Coordinator
             </label>
             <input
               type="text"
               name="facultyCoordinator"
-              value={formData.facultyCoordinator}
+              value={formData.eventCoordinator}
               onChange={handleInputChange}
-              placeholder="Faculty Coordinator"
-              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Event Coordinator"
+              className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <label className="block text-sm font-semibold mb-2 mt-4">
-              Alumni Coordinator
+              Contact Details
             </label>
             <input
               type="text"
-              name="alumniCoordinator"
-              value={formData.alumniCoordinator}
+              name="contactDetails"
+              value={formData.contactDetails}
               onChange={handleInputChange}
-              placeholder="Alumni Coordinator"
-              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Contact Details- Email/ Phone"
+              className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            <label className="block text-sm font-semibold mb-2 mt-4">
-              Student Coordinator
-            </label>
-            <input
-              type="text"
-              name="studentCoordinator"
-              value={formData.studentCoordinator}
-              onChange={handleInputChange}
-              placeholder="Student Coordinator"
-              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <label className="block text-sm font-semibold mb-2 mt-4">Tags / Topics</label>
+            <div className="w-full border border-gray-300 rounded-lg p-3">
+              <div className="flex flex-wrap gap-2 mb-3">
+                {tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full flex items-center gap-2"
+                  >
+                    {tag}
+                    <button
+                      onClick={() => handleRemoveTag(tag)}
+                      className="text-red-500 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <form onSubmit={handleAddTag} className="flex gap-2">
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  placeholder="Add a tag"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Add
+                </button>
+              </form>
+            </div>
 
-            <label className="block text-sm font-semibold mb-2 mt-4 ">
-              Eligibility
-            </label>
-            <input
-              type="text"
-              name="Eligibility"
+            <label className="block text-sm font-semibold mb-2">Eligibility</label>
+            <select
+              name="eligibility"
               value={formData.eligibility}
               onChange={handleInputChange}
-              placeholder="Faculty Coordinator"
-              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Eligibility</option>
+              <option value="All">All</option>
+              <option value="Faculty and Alumni">Faculty and Alumni</option>
+              <option value="Faculty and Student">Faculty and Student</option>
+              <option value="Alumni and Student">Alumni and Student</option>
+              <option value="Only Faculty">Only Faculty</option>
+              <option value="Only Alumni">Only Alumni</option>
+              <option value="Only Student">Only Student</option>
+            </select>
 
             <label className="block text-sm font-semibold mb-2 mt-4">
               Speaker
@@ -290,7 +341,7 @@ const CreateEvent = () => {
               value={formData.speaker}
               onChange={handleInputChange}
               placeholder="Enter Speaker Name"
-              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <label className="block text-sm font-semibold mb-2 mt-4">
@@ -302,31 +353,9 @@ const CreateEvent = () => {
               value={formData.organizedBy}
               onChange={handleInputChange}
               placeholder="Enter Name of Organiser"
-              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <label className="block text-sm font-semibold mb-2 mt-4">Comment </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="commentsOn"
-                  value="Yes"
-                  checked={formData.comments === "Yes"}
-                  onChange={handleInputChange}
-                  className="form-radio"
-                />
-                Yes
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="commentsOff"
-                  value="No"
-                  checked={formData.comments === "No"}
-                  onChange={handleInputChange}
-                  className="form-radio"
-                />
-                No
-              </label>
+            
 
             
             {/* Add more fields for step 3 */}

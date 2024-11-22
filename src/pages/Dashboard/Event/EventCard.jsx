@@ -1,28 +1,45 @@
+
+import { useNavigate } from "react-router-dom"; // For navigation to AboutEvent page
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 import shareIcon from "../../../assets/icons/shareArrow.svg";
 
-// import badgeIcon from "../../../assets/images/badge.svg";
-
 const EventCard = ({ image, title, speaker, date, time, tags, attending, verified }) => {
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate(`/about-event`, {
+      state: {
+        image,
+        title,
+        speaker,
+        date,
+        time,
+        tags,
+        attending,
+        verified,
+      },
+    });
+  };
+
   return (
-    <div className=" w-[270px] border border-gray-300 rounded-lg shadow-lg bg-white p-4">
+    <div
+      className="w-[270px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer"
+      onClick={handleNavigate}
+    >
       {/* Event Image */}
       <div className="relative">
         <img src={image} alt={title} className="w-45 h-30 rounded-lg object-cover" />
-        {/* <img src={badgeIcon} alt="Badge" className="absolute top-2 left-2 w-8 h-8" /> */}
       </div>
-      
+
       {/* Event Details */}
       <div>
-      <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
-        <p className="text-sm text-gray-500">{date} • {time}</p>
-        
-      <button aria-label="Share event" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square">
-      <img src={shareIcon} alt="Share" className=" object-contain rounded-none aspect-[0.83] w-[25px]" />
-      </button>
-      </div>
-      
+        <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
+          <p className="text-sm text-gray-500">{date} • {time}</p>
+          <button aria-label="Share event" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square">
+            <img src={shareIcon} alt="Share" className="object-contain rounded-none aspect-[0.83] w-[25px]" />
+          </button>
+        </div>
         <h4 className="text-md font-semibold mt-1">{title}</h4>
         <p className="text-sm text-gray-500 flex items-center">
           {speaker} {verified && <span className="text-blue-600 ml-1">✔</span>}
@@ -38,38 +55,43 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, verifie
         </div>
 
         {/* Attending */}
-        <div className="flex flex-1 shrink gap-3 items-center self-stretch mt-1 my-auto basis-10 text-black text-opacity-40 bold">
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/d0c61ecd2b93b8976c1a6041747230e8c6a163e692221e80a09363dd61c27f14?placeholderIfAbsent=true&apiKey=2b6398d7743249e49e60a2c281a1ae3e" className="object-contain shrink-0 self-stretch my-auto w-3.5 rounded-none aspect-[1.17]" alt="" />
-        <div  className="flex-1 shrink self-stretch my-auto basis-0 text-ellipsis">
-        {attending.toLocaleString()} 
+        <div className="flex gap-3 items-center mt-2 text-sm text-gray-500">
+          <span>{attending}</span>
         </div>
-    </div>
       </div>
-      
 
       {/* Register Button */}
-      
-
-      {/* Interaction Icons */}
-      <footer className="flex gap-5 justify-between items-start self-center mt-2 w-full ">
+      <footer className="flex justify-between items-start self-center mt-4 w-full">
         <div className="flex items-center gap-3">
           <button className="flex gap-1 items-center font-semibold justify-center">
-            <img src={arrowBlockUp}></img>
+            <img src={arrowBlockUp} alt="Thumbs Up" />
             <span>63K</span>
           </button>
           <button className="flex gap-1 items-center font-semibold justify-center">
-            <img src={arrowBlockdown}></img>
+            <img src={arrowBlockdown} alt="Thumbs Down" />
             <span>13K</span>
           </button>
-          </div>
-          <button className=" overflow-hidden gap-3 self-stretch px-7 py-1.5 my-auto text-white whitespace-nowrap w-60% bg-blue-600 rounded-xl">
-            Register
-            </button>
-        
-        </footer>
-      
+        </div>
+        <button
+          className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent navigation from the card click
+            handleNavigate();
+            navigate("/dashboard/event/about-event");
+          }}
+        >
+          Register
+        </button>
+      </footer>
     </div>
   );
 };
 
 export default EventCard;
+
+{/* <button
+            aria-label="Alumni Resources "
+            onClick={() => {
+              navigate("/dashboard/alumni-resources");
+            }}
+          ></button> */}

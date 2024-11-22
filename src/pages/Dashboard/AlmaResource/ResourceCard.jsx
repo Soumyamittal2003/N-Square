@@ -1,6 +1,7 @@
 import pdfIcon from "../../../assets/images/pdfIcon.png"; // Path to the PDF icon
-import thumbUpIcon from "../../../assets/icons/arrow-block-up.svg"; // Path to the Thumb Up icon
-import bookmark from "../../../assets/icons/bookmark.svg"; // Path to the Thumb Down icon
+import thumbUpIcon from "../../../assets/icons/arrow-block-up.svg";
+import thumbDownIcon from "../../../assets/icons/arrow-block-down.svg"; // Path to the Thumb Up icon
+ // Path to the Thumb Down icon
 import downloadIcon from "../../../assets/icons/download.svg"; // Path to the Download icon
 import shareIcon from "../../../assets/icons/shareArrow.svg"; // Path to the Share icon
 
@@ -26,21 +27,22 @@ const ResourceCard = ({ resource }) => {
         />
         <span className="text-sm font-semibold mx-0">63K</span>
         <img
-          src={downloadIcon}
-          alt="Download"
+          src={thumbDownIcon}
+          alt="Thumb Down"
           className="w-5 h-5 cursor-pointer hover:opacity-80 mr-2"
         />
+        <span className="text-sm font-semibold mx-0">1K</span>
       </div>
       
       <div className="absolute bottom-4 right-4 flex items-center space-x-2">
         <img
-          src={bookmark}
-          alt="Bookmark"
+          src={shareIcon}
+          alt="Share"
           className="w-5 h-5 cursor-pointer hover:opacity-80"
         />
         <img
-          src={shareIcon}
-          alt="Share"
+          src={downloadIcon}
+          alt="Download"
           className="w-5 h-5 cursor-pointer hover:opacity-80"
         />
       </div>
