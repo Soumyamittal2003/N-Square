@@ -72,7 +72,7 @@ const PostCard = ({
               </button>
             </div>
             <p className="text-sm text-gray-500">
-              {user?.role || "Unknown Role"}
+              {user?.tagline || "Tagline not present"}
             </p>
           </div>
         </div>

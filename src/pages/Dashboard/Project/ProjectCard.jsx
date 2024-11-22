@@ -1,56 +1,77 @@
-import contributorsIcon from "../../../assets/icons/contribution.svg";
+import { useState, useEffect } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
+const ProjectCard = ({ project }) => {
+  const {
+    createdBy,
+    projectTopic: title,
+    description,
+    profilePhoto: image,
+  } = project;
 
-const ProjectCard = ({ title, description, contributors, creator, image }) => {
+  const [creatorName, setCreatorName] = useState("Loading...");
+
+  useEffect(() => {
+    const fetchCreatorDetails = async () => {
+      try {
+        if (createdBy) {
+          const userId = createdBy._id;
+          const response = await axiosInstance.get(`/users/${userId}`);
+          if (response.data?.success) {
+            const { firstName, lastName } = response.data.data;
+            setCreatorName(`${firstName} ${lastName}`);
+          } else {
+            setCreatorName("Unknown");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching creator details:", error);
+        setCreatorName("Error fetching user");
+      }
+    };
+
+    fetchCreatorDetails();
+  }, [createdBy]);
+
   return (
-    <div className="w-auto border border-gray-200 rounded-2xl p-4 shadow-lg bg-white mb-4">
-      <div className="flex items-start">
-        {/* Image Section */}
+    <div className="border p-2 m-2 border-gray-300 rounded-lg shadow-md bg-white">
+      {/* Header Section */}
+      <div className="flex justify-between items-center p-4">
+        <h3 className="text-lg font-semibold text-gray-900">
+          {title || "E-Krishak"}
+        </h3>
+        <button className="text-black border font-extrabold rounded-lg border-black p-2 hover:text-gray-700 text-sm ">
+          Request
+          <span className="border-2 m-1 px-1.5 font-extrabold border-black rounded-full">
+            +
+          </span>
+        </button>
+      </div>
+
+      {/* Body Section */}
+      <div className="flex items-start px-4 pb-4">
         <img
-          loading="lazy"
           src={image || "https://via.placeholder.com/150"}
           alt={title || "Project Image"}
-          className="object-contain rounded-md w-[121px] h-[121px] p-3"
+          className="h-32 w-32 rounded-full"
         />
         <div className="ml-4 flex-1">
-          {/* Project Title */}
-          <h3 className="text-lg font-semibold text-gray-900">
-            {title || "Untitled Project"}
-          </h3>
-
-          {/* Project Description */}
-          <p className="text-sm text-gray-600 mt-2">
-            {description || "No description available."}{" "}
-            <span className="text-blue-600 font-semibold cursor-pointer">
+          <p className="text-sm pr-6 text-gray-700 items-center">
+            {description ||
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."}
+            <a href="#" className="text-blue-500 font-medium">
+              {" "}
               Read More
-            </span>
+            </a>
           </p>
-
-          {/* Contributors Information */}
-          <div className="flex items-center mt-3">
-            <img
-              src={contributorsIcon}
-              alt="Contributors"
-              className="w-5 h-5 mr-2"
-            />
-            <p className="text-sm text-gray-600">{contributors || "Unknown"}</p>
-          </div>
         </div>
       </div>
 
       {/* Footer Section */}
-      <div className="flex justify-between items-center mt-4">
-        {/* Creator Information */}
-        <p className="text-sm text-gray-500 font-semibold">
-          Created By:{" "}
-          <span className="font-semibold text-gray-700">
-            {creator || "Anonymous"}
-          </span>
+      <div className="flex justify-between items-center p-4">
+        <p className="text-sm text-gray-500 font-medium">
+          Created By -{" "}
+          <span className="text-gray-700 font-semibold">{creatorName}</span>
         </p>
-
-        {/* Call to Action */}
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-          Request
-        </button>
       </div>
     </div>
   );
