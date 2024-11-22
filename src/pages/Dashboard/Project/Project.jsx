@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Project = () => {
   const [activeTab, setActiveTab] = useState("All");
-  const tabs = ["All", "Faculty Project", "Alma Project", "Student Project"];
+  const tabs = ["All", "Faculty", "Alumni", "Student"];
 
   const NavBar = () => (
     <div className="flex border border-gray-300 justify-between w-7/12 bg-white rounded-2xl shadow-lg px-4 py-1 mt-4 ">
