@@ -1,7 +1,7 @@
 // import React from "react";
 import shareIcon from "../../../assets/icons/shareArrow.svg"; // Update with the correct path to your icon
 
-const VolunteerCard = ({ functionName, date, time, organizer, contact }) => {
+const VolunteerCard = ({ functionName, date, time, venue, organizer, contact }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col justify-between  ">
       {/* Main Content */}
@@ -12,6 +12,9 @@ const VolunteerCard = ({ functionName, date, time, organizer, contact }) => {
         </p>
         <p className="text-sm text-gray-500 mb-1">
           <strong>Time:</strong> {time}
+        </p>
+        <p className="text-sm text-gray-500 mb-1">
+          <strong>Venue:</strong> {venue}
         </p>
         <p className="text-sm text-gray-500 mb-1">
           <strong>Contact:</strong> {organizer} ({contact})

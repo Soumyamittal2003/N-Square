@@ -18,6 +18,7 @@ import CreateProject from "./Project/CreateProject";
 import AlmaResource from "./AlmaResource/AlmaResource";
 import Volunteer from "./Volunteer/Volunteer";
 import AboutEvent from "./Event/AboutEvent";
+import AboutProject from "./Project/AboutProject";
 
 import Chat from "./Chat/Chat";
 
@@ -42,6 +43,7 @@ const Dashboard = () => {
               <Route path="event/about-event" element={<AboutEvent />} />
               <Route path="chat" element={<Chat />} />
               <Route path="project" element={<Project />} />
+              <Route path="project/:projectId" element={<AboutProject />} />
               <Route
                 path="project/create-project"
                 element={<CreateProject />}

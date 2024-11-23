@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
+import { useNavigate } from "react-router-dom";
+
 const ProjectCard = ({ project }) => {
+  const navigate = useNavigate();
   const {
     createdBy,
     projectTopic: title,
     description,
     profilePhoto: image,
+    _id, // The project ID to navigate to the AboutProject page
   } = project;
 
   const [creatorName, setCreatorName] = useState("Loading...");
@@ -33,7 +37,10 @@ const ProjectCard = ({ project }) => {
   }, [createdBy]);
 
   return (
-    <div className="border p-2 m-2 border-gray-300 rounded-lg shadow-md bg-white">
+    <div
+      className="border p-2 m-2 border-gray-300 rounded-lg shadow-md bg-white cursor-pointer"
+      onClick={() => navigate(`/${_id}`)} // Navigate to AboutProject with project ID
+    >
       {/* Header Section */}
       <div className="flex justify-between items-center p-4">
         <h3 className="text-lg font-semibold text-gray-900">
