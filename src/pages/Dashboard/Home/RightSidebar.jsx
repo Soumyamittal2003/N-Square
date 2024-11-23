@@ -1,10 +1,10 @@
 const RightSidebar = () => {
   return (
-    <div className="w-1/4 mt-12 mb-auto bg-white px-8  rounded-lg">
+    <div className="w-3/12 mt-12 mb-auto bg-white px-4  rounded-lg">
       <div className="mb-6">
         {/* Upcoming Events Section */}
-        <div className="border p-2 rounded-lg shadow-md">
-          <div className="flex justify-between items-center">
+        <div className="border  p-2 rounded-lg shadow-md">
+          <div className="grid grid-cols-2 justify-between items-center">
             <h3 className="font-bold text-lg mx-2">Upcoming Events</h3>
             <button className="text-black mx-2 font-semibold text-sm">
               Explore All
@@ -14,7 +14,7 @@ const RightSidebar = () => {
           {/* Event Card */}
 
           {[1, 2].map((event, index) => (
-            <div key={index} className=" p-4 rounded-lg my-2  flex">
+            <div key={index} className=" p-2 rounded-lg my-2  flex">
               <img
                 src="https://via.placeholder.com/60"
                 alt="Event Thumbnail"

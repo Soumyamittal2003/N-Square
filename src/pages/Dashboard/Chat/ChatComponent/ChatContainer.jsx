@@ -40,6 +40,8 @@ export default function ChatContainer({ currentChat, socket }) {
 
   // Send a message to the server
   const handleSendMsg = async (msg) => {
+    if (!msg.trim()) return; // Avoid sending empty messages
+
     socket.current.emit("send-msg", {
       from: currentUser._id,
       to: currentChat._id,
@@ -69,9 +71,9 @@ export default function ChatContainer({ currentChat, socket }) {
   // Listen for incoming messages via WebSocket
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("msg-recieve", (msg) => {
-        if (msg.from === currentChat._id) {
-          setArrivalMessage({ fromSelf: false, message: msg.msg });
+      socket.current.on("msg-recieve", (data) => {
+        if (data.from === currentChat._id) {
+          setArrivalMessage({ fromSelf: false, message: data.msg });
         }
       });
     }
@@ -90,21 +92,25 @@ export default function ChatContainer({ currentChat, socket }) {
   }, [messages]);
 
   return (
-    <div className="grid grid-rows-[10%_80%_10%] gap-1 h-full overflow-hidden">
+    <div className="grid grid-rows-[10%_80%_10%] gap-2 h-full bg-gray-50 rounded-lg shadow">
       {/* Chat Header */}
-      <div className="flex justify-between items-center px-8 bg-gray-800">
+      <div className="flex justify-between items-center px-6 py-2 bg-gray-200 rounded-t-lg shadow-inner">
         <div className="flex items-center gap-4">
           <img
-            src={currentChat?.avatar || "defaultAvatarUrl"}
+            src={
+              currentChat?.profileimageUrl || "https://via.placeholder.com/150"
+            }
             alt="avatar"
-            className="h-12 w-12 rounded-full"
+            className="h-12 w-12 rounded-full shadow"
           />
-          <h3 className="text-white">{currentChat?.username}</h3>
+          <h3 className="text-gray-700 font-semibold">
+            {currentChat?.firstName} {currentChat?.lastName}
+          </h3>
         </div>
       </div>
 
       {/* Chat Messages */}
-      <div className="flex flex-col gap-4 p-4 overflow-auto bg-gray-900 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-800">
+      <div className="flex flex-col gap-2 p-4 overflow-auto bg-white rounded-lg shadow-inner scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {messages.map((message, index) => (
           <div
             ref={index === messages.length - 1 ? scrollRef : null}
@@ -114,8 +120,8 @@ export default function ChatContainer({ currentChat, socket }) {
             }`}
           >
             <div
-              className={`max-w-[40%] p-4 rounded-lg text-white ${
-                message.fromSelf ? "bg-blue-500" : "bg-purple-500"
+              className={`max-w-[60%] px-4 py-2 rounded-lg text-sm text-white shadow ${
+                message.fromSelf ? "bg-blue-500" : "bg-indigo-400"
               }`}
             >
               {message.message}

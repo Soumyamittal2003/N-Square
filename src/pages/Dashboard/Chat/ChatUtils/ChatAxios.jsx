@@ -8,15 +8,22 @@ const chatAxios = axios.create({
 });
 
 // Add a request interceptor to attach the token (if available)
-chatAxios.interceptors.request.use((config) => {
-  return config;
-});
+chatAxios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("chat-token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// Add a response interceptor to handle errors globally (optional)
+// Add a response interceptor to handle errors globally
 chatAxios.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("API Error:", error.response || error.message);
+    console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error);
   }
 );

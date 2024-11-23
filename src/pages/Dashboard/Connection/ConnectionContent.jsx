@@ -127,7 +127,7 @@ const ConnectionContent = () => {
             placeholder="Search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-sm py-1 px-2 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none"
+            className="w-full text-sm py-1 px-2 text-gray-700  border-none "
           />
         </div>
       </div>

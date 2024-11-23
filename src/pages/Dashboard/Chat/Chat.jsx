@@ -7,7 +7,7 @@ import axiosInstance from "../../../utils/axiosinstance";
 
 export default function Chat() {
   // WebSocket reference
-  const socket = useRef();
+  const socket = useRef(null);
 
   // State for contacts and current chat
   const [contacts, setContacts] = useState([]);
@@ -18,16 +18,40 @@ export default function Chat() {
 
   // Establish WebSocket connection
   useEffect(() => {
-    if (currentUser) {
-      // Connect to WebSocket server
-      socket.current = io("https://network-next-backend.onrender.com");
+    if (currentUser && !socket.current) {
+      socket.current = io("https://network-next-backend.onrender.com", {
+        transports: ["websocket"], // Use WebSocket transport only
+        reconnectionAttempts: 5, // Limit reconnections
+        reconnectionDelay: 5000, // Delay between reconnections
+      });
 
-      // Notify server of the connected user
-      socket.current.emit("add-user", currentUser._id);
+      // Emit user ID after connecting
+      socket.current.once("connect", () => {
+        console.log("WebSocket connected.");
+        socket.current.emit("add-user", currentUser._id);
+      });
+
+      // Handle WebSocket connection errors
+      socket.current.on("connect_error", (err) => {
+        console.error("WebSocket connection error:", err.message);
+      });
+
+      // Handle WebSocket disconnection
+      socket.current.on("disconnect", (reason) => {
+        console.warn("WebSocket disconnected:", reason);
+      });
     }
-  }, [currentUser]);
 
-  // Fetch all contacts
+    return () => {
+      console.log("Cleaning up WebSocket...");
+      if (socket.current) {
+        console.log("Disconnecting WebSocket...");
+        socket.current.disconnect();
+        socket.current = null;
+      }
+    };
+  }, [currentUser]);
+  // Fetch all contacts from the server
   useEffect(() => {
     const fetchContacts = async () => {
       if (currentUser) {
@@ -48,18 +72,20 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center bg-gray-900">
-      <div className="h-[85vh] w-[85vw] bg-gray-800 grid grid-cols-1 md:grid-cols-[25%_75%] gap-4">
-        {/* Contacts Section */}
-        <Contacts contacts={contacts} changeChat={handleChatChange} />
+    <div className=" bg-white shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-[30%_70%] gap-4 p-4">
+      {/* Contacts Section */}
+      <Contacts
+        contacts={contacts}
+        changeChat={handleChatChange}
+        currentUser={currentUser}
+      />
 
-        {/* Chat Container or Welcome Message */}
-        {currentChat === undefined ? (
-          <Welcome />
-        ) : (
-          <ChatContainer currentChat={currentChat} socket={socket} />
-        )}
-      </div>
+      {/* Chat Container or Welcome Message */}
+      {currentChat === undefined ? (
+        <Welcome />
+      ) : (
+        <ChatContainer currentChat={currentChat} socket={socket} />
+      )}
     </div>
   );
 }

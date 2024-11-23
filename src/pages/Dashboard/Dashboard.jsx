@@ -28,29 +28,34 @@ const Dashboard = () => {
 
   return (
     <>
-      <Header />
-      <div className="flex w-full h-screen overflow-hidden">
-        <Sidebar />
-        <div className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Navigate to="home" />} />
-            <Route path="home" element={<Home />} />
-            <Route path="profile" element={<UserProfile />} />
-            <Route path="job" element={<Job />} />
-            <Route path="event" element={<Event />} />
-            <Route path="event/about-event" element={<AboutEvent />} />
-            <Route path="chat" element={<Chat />} />
-            <Route path="project" element={<Project />} />
-            <Route path="project/create-project" element={<CreateProject />} />
-            <Route path="inspiring-story" element={<InspiringStory />} />
-            <Route path="job/create-job" element={<CreateJob />} />
-            <Route path="alumni-resources" element={<AlmaResource />} />
-            <Route path="volunteer" element={<Volunteer/>}/>
-            <Route path="connection" element={<Connection />} />
-            <Route path="followers" element={<Followers />} />
-            <Route path="following" element={<Following />} />
-            <Route path="*" element={<Error404 />} />
-          </Routes>
+      <div className="grid-cols-2">
+        <Header />
+        <div className="flex w-full h-screen">
+          <Sidebar className="w-1/4 h-full" />
+          <div className="flex-1 overflow-auto">
+            <Routes>
+              <Route path="/" element={<Navigate to="home" />} />
+              <Route path="home" element={<Home />} />
+              <Route path="profile" element={<UserProfile />} />
+              <Route path="job" element={<Job />} />
+              <Route path="event" element={<Event />} />
+              <Route path="event/about-event" element={<AboutEvent />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="project" element={<Project />} />
+              <Route
+                path="project/create-project"
+                element={<CreateProject />}
+              />
+              <Route path="inspiring-story" element={<InspiringStory />} />
+              <Route path="job/create-job" element={<CreateJob />} />
+              <Route path="alumni-resources" element={<AlmaResource />} />
+              <Route path="volunteer" element={<Volunteer />} />
+              <Route path="connection" element={<Connection />} />
+              <Route path="followers" element={<Followers />} />
+              <Route path="following" element={<Following />} />
+              <Route path="*" element={<Error404 />} />
+            </Routes>
+          </div>
         </div>
       </div>
     </>

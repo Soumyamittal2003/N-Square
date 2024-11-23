@@ -41,7 +41,7 @@ const Sidebar = () => {
   }
   return (
     <>
-      <div className="min-w-[275px] mx-12 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+      <div className="min-w-[275px] mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
         <Link to={"/dashboard/profile"}>
           <ProfileSection userData={userData} />
         </Link>

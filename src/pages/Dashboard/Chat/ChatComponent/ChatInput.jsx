@@ -7,40 +7,41 @@ export default function ChatInput({ handleSendMsg }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const handleEmojiPickerhideShow = () => {
-    setShowEmojiPicker(!showEmojiPicker);
+  // Toggle emoji picker visibility
+  const handleEmojiPickerToggle = () => {
+    setShowEmojiPicker((prev) => !prev);
   };
 
-  const handleEmojiClick = (event, emojiObject) => {
-    let message = msg;
-    message += emojiObject.emoji;
-    setMsg(message);
+  // Add selected emoji to the message input
+  const handleEmojiClick = (emojiObject) => {
+    setMsg((prev) => prev + emojiObject.emoji);
   };
 
+  // Send the message
   const sendChat = (event) => {
     event.preventDefault();
-    if (msg.length > 0) {
-      handleSendMsg(msg);
+    if (msg.trim().length > 0) {
+      handleSendMsg(msg.trim());
       setMsg("");
     }
   };
 
   return (
-    <div className="grid grid-cols-[5%_95%] items-center bg-gray-900 px-8 py-4 md:px-4 gap-4">
+    <div className="flex items-center justify-between bg-gray-200 p-4 rounded-b-lg shadow-inner">
       {/* Emoji Picker */}
-      <div className="relative flex items-center text-white">
+      <div className="relative">
         <BsEmojiSmileFill
-          className="text-yellow-400 text-xl cursor-pointer"
-          onClick={handleEmojiPickerhideShow}
+          className="text-gray-500 text-xl cursor-pointer hover:text-gray-700"
+          onClick={handleEmojiPickerToggle}
         />
         {showEmojiPicker && (
-          <div className="absolute top-[-22rem]">
+          <div className="absolute bottom-12 left-0">
             <Picker
-              onEmojiClick={handleEmojiClick}
+              onEmojiClick={(_, emojiObject) => handleEmojiClick(emojiObject)}
               pickerStyle={{
-                backgroundColor: "#080420",
-                borderColor: "#9a86f3",
-                boxShadow: "0 5px 10px #9a86f3",
+                backgroundColor: "#f9fafb",
+                borderColor: "#d1d5db",
+                boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
               }}
             />
           </div>
@@ -49,21 +50,21 @@ export default function ChatInput({ handleSendMsg }) {
 
       {/* Input Field */}
       <form
-        className="flex items-center gap-4 w-full bg-gray-800 p-2 rounded-full"
+        className="flex items-center flex-1 gap-4 bg-white rounded-full shadow px-4 py-2"
         onSubmit={sendChat}
       >
         <input
           type="text"
-          placeholder="Type your message here"
-          className="flex-1 bg-transparent text-white text-lg focus:outline-none px-4"
-          onChange={(e) => setMsg(e.target.value)}
+          placeholder="Type your message here..."
+          className="flex-1 bg-transparent text-gray-700 placeholder-gray-500 text-sm focus:outline-none"
           value={msg}
+          onChange={(e) => setMsg(e.target.value)}
         />
         <button
           type="submit"
-          className="flex items-center justify-center bg-purple-500 p-2 rounded-full text-white hover:bg-purple-600"
+          className="flex items-center justify-center bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition"
         >
-          <IoMdSend className="text-2xl" />
+          <IoMdSend className="text-lg" />
         </button>
       </form>
     </div>
