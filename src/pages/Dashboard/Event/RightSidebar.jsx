@@ -13,7 +13,7 @@ const RightSidebar = () => {
   };
 
   return (
-    <div className="w-1/3 mt-6 mb-auto bg-white px-10 rounded-lg p-11">
+    <div className="w-1/3 mt-6 mb-auto bg-white px-6 rounded-lg p-11">
       {/* Create Event Button */}
       <div className="flex justify-center mb-2">
         <button
