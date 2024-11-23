@@ -41,7 +41,7 @@ const ProjectCard = ({ project }) => {
         </h3>
         <button className="text-black border font-extrabold rounded-lg border-black p-2 hover:text-gray-700 text-sm ">
           Request
-          <span className="border-2 m-1 px-1.5 font-extrabold border-black rounded-full">
+          <span className="border-2 m-1 px-1.5 text-xl font-extrabold border-black rounded-full">
             +
           </span>
         </button>

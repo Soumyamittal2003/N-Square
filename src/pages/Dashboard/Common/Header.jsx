@@ -56,12 +56,12 @@ const SettingsModal = ({ settingsOptions }) => {
   const navigate = useNavigate();
   return (
     <div className="absolute top-full right-12 mt-2 w-72 bg-white shadow-lg rounded-lg z-20">
-      <ul className="py-8">
+      <ul className="py-2">
         {settingsOptions.map((option) => (
           <li key={option.name}>
             <Link
               to={option.path}
-              className="flex items-center m-2 px-4 py-2 font-semibold text-md text-black hover:text-gray-600"
+              className="flex items-center m-2 px-4 py-1 font-semibold text-md text-black hover:text-gray-600"
             >
               <img src={option.icon} alt={option.name} className="p-2 mx-2" />
               {option.name}
@@ -104,7 +104,6 @@ const Header = () => {
     { name: "Event", path: "/dashboard/event" },
     { name: "Project", path: "/dashboard/project" },
     { name: "Story", path: "/dashboard/inspiring-story" },
-    
   ];
 
   const settingsOptions = [
