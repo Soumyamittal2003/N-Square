@@ -1,34 +1,26 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
 import Robot from "../../../../assets/chat/robot.gif";
+
 export default function Welcome() {
   const [userName, setUserName] = useState("");
-  // useEffect(async () => {
-  //   setUserName(
-  //     await JSON.parse(
-  //       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-  //     ).username
-  //   );
-  // }, []);
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const user = await JSON.parse(
+        localStorage.getItem(import.meta.env.VITE_LOCALHOST_KEY)
+      );
+      setUserName(user?.username || "");
+    };
+    fetchUserName();
+  }, []);
+
   return (
-    <Container>
-      <img src={Robot} alt="" />
-      <h1>{/* Welcome, <span>{userName}!</span> */}</h1>
-      <h3>Please select a chat to Start messaging.</h3>
-    </Container>
+    <div className="flex flex-col justify-center items-center text-white">
+      <img src={Robot} alt="Robot" className="h-80" />
+      <h1 className="text-2xl">
+        Welcome, <span className="text-indigo-500">{userName}</span>!
+      </h1>
+      <h3 className="text-lg mt-4">Please select a chat to start messaging.</h3>
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  flex-direction: column;
-  img {
-    height: 20rem;
-  }
-  span {
-    color: #4e0eff;
-  }
-`;

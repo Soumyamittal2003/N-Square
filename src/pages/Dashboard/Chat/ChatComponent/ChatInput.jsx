@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import { IoMdSend } from "react-icons/io";
-import styled from "styled-components";
 import Picker from "emoji-picker-react";
 
 export default function ChatInput({ handleSendMsg }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   const handleEmojiPickerhideShow = () => {
     setShowEmojiPicker(!showEmojiPicker);
   };
@@ -26,119 +26,46 @@ export default function ChatInput({ handleSendMsg }) {
   };
 
   return (
-    <Container>
-      <div className="button-container">
-        <div className="emoji">
-          <BsEmojiSmileFill onClick={handleEmojiPickerhideShow} />
-          {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
-        </div>
+    <div className="grid grid-cols-[5%_95%] items-center bg-gray-900 px-8 py-4 md:px-4 gap-4">
+      {/* Emoji Picker */}
+      <div className="relative flex items-center text-white">
+        <BsEmojiSmileFill
+          className="text-yellow-400 text-xl cursor-pointer"
+          onClick={handleEmojiPickerhideShow}
+        />
+        {showEmojiPicker && (
+          <div className="absolute top-[-22rem]">
+            <Picker
+              onEmojiClick={handleEmojiClick}
+              pickerStyle={{
+                backgroundColor: "#080420",
+                borderColor: "#9a86f3",
+                boxShadow: "0 5px 10px #9a86f3",
+              }}
+            />
+          </div>
+        )}
       </div>
-      <form className="input-container" onSubmit={(event) => sendChat(event)}>
+
+      {/* Input Field */}
+      <form
+        className="flex items-center gap-4 w-full bg-gray-800 p-2 rounded-full"
+        onSubmit={sendChat}
+      >
         <input
           type="text"
-          placeholder="type your message here"
+          placeholder="Type your message here"
+          className="flex-1 bg-transparent text-white text-lg focus:outline-none px-4"
           onChange={(e) => setMsg(e.target.value)}
           value={msg}
         />
-        <button type="submit">
-          <IoMdSend />
+        <button
+          type="submit"
+          className="flex items-center justify-center bg-purple-500 p-2 rounded-full text-white hover:bg-purple-600"
+        >
+          <IoMdSend className="text-2xl" />
         </button>
       </form>
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 5% 95%;
-  background-color: #080420;
-  padding: 0 2rem;
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-  .button-container {
-    display: flex;
-    align-items: center;
-    color: white;
-    gap: 1rem;
-    .emoji {
-      position: relative;
-      svg {
-        font-size: 1.5rem;
-        color: #ffff00c8;
-        cursor: pointer;
-      }
-      .emoji-picker-react {
-        position: absolute;
-        top: -350px;
-        background-color: #080420;
-        box-shadow: 0 5px 10px #9a86f3;
-        border-color: #9a86f3;
-        .emoji-scroll-wrapper::-webkit-scrollbar {
-          background-color: #080420;
-          width: 5px;
-          &-thumb {
-            background-color: #9a86f3;
-          }
-        }
-        .emoji-categories {
-          button {
-            filter: contrast(0);
-          }
-        }
-        .emoji-search {
-          background-color: transparent;
-          border-color: #9a86f3;
-        }
-        .emoji-group:before {
-          background-color: #080420;
-        }
-      }
-    }
-  }
-  .input-container {
-    width: 100%;
-    border-radius: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    background-color: #ffffff34;
-    input {
-      width: 90%;
-      height: 60%;
-      background-color: transparent;
-      color: white;
-      border: none;
-      padding-left: 1rem;
-      font-size: 1.2rem;
-
-      &::selection {
-        background-color: #9a86f3;
-      }
-      &:focus {
-        outline: none;
-      }
-    }
-    button {
-      padding: 0.3rem 2rem;
-      border-radius: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #9a86f3;
-      border: none;
-      @media screen and (min-width: 720px) and (max-width: 1080px) {
-        padding: 0.3rem 1rem;
-        svg {
-          font-size: 1rem;
-        }
-      }
-      svg {
-        font-size: 2rem;
-        color: white;
-      }
-    }
-  }
-`;

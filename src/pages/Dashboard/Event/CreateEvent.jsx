@@ -24,7 +24,7 @@ const CreateEvent = () => {
     eligibility: "",
     speaker: "",
     organizedBy: "",
-    
+
     reminder: "",
   });
 
@@ -71,7 +71,6 @@ const CreateEvent = () => {
       alert("Please add between 2 and 7 tags.");
       return;
     }
-    console.log("Form Data Submitted:", { ...formData, tags });
   };
 
   const handleNext = () => {
@@ -99,7 +98,9 @@ const CreateEvent = () => {
         {/* Step 1: Add Title and Cover Image */}
         {step === 1 && (
           <div>
-            <label className="block text-sm mb-1 font-semibold">Add Title</label>
+            <label className="block text-sm mb-1 font-semibold">
+              Add Title
+            </label>
             <input
               type="text"
               name="title"
@@ -113,7 +114,10 @@ const CreateEvent = () => {
                 Upload Cover Image
               </label>
               <div className="w-full h-40 border border-gray-300 bg-gray-100 flex items-center justify-center rounded-lg cursor-pointer">
-                <label htmlFor="coverImage" className="text-gray-500 font-semibold">
+                <label
+                  htmlFor="coverImage"
+                  className="text-gray-500 font-semibold"
+                >
                   Add Image
                   <input
                     type="file"
@@ -137,14 +141,18 @@ const CreateEvent = () => {
         {/* Step 2: Event Details */}
         {step === 2 && (
           <div>
-            <label className="block text-sm font-semibold mb-2">Type Of Event</label>
+            <label className="block text-sm font-semibold mb-2">
+              Type Of Event
+            </label>
             <select
               name="eventType"
               value={formData.eventType}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="" className="font-semibold text-gray-300">Select Type</option>
+              <option value="" className="font-semibold text-gray-300">
+                Select Type
+              </option>
               <option value="Workshop">Workshop</option>
               <option value="Seminar">Seminar</option>
               <option value="Conference">Conference</option>
@@ -152,7 +160,9 @@ const CreateEvent = () => {
               <option value="Training">Training</option>
             </select>
             <div className="flex gap-4 mt-4">
-              <label className="block text-sm font-semibold mb-1">Event Mode: </label>
+              <label className="block text-sm font-semibold mb-1">
+                Event Mode:{" "}
+              </label>
               <label className="flex items-center gap-2">
                 <input
                   type="radio"
@@ -180,7 +190,9 @@ const CreateEvent = () => {
             {/* Conditional Fields */}
             {formData.eventMode === "Offline" && (
               <div className="mt-4">
-                <label className="block text-sm font-semibold mb-2">Enter Venue</label>
+                <label className="block text-sm font-semibold mb-2">
+                  Enter Venue
+                </label>
                 <input
                   type="text"
                   name="enterVenue"
@@ -194,7 +206,9 @@ const CreateEvent = () => {
 
             {formData.eventMode === "Online" && (
               <div className="mt-4">
-                <label className="block text-sm font-semibold mb-2">Event Link</label>
+                <label className="block text-sm font-semibold mb-2">
+                  Event Link
+                </label>
                 <input
                   type="url"
                   name="eventLink"
@@ -228,7 +242,9 @@ const CreateEvent = () => {
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-semibold mb-2">Event Description</label>
+              <label className="block text-sm font-semibold mb-2">
+                Event Description
+              </label>
               <textarea
                 name="eventDescription"
                 value={formData.eventDescription}
@@ -255,7 +271,6 @@ const CreateEvent = () => {
             </div>
           </div>
         )}
-
 
         {/* Remaining Steps */}
         {/* Step 3: Coordinators */}
@@ -285,61 +300,64 @@ const CreateEvent = () => {
               className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-              <div className="mt-4">
-                <label className="block text-sm font-semibold mb-2 mt-4">Tags / Topics</label> 
-                <div className="w-full border border-gray-300 rounded-lg p-3">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full flex items-center gap-2"
-                      >
-                        {tag}
-                        <button
-                          onClick={() => handleRemoveTag(tag)}
-                          className="text-red-500 font-bold"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleAddTag();
-                    }}
-                    className="flex gap-2"
-                  >
-                    <input
-                      type="text"
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                      placeholder="Add a tag"
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                      disabled={tags.length >= 7}
+            <div className="mt-4">
+              <label className="block text-sm font-semibold mb-2 mt-4">
+                Tags / Topics
+              </label>
+              <div className="w-full border border-gray-300 rounded-lg p-3">
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full flex items-center gap-2"
                     >
-                      Add
-                    </button>
-                  </form>
-
-                  {/* Error Message */}
-                  {tags.length < 2 || tags.length > 7 ? (
-                    <p className="mt-2 text-sm text-red-500">
-                      {tags.length < 2
-                        ? "Please add at least 2 tags before proceeding."
-                        : "You cannot add more than 7 tags."}
-                    </p>
-                  ) : null}
+                      {tag}
+                      <button
+                        onClick={() => handleRemoveTag(tag)}
+                        className="text-red-500 font-bold"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
                 </div>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleAddTag();
+                  }}
+                  className="flex gap-2"
+                >
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    placeholder="Add a tag"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    disabled={tags.length >= 7}
+                  >
+                    Add
+                  </button>
+                </form>
+
+                {/* Error Message */}
+                {tags.length < 2 || tags.length > 7 ? (
+                  <p className="mt-2 text-sm text-red-500">
+                    {tags.length < 2
+                      ? "Please add at least 2 tags before proceeding."
+                      : "You cannot add more than 7 tags."}
+                  </p>
+                ) : null}
               </div>
+            </div>
 
-
-            <label className="block text-sm font-semibold mb-2 mt-4">Eligibility</label>
+            <label className="block text-sm font-semibold mb-2 mt-4">
+              Eligibility
+            </label>
             <select
               name="eligibility"
               value={formData.eligibility}
@@ -379,9 +397,7 @@ const CreateEvent = () => {
               placeholder="Enter Name of Organiser"
               className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            
 
-            
             {/* Add more fields for step 3 */}
             <div className="flex justify-between items-center mt-6">
               <button
@@ -403,10 +419,14 @@ const CreateEvent = () => {
         {/* Step 4 and 5 follow the same structure */}
         {/* Step 4: Add Reminder */}
         {step === 4 && (
-            <div className="mt-4">
-            <h2 className="text-2xl font-bold mb-6 text-center">Schedule Reminder</h2>
-            
-            <label className="block text-sm font-semibold mb-4">Notify your Viewer</label>
+          <div className="mt-4">
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              Schedule Reminder
+            </h2>
+
+            <label className="block text-sm font-semibold mb-4">
+              Notify your Viewer
+            </label>
             <div className="space-y-4">
               <label className="flex items-center gap-2">
                 <input
@@ -456,27 +476,26 @@ const CreateEvent = () => {
                 Next
               </button>
             </div>
-            </div>
+          </div>
         )}
         {/* Final Step 5: Success */}
         {step === 5 && (
           <div className="flex flex-col items-center justify-center">
-          <p className="text-lg font-bold mb-4"></p>
-          <div className="w-24 h-24 mb-6 flex items-center justify-center">
-            <img
-              src={CheckmarkAnimation}
-              alt="Checkmark Animation"
-              className="w-full h-full"
-            />
+            <p className="text-lg font-bold mb-4"></p>
+            <div className="w-24 h-24 mb-6 flex items-center justify-center">
+              <img
+                src={CheckmarkAnimation}
+                alt="Checkmark Animation"
+                className="w-full h-full"
+              />
+            </div>
+            <button
+              onClick={handleSubmit}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Continue
+            </button>
           </div>
-          <button
-            onClick={handleSubmit}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Continue
-          </button>
-        </div>
-        
         )}
       </div>
     </div>

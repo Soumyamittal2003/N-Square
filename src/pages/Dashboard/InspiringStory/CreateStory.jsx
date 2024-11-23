@@ -38,7 +38,6 @@ const CreateStory = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
     // Add form submission logic here
   };
 

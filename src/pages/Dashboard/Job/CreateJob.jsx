@@ -35,7 +35,6 @@ const CreateJob = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
     // Add logic to send formData to backend
   };
 
@@ -68,9 +67,7 @@ const CreateJob = ({ onClose }) => {
               />
               <span className="text-2xl text-gray-500">📎</span>
             </label>
-            <span className="text-sm text-gray-600 mt-2">
-              Upload Job Photo
-            </span>
+            <span className="text-sm text-gray-600 mt-2">Upload Job Photo</span>
           </div>
 
           {/* Job Role */}
@@ -144,7 +141,9 @@ const CreateJob = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Stipend Or Salary</label>
+            <label className="block text-sm font-medium mb-1">
+              Stipend Or Salary
+            </label>
             <input
               type="text"
               name="Enter Stipend or Salary"

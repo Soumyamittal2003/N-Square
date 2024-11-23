@@ -1,161 +1,166 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState, useEffect, useRef } from "react";
+import ChatInput from "./ChatInput";
+import { v4 as uuidv4 } from "uuid";
 
-export default function Contacts({ contacts, changeChat }) {
-  const [currentUserName, setCurrentUserName] = useState(undefined);
-  const [currentUserImage, setCurrentUserImage] = useState(undefined);
-  const [currentSelected, setCurrentSelected] = useState(undefined);
-  console.log(contacts);
+export default function ChatContainer({ currentChat, socket }) {
+  const [messages, setMessages] = useState([]);
+  const scrollRef = useRef();
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
+  // Fetch messages from the server
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchMessages = async () => {
+      const data = localStorage.getItem("chat-app-current-user");
+      if (!data) {
+        console.error("No user data found in localStorage");
+        return;
+      }
+      const parsedData = JSON.parse(data);
+
       try {
-        const data = JSON.parse(localStorage.getItem("chat-app-current-user"));
-        setCurrentUserName(`${data.firstName} ${data.lastName}`);
-        setCurrentUserImage(data.profileimageUrl);
+        const response = await fetch(
+          "https://network-next-backend.onrender.com/api/network-next/v1/messages/getmsg",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: parsedData._id,
+              to: currentChat?._id,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        setMessages(result);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Failed to fetch messages:", error);
       }
     };
-    fetchUserData();
-  }, []);
 
-  const changeCurrentChat = (index, contact) => {
-    setCurrentSelected(index);
-    changeChat(contact);
+    if (currentChat) {
+      setMessages([]); // Clear old messages when chat changes
+      fetchMessages();
+    }
+  }, [currentChat]);
+
+  // Handle sending a message
+  const handleSendMsg = async (msg) => {
+    const data = localStorage.getItem("chat-app-current-user");
+    if (!data) {
+      console.error("No user data found in localStorage");
+      return;
+    }
+    const parsedData = JSON.parse(data);
+
+    // Emit message via socket
+    socket.current.emit("send-msg", {
+      to: currentChat?._id,
+      from: parsedData._id,
+      msg,
+    });
+
+    // Make API call to send message
+    try {
+      const response = await fetch(
+        "https://network-next-backend.onrender.com/api/network-next/v1/messages/addmsg",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: parsedData._id,
+            to: currentChat?._id,
+            message: msg,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Update messages state
+      setMessages((prev) => [...prev, { fromSelf: true, message: msg }]);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
+  // Listen for incoming messages via WebSocket
+  useEffect(() => {
+    if (socket.current) {
+      const handleReceiveMessage = (msg) => {
+        console.log("Message received via socket:", msg);
+        if (msg.from === currentChat?._id) {
+          // Ensure it's from the current chat
+          setArrivalMessage({ fromSelf: false, message: msg });
+        }
+      };
+
+      socket.current.on("msg-recieve", handleReceiveMessage);
+
+      return () => {
+        socket.current.off("msg-recieve", handleReceiveMessage); // Cleanup listener
+      };
+    }
+  }, [socket, currentChat]);
+
+  // Add new messages to the chat
+  useEffect(() => {
+    if (arrivalMessage) {
+      setMessages((prev) => [...prev, arrivalMessage]);
+    }
+  }, [arrivalMessage]);
+
+  // Scroll to the latest message
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
-    <>
-      {currentUserImage && currentUserName && (
-        <Container>
-          <div className="brand">
-            <h3>N-square</h3>
+    <div className="grid grid-rows-[10%_80%_10%] gap-1 h-full overflow-hidden">
+      {/* Chat Header */}
+      <div className="flex justify-between items-center px-8 bg-gray-800">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12">
+            <img
+              src={currentChat?.avatar || "defaultAvatarUrl"}
+              alt="avatar"
+              className="h-full w-full rounded-full"
+            />
           </div>
-          <div className="contacts">
-            {contacts.map((contact, index) => {
-              return (
-                <div
-                  key={contact._id}
-                  className={`contact ${
-                    index === currentSelected ? "selected" : ""
-                  }`}
-                  onClick={() => changeCurrentChat(index, contact)}
-                >
-                  <div className="avatar">
-                    <img
-                      style={{ borderRadius: "50%" }}
-                      src={contact.profileimageUrl}
-                      alt="avatar"
-                    />
-                  </div>
-                  <div className="username">
-                    <h3>
-                      {contact.firstName} {contact.lastName}
-                    </h3>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="current-user">
-            <div className="avatar">
-              <img
-                style={{ borderRadius: "50%" }}
-                src={currentUserImage}
-                alt="avatar"
-              />
-            </div>
-            <div className="username">
-              <h2>{currentUserName}</h2>
+          <h3 className="text-white">{currentChat?.username}</h3>
+        </div>
+      </div>
+
+      {/* Chat Messages */}
+      <div className="flex flex-col gap-4 p-4 overflow-auto bg-gray-900 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-800">
+        {messages.map((message, index) => (
+          <div
+            ref={index === messages.length - 1 ? scrollRef : null}
+            key={uuidv4()}
+            className={`flex ${message.fromSelf ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[40%] break-words p-4 rounded-lg text-white text-base ${
+                message.fromSelf ? "bg-blue-500" : "bg-purple-500"
+              }`}
+            >
+              {message.message}
             </div>
           </div>
-        </Container>
-      )}
-    </>
+        ))}
+      </div>
+
+      {/* Chat Input */}
+      <ChatInput handleSendMsg={handleSendMsg} />
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: grid;
-  grid-template-rows: 10% 75% 15%;
-  overflow: hidden;
-  background-color: #080420;
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: center;
-    h3 {
-      color: white;
-      text-transform: uppercase;
-    }
-  }
-  .contacts {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: auto;
-    gap: 0.8rem;
-    &::-webkit-scrollbar {
-      width: 0.2rem;
-      &-thumb {
-        background-color: #ffffff39;
-        width: 0.1rem;
-        border-radius: 1rem;
-      }
-    }
-    .contact {
-      background-color: #ffffff34;
-      min-height: 5rem;
-      cursor: pointer;
-      width: 90%;
-      border-radius: 0.2rem;
-      padding: 0.4rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      transition: 0.5s ease-in-out;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
-      .username {
-        h3 {
-          color: white;
-        }
-      }
-    }
-    .selected {
-      background-color: #9a86f3;
-    }
-  }
-
-  .current-user {
-    background-color: #0d0d30;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    .avatar {
-      img {
-        height: 4rem;
-        max-inline-size: 100%;
-      }
-    }
-    .username {
-      h2 {
-        color: white;
-      }
-    }
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      gap: 0.5rem;
-      .username {
-        h2 {
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-`;

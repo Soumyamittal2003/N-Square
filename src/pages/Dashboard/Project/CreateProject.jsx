@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 const CreateProject = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     projectType: "",
     profilePhoto: null,
@@ -129,7 +129,6 @@ const CreateProject = () => {
     }
     formDataToSubmit.append("openForMentor", formData.openForMentor);
     formDataToSubmit.append("openForStudent", formData.openForStudent);
-    console.log([...formDataToSubmit.entries()]);
 
     try {
       const response = await axiosInstance.post(
@@ -139,13 +138,12 @@ const CreateProject = () => {
       );
 
       toast.success("Project created successfully!");
-      console.log("Response: ", response.data);
     } catch (error) {
       console.error("API Error Details:", error.response?.data);
       toast.error("Error creating project. Please try again.");
     } finally {
       setIsLoading(false);
-      navigate("dashboard/project");
+      // navigate("project details")
     }
   };
 

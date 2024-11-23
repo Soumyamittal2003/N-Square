@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
+import Logo from "../../../../assets/chat/logo.svg";
 
 export default function Contacts({ contacts, changeChat }) {
-  const [currentUserName, setCurrentUserName] = useState(undefined);
+  const [currentUserName, setCurrentUserName] = useState("");
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const data = await JSON.parse(
-          localStorage.getItem("chat-app-current-user")
-        );
-        setCurrentUserName(`${data.firstName} ${data.lastName}`);
-        setCurrentUserImage(data.profileimageUrl);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
+      const data = localStorage.getItem("chat-app-current-user");
+      const parsedData = JSON.parse(data);
+      setCurrentUserName(`${parsedData.firstName} ${parsedData.lastName}`);
+      setCurrentUserImage(parsedData.profileimageUrl);
     };
-
     fetchUserData();
   }, []);
 
@@ -26,140 +20,58 @@ export default function Contacts({ contacts, changeChat }) {
     setCurrentSelected(index);
     changeChat(contact);
   };
+
   return (
     <>
-      {currentUserImage && currentUserImage && (
-        <Container>
-          <div className="brand">
-            <h3>N-square</h3>
+      {currentUserName && currentUserImage && (
+        <div className="grid grid-rows-[10%_75%_15%] h-full bg-gray-900">
+          {/* Brand Section */}
+          <div className="flex items-center justify-center gap-4">
+            <img src={Logo} alt="logo" className="h-8" />
+            <h3 className="text-white uppercase">N-square</h3>
           </div>
-          <div className="contacts">
-            {contacts.map((contact, index) => {
-              return (
-                <div
-                  key={contact._id}
-                  className={`contact ${
-                    index === currentSelected ? "selected" : ""
-                  }`}
-                  onClick={() => changeCurrentChat(index, contact)}
-                >
-                  <div className="avatar">
-                    <img
-                      style={{ borderRadius: "50%" }}
-                      src={`${contact.profileimageUrl}`}
-                      alt=""
-                    />
-                  </div>
 
-                  <div className="username">
-                    <h3>
-                      {contact.firstName} {contact.lastName}
-                    </h3>
-                  </div>
+          {/* Contacts Section */}
+          <div className="flex flex-col items-center gap-2 overflow-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-800">
+            {contacts.map((contact, index) => (
+              <div
+                key={contact._id}
+                className={`w-[90%] flex items-center gap-4 p-2 rounded-md cursor-pointer transition-all duration-300 ${
+                  index === currentSelected ? "bg-purple-500" : "bg-gray-700"
+                }`}
+                onClick={() => changeCurrentChat(index, contact)}
+              >
+                <div className="flex-shrink-0">
+                  <img
+                    src={contact.profileimageUrl}
+                    alt=""
+                    className="h-12 w-12 rounded-full"
+                  />
                 </div>
-              );
-            })}
+                <div className="text-white">
+                  <h3>
+                    {contact.firstName} {contact.lastName}
+                  </h3>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="current-user">
-            <div className="avatar">
+
+          {/* Current User Section */}
+          <div className="flex items-center justify-center gap-6 bg-gray-800">
+            <div className="flex-shrink-0">
               <img
-                style={{ borderRadius: "50%" }}
-                src={`${currentUserImage}`}
+                src={currentUserImage}
                 alt="avatar"
+                className="h-16 w-16 rounded-full"
               />
             </div>
-            <div className="username">
-              <h2>{currentUserName}</h2>
+            <div className="text-white">
+              <h2 className="text-lg">{currentUserName}</h2>
             </div>
           </div>
-        </Container>
+        </div>
       )}
     </>
   );
 }
-const Container = styled.div`
-  display: grid;
-  grid-template-rows: 10% 75% 15%;
-  overflow: hidden;
-  background-color: #080420;
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: center;
-    img {
-      height: 2rem;
-    }
-    h3 {
-      color: white;
-      text-transform: uppercase;
-    }
-  }
-  .contacts {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: auto;
-    gap: 0.8rem;
-    &::-webkit-scrollbar {
-      width: 0.2rem;
-      &-thumb {
-        background-color: #ffffff39;
-        width: 0.1rem;
-        border-radius: 1rem;
-      }
-    }
-    .contact {
-      background-color: #ffffff34;
-      min-height: 5rem;
-      cursor: pointer;
-      width: 90%;
-      border-radius: 0.2rem;
-      padding: 0.4rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      transition: 0.5s ease-in-out;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
-      .username {
-        h3 {
-          color: white;
-        }
-      }
-    }
-    .selected {
-      background-color: #9a86f3;
-    }
-  }
-
-  .current-user {
-    background-color: #0d0d30;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    .avatar {
-      img {
-        height: 4rem;
-        max-inline-size: 100%;
-      }
-    }
-    .username {
-      h2 {
-        color: white;
-      }
-    }
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      gap: 0.5rem;
-      .username {
-        h2 {
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-`;

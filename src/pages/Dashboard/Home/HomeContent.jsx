@@ -100,7 +100,6 @@ const HomeContent = () => {
       await axiosInstance.post(`/users/follow-user/${userId}`, {
         currentUserId,
       });
-      console.log(`Successfully followed user: ${userId}`);
     } catch (error) {
       console.error("Error following user:", error);
     }
