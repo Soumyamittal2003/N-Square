@@ -1,14 +1,17 @@
 import { useState } from "react";
 import VolunteerCard from "./VolunteerCard";
 
+
 const VolunteerContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  
 
   const volunteerData = [
     {
       functionName: "Teacher’s Day Function",
       date: "12 Nov 2024",
       time: "12:00 PM",
+      venue: "place",
       organizer: "Aadarsh",
       contact: "9876543210",
     },
@@ -16,6 +19,7 @@ const VolunteerContent = () => {
       functionName: "Annual Sports Day",
       date: "20 Dec 2024",
       time: "10:00 AM",
+      venue: "place",
       organizer: "Riya",
       contact: "9876541111",
     },
@@ -23,10 +27,14 @@ const VolunteerContent = () => {
       functionName: "Cultural Fest",
       date: "15 Jan 2025",
       time: "02:00 PM",
+      venue: "place",
       organizer: "Rahul",
       contact: "9876542222",
     },
   ];
+
+  
+    
 
   // Filtered data based on the search query
   const filteredData = volunteerData.filter((volunteer) =>
@@ -46,6 +54,8 @@ const VolunteerContent = () => {
         />
       </div>
 
+      
+        
       {/* Volunteer Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {filteredData.map((volunteer, index) => (
@@ -54,6 +64,7 @@ const VolunteerContent = () => {
             functionName={volunteer.functionName}
             date={volunteer.date}
             time={volunteer.time}
+            venue={volunteer.venue}
             organizer={volunteer.organizer}
             contact={volunteer.contact}
           />
@@ -66,6 +77,7 @@ const VolunteerContent = () => {
             functionName={volunteer.functionName}
             date={volunteer.date}
             time={volunteer.time}
+            venue={volunteer.venue}
             organizer={volunteer.organizer}
             contact={volunteer.contact}
           />
