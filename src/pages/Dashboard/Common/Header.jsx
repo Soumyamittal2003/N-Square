@@ -104,6 +104,7 @@ const Header = () => {
     { name: "Event", path: "/dashboard/event" },
     { name: "Project", path: "/dashboard/project" },
     { name: "Story", path: "/dashboard/inspiring-story" },
+    { name: "Reunion", path: "/dashboard/reunion" },
   ];
 
   const settingsOptions = [
@@ -164,7 +165,7 @@ const Header = () => {
         </div>
 
         {/* Navigation Section */}
-        <nav className="flex space-x-20 lg:space-x-12 md:space-x-6 sm:space-x-4 ">
+        <nav className="flex space-x-20 lg:space-x-16 md:space-x-10 sm:space-x-6 ">
           {navLinks.map((link) => (
             <Link
               key={link.name}
