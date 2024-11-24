@@ -6,13 +6,15 @@ import Connections from "../../../assets/icons/user-logo.svg";
 import { Link } from "react-router-dom";
 import ProfileSection from "./ProfileSection";
 import { useState, useEffect } from "react";
-import PostPopup from "../Connection/Postpage.jsx";
+import PostPopup from "./Postpage.jsx";
 import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie";
+
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State for popup
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
   useEffect(() => {
@@ -33,42 +35,44 @@ const Sidebar = () => {
 
   if (loading) {
     return (
-      <div className="relative">
-        <p className="text-center py-6 text-gray-500">Loading profile</p>
-      </div>
+      <div className="text-center py-6 text-gray-500">Loading profile...</div>
     );
   }
-  return (
-    <>
-      <div className="min-w-[275px] mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
-        <Link to={"/dashboard/profile"}>
-          <ProfileSection userData={userData} />
-        </Link>
 
-        <div className="relative inset-x-0 -top-6 flex items-center justify-center h-10 mx-2 rounded-3xl py-8 border">
-          <Link to={"/dashboard/followers"} className="flex-1 text-center">
-            <div>
-              <span className="block text-2xl font-semibold text-gray-800">
-                {userData.followers.length}
-              </span>
-              <span className="text-sm text-gray-500">Follower</span>
-            </div>
-          </Link>
-          <div className="border-l border-gray-200 h-12 mx-1"></div>
-          <Link to={"/dashboard/following"} className="flex-1 text-center">
-            <div>
-              <span className="block text-2xl font-semibold text-gray-800">
-                {userData.following.length}
-              </span>
-              <span className="text-sm text-gray-500">Following</span>
-            </div>
-          </Link>
-        </div>
-        <nav className="flex-grow px-4">
+  return (
+    <div className=" mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+      {/* Profile Section */}
+      <Link to="/dashboard/profile">
+        <ProfileSection userData={userData} />
+      </Link>
+
+      {/* Followers and Following Section */}
+      <div className="flex items-center justify-around p-1 border rounded-2xl mx-4">
+        <Link to="/dashboard/followers" className="text-center">
+          <div>
+            <span className="block text-lg font-semibold text-gray-800">
+              {userData.followers.length}
+            </span>
+            <span className="text-sm text-gray-500">Followers</span>
+          </div>
+        </Link>
+        <div className="border-l border-gray-300 h-8"></div>
+        <Link to="/dashboard/following" className="text-center">
+          <div>
+            <span className="block text-lg font-semibold text-gray-800">
+              {userData.following.length}
+            </span>
+            <span className="text-sm text-gray-500">Following</span>
+          </div>
+        </Link>
+      </div>
+
+      {/* Navigation Links */}
+      <div className="flex-grow flex flex-col ">
+        <nav className="overflow-y-auto mt-4 px-4 space-y-2">
           <Link to="/dashboard/connection">
             <SidebarItem icon={Connections} label="Connection" />
           </Link>
-
           <div onClick={togglePopup}>
             <SidebarItem icon={newPostLogo} label="Post" />
           </div>
@@ -78,38 +82,29 @@ const Sidebar = () => {
           <Link to="/dashboard/applied">
             <SidebarItem icon={briefcase} label="Applied" />
           </Link>
-          <hr className="border-gray-200 my-2" />
+          <hr className="border-gray-100" />
           <ExpandableItems />
-          <hr className="border-gray-200 my-2" />
+          <hr className="border-gray-100" />
           <Link to="/dashboard/help">
             <SidebarItem icon={helpCircle} label="Help" />
           </Link>
         </nav>
-
         <Footer />
       </div>
+
+      {/* Post Popup */}
       {isPopupOpen && <PostPopup setPopupOpen={setIsPopupOpen} />}
-    </>
+    </div>
   );
 };
 
-// Sidebar Item Component with icon and expandable option
+// Sidebar Item Component
 const SidebarItem = ({ icon, label, expandable = false }) => (
-  <div className="flex items-center px-3 py-2 text-gray-800 hover:bg-gray-100 rounded-md cursor-pointer">
-    {icon && (
-      <img
-        src={icon}
-        alt={`${label} icon`}
-        className="text-gray-600 mr-3 w-4"
-      />
-    )}
+  <div className="flex items-center p-1 text-gray-800 hover:bg-gray-100 rounded-lg cursor-pointer">
+    {icon && <img src={icon} alt={`${label} icon`} className="w-5 h-5 mr-3" />}
     <span className="flex-grow text-sm font-medium">{label}</span>
     {expandable && (
-      <img
-        src={newPostLogo}
-        alt="expand icon"
-        className="text-gray-400 ml-auto w-4"
-      />
+      <img src={newPostLogo} alt="expand icon" className="w-4 ml-auto" />
     )}
   </div>
 );
@@ -124,7 +119,7 @@ const ExpandableItems = () => {
         <SidebarItem label="Events" expandable />
       </div>
       {expanded && (
-        <div className="ml-6 mt-2 space-y-2">
+        <div className="ml-6 space-y-2">
           <Link to="/dashboard/event/event1">
             <SidebarItem label="Event 1" />
           </Link>
@@ -145,7 +140,7 @@ const ExpandableItems = () => {
 
 // Footer Component
 const Footer = () => (
-  <div className="px-4 py-4 text-center text-xs text-gray-500 border-t border-gray-300">
+  <div className="text-center text-xs text-gray-500 mt-10 p-3 ">
     <p>Terms and Conditions</p>
     <p>©2024 Network_Next</p>
   </div>

@@ -121,7 +121,7 @@ const HomeContent = () => {
   });
 
   return (
-    <div className="w-1/2">
+    <div className="w-2/3">
       {/* Tabs Section */}
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
         {tabs.map((tab) => (

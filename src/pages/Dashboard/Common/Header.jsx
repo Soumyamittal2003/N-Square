@@ -32,7 +32,7 @@ const SearchModal = () => (
     />
   </div>
 );
-//model
+
 // Modal Component for Notifications
 const NotificationsModal = ({ notifications }) => (
   <div className="absolute top-full right-32 mt-2 w-auto bg-white shadow-lg rounded-lg z-2 p-4">
@@ -61,9 +61,9 @@ const SettingsModal = ({ settingsOptions }) => {
           <li key={option.name}>
             <Link
               to={option.path}
-              className="flex items-center m-2 px-4 py-1 font-semibold text-md text-black hover:text-gray-600"
+              className="flex items-center px-4 py-1 my-2 font-semibold text-md text-black hover:text-gray-600"
             >
-              <img src={option.icon} alt={option.name} className="p-2 mx-2" />
+              <img src={option.icon} alt={option.name} className="px-2 mx-2" />
               {option.name}
             </Link>
           </li>
@@ -71,9 +71,9 @@ const SettingsModal = ({ settingsOptions }) => {
         <li>
           <button
             onClick={() => {
-              Cookies.remove("token");
-              Cookies.remove("id");
-              Cookies.remove("role");
+              Cookies.remove("token", { path: "/" });
+              Cookies.remove("id", { path: "/" });
+              Cookies.remove("role", { path: "/" });
               toast.success("Logged out successfully!");
               navigate("/login"); // Redirect after logout
             }}
@@ -107,30 +107,22 @@ const Header = () => {
   ];
 
   const settingsOptions = [
-    { name: "Profile", path: "/profile", icon: [setting1] },
-    {
-      name: "Account Preference",
-      path: "/account-preference",
-      icon: [setting2],
-    },
-    {
-      name: "Account Activity",
-      path: "/account-activity",
-      icon: [setting3],
-    },
-    { name: "Post Saved", path: "/post-saved", icon: [setting4] },
-    { name: "Download", path: "/download", icon: [setting5] },
-    { name: "My Jobs", path: "/my-jobs", icon: [setting6] },
-    { name: "Data Privacy", path: "/data-privacy", icon: [setting7] },
-    { name: "Privacy & Security", path: "/privacy-security", icon: [setting8] },
-    { name: "Device Permission", path: "/device-permission", icon: [setting9] },
+    { name: "Profile", path: "/profile", icon: setting1 },
+    { name: "Account Preference", path: "/account-preference", icon: setting2 },
+    { name: "Account Activity", path: "/account-activity", icon: setting3 },
+    { name: "Post Saved", path: "/post-saved", icon: setting4 },
+    { name: "Download", path: "/download", icon: setting5 },
+    { name: "My Jobs", path: "/my-jobs", icon: setting6 },
+    { name: "Data Privacy", path: "/data-privacy", icon: setting7 },
+    { name: "Privacy & Security", path: "/privacy-security", icon: setting8 },
+    { name: "Device Permission", path: "/device-permission", icon: setting9 },
     {
       name: "Data Usage & Media Quality",
       path: "/data-usage-media-quality",
-      icon: [setting10],
+      icon: setting10,
     },
-    { name: "Language", path: "/language", icon: [setting11] },
-    { name: "About", path: "/about", icon: [setting12] },
+    { name: "Language", path: "/language", icon: setting11 },
+    { name: "About", path: "/about", icon: setting12 },
   ];
 
   const notifications = [
@@ -172,12 +164,12 @@ const Header = () => {
         </div>
 
         {/* Navigation Section */}
-        <nav className="flex space-x-[97px]">
+        <nav className="flex space-x-20 lg:space-x-12 md:space-x-6 sm:space-x-4 ">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               to={link.path}
-              className={`text-xl font-semibold ${
+              className={`text-xl font-semibold md:text-base sm:text-sm ${
                 location.pathname === link.path ? "text-black" : "text-gray-800"
               } hover:text-black`}
               aria-label={`Navigate to ${link.name}`}

@@ -18,7 +18,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
   return (
-    <div className="font-sans">
+    <div className="font-sans max-h-screen">
       <ToastContainer
         position="top-right"
         autoClose={3000}
