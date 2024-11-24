@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CiSearch } from "react-icons/ci";
+//import { CiSearch } from "react-icons/ci";
 import UserCard from "./UserCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -103,14 +103,14 @@ const Followers = () => {
           <span className="text-xl">{filteredFollowers.length} Followers</span>
         </div>
 
-        <div className="flex w-1/3 items-center rounded-md border border-gray-700 mx-12 px-3 py-1 bg-white">
-          <CiSearch />
+        <div className="flex w-1/3 items-center rounded-md  border-gray-700 mx-12 px-3 py-1 bg-white">
+          {/* <CiSearch /> */}
           <input
             type="text"
             placeholder="Search Followers"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-sm py-1 px-2 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none"
+            className="w-full px-4 py-1 border border-gray-300 shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
       </div>

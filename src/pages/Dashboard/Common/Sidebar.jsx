@@ -40,7 +40,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className=" mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
       {/* Profile Section */}
       <Link to="/dashboard/profile">
         <ProfileSection userData={userData} />
@@ -68,9 +68,9 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation Links */}
-      <div className="flex-grow flex flex-col ">
-        <nav className=" mt-4 px-4 space-y-2">
-          <Link to="/dashboard/connection">
+      <div className="flex-grow flex flex-col">
+        <nav className="mt-4 px-5 space-y-2">
+          <Link to="/dashboard/connection" >
             <SidebarItem icon={Connections} label="Connection" />
           </Link>
           <div onClick={togglePopup}>
@@ -79,16 +79,28 @@ const Sidebar = () => {
           <Link to="/dashboard/chat">
             <SidebarItem icon={messageChat} label="Chat" />
           </Link>
-          <Link to="/dashboard/applied">
-            <SidebarItem icon={briefcase} label="Applied" />
+          <Link to="/dashboard/job-internship-applied">
+            <SidebarItem icon={briefcase} label="Job/Internship Applied" />
           </Link>
-          <hr className="border-gray-100" />
+          <hr className="border-gray-200" />
           <ExpandableItems />
-          <hr className="border-gray-100" />
+          <hr className="border-gray-200" />
           <Link to="/dashboard/help">
             <SidebarItem icon={helpCircle} label="Help" />
           </Link>
         </nav>
+
+        {/* Virtual Interview Button */}
+        <Link
+          to="https://n-sqare-virtual-interview.vercel.app/"
+          className="mx-8 mt-4"
+        >
+          <button className="w-full py-1 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
+            Virtual Interview
+          </button>
+        </Link>
+
+        {/* Footer */}
         <Footer />
       </div>
 
@@ -116,7 +128,7 @@ const ExpandableItems = () => {
   return (
     <>
       <div onClick={() => setExpanded(!expanded)}>
-        <SidebarItem label="Events" expandable />
+        <SidebarItem label="My Events" expandable />
       </div>
       {expanded && (
         <div className="ml-6 space-y-2">
@@ -134,16 +146,13 @@ const ExpandableItems = () => {
       <Link to="/dashboard/mentorship">
         <SidebarItem label="Mentorship" />
       </Link>
-      <Link to="https://n-sqare-virtual-interview.vercel.app/">
-        <SidebarItem label="Virtual Interview" />
-      </Link>
     </>
   );
 };
 
 // Footer Component
 const Footer = () => (
-  <div className="text-center text-xs text-gray-500 mt-6 p-3 ">
+  <div className="text-center text-xs text-gray-500 mt-auto p-3 ">
     <p>Terms and Conditions</p>
     <p>©2024 Network_Next</p>
   </div>

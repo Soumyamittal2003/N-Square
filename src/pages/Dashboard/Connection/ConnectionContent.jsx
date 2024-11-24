@@ -13,7 +13,7 @@ const ConnectionContent = () => {
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const tabs = ["All", "Existing Faculty", "Alma Connection", "Student"];
+  const tabs = ["All", "Alumni", "Faculty", "Student"];
 
   useEffect(() => {
     const fetchUsersAndFollowing = async () => {
