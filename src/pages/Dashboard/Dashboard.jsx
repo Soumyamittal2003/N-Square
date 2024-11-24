@@ -6,6 +6,7 @@ import Home from "./Home/Home";
 import Event from "./Event/Event";
 import Job from "./Job/Job";
 import Project from "./Project/Project";
+import MentorShip from "./MentorShip/Mentor";
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import UserProfile from "./Common/UserProfile";
@@ -19,6 +20,7 @@ import AlmaResource from "./AlmaResource/AlmaResource";
 import Volunteer from "./Volunteer/Volunteer";
 import AboutEvent from "./Event/AboutEvent";
 import AboutProject from "./Project/AboutProject";
+import Reunion from "./Reunion/Reunion";
 
 import Chat from "./Chat/Chat";
 
@@ -54,6 +56,7 @@ const Dashboard = () => {
             <Route path="event/about-event" element={<AboutEvent />} />
             <Route path="chat" element={<Chat />} />
             <Route path="project" element={<Project />} />
+            <Route path="mentorship" element={<MentorShip />} />
             <Route path="project/:projectId" element={<AboutProject />} />
             <Route path="project/create-project" element={<CreateProject />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
@@ -62,6 +65,7 @@ const Dashboard = () => {
             <Route path="volunteer" element={<Volunteer />} />
             <Route path="connection" element={<Connection />} />
             <Route path="followers" element={<Followers />} />
+            <Route path="reunion" element={<Reunion />} />
             <Route path="following" element={<Following />} />
             <Route path="*" element={<Error404 />} />
           </Routes>
