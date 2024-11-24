@@ -1,6 +1,6 @@
 // import React from 'react';
-import pic from "../../../assets/icons/pic.svg"
-const MentorContent = () => {
+import pic from "../../../assets/icons/pic.svg";
+const MentorContent = ({ onFindGroupClick }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 flex items-center w-3/4">
       {/* Left Content */}
@@ -9,8 +9,11 @@ const MentorContent = () => {
         <p className="text-gray-700 text-lg mb-2">Run impactful</p>
         <p className="text-gray-700 text-lg mb-2">mentorship programs</p>
         <p className="text-gray-700 text-lg mb-20">without hassle</p>
-        <button className="bg-blue-500 mb-9 text-white px-6 py-2 rounded-md">
-          Find  Mentors Group
+        <button
+          className="bg-blue-500 text-white px-6 py-2 rounded-md"
+          onClick={onFindGroupClick}
+        >
+          Find a Mentors Group
         </button>
       </div>
 
