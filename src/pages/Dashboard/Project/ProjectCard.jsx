@@ -39,7 +39,7 @@ const ProjectCard = ({ project }) => {
   return (
     <div
       className="border p-2 m-2 border-gray-300 rounded-lg shadow-md bg-white cursor-pointer"
-      onClick={() => navigate(`/${_id}`)} // Navigate to AboutProject with project ID
+      onClick={() => navigate(`${_id}`)} // Navigate to AboutProject with project ID
     >
       {/* Header Section */}
       <div className="flex justify-between items-center p-4">

@@ -1,22 +1,24 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axiosInstance from "../../../utils/axiosinstance";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { IoChevronBackOutline } from "react-icons/io5";
+import { BsStars } from "react-icons/bs";
+import { TbCoinRupee } from "react-icons/tb";
+import axiosInstance from "../../../utils/axiosinstance"; // Ensure axiosInstance is properly configured
 
-const AboutProject = () => {
-  const { projectId } = useParams(); // Assuming projectId is passed via route
-  const [project, setProject] = useState(null);
+const ProjectDetail = () => {
+  const { projectId } = useParams(); // Get project ID from URL params
+  const [projectData, setProjectData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("About");
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
         const response = await axiosInstance.get(`/project/${projectId}`);
-        if (response.data.success) {
-          setProject(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching project details:", error);
+        setProjectData(response.data);
+      } catch (err) {
+        setError("Failed to load project details. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -29,124 +31,146 @@ const AboutProject = () => {
     return <div className="text-center text-gray-500 mt-10">Loading...</div>;
   }
 
-  if (!project) {
-    return (
-      <div className="text-center text-red-500 mt-10">
-        Project details could not be loaded.
-      </div>
-    );
+  if (error) {
+    return <div className="text-center text-red-500 mt-10">{error}</div>;
   }
 
-  const {
-    projectTopic,
-    description,
-    status,
-    contributors,
-    eligibility,
-    source,
-    createdBy,
-  } = project;
+  const tabContent = {
+    About: <p>{projectData?.description || "No description available."}</p>,
+    "Mentor/Contributor": (
+      <div>
+        <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
+        <p>
+          {projectData?.openForMentor
+            ? "This project is open for mentorship."
+            : "Mentorship is not open for this project."}
+        </p>
+        <p>
+          {projectData?.openForStudent
+            ? "This project is open for student collaboration."
+            : "Student collaboration is not open for this project."}
+        </p>
+      </div>
+    ),
+    Eligibility: (
+      <div>
+        <h3 className="text-lg font-bold">Eligibility Criteria</h3>
+        <p className="mt-2">
+          {projectData?.eligibility || "No eligibility criteria available."}
+        </p>
+      </div>
+    ),
+    "Project Source": (
+      <div>
+        <h3 className="text-lg font-bold">Project Links</h3>
+        {projectData?.projectLinks ? (
+          Object.entries(projectData.projectLinks).map(([key, value]) => (
+            <div key={key} className="mt-2">
+              <a
+                href={value}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline"
+              >
+                {key}
+              </a>
+            </div>
+          ))
+        ) : (
+          <p>No project links available.</p>
+        )}
+      </div>
+    ),
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-7xl mx-auto bg-white shadow-md rounded-xl p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">{projectTopic}</h1>
-          <Link
-            to="/project"
-            className="px-4 py-2 bg-gray-800 text-white text-sm font-semibold rounded-lg hover:bg-gray-700"
-          >
-            Back to Projects
-          </Link>
+    <div className="min-h-screen  p-6">
+      <div className="max-w-7xl mx-auto bg-white shadow-md rounded-lg p-8">
+        {/* Header Section */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <Link to="/dashboard/project" className="self-center mr-3">
+              <IoChevronBackOutline />
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-800">
+              Project Description
+            </h1>
+          </div>
+
+          <div className="flex space-x-4">
+            <button className="px-4 py-2 border border-black text-black font-semibold text-sm rounded-lg hover:bg-black hover:text-white">
+              Participate as Contributor
+            </button>
+            <div className="justify-center items-center flex">
+              <button>
+                <TbCoinRupee className="h-10 w-10 rounded-lg bg-yellow-500 text-white font-semibold" />
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:space-x-6">
-          {/* Left Section */}
-          <div className="md:w-2/3">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">
-              Project Description
-            </h2>
-            <p className="text-gray-600 leading-relaxed mb-6">{description}</p>
-
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">
-              About the Project
-            </h2>
-            <p className="text-gray-600 leading-relaxed mb-6">
-              This is a detailed explanation of the project. Lorem Ipsum is
-              simply dummy text of the printing and typesetting industry. Lorem
-              Ipsum has been the industry standard dummy text ever since the
-              1500s.
-            </p>
-
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">
-              Eligibility
-            </h2>
-            <p className="text-gray-600 leading-relaxed mb-6">
-              {eligibility || "Eligibility information is not available."}
-            </p>
-
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">
-              Project Source
-            </h2>
-            <p className="text-gray-600 leading-relaxed mb-6">
-              {source || "Source details are not available."}
-            </p>
+        {/* Main Section */}
+        <div className="flex mt-8">
+          {/* Left Section: Image */}
+          <div className="flex-shrink-0">
+            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
+              <img
+                src={
+                  projectData?.profilePhoto || "https://via.placeholder.com/100"
+                }
+                alt="Project Icon"
+                className="w-full h-full rounded-full object-cover"
+              />
+            </div>
           </div>
 
-          {/* Right Section */}
-          <div className="md:w-1/3 bg-gray-50 p-4 rounded-lg shadow-inner">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">
-              Project Status
-            </h2>
-            <p
-              className={`text-sm font-medium px-4 py-2 rounded-full ${
-                status === "Working"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-yellow-100 text-yellow-700"
-              }`}
-            >
-              {status}
-            </p>
-
-            <h2 className="text-lg font-semibold text-gray-700 mt-6 mb-4">
-              Contributors
-            </h2>
-            <ul className="space-y-2">
-              {contributors && contributors.length > 0 ? (
-                contributors.map((contributor, index) => (
-                  <li
-                    key={index}
-                    className="text-gray-600 text-sm font-medium flex items-center"
-                  >
-                    <img
-                      src={
-                        contributor.profilePhoto ||
-                        "https://via.placeholder.com/40"
-                      }
-                      alt="Contributor"
-                      className="w-8 h-8 rounded-full mr-2"
-                    />
-                    {contributor.name || "Unknown Contributor"}
-                  </li>
-                ))
-              ) : (
-                <p className="text-gray-500">No contributors available.</p>
+          {/* Right Section: Project Description */}
+          <div className="ml-6">
+            <h2 className="text-xl flex font-bold text-gray-800">
+              {projectData?.projectTopic || "Untitled Project"}
+              {projectData?.fundingRequired && (
+                <span className="ml-4 p-1 px-2 bg-green-500 flex justify-center items-center text-white font-semibold text-sm rounded-lg shadow ">
+                  <BsStars className="mr-1" />
+                  Open For Funding
+                </span>
               )}
-            </ul>
-
-            <h2 className="text-lg font-semibold text-gray-700 mt-6 mb-4">
-              Created By
             </h2>
-            <p className="text-gray-600 font-medium">
-              {createdBy?.firstName
-                ? `${createdBy.firstName} ${createdBy.lastName}`
-                : "Unknown"}
+            <p className="text-gray-600 mt-4 leading-relaxed">
+              Department: {projectData?.department || "Unknown Department"}
+            </p>
+            <p className="text-gray-600 mt-2 leading-relaxed">
+              Phase: {projectData?.projectPhase || "Unknown Phase"}
             </p>
           </div>
+        </div>
+
+        {/* Tab Section */}
+        <div className="mt-8">
+          <div className="flex space-x-6 border-b border-gray-300 pb-2">
+            {[
+              "About",
+              "Mentor/Contributor",
+              "Eligibility",
+              "Project Source",
+            ].map((tab) => (
+              <button
+                key={tab}
+                className={`font-semibold pb-2 ${
+                  activeTab === tab
+                    ? "text-blue-500 border-b-2 border-blue-500"
+                    : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          <div className="mt-4">{tabContent[activeTab]}</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default AboutProject;
+export default ProjectDetail;

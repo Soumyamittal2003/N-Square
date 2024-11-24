@@ -1,11 +1,10 @@
-// Sidebar.jsx
 import briefcase from "../../../assets/icons/briefcase-01.svg";
 import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
-import { Link } from "react-router-dom"; // Import Link
-import ProfileSection from "./ProfileSection"; // Import the ProfileSection component
+import { Link } from "react-router-dom";
+import ProfileSection from "./ProfileSection";
 import { useState, useEffect } from "react";
 import PostPopup from "../Connection/Postpage.jsx";
 import axiosInstance from "../../../utils/axiosinstance";
@@ -71,8 +70,6 @@ const Sidebar = () => {
           </Link>
 
           <div onClick={togglePopup}>
-            {" "}
-            {/* Open the popup */}
             <SidebarItem icon={newPostLogo} label="Post" />
           </div>
           <Link to="/dashboard/chat">
@@ -82,9 +79,7 @@ const Sidebar = () => {
             <SidebarItem icon={briefcase} label="Applied" />
           </Link>
           <hr className="border-gray-200 my-2" />
-          {/* Expandable Items */}
           <ExpandableItems />
-          {/* Divider and Help Section */}
           <hr className="border-gray-200 my-2" />
           <Link to="/dashboard/help">
             <SidebarItem icon={helpCircle} label="Help" />
@@ -93,7 +88,6 @@ const Sidebar = () => {
 
         <Footer />
       </div>
-      {/* Render the PostPopup if open */}
       {isPopupOpen && <PostPopup setPopupOpen={setIsPopupOpen} />}
     </>
   );

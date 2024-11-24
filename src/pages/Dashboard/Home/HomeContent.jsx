@@ -6,7 +6,8 @@ const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState({});
-  const currentUserId = "67363daf6410c39c2629897b"; // Example current user ID
+  const fetchCurrentUserId = localStorage.getItem("chat-app-current-user");
+  const currentUserId = fetchCurrentUserId?._id;
 
   const tabs = [
     "All",
