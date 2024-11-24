@@ -69,7 +69,7 @@ const Sidebar = () => {
 
       {/* Navigation Links */}
       <div className="flex-grow flex flex-col ">
-        <nav className="overflow-y-auto mt-4 px-4 space-y-2">
+        <nav className=" mt-4 px-4 space-y-2">
           <Link to="/dashboard/connection">
             <SidebarItem icon={Connections} label="Connection" />
           </Link>
@@ -134,13 +134,16 @@ const ExpandableItems = () => {
       <Link to="/dashboard/mentorship">
         <SidebarItem label="Mentorship" />
       </Link>
+      <Link to="https://n-sqare-virtual-interview.vercel.app/">
+        <SidebarItem label="Virtual Interview" />
+      </Link>
     </>
   );
 };
 
 // Footer Component
 const Footer = () => (
-  <div className="text-center text-xs text-gray-500 mt-10 p-3 ">
+  <div className="text-center text-xs text-gray-500 mt-6 p-3 ">
     <p>Terms and Conditions</p>
     <p>©2024 Network_Next</p>
   </div>
