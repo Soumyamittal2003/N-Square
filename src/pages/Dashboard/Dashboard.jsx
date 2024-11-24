@@ -6,6 +6,7 @@ import Home from "./Home/Home";
 import Event from "./Event/Event";
 import Job from "./Job/Job";
 import Project from "./Project/Project";
+import MentorShip from "./MentorShip/Mentor"
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import UserProfile from "./Common/UserProfile";
@@ -42,6 +43,7 @@ const Dashboard = () => {
               <Route path="job" element={<Job />} />
               <Route path="event" element={<Event />} />
               <Route path="event/about-event" element={<AboutEvent />} />
+              <Route path="mentorship" element={<MentorShip/>}/>
               <Route path="chat" element={<Chat />} />
               <Route path="project" element={<Project />} />
               <Route path="project/:projectId" element={<AboutProject />} />
