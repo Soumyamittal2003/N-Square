@@ -11,7 +11,7 @@ const JobContent = () => {
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4 scroll-m-11">
         {tabs.map((tab) => (
           <button
-            key={tab}
+            key={tab}//d
             onClick={() => setActiveTab(tab)}
             className={`text-sm px-4 py-2 rounded-full font-semibold ${
               activeTab === tab ? "text-black font-bold" : "text-gray-500"

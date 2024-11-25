@@ -18,7 +18,7 @@ const CreateJob = ({ onClose }) => {
     if (type === "file") {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0], // Assign the first selected file
+        [name]: files[0], // Assign the first selected file.
       }));
     } else if (type === "checkbox") {
       setFormData((prevData) => ({

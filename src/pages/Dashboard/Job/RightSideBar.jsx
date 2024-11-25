@@ -14,7 +14,7 @@ const RightSidebar = () => {
 
   return (
     <div className="w-full p-4 space-y-2 bg-white">
-      {/* Create Job Button */}
+      {/* Create Job Button. */}
       <div className="flex justify-center">
         <button
           onClick={handleOpenCreateJob}

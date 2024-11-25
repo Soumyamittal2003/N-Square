@@ -16,7 +16,7 @@ const JobCard = () => {
         />
       </div>
 
-      {/* Job Details */}
+      {/* Job Details. */}
       <div className="mt-4 flex-1">
         <h4 className="text-md font-semibold">Software Engineer Intern</h4>
         <p className="text-sm text-gray-500">

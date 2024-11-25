@@ -4,7 +4,7 @@ const Home = () => {
   return (
     
       <div className="flex w-full bg-white">
-      {/* Main Content */}
+      {/* Main Content Here */}
       <div className="w-[80%] p-2">
         <JobContent />
       </div>
