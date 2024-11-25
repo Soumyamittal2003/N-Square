@@ -24,7 +24,7 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, link })
 
   return (
     <div
-      className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer"
+      className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between"
       onClick={handleNavigate}
     >
       {/* Event Image */}

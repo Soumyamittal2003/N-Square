@@ -15,7 +15,7 @@ const ReunionCard = ({ title, name, batch, date, organizer, status }) => {
         </div>
   
         {/* Content Section */}
-        <div className="flex items-center">
+        <div className="flex items-center relative">
           <div className="mr-4">
             <img
               src="/path/to/reunion-image-placeholder.png" // Replace with real image or API

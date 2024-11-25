@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const FAQSection = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -31,7 +31,7 @@ const FAQSection = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6 bg-gray-50">
+    <div className="max-w-7xl mx-auto py-12 px-6 bg-gray-50">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">FAQs</h2>
       <p className="text-gray-600 mb-8">
         Get your questions answered quickly. Browse through our FAQs for instant support on common topics of inquiry.

@@ -3,7 +3,7 @@ import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
 const StoryCard = ({ title, description }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center text-center">
+    <div className="bg-white border  shadow-lg rounded-lg p-4 flex flex-col items-center text-center">
       <div className="bg-gray-300 rounded-full w-16 h-16 flex items-center justify-center">
         {/* Placeholder for a logo or avatar */}
         <span className="text-white font-bold text-lg">{title.charAt(0)}</span>

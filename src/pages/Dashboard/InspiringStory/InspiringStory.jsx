@@ -19,11 +19,11 @@ const InspiringStory = () => {
   ];
 
   return (
-    <div className="flex w-full bg-gray-50">
+    <div className="flex w-full ">
       {/* Main Content */}
-      <div className="w-[70%] p-6">
+      <div className="w-[70%] mx-8">
         {/* Tabs Section */}
-        <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
+        <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -73,7 +73,7 @@ const InspiringStory = () => {
       </div>
 
       {/* Right Sidebar */}
-      <div className="w-[30%] p-6">
+      <div className="w-[30%] mx-6 ">
         <RightSidebar />
       </div>
     </div>
