@@ -281,7 +281,7 @@ const CreateEvent = () => {
             </label>
             <input
               type="text"
-              name="facultyCoordinator"
+              name="eventCoordinator"
               value={formData.eventCoordinator}
               onChange={handleInputChange}
               placeholder="Event Coordinator"
@@ -391,7 +391,7 @@ const CreateEvent = () => {
             </label>
             <input
               type="text"
-              name="Organized By"
+              name="organizedBy"
               value={formData.organizedBy}
               onChange={handleInputChange}
               placeholder="Enter Name of Organiser"

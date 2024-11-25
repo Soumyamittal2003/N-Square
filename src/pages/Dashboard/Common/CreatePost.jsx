@@ -3,14 +3,14 @@ import EmojiPicker from "emoji-picker-react";
 import uploadMedia from "../../../assets/images/upload.png";
 import emoji from "../../../assets/images/emoji.png";
 
-const CreateStory = ({ onClose }) => {
+const CreatePost = ({ onClose }) => {
   const [formData, setFormData] = useState({
     content: "",
-    storyType: "Story", // Default story type
+    postType: "Post", // Default story type
     attachedFile: null,
   });
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
 
   const handleInputChange = (e) => {
@@ -18,10 +18,7 @@ const CreateStory = ({ onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleStoryTypeChange = (type) => {
-    setFormData((prev) => ({ ...prev, storyType: type }));
-    setDropdownOpen(false);
-  };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -31,7 +28,7 @@ const CreateStory = ({ onClose }) => {
   const handleEmojiClick = (emojiObject) => {
     setFormData((prev) => ({
       ...prev,
-      content: prev.content + emojiObject.emoji, // Append emoji to content
+      content: prev.content + emojiObject.emoji,
     }));
     setEmojiPickerOpen(false); // Close the emoji picker after selection
   };
@@ -73,33 +70,10 @@ const CreateStory = ({ onClose }) => {
               <h2 className="font-semibold text-gray-800">Lauy Rahil</h2>
               <div
                 className="relative cursor-pointer mt-1 text-gray-500"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                {formData.storyType}{" "}
+                {formData.postType}
                 <span className="ml-1 text-sm">&#x25BC;</span>
               </div>
-              {dropdownOpen && (
-                <div className="absolute bg-white border border-gray-300 rounded mt-2 shadow-lg w-48 z-10">
-                  <div
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleStoryTypeChange("Story")}
-                  >
-                    Story
-                  </div>
-                  <div
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleStoryTypeChange("Impact Story")}
-                  >
-                    Impact Story
-                  </div>
-                  <div
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleStoryTypeChange("Funding Story")}
-                  >
-                    Funding Story
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
@@ -168,4 +142,4 @@ const CreateStory = ({ onClose }) => {
   );
 };
 
-export default CreateStory;
+export default CreatePost;

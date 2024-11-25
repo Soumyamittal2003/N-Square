@@ -5,6 +5,7 @@ import CreateJob from "../Job/CreateJob";
 import CreateEvent from "../Event/CreateEvent";
 import CreateResources from "../AlmaResource/CreateResource";
 import CreateVolunteer from "../Volunteer/CreateVolunteer";
+import CreatePost from "./CreatePost";
 
 const PostPopup = ({ setPopupOpen }) => {
   const [showCreateStory, setShowCreateStory] = useState(false);
@@ -12,6 +13,7 @@ const PostPopup = ({ setPopupOpen }) => {
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [showCreateResource, setShowCreateResource] = useState(false);
   const [showCreateVolunteer, setShowCreateVolunteer] = useState(false);
+  const [showCreatePost, setShowCreatePost] = useState(false);
 
   const handleStoryClick = () => {
     setShowCreateStory(true);
@@ -33,9 +35,13 @@ const PostPopup = ({ setPopupOpen }) => {
     setShowCreateVolunteer(true);
   };
 
+  const handlePostClick = () => {
+    setShowCreatePost(true);
+  }
+
   return (
     <>
-      {!showCreateStory && !showCreateJob && !showCreateEvent && !showCreateResource && !showCreateVolunteer ? (
+      {!showCreateStory && !showCreateJob && !showCreateEvent && !showCreateResource && !showCreateVolunteer && !showCreatePost ? (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-[500px] shadow-lg">
             <div className="p-6 border-b flex justify-between items-center">
@@ -49,7 +55,7 @@ const PostPopup = ({ setPopupOpen }) => {
             </div>
             <div className="p-6 space-y-4">
               {[  
-                { label: "Post", visibility: "Anyone can view" },
+                { label: "Post", visibility: "Anyone can view", onClick: handlePostClick },
                 { 
                   label: "Project", 
                   visibility: "Followed People can view", 
@@ -102,8 +108,10 @@ const PostPopup = ({ setPopupOpen }) => {
         <CreateEvent onClose={() => setShowCreateEvent(false)} />
       ) : showCreateResource ? (
         <CreateResources onClose={() => setShowCreateResource(false)} />
-      ) : (
+      ) : showCreateVolunteer? (
         <CreateVolunteer onClose={() => setShowCreateVolunteer(false)} />
+      ) : (
+        <CreatePost onClose={() => setShowCreatePost(false)} />
       )}
     </>
   );

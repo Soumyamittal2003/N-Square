@@ -13,9 +13,9 @@ const RightSidebar = () => {
   };
 
   return (
-    <div className="w-1/3 mt-6 mb-auto bg-white px-6 rounded-lg p-11">
-      {/* Create Event Button */}
-      <div className="flex justify-center mb-2">
+    <div className="relative w-1/3 mt-2 mb-auto bg-white px-6 rounded-lg p-11">
+      {/* Create Event Button Positioned Top Right */}
+      <div className="absolute top-2 right-8">
         <button
           onClick={handleOpenCreateEvent}
           className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
@@ -27,7 +27,7 @@ const RightSidebar = () => {
       {/* Create Event Popup */}
       {isCreateEventOpen && <CreateEvent onClose={handleCloseCreateEvent} />}
 
-      <div className="mb-6">
+      <div className="mt-16 mb-0 p-2"> {/* Adjust spacing below the button */}
         {/* Upcoming Events Section */}
         <div className="border p-2 rounded-lg shadow-md">
           <div className="flex justify-between items-center">

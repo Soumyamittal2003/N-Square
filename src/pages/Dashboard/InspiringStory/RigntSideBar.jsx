@@ -10,7 +10,7 @@ const RightSidebar = () => {
   const handleCloseCreateStory = () => setIsCreateStoryOpen(false);
 
   return (
-    <div className="w-full p-4 space-y-8 ">
+    <div className="w-full p-4 space-y-2 ">
       {/* Create Story Button */}
       <div className="flex justify-center mb-2">
         <button
