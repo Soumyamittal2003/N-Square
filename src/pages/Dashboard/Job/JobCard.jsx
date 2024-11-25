@@ -2,33 +2,69 @@ import bookmark from "../../../assets/icons/bookmark.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 import shareArrow from "../../../assets/icons/shareArrow.svg";
-import jobImage from "../../../assets/icons/job-image.svg";
 
-const JobCard = () => {
+const JobCard = ({ job }) => {
+  const {
+    title,
+    company,
+    location,
+    description,
+    jobphoto,
+    skills,
+    type,
+    stipendOrSalary,
+    applyLink,
+    createdBy,
+    postedDate,
+  } = job;
+
   return (
     <div className="w-[350px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between">
       {/* Job Image */}
       <div className="relative">
         <img
-          src={jobImage}
-          alt="Job"
+          src={jobphoto || "https://via.placeholder.com/150"}
+          alt={title || "Job Image"}
           className="w-full h-32 rounded-t-lg object-cover"
         />
       </div>
 
       {/* Job Details. */}
       <div className="mt-4 flex-1">
-        <h4 className="text-md font-semibold">Software Engineer Intern</h4>
+        <h4 className="text-md font-semibold">{title || "Job Title"}</h4>
         <p className="text-sm text-gray-500">
-          DocuVille <span className="text-blue-600 font-semibold">India</span><span className="text-green-600 font-semilbold"> Elegibility</span><span className="text-red-600 font-semibold"> Job</span>
+          {company || "Company"}{" "}
+          <span className="text-blue-600 font-semibold">
+            {location || "Location"}
+          </span>
         </p>
         <p className="text-sm text-gray-600 mt-2">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry standard dummy text ever
-          since the 1500s.
+          {description || "No description available."}
         </p>
         <p className="text-xs text-gray-500 mt-2">
-          Posted By - <span className="self-end leading-none">Aadarsh</span>
+          Skills:{" "}
+          <span className="text-gray-800 font-medium">
+            {skills ? skills.join(", ") : "None specified"}
+          </span>
+        </p>
+        <p className="text-xs text-gray-500 mt-2">
+          Type: <span className="text-blue-800 font-medium">{type}</span>
+        </p>
+        <p className="text-xs text-gray-500 mt-2">
+          Salary/Stipend:{" "}
+          <span className="text-green-800 font-medium">{stipendOrSalary}</span>
+        </p>
+        <p className="text-xs text-gray-500 mt-2">
+          Posted By:{" "}
+          <span className="text-gray-800 font-medium">
+            {createdBy?.name || "Unknown"}
+          </span>
+        </p>
+        <p className="text-xs text-gray-500 mt-2">
+          Posted Date:{" "}
+          <span className="text-gray-800 font-medium">
+            {new Date(postedDate).toLocaleDateString()}
+          </span>
         </p>
       </div>
 
@@ -61,9 +97,14 @@ const JobCard = () => {
         </div>
 
         {/* Apply Button */}
-        <button className="px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-2xl">
+        <a
+          href={applyLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-2xl hover:bg-blue-700"
+        >
           Apply
-        </button>
+        </a>
       </div>
     </div>
   );
