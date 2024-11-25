@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CreateStory from "../InspiringStory/CreateStory";
 import CreateJob from "../Job/CreateJob";
 import CreateEvent from "../Event/CreateEvent";
@@ -12,8 +12,6 @@ const PostPopup = ({ setPopupOpen }) => {
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [showCreateResource, setShowCreateResource] = useState(false);
   const [showCreateVolunteer, setShowCreateVolunteer] = useState(false);
-
-  const navigate = useNavigate(); // Use React Router's useNavigate
 
   const handleStoryClick = () => {
     setShowCreateStory(true);
@@ -35,10 +33,6 @@ const PostPopup = ({ setPopupOpen }) => {
     setShowCreateVolunteer(true);
   };
 
-  const handleProjectClick = () => {
-    navigate("project/create-project"); // Navigate to the CreateProject page
-  };
-
   return (
     <>
       {!showCreateStory && !showCreateJob && !showCreateEvent && !showCreateResource && !showCreateVolunteer ? (
@@ -54,29 +48,49 @@ const PostPopup = ({ setPopupOpen }) => {
               </button>
             </div>
             <div className="p-6 space-y-4">
-              {[
+              {[  
                 { label: "Post", visibility: "Anyone can view" },
-                { label: "Project", visibility: "Followed People can view", onClick: handleProjectClick },
+                { 
+                  label: "Project", 
+                  visibility: "Followed People can view", 
+                  link: "/dashboard/project/create-project" // Use Link for navigation
+                },
                 { label: "Event", visibility: "Anyone can view", onClick: handleEventClick },
                 { label: "Story", visibility: "Anyone can view", onClick: handleStoryClick },
                 { label: "Job", visibility: "Anyone can view", onClick: handleJobClick },
                 { label: "Volunteering", visibility: "Anyone can view", onClick: handleVolunteerClick },
                 { label: "Alma Resources", visibility: "Anyone can view", onClick: handleResourceClick },
-              ].map((item, index) => (
-                <button
-                  key={index}
-                  onClick={item.onClick}
-                  className="flex items-center justify-between w-full border px-3 py-2 rounded-md hover:bg-gray-100"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span className="text-gray-500">👤</span>
+              ].map((item, index) =>
+                item.link ? ( // Check if the item has a link
+                  <Link
+                    key={index}
+                    to={item.link}
+                    className="flex items-center justify-between w-full border px-3 py-2 rounded-md hover:bg-gray-100"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span className="text-gray-500">👤</span>
+                      </div>
+                      <span className="text-sm font-medium">{item.label}</span>
                     </div>
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </div>
-                  <span className="text-xs text-gray-500">{item.visibility}</span>
-                </button>
-              ))}
+                    <span className="text-xs text-gray-500">{item.visibility}</span>
+                  </Link>
+                ) : (
+                  <button
+                    key={index}
+                    onClick={item.onClick}
+                    className="flex items-center justify-between w-full border px-3 py-2 rounded-md hover:bg-gray-100"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span className="text-gray-500">👤</span>
+                      </div>
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </div>
+                    <span className="text-xs text-gray-500">{item.visibility}</span>
+                  </button>
+                )
+              )}
             </div>
           </div>
         </div>
