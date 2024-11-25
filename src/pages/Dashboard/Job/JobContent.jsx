@@ -40,7 +40,7 @@ const JobContent = () => {
 
   return (
     <div className="w-full">
-      {/* Tabs Section */}
+      {/* Tabs Sections */}
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
         {tabs.map((tab) => (
           <button
