@@ -19,7 +19,7 @@ const JobCard = ({ job }) => {
   } = job;
 
   return (
-    <div className="w-[350px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between">
+    <div className="w-[300px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between">
       {/* Job Image */}
       <div className="relative">
         <img
