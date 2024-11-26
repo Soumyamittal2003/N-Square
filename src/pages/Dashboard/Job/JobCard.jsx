@@ -1,9 +1,9 @@
+import  { useState } from "react";
 import bookmark from "../../../assets/icons/bookmark.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
-import shareArrow from "../../../assets/icons/shareArrow.svg";
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, createdByData }) => {
   const {
     title,
     company,
@@ -14,22 +14,31 @@ const JobCard = ({ job }) => {
     type,
     stipendOrSalary,
     applyLink,
-    createdBy,
+    createdBy,  // ID of the creator
     postedDate,
   } = job;
 
+  const [isApplied, setIsApplied] = useState(false);
+
+  // Getting the name of the person who created the job using the createdBy ID
+  const createdByName = createdByData[createdBy]?.name || "Unknown";
+
+  const handleApplyClick = () => {
+    setIsApplied(true); // This marks the job as applied
+  };
+
   return (
-    <div className="w-[300px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between">
+    <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between">
       {/* Job Image */}
       <div className="relative">
         <img
           src={jobphoto || "https://via.placeholder.com/150"}
           alt={title || "Job Image"}
-          className="w-full h-32 rounded-t-lg object-cover"
+          className="w-full h-[180px] rounded-t-lg object-cover"
         />
       </div>
 
-      {/* Job Details. */}
+      {/* Job Details */}
       <div className="mt-4 flex-1">
         <h4 className="text-md font-semibold">{title || "Job Title"}</h4>
         <p className="text-sm text-gray-500">
@@ -55,16 +64,28 @@ const JobCard = ({ job }) => {
           <span className="text-green-800 font-medium">{stipendOrSalary}</span>
         </p>
         <p className="text-xs text-gray-500 mt-2">
-          Posted By:{" "}
+          Created By:{" "}
           <span className="text-gray-800 font-medium">
-            {createdBy?.name || "Unknown"}
+            {createdByName}
           </span>
         </p>
         <p className="text-xs text-gray-500 mt-2">
-          Posted Date:{" "}
+          Created Date:{" "}
           <span className="text-gray-800 font-medium">
             {new Date(postedDate).toLocaleDateString()}
           </span>
+        </p>
+
+        {/* Apply Link */}
+        <p className="text-xs text-gray-500 mt-2">
+          <a
+            href={applyLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            Apply Here
+          </a>
         </p>
       </div>
 
@@ -73,12 +94,9 @@ const JobCard = ({ job }) => {
         {/* Left Icons */}
         <div className="flex gap-4">
           <button className="w-5 h-5">
-            <img src={shareArrow} alt="Share" className="w-full h-full" />
-          </button>
-          <button className="w-5 h-5">
             <img src={bookmark} alt="Bookmark" className="w-full h-full" />
           </button>
-          <button className="flex items-center gap-0">
+          <button className="flex items-center gap-1">
             <img
               src={arrowBlockUp}
               alt="Up arrow"
@@ -86,7 +104,7 @@ const JobCard = ({ job }) => {
             />
             <span className="text-sm font-semibold">63K</span>
           </button>
-          <button className="flex items-center gap-0">
+          <button className="flex items-center gap-1">
             <img
               src={arrowBlockdown}
               alt="Down arrow"
@@ -97,14 +115,15 @@ const JobCard = ({ job }) => {
         </div>
 
         {/* Apply Button */}
-        <a
-          href={applyLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-2xl hover:bg-blue-700"
+        <button
+          onClick={handleApplyClick}
+          className={`px-4 py-2 text-sm font-bold text-white rounded-2xl ${
+            isApplied ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+          disabled={isApplied}
         >
-          Apply
-        </a>
+          {isApplied ? 'Applied' : 'Apply'}
+        </button>
       </div>
     </div>
   );

@@ -1,17 +1,20 @@
 import { useState } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
 
 const CreateJob = ({ onClose }) => {
   const [formData, setFormData] = useState({
-    profilePhoto: null,
-    jobRole: "",
+    jobphoto: null,
+    title: "",
     company: "",
-    jobLocation: "",
+    location: "",
     skills: "",
-    jobType: "",
+    type: "",
     stipendOrSalary: "",
     applyLink: "",
-    jobDescription: "",
+    description: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value, type, files, checked } = e.target;
@@ -33,13 +36,38 @@ const CreateJob = ({ onClose }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add logic to send formData to backend
+    setIsSubmitting(true);
+    setError("");
+
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+      console.log(key, formData[key]);
+    }
+
+    try {
+      // Replace this URL with your actual API endpoint
+      
+        const response = await axiosInstance.post("/jobs/create",
+        formDataToSend,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      // Handle successful job creation
+      console.log("Job created successfully:", response.data);
+      onClose();  // Close the modal after successful submission
+    } catch (err) {
+      console.error("Error creating job:", err);
+      setError("An error occurred while creating the job. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className=" fixed inset-0 z-70 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-70 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white w-[100%] max-w-lg rounded-lg shadow-lg p-6">
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-4">
@@ -55,13 +83,13 @@ const CreateJob = ({ onClose }) => {
           {/* Profile Photo */}
           <div className="mb-4 flex flex-col items-center">
             <label
-              htmlFor="profilePhoto"
+              htmlFor="jobphoto"
               className="w-10 h-10 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition ease-in-out duration-200"
             >
               <input
                 type="file"
-                name="JobPhoto"
-                id="profilePhoto"
+                name="jobphoto"
+                id="jobphoto"
                 onChange={handleInputChange}
                 className="hidden"
               />
@@ -75,8 +103,8 @@ const CreateJob = ({ onClose }) => {
             <label className="block text-sm font-medium mb-0">Job Role</label>
             <input
               type="text"
-              name="jobRole"
-              value={formData.jobRole}
+              name="title"
+              value={formData.title}
               onChange={handleInputChange}
               placeholder="Job Title"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -103,8 +131,8 @@ const CreateJob = ({ onClose }) => {
             </label>
             <input
               type="text"
-              name="jobLocation"
-              value={formData.jobLocation}
+              name="location"
+              value={formData.location}
               onChange={handleInputChange}
               placeholder="City, State, Country"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -126,10 +154,10 @@ const CreateJob = ({ onClose }) => {
 
           {/* Job Type */}
           <div>
-            <label className="block text-sm font-medium mb-1">Types</label>
+            <label className="block text-sm font-medium mb-1">Job Type</label>
             <select
-              name="jobType"
-              value={formData.jobType}
+              name="type"
+              value={formData.type}
               onChange={handleInputChange}
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -146,7 +174,7 @@ const CreateJob = ({ onClose }) => {
             </label>
             <input
               type="text"
-              name="Enter Stipend or Salary"
+              name="stipendOrSalary"
               value={formData.stipendOrSalary}
               onChange={handleInputChange}
               placeholder="Stipend Required"
@@ -175,8 +203,8 @@ const CreateJob = ({ onClose }) => {
               Job Description
             </label>
             <textarea
-              name="Add a Job Description"
-              value={formData.jobDescription}
+              name="description"
+              value={formData.description}
               onChange={handleInputChange}
               rows="2"
               placeholder="Add a description"
@@ -195,11 +223,15 @@ const CreateJob = ({ onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+              className={`px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 ${isSubmitting ? "cursor-not-allowed" : ""}`}
+              disabled={isSubmitting}
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </div>
+
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-center mt-4">{error}</p>}
         </form>
       </div>
     </div>
