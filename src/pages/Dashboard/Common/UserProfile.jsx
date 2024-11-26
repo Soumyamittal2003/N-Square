@@ -4,17 +4,19 @@ import PostCard from "./PostCard";
 import Cookies from "js-cookie";
 
 const UserProfile = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingAbout, setIsEditingAbout] = useState(false);
+  const [isEditingProfileImage, setIsEditingProfileImage] = useState(false);
+  const [isEditingBannerImage, setIsEditingBannerImage] = useState(false);
   const [activeTab, setActiveTab] = useState("My Posts");
   const tabs = ["My Posts", "My Projects", "My Events", "My Job"];
   const [profileInfo, setProfileInfo] = useState({
     firstName: "",
     lastName: "",
     about: "",
-    education: "",
-    experience: "",
-    skills: "",
     tagline: "",
+    role: "",
+    followers: [],
+    following: [],
   });
   const [profileImage, setProfileImage] = useState("");
   const [bannerImage, setBannerImage] = useState("");
@@ -34,14 +36,14 @@ const UserProfile = () => {
         setProfileInfo({
           firstName: userData.firstName || "",
           lastName: userData.lastName || "",
-          role: userData.role || "", // Add role
-          profileImage: userData.profileimageUrl || "", // Add profile image
-          phone: userData.phone || "",
-          address: userData.address || "",
-          city: userData.city || "",
+          role: userData.role || "",
           about: userData.about || "",
-          tagline: userData.tagline || "",
+          tagline: userData.tagLine || "",
+          followers: userData.followers || [],
+          following: userData.following || [],
         });
+        setProfileImage(userData.profileimageUrl || "");
+        setBannerImage(userData.backgroundimageUrl || "");
         setUserPosts(postsResponse.data || []);
         setLoading(false);
       } catch (error) {
@@ -51,53 +53,24 @@ const UserProfile = () => {
 
     fetchUserData();
   }, []);
-  const handleLikePost = async (postId) => {
-    try {
-      await axiosInstance.post(`/post/${postId}/like`);
-      setUserPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post._id === postId
-            ? {
-                ...post,
-                likes: post.likes.includes(Cookies.get("id"))
-                  ? post.likes.filter((id) => id !== Cookies.get("id"))
-                  : [...post.likes, Cookies.get("id")],
-                dislikes: post.dislikes.filter(
-                  (id) => id !== Cookies.get("id")
-                ), // Remove dislike
-              }
-            : post
-        )
-      );
-    } catch (error) {
-      console.error("Error liking the post:", error);
-    }
-  };
-
-  const handleDislikePost = async (postId) => {
-    try {
-      await axiosInstance.post(`/post/${postId}/dislike`);
-      setUserPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post._id === postId
-            ? {
-                ...post,
-                dislikes: post.dislikes.includes(Cookies.get("id"))
-                  ? post.dislikes.filter((id) => id !== Cookies.get("id"))
-                  : [...post.dislikes, Cookies.get("id")],
-                likes: post.likes.filter((id) => id !== Cookies.get("id")), // Remove like
-              }
-            : post
-        )
-      );
-    } catch (error) {
-      console.error("Error disliking the post:", error);
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfileInfo({ ...profileInfo, [name]: value });
+  };
+
+  const updateProfileInfo = async () => {
+    try {
+      const userId = Cookies.get("id");
+      await axiosInstance.put(`/users/update/${userId}`, {
+        about: profileInfo.about,
+        tagline: profileInfo.tagline,
+      });
+      alert("Profile updated successfully!");
+      setIsEditingAbout(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   const handleImageChange = async (e, type) => {
@@ -111,35 +84,34 @@ const UserProfile = () => {
           type === "profile"
             ? `/profile/updateProfileImage/${userId}`
             : `/profile/updateBackgroundImage/${userId}`;
-
         await axiosInstance.patch(url, formData);
+
         const imagePreview = URL.createObjectURL(file);
         if (type === "profile") setProfileImage(imagePreview);
         else setBannerImage(imagePreview);
+
+        alert(
+          `${type === "profile" ? "Profile" : "Banner"} image updated successfully!`
+        );
+        type === "profile"
+          ? setIsEditingProfileImage(false)
+          : setIsEditingBannerImage(false);
       } catch (error) {
         console.error("Error uploading image:", error);
       }
     }
   };
 
-  const saveProfileEdits = async () => {
-    try {
-      const userId = Cookies.get("id");
-      const updatedProfile = {
-        firstName: profileInfo.firstName,
-        lastName: profileInfo.lastName,
-        phone: profileInfo.phone,
-        address: profileInfo.address,
-        city: profileInfo.city,
-        about: profileInfo.about,
-        tagline: profileInfo.tagline,
-      };
-
-      await axiosInstance.put(`/users/update/${userId}`, updatedProfile);
-
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error saving profile edits:", error);
+  const getBorderColor = () => {
+    switch (profileInfo.role) {
+      case "student":
+        return "border-yellow-500";
+      case "faculty":
+        return "border-red-500";
+      case "alumni":
+        return "border-blue-500";
+      default:
+        return "border-gray-300";
     }
   };
 
@@ -152,33 +124,45 @@ const UserProfile = () => {
       {/* Left Section */}
       <div className="w-1/3 m-2 p-2 overflow-y-auto hide-scrollbar h-[calc(100vh-100px)]">
         <div className="flex flex-col items-center">
-          {/* Editable Profile Image */}
-          <label htmlFor="profileImage">
-            <img
-              src={profileImage}
-              alt="Profile"
-              className="rounded-full w-60 mx-6 h-60 border-4 border-white cursor-pointer"
-            />
-          </label>
-          {isEditing && (
-            <input
-              type="file"
-              id="profileImage"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => handleImageChange(e, "profile")}
-            />
-          )}
-          <h1 className="m-3 text-4xl font-bold">
+          {/* Profile Image */}
+          <div className="relative">
+            <label htmlFor="profileImage">
+              <img
+                src={profileImage}
+                alt="Profile"
+                className={`rounded-full w-60 h-60 cursor-pointer border-8 ${getBorderColor()}`}
+              />
+            </label>
+            {isEditingProfileImage && (
+              <input
+                type="file"
+                id="profileImage"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleImageChange(e, "profile")}
+              />
+            )}
+            <button
+              onClick={() => setIsEditingProfileImage(!isEditingProfileImage)}
+              className="absolute bottom-2 right-2 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
+            >
+              {isEditingProfileImage ? "Save" : "Edit"}
+            </button>
+          </div>
+          <h1 className="mt-3 text-4xl font-bold">
             {profileInfo.firstName} {profileInfo.lastName}
           </h1>
           <div className="flex space-x-6 gap-2 m-3 p-5 px-10 border rounded-3xl">
             <div className="text-center">
-              <p className="font-bold text-lg">12K</p>
+              <p className="font-bold text-lg">
+                {profileInfo.followers.length}
+              </p>
               <p className="text-gray-500">Followers</p>
             </div>
             <div className="text-center">
-              <p className="font-bold text-lg">13K</p>
+              <p className="font-bold text-lg">
+                {profileInfo.following.length}
+              </p>
               <p className="text-gray-500">Following</p>
             </div>
             <div className="text-center">
@@ -186,51 +170,55 @@ const UserProfile = () => {
               <p className="text-gray-500">Posts</p>
             </div>
           </div>
-          {/* Editable Tagline */}
-          {isEditing ? (
+          {/* Tagline */}
+          {isEditingAbout ? (
             <input
               type="text"
-              value={profileInfo.tagline}
               name="tagline"
+              value={profileInfo.tagline}
               onChange={handleInputChange}
               className="text-gray-500 border-b-2 w-1/2 focus:outline-none text-center"
             />
           ) : (
             <p className="text-gray-500">{profileInfo.tagline}</p>
           )}
-        </div>
-
-        {/* Editable About Section */}
-        <div className="bg-white text-center border rounded-lg shadow mt-6 p-6">
-          <h3 className="text-lg font-bold">About</h3>
-          {isEditing ? (
-            <textarea
-              name="about"
-              value={profileInfo.about}
-              onChange={handleInputChange}
-              className="w-full mt-2 border p-2 rounded"
-            />
-          ) : (
-            <p className="text-gray-700 mt-2">{profileInfo.about}</p>
+          {/* About Section */}
+          <div className="bg-white text-center border rounded-lg shadow mt-6 p-6 w-full">
+            <h3 className="text-lg font-bold">About</h3>
+            {isEditingAbout ? (
+              <textarea
+                name="about"
+                value={profileInfo.about}
+                onChange={handleInputChange}
+                className="w-full mt-2 border p-2 rounded"
+              />
+            ) : (
+              <p className="text-gray-700 mt-2">{profileInfo.about}</p>
+            )}
+          </div>
+          {isEditingAbout && (
+            <button
+              onClick={updateProfileInfo}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >
+              Save Changes
+            </button>
           )}
-          <h3 className="text-lg font-bold mt-4">Address</h3>
-          {isEditing ? (
-            <textarea
-              name="address"
-              value={profileInfo.address}
-              onChange={handleInputChange}
-              className="w-full mt-2 border p-2 rounded"
-            />
-          ) : (
-            <p className="text-gray-700 mt-2">{profileInfo.address}</p>
+          {!isEditingAbout && (
+            <button
+              onClick={() => setIsEditingAbout(true)}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >
+              Edit About
+            </button>
           )}
         </div>
       </div>
 
       {/* Right Section */}
       <div className="w-2/3 p-8">
+        {/* Banner Image */}
         <div className="relative shadow-md rounded-lg">
-          {/* Editable Banner Image */}
           <label htmlFor="bannerImage">
             <img
               src={bannerImage}
@@ -238,7 +226,7 @@ const UserProfile = () => {
               className="w-full h-60 object-cover cursor-pointer"
             />
           </label>
-          {isEditing && (
+          {isEditingBannerImage && (
             <input
               type="file"
               id="bannerImage"
@@ -248,17 +236,15 @@ const UserProfile = () => {
             />
           )}
           <button
-            onClick={() =>
-              isEditing ? saveProfileEdits() : setIsEditing(true)
-            }
-            className="absolute bottom-2 left-2 bg-white px-3 py-1 rounded-lg shadow text-gray-700 font-semibold"
+            onClick={() => setIsEditingBannerImage(!isEditingBannerImage)}
+            className="absolute bottom-2 left-2 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
           >
-            {isEditing ? "Save" : "Edit"}
+            {isEditingBannerImage ? "Save" : "Edit"}
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-md px-1 py-1 mt-6 mx-4">
+        <div className="flex border justify-around bg-white rounded-2xl shadow-md px-1 py-1 mt-6">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -272,24 +258,17 @@ const UserProfile = () => {
           ))}
         </div>
 
-        {/* Active Tab Content */}
-        <div className="mt-6 mx-4">
+        {/* Tab Content */}
+        <div className="mt-6 bg-white p-4 rounded-lg shadow">
           {activeTab === "My Posts" && (
-            <div className="w-full bg-[#ffffff] h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
+            <div className="h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
               {userPosts.length > 0 ? (
                 userPosts.map((post) => (
                   <PostCard
                     key={post._id}
                     post={post}
-                    user={{
-                      firstName: profileInfo.firstName,
-                      lastName: profileInfo.lastName,
-                      role: profileInfo.role,
-                      profileimageUrl: profileInfo.profileImage,
-                    }}
-                    currentUserId={Cookies.get("id")} // Pass the current user ID
-                    onLikePost={handleLikePost} // Pass like handler
-                    onDislikePost={handleDislikePost} // Pass dislike handler
+                    user={profileInfo}
+                    currentUserId={Cookies.get("id")}
                   />
                 ))
               ) : (
