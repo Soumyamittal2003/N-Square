@@ -285,9 +285,15 @@ const UserDetail = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg ${error.organization ? "border-red-500" : "border-gray-300"}`}
               >
-                <option value="" disabled>Select Organization</option>
-                <option value="Gujarat Technical University">Gujarat Technical University</option>
-                <option value="OP Jindal University">OP Jindal University</option>
+                <option value="" disabled>
+                  Select Organization
+                </option>
+                <option value="Gujarat Technical University">
+                  Gujarat Technical University
+                </option>
+                <option value="OP Jindal University">
+                  OP Jindal University
+                </option>
               </select>
 
               <div className="flex justify-end mt-6">

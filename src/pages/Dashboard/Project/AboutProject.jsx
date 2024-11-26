@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { IoChevronBackOutline } from "react-icons/io5";
+import Cookies from "js-cookie";
 import { BsStars } from "react-icons/bs";
 import { TbCoinRupee } from "react-icons/tb";
-import axiosInstance from "../../../utils/axiosinstance"; // Ensure axiosInstance is properly configured
+import axiosInstance from "../../../utils/axiosinstance";
 
 const ProjectDetail = () => {
   const { projectId } = useParams(); // Get project ID from URL params
@@ -11,12 +12,44 @@ const ProjectDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("About");
+  const role = Cookies.get("role"); // Get user role from cookies
+  const userId = Cookies.get("userId"); // Get user ID from cookies
+
+  const [contributorDetails, setContributorDetails] = useState({
+    mentorContributors: [],
+    studentContributors: [],
+  });
+
+  const [isContributor, setIsContributor] = useState(false);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
         const response = await axiosInstance.get(`/project/${projectId}`);
         setProjectData(response.data);
+
+        // Fetch contributor details
+        const mentorContributors = await Promise.all(
+          response.data.mentorContributors.map((id) =>
+            axiosInstance.get(`/users/${id}`).then((res) => res.data.data)
+          )
+        );
+
+        const studentContributors = await Promise.all(
+          response.data.studentContributors.map((id) =>
+            axiosInstance.get(`/users/${id}`).then((res) => res.data.data)
+          )
+        );
+
+        setContributorDetails({
+          mentorContributors,
+          studentContributors,
+        });
+
+        // Check if the current user is already a contributor
+        const isMentor = response.data.mentorContributors.includes(userId);
+        const isStudent = response.data.studentContributors.includes(userId);
+        setIsContributor(isMentor || isStudent);
       } catch (err) {
         setError("Failed to load project details. Please try again later.");
       } finally {
@@ -25,7 +58,48 @@ const ProjectDetail = () => {
     };
 
     fetchProjectDetails();
-  }, [projectId]);
+  }, [projectId, userId]);
+
+  const toggleContributor = async () => {
+    try {
+      if (isContributor) {
+        // Remove contributor
+        await axiosInstance.delete(`/project/contribute/${projectId}`, {
+          data: { userId },
+        });
+      } else {
+        // Add contributor
+        await axiosInstance.post(`/project/contribute/${projectId}`, {
+          userId,
+        });
+      }
+
+      // Re-fetch project details to update state
+      const response = await axiosInstance.get(`/project/${projectId}`);
+      const isMentor = response.data.mentorContributors.includes(userId);
+      const isStudent = response.data.studentContributors.includes(userId);
+      setIsContributor(isMentor || isStudent);
+
+      const mentorContributors = await Promise.all(
+        response.data.mentorContributors.map((id) =>
+          axiosInstance.get(`/users/${id}`).then((res) => res.data.data)
+        )
+      );
+
+      const studentContributors = await Promise.all(
+        response.data.studentContributors.map((id) =>
+          axiosInstance.get(`/users/${id}`).then((res) => res.data.data)
+        )
+      );
+
+      setContributorDetails({
+        mentorContributors,
+        studentContributors,
+      });
+    } catch (error) {
+      console.error("Failed to toggle contributor:", error);
+    }
+  };
 
   if (loading) {
     return <div className="text-center text-gray-500 mt-10">Loading...</div>;
@@ -40,16 +114,59 @@ const ProjectDetail = () => {
     "Mentor/Contributor": (
       <div>
         <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
-        <p>
-          {projectData?.openForMentor
-            ? "This project is open for mentorship."
-            : "Mentorship is not open for this project."}
-        </p>
-        <p>
-          {projectData?.openForStudent
-            ? "This project is open for student collaboration."
-            : "Student collaboration is not open for this project."}
-        </p>
+        <div className="mt-4">
+          <h4 className="text-md font-semibold">Mentors:</h4>
+          {contributorDetails.mentorContributors.length > 0 ? (
+            <ul>
+              {contributorDetails.mentorContributors.map((mentor) => (
+                <li
+                  key={mentor._id}
+                  className="flex justify-between items-center mt-2"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={mentor.profileimageUrl}
+                      alt={mentor.firstName}
+                      className="w-8 h-8 rounded-full mr-3"
+                    />
+                    <p>
+                      {mentor.firstName} {mentor.lastName}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No mentors available.</p>
+          )}
+        </div>
+
+        <div className="mt-4">
+          <h4 className="text-md font-semibold">Students:</h4>
+          {contributorDetails.studentContributors.length > 0 ? (
+            <ul>
+              {contributorDetails.studentContributors.map((student) => (
+                <li
+                  key={student._id}
+                  className="flex justify-between items-center mt-2"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={student.profileimageUrl}
+                      alt={student.firstName}
+                      className="w-8 h-8 rounded-full mr-3"
+                    />
+                    <p>
+                      {student.firstName} {student.lastName}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No students available.</p>
+          )}
+        </div>
       </div>
     ),
     Eligibility: (
@@ -84,7 +201,7 @@ const ProjectDetail = () => {
   };
 
   return (
-    <div className="min-h-screen  p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto bg-white shadow-md rounded-lg p-8">
         {/* Header Section */}
         <div className="flex justify-between items-center">
@@ -96,14 +213,27 @@ const ProjectDetail = () => {
               Project Description
             </h1>
           </div>
-
           <div className="flex space-x-4">
-            <button className="px-4 py-2 border border-black text-black font-semibold text-sm rounded-lg hover:bg-black hover:text-white">
-              Participate as Contributor
+            <button
+              onClick={toggleContributor}
+              className={`px-4 py-2 border font-semibold text-sm rounded-lg ${
+                isContributor
+                  ? "border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                  : "border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+              }`}
+            >
+              {isContributor
+                ? "Remove as Contributor"
+                : role === "student"
+                  ? "Contribute as Student"
+                  : role === "faculty" || role === "alumni"
+                    ? "Contribute as Mentor"
+                    : "Contribute"}
             </button>
-            <div className="justify-center items-center flex">
+
+            <div className="flex items-center">
               <button>
-                <TbCoinRupee className="h-10 w-10 rounded-lg bg-yellow-500 text-white font-semibold" />
+                <TbCoinRupee className="h-10 w-10 bg-yellow-500 rounded-full text-white p-2" />
               </button>
             </div>
           </div>
@@ -111,7 +241,6 @@ const ProjectDetail = () => {
 
         {/* Main Section */}
         <div className="flex mt-8">
-          {/* Left Section: Image */}
           <div className="flex-shrink-0">
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
               <img
@@ -123,18 +252,24 @@ const ProjectDetail = () => {
               />
             </div>
           </div>
-
-          {/* Right Section: Project Description */}
           <div className="ml-6">
-            <h2 className="text-xl flex font-bold text-gray-800">
-              {projectData?.projectTopic || "Untitled Project"}
-              {projectData?.fundingRequired && (
-                <span className="ml-4 p-1 px-2 bg-green-500 flex justify-center items-center text-white font-semibold text-sm rounded-lg shadow ">
-                  <BsStars className="mr-1" />
-                  Open For Funding
-                </span>
-              )}
-            </h2>
+            <div className="flex">
+              <h2 className="text-xl font-bold text-gray-800">
+                {projectData?.projectTopic || "Untitled Project"}
+              </h2>
+              {(role === "mentor" || role === "faculty" || role === "alumni") &&
+              projectData?.openForMentor ? (
+                <div className="ml-6 px-6 py-1 border flex items-center gap-2 font-semibold text-sm rounded-lg text-white bg-green-400">
+                  <BsStars />
+                  Open for Mentors
+                </div>
+              ) : projectData?.openForStudent ? (
+                <div className="px-6 py-1 border flex items-center gap-2 font-semibold text-sm rounded-lg text-white bg-green-400">
+                  <BsStars />
+                  Open for Students
+                </div>
+              ) : null}
+            </div>
             <p className="text-gray-600 mt-4 leading-relaxed">
               Department: {projectData?.department || "Unknown Department"}
             </p>
@@ -147,12 +282,7 @@ const ProjectDetail = () => {
         {/* Tab Section */}
         <div className="mt-8">
           <div className="flex space-x-6 border-b border-gray-300 pb-2">
-            {[
-              "About",
-              "Mentor/Contributor",
-              "Eligibility",
-              "Project Source",
-            ].map((tab) => (
+            {Object.keys(tabContent).map((tab) => (
               <button
                 key={tab}
                 className={`font-semibold pb-2 ${

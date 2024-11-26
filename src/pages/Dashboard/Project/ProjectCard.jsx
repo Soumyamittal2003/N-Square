@@ -9,62 +9,68 @@ const ProjectCard = ({ project }) => {
     projectTopic: title,
     description,
     profilePhoto: image,
-    _id, // The project ID to navigate to the AboutProject page
+    _id,
+    mentorContributors,
+    studentContributors,
   } = project;
 
   const [creatorName, setCreatorName] = useState("Loading...");
 
   useEffect(() => {
-    const fetchCreatorDetails = async () => {
-      try {
-        if (createdBy) {
-          const userId = createdBy._id;
-          const response = await axiosInstance.get(`/users/${userId}`);
+    if (createdBy?.firstName && createdBy?.lastName) {
+      setCreatorName(`${createdBy.firstName} ${createdBy.lastName}`);
+    } else if (createdBy?._id) {
+      const fetchCreatorDetails = async () => {
+        try {
+          const response = await axiosInstance.get(`/users/${createdBy._id}`);
           if (response.data?.success) {
             const { firstName, lastName } = response.data.data;
             setCreatorName(`${firstName} ${lastName}`);
           } else {
             setCreatorName("Unknown");
           }
+        } catch (error) {
+          console.error("Error fetching creator details:", error);
+          setCreatorName("Error fetching user");
         }
-      } catch (error) {
-        console.error("Error fetching creator details:", error);
-        setCreatorName("Error fetching user");
-      }
-    };
-
-    fetchCreatorDetails();
+      };
+      fetchCreatorDetails();
+    }
   }, [createdBy]);
+
+  const handleNavigate = () => navigate(`${_id}`);
 
   return (
     <div
-      className="border p-2 m-2 border-gray-300 rounded-lg shadow-md bg-white cursor-pointer"
-      onClick={() => navigate(`${_id}`)} // Navigate to AboutProject with project ID
+      className="relative border p-4 m-2 border-gray-300 rounded-lg shadow-md bg-white cursor-pointer hover:shadow-lg"
+      onClick={handleNavigate}
     >
-      {/* Header Section */}
-      <div className="flex justify-between items-center p-4">
-        <h3 className="text-lg font-semibold text-gray-900">
-          {title || "E-Krishak"}
-        </h3>
-        <button className="text-black border font-extrabold rounded-lg border-black p-2 hover:text-gray-700 text-sm ">
-          Request
-          <span className="border-2 m-1 px-1.5 text-xl font-extrabold border-black rounded-full">
-            +
-          </span>
-        </button>
-      </div>
+      {/* Request Button */}
+      <button className="absolute top-4 right-4 px-2 py-1 outline text-gray-500 font-semibold rounded-md hover:bg-black hover:text-white">
+        Request
+      </button>
 
-      {/* Body Section */}
-      <div className="flex items-start px-4 pb-4">
-        <img
-          src={image || "https://via.placeholder.com/150"}
-          alt={title || "Project Image"}
-          className="h-32 w-32 rounded-full"
-        />
-        <div className="ml-4 flex-1">
-          <p className="text-sm pr-6 text-gray-700 items-center">
-            {description ||
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."}
+      {/* Image and Content */}
+      <div className="flex">
+        <div>
+          <img
+            src={image || "https://via.placeholder.com/150"}
+            alt={`Image for project: ${title || "E-Krishak"}`}
+            className="h-24 w-24 m-3  rounded-full"
+          />
+          <h2 className=" text-center  text-sm">
+            +{mentorContributors.length + studentContributors.length}{" "}
+            contributor
+          </h2>
+        </div>
+        <div className="flex flex-col ml-4">
+          <h3 className="text-lg font-semibold text-gray-900">
+            {title || "E-Krishak"}
+          </h3>
+          <p className="text-sm text-black mt-2">
+            {description?.length > 100
+              ? `${description.slice(0, 100)}...`
+              : description || "Lorem Ipsum is simply dummy text..."}
             <a href="#" className="text-blue-500 font-medium">
               {" "}
               Read More
@@ -73,9 +79,9 @@ const ProjectCard = ({ project }) => {
         </div>
       </div>
 
-      {/* Footer Section */}
-      <div className="flex justify-between items-center p-4">
-        <p className="text-sm text-gray-500 font-medium">
+      {/* Created By */}
+      <div className="absolute bottom-4 right-4">
+        <p className="text-sm text-gray-500 font-medium underline">
           Created By -{" "}
           <span className="text-gray-700 font-semibold">{creatorName}</span>
         </p>
