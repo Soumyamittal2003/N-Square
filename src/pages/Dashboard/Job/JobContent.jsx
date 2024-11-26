@@ -1,34 +1,49 @@
 import { useState, useEffect } from "react";
+import axiosInstance from "../../../utils/axiosinstance"; // Make sure this is correctly pointing to your axios instance
 import JobCard from "./JobCard";
-import axiosInstance from "../../../utils/axiosinstance"; // Adjust the path to your axios instance
 
 const JobContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [jobs, setJobs] = useState([]);
+  const [users, setUsers] = useState({}); // Store users here
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const tabs = ["All", "Alumni", "Faculty"];
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchJobsAndUsers = async () => {
       try {
         setLoading(true);
-        setError(null); // Reset error before fetching
-        const response = await axiosInstance.get("/jobs/all");
-        if (response.data.success) {
-          setJobs(response.data.jobs || []);
+        setError(null); // Reset any errors
+
+        // Fetch jobs
+        const jobResponse = await axiosInstance.get("/jobs/all");
+        if (jobResponse.data.success) {
+          setJobs(jobResponse.data.jobs || []);
         } else {
-          setError("Failed to fetch jobs. Please try again later.");
+          setError("Failed to fetch jobs.");
+        }
+
+        // Fetch users
+        const userResponse = await axiosInstance.get("users/get-all-users");
+        if (userResponse.data.success) {
+          const userData = userResponse.data.users.reduce((acc, user) => {
+            acc[user._id] = user; // Use _id as key for fast lookup
+            return acc;
+          }, {});
+          setUsers(userData);
+        } else {
+          setError("Failed to fetch users.");
         }
       } catch (err) {
-        setError("Failed to fetch jobs. Please check your connection.");
+        setError("Failed to fetch data. Please check your connection.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchJobs();
+    fetchJobsAndUsers();
   }, []);
 
   const filteredJobs = jobs.filter((job) => {
@@ -40,11 +55,11 @@ const JobContent = () => {
 
   return (
     <div className="w-full">
-      {/* Tabs Sections */}
+      {/* Tabs Section */}
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
         {tabs.map((tab) => (
           <button
-            key={tab}//d
+            key={tab}
             onClick={() => setActiveTab(tab)}
             className={`text-sm px-4 py-2 rounded-full font-semibold ${
               activeTab === tab ? "text-black font-bold" : "text-gray-500"
@@ -66,7 +81,7 @@ const JobContent = () => {
         ) : filteredJobs.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">
             {filteredJobs.map((job) => (
-              <JobCard key={job._id} job={job} />
+              <JobCard key={job._id} job={job} createdByData={users} />
             ))}
           </div>
         ) : (
