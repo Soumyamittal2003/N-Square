@@ -1,38 +1,63 @@
 import { useState } from "react";
-import axiosInstance from "../../../utils/axiosinstance";
+import axiosInstance from "../../../utils/axiosinstance"; // Importing the axiosInstance you set up
+import Cookies from "js-cookie";
 
 const CreateJob = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    jobphoto: null,
-    title: "",
-    company: "",
-    location: "",
-    skills: "",
-    type: "",
-    stipendOrSalary: "",
-    applyLink: "",
-    description: "",
-  });
+  const [jobphoto, setJobphoto] = useState(null);
+  const [title, setTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [skills, setSkills] = useState("");
+  const [type, setType] = useState("");
+  const [stipendOrSalary, setStipendOrSalary] = useState("");
+  const [applyLink, setApplyLink] = useState("");
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value, type, files, checked } = e.target;
     if (type === "file") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0], // Assign the first selected file.
-      }));
+      // Update the corresponding state for file input (jobphoto)
+      if (name === "jobphoto") {
+        setJobphoto(files[0]);
+      }
     } else if (type === "checkbox") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: checked,
-      }));
+      // Handle checkbox (if there are any in the future)
+      if (name === "someCheckbox") {
+        // Handle the checkbox state here
+      }
     } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+      // Update the corresponding state for text inputs
+      switch (name) {
+        case "title":
+          setTitle(value);
+          break;
+        case "company":
+          setCompany(value);
+          break;
+        case "location":
+          setLocation(value);
+          break;
+        case "description":
+          setDescription(value);
+          break;
+        case "skills":
+          setSkills(value);
+          break;
+        case "type":
+          setType(value);
+          break;
+        case "stipendOrSalary":
+          setStipendOrSalary(value);
+          break;
+        case "applyLink":
+          setApplyLink(value);
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -41,16 +66,22 @@ const CreateJob = ({ onClose }) => {
     setIsSubmitting(true);
     setError("");
 
+    // Prepare FormData to send as multipart/form-data
     const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
-      console.log(key, formData[key]);
-    }
+    formDataToSend.append("jobphoto", jobphoto);
+    formDataToSend.append("title", title);
+    formDataToSend.append("company", company);
+    formDataToSend.append("location", location);
+    formDataToSend.append("description", description);
+    formDataToSend.append("skills", skills);
+    formDataToSend.append("type", type);
+    formDataToSend.append("stipendOrSalary", stipendOrSalary);
+    formDataToSend.append("applyLink", applyLink);
 
     try {
-      // Replace this URL with your actual API endpoint
-      
-        const response = await axiosInstance.post("/jobs/create",
+      console.log(formDataToSend); 
+      const response = await axiosInstance.post(
+        "/jobs/create",
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -98,13 +129,13 @@ const CreateJob = ({ onClose }) => {
             <span className="text-sm text-gray-600 mt-2">Upload Job Photo</span>
           </div>
 
-          {/* Job Role */}
+          {/* Job Title */}
           <div>
-            <label className="block text-sm font-medium mb-0">Job Role</label>
+            <label className="block text-sm font-medium mb-0">Job Title</label>
             <input
               type="text"
               name="title"
-              value={formData.title}
+              value={title}
               onChange={handleInputChange}
               placeholder="Job Title"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -117,7 +148,7 @@ const CreateJob = ({ onClose }) => {
             <input
               type="text"
               name="company"
-              value={formData.company}
+              value={company}
               onChange={handleInputChange}
               placeholder="Company Name"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -132,7 +163,7 @@ const CreateJob = ({ onClose }) => {
             <input
               type="text"
               name="location"
-              value={formData.location}
+              value={location}
               onChange={handleInputChange}
               placeholder="City, State, Country"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -145,7 +176,7 @@ const CreateJob = ({ onClose }) => {
             <input
               type="text"
               name="skills"
-              value={formData.skills}
+              value={skills}
               onChange={handleInputChange}
               placeholder="Skills Required"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -157,7 +188,7 @@ const CreateJob = ({ onClose }) => {
             <label className="block text-sm font-medium mb-1">Job Type</label>
             <select
               name="type"
-              value={formData.type}
+              value={type}
               onChange={handleInputChange}
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -168,6 +199,7 @@ const CreateJob = ({ onClose }) => {
             </select>
           </div>
 
+          {/* Stipend Or Salary */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Stipend Or Salary
@@ -175,9 +207,9 @@ const CreateJob = ({ onClose }) => {
             <input
               type="text"
               name="stipendOrSalary"
-              value={formData.stipendOrSalary}
+              value={stipendOrSalary}
               onChange={handleInputChange}
-              placeholder="Stipend Required"
+              placeholder="Stipend or Salary"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -190,7 +222,7 @@ const CreateJob = ({ onClose }) => {
             <input
               type="url"
               name="applyLink"
-              value={formData.applyLink}
+              value={applyLink}
               onChange={handleInputChange}
               placeholder="Apply Link"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -199,12 +231,10 @@ const CreateJob = ({ onClose }) => {
 
           {/* Job Description */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Job Description
-            </label>
+            <label className="block text-sm font-medium mb-1">Job Description</label>
             <textarea
               name="description"
-              value={formData.description}
+              value={description}
               onChange={handleInputChange}
               rows="2"
               placeholder="Add a description"
@@ -223,16 +253,16 @@ const CreateJob = ({ onClose }) => {
             </button>
             <button
               type="submit"
-              className={`px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 ${isSubmitting ? "cursor-not-allowed" : ""}`}
+              className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </div>
-
-          {/* Error Message */}
-          {error && <p className="text-red-500 text-center mt-4">{error}</p>}
         </form>
+
+        {/* Error Message */}
+        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
       </div>
     </div>
   );

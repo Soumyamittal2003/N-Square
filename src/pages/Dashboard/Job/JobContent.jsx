@@ -5,17 +5,31 @@ import JobCard from "./JobCard";
 const JobContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [jobs, setJobs] = useState([]);
-  const [users, setUsers] = useState({}); // Store users here
+  const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const tabs = ["All", "Alumni", "Faculty"];
 
+  // Function to fetch user by ID
+  const fetchUserById = async (userId) => {
+    try {
+      const response = await axiosInstance.get(`/users/${userId}`);
+      if (response.data.success) {
+        return response.data.user;  // Returns user data if successful
+      }
+      return null;
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchJobsAndUsers = async () => {
       try {
         setLoading(true);
-        setError(null); // Reset any errors
+        setError(null);
 
         // Fetch jobs
         const jobResponse = await axiosInstance.get("/jobs/all");
@@ -25,17 +39,18 @@ const JobContent = () => {
           setError("Failed to fetch jobs.");
         }
 
-        // Fetch users
-        const userResponse = await axiosInstance.get("users/get-all-users");
-        if (userResponse.data.success) {
-          const userData = userResponse.data.users.reduce((acc, user) => {
-            acc[user._id] = user; // Use _id as key for fast lookup
-            return acc;
-          }, {});
-          setUsers(userData);
-        } else {
-          setError("Failed to fetch users.");
+        // Fetch users based on job createdBy IDs
+        const userData = {};
+        for (const job of jobResponse.data.jobs) {
+          const userId = job.createdBy?._id;
+          if (userId && !userData[userId]) {
+            const user = await fetchUserById(userId);
+            if (user) {
+              userData[userId] = user;
+            }
+          }
         }
+        setUsers(userData);
       } catch (err) {
         setError("Failed to fetch data. Please check your connection.");
       } finally {
@@ -80,9 +95,18 @@ const JobContent = () => {
           </div>
         ) : filteredJobs.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">
-            {filteredJobs.map((job) => (
-              <JobCard key={job._id} job={job} createdByData={users} />
-            ))}
+            {filteredJobs.map((job) => {
+              // Get user data by createdBy ID
+              const createdByData = users[job.createdBy?._id];
+
+              return (
+                <JobCard
+                  key={job._id}
+                  job={job}
+                  createdByData={createdByData}
+                />
+              );
+            })}
           </div>
         ) : (
           <p>No jobs found for {activeTab}.</p>

@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import bookmark from "../../../assets/icons/bookmark.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
@@ -20,8 +20,8 @@ const JobCard = ({ job, createdByData }) => {
 
   const [isApplied, setIsApplied] = useState(false);
 
-  // Getting the name of the person who created the job using the createdBy ID
-  const createdByName = createdByData[createdBy]?.name || "Unknown";
+  // If createdByData exists, use it to get the name; otherwise, fallback to "Unknown"
+  const createdByName = createdByData ? createdByData.name : "Unknown";
 
   const handleApplyClick = () => {
     setIsApplied(true); // This marks the job as applied
