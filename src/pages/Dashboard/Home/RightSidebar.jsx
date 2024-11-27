@@ -1,8 +1,8 @@
 const RightSidebar = () => {
   return (
-    <div className="w-1/3 mt-16 bg-white px-6">
+    <div className="w-1/3 mt-4 bg-white px-4">
       {/* Upcoming Events Section */}
-      <div className="border p-4 rounded-xl shadow-md">
+      <div className="border p-4 rounded-xl shadow-lg">
         <div className="flex justify-between items-center">
           <h3 className="font-bold text-lg">Upcoming Events</h3>
           <button className="text-black font-semibold text-sm hover:underline">
@@ -42,7 +42,7 @@ const RightSidebar = () => {
       </div>
 
       {/* Suggested Profiles Section */}
-      <div className=" px-4 py-2 rounded-lg  mt-4">
+      <div className=" px-2 py-2 rounded-lg  mt-4">
         <div className="flex justify-between items-center">
           <h3 className="font-bold text-lg">Suggested Profiles</h3>
           <button className="text-black font-semibold text-sm hover:underline">

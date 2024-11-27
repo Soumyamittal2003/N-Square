@@ -158,14 +158,14 @@ const Header = () => {
 
   return (
     <div className="relative">
-      <header className="w-full h-16 flex items-center justify-between px-6 py-4 bg-white border-b shadow-sm">
+      <header className="w-full h-14 flex items-center justify-between px-4 py-4 bg-white border-b shadow-md">
         {/* Logo Section */}
-        <div className="flex items-center">
+        <div className="flex items-center ">
           <img src={NsquareLogo} alt="Nsquare Logo" className="w-10 h-10" />
         </div>
-
+  
         {/* Navigation Section */}
-        <nav className="flex space-x-28 lg:space-x-20 md:space-x-1 sm:space-x-10 ">
+        <nav className="flex-grow space-x-20 lg:space-x-20 md:space-x-30 sm:space-x-30  px-60 ml-20"> {/* Added ml-auto here */}
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -179,7 +179,7 @@ const Header = () => {
             </Link>
           ))}
         </nav>
-
+  
         {/* Icon Section */}
         <div className="flex items-center space-x-2">
           <button
@@ -221,7 +221,7 @@ const Header = () => {
               className="h-12 w-12 hover:opacity-80"
             />
           </button>
-
+  
           {/* Notifications Icon with Modal */}
           <button
             ref={notificationsRef}
@@ -237,7 +237,7 @@ const Header = () => {
               className="h-12 w-12 hover:opacity-80"
             />
           </button>
-
+  
           {/* Settings Icon with Modal */}
           <button
             ref={settingsRef}
@@ -255,7 +255,7 @@ const Header = () => {
           </button>
         </div>
       </header>
-
+  
       {/* Background Overlay */}
       {(showSearchMenu || showNotificationsMenu || showSettingsMenu) && (
         <div

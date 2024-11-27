@@ -41,7 +41,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg border border-gray-300 overflow-hidden flex flex-col">
+    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       {/* Profile Section */}
       <Link to="/dashboard/profile">
         <ProfileSection userData={userData} />
@@ -69,8 +69,8 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation Links */}
-      <div className="flex-grow flex flex-col  ">
-      <nav className=" px-4 py-4">
+      <div className="flex-grow flex flex-col overflow-auto hide-scrollbar">
+        <nav className="px-4 py-4">
           <Link to="/dashboard/connection" className="mt-3">
             <SidebarItem icon={Connections} label="Connections" />
           </Link>
@@ -86,7 +86,7 @@ const Sidebar = () => {
           <Link to="/dashboard/job-internship-applied" className="py-4">
             <SidebarItem icon={briefcase} label="Job/Internship Applied" />
           </Link>
-          <hr className="border-gray-300 py-1 mt-2"  />
+          <hr className="border-gray-300 py-1 mt-2" />
           <Link to="/dashboard/my-events" className="py-1">
             <SidebarItem label="My Events" />
           </Link>
@@ -98,10 +98,11 @@ const Sidebar = () => {
             <SidebarItem icon={helpCircle} label="Help" />
           </Link>
         </nav>
+        
         {/* Virtual Interview Button */}
         <Link
           to="https://n-sqare-virtual-interview.vercel.app/"
-          className="mx-3 mt-4"
+          className="mx-3 mt-2"
         >
           <button className="w-full py-1 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
             Virtual Interview
@@ -119,21 +120,16 @@ const Sidebar = () => {
 };
 
 // Sidebar Item Component
-const SidebarItem = ({ icon, label, expandable = false }) => (
+const SidebarItem = ({ icon, label }) => (
   <div className="flex items-center p-1 text-gray-800 hover:bg-gray-100 rounded-lg cursor-pointer">
     {icon && <img src={icon} alt={`${label} icon`} className="w-5 h-5 mr-3" />}
     <span className="flex-grow text-sm font-medium">{label}</span>
-    {expandable && (
-      <img src={newPostLogo} alt="expand icon" className="w-4 ml-auto" />
-    )}
   </div>
 );
 
-//
-
 // Footer Component
 const Footer = () => (
-  <div className="text-center text-xs text-gray-500 mt-auto p-3 ">
+  <div className="text-center text-xs text-gray-500 mt-auto p-3">
     <p>Terms and Conditions</p>
     <p>©2024 Network_Next</p>
   </div>
