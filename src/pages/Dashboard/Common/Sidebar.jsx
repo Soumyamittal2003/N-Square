@@ -41,14 +41,14 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg overflow-hidden flex flex-col">
+    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg border border-gray-300 overflow-hidden flex flex-col">
       {/* Profile Section */}
       <Link to="/dashboard/profile">
         <ProfileSection userData={userData} />
       </Link>
 
       {/* Followers and Following Section */}
-      <div className="flex items-center justify-around p-1 border rounded-2xl mx-4">
+      <div className="flex items-center justify-around p-1 border border-gray-300 rounded-2xl shadow-sm mx-4 py-1">
         <Link to="/dashboard/followers" className="text-center">
           <div>
             <span className="block text-lg font-semibold text-gray-800">
@@ -69,35 +69,39 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation Links */}
-      <div className="flex-grow flex flex-col">
-        <nav className="mt-4 px-5 space-y-2">
-          <Link to="/dashboard/connection" >
-            <SidebarItem icon={Connections} label="Connection" />
+      <div className="flex-grow flex flex-col  ">
+      <nav className=" px-4 py-4">
+          <Link to="/dashboard/connection" className="mt-3">
+            <SidebarItem icon={Connections} label="Connections" />
           </Link>
-          <div onClick={togglePopup}>
+          <div onClick={togglePopup} className="py-1">
             <SidebarItem icon={newPostLogo} label="Post" />
           </div>
-          <Link to="/dashboard/chat">
+          <Link to="/dashboard/chat" className="py-1">
             <SidebarItem icon={messageChat} label="Chat" />
           </Link>
-          <Link to="/dashboard/video-call">
+          <Link to="/dashboard/video-call" className="py-1">
             <SidebarItem icon={videoChatIcon} label="Video Call" />
           </Link>
-          <Link to="/dashboard/job-internship-applied">
+          <Link to="/dashboard/job-internship-applied" className="py-4">
             <SidebarItem icon={briefcase} label="Job/Internship Applied" />
           </Link>
-          <hr className="border-gray-200" />
-          <ExpandableItems />
-          <hr className="border-gray-200" />
+          <hr className="border-gray-300 py-1 mt-2"  />
+          <Link to="/dashboard/my-events" className="py-1">
+            <SidebarItem label="My Events" />
+          </Link>
+          <Link to="/dashboard/mentorship" className="py-1">
+            <SidebarItem label="Mentorship" />
+          </Link>
+          <hr className="border-gray-300 py-1 mt-2" />
           <Link to="/dashboard/help">
             <SidebarItem icon={helpCircle} label="Help" />
           </Link>
         </nav>
-
         {/* Virtual Interview Button */}
         <Link
           to="https://n-sqare-virtual-interview.vercel.app/"
-          className="mx-8 mt-4"
+          className="mx-3 mt-4"
         >
           <button className="w-full py-1 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
             Virtual Interview
@@ -125,34 +129,7 @@ const SidebarItem = ({ icon, label, expandable = false }) => (
   </div>
 );
 
-// Expandable Items Component
-const ExpandableItems = () => {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <>
-      <div onClick={() => setExpanded(!expanded)}>
-        <SidebarItem label="My Events" expandable />
-      </div>
-      {expanded && (
-        <div className="ml-6 space-y-2">
-          <Link to="/dashboard/event/event1">
-            <SidebarItem label="Event 1" />
-          </Link>
-          <Link to="/dashboard/event/event2">
-            <SidebarItem label="Event 2" />
-          </Link>
-          <Link to="/dashboard/event/event3">
-            <SidebarItem label="Event 3" />
-          </Link>
-        </div>
-      )}
-      <Link to="/dashboard/mentorship">
-        <SidebarItem label="Mentorship" />
-      </Link>
-    </>
-  );
-};
+//
 
 // Footer Component
 const Footer = () => (
