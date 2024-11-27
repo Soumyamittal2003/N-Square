@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CheckmarkAnimation from "../../../assets/animations/checkmark.gif";
 
-const CreateEvent = ({ onClose }) => {
+const CreateEvent = ({onClose}) => {
   const [step, setStep] = useState(1);
   const [reminder, setReminder] = useState("");
   const [tags, setTags] = useState([]);
@@ -24,6 +24,7 @@ const CreateEvent = ({ onClose }) => {
     eligibility: "",
     speaker: "",
     organizedBy: "",
+
     reminder: "",
   });
 
@@ -50,6 +51,7 @@ const CreateEvent = ({ onClose }) => {
     }
   };
 
+  // Add tag to the tags array
   const handleAddTag = () => {
     if (tagInput.trim() && tags.length < 7 && !tags.includes(tagInput)) {
       setTags([...tags, tagInput.trim()]);
@@ -62,34 +64,7 @@ const CreateEvent = ({ onClose }) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleDiscard = () => {
-    setFormData({
-      title: "",
-      coverImage: null,
-      eventType: "",
-      eventMode: "",
-      date: "",
-      time: "",
-      enterVenue: "",
-      eventLink: "",
-      eventDescription: "",
-      eventCoordinator: "",
-      tagAndTopics: "",
-      contactDetails: "",
-      eligibility: "",
-      speaker: "",
-      organizedBy: "",
-      reminder: "",
-    });
-    setTags([]);
-    setTagInput("");
-    setStep(1); // Reset to the first step
-    onClose(); // Close the modal
-  };
-
-  const handleNext = () => setStep((prevStep) => prevStep + 1);
-  const handleBack = () => setStep((prevStep) => prevStep - 1);
-
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (tags.length < 2 || tags.length > 7) {
@@ -98,20 +73,57 @@ const CreateEvent = ({ onClose }) => {
     }
   };
 
-  
+  const handleNext = () => {
+    // if (step === 3 && (tags.length < 2 || tags.length > 7)) {
+    //   alert("Please add between 2 and 7 tags before proceeding.");
+    //   return;
+    // }
+    setStep((prevStep) => prevStep + 1);
+  };
+
+  const handleBack = () => {
+    setStep((prevStep) => prevStep - 1);
+  };
+  const handleDiscard = () => {
+    //if (window.confirm("Are you sure you want to discard this event?")) {
+      // Reset the formData and tags
+      setFormData({
+        title: "",
+        coverImage: null,
+        eventType: "",
+        eventMode: "",
+        date: "",
+        time: "",
+        enterVenue: "",
+        eventLink: "",
+        eventDescription: "",
+        eventCoordinator: "",
+        tagAndTopics: "",
+        contactDetails: "",
+        eligibility: "",
+        speaker: "",
+        organizedBy: "",
+        reminder: "",
+      });
+      setTags([]);
+      setTagInput("");
+      setStep(1);
+      onClose();  // Reset to step 1
+    }
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white w-[90%] max-w-lg rounded-lg shadow-lg p-6">
+      <div className="bg-white w-[90%] max-w-lg rounded-lg shadow-lg p-6 relative">
         {/* Header */}
         <button
           onClick={handleDiscard}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-lg font-bold"
         >
-          &times;
+          ×
         </button>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-bold items-center">
             {step === 5 ? "Event Created Successfully!" : "Create an Event"}
           </h2>
         </div>
@@ -504,11 +516,11 @@ const CreateEvent = ({ onClose }) => {
           <div className="flex flex-col items-center justify-center">
             <p className="text-lg font-bold mb-4"></p>
             <div className="w-24 h-24 mb-6 flex items-center justify-center">
-            <img
-              src={CheckmarkAnimation}
-              alt="Checkmark Animation"
+              <img
+                src={CheckmarkAnimation}
+                alt="Checkmark Animation"
                 className="w-full h-full"
-            />
+              />
             </div>
             <button
               onClick={handleSubmit}
