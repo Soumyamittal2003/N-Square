@@ -39,17 +39,15 @@ const EventContent = () => {
   ];
 
   return (
-    <div className="w-full lg:w-[72%] px-4 lg:px-6">
+    <div className="w-full lg:w-[75%] px-4 lg:px-6">
       {/* Tabs Section */}
-      <div className="flex flex-wrap justify-center lg:justify-around border border-gray-300 bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`text-sm px-4 py-2 rounded-full font-semibold transition ${
-              activeTab === tab
-                ? "text-black font-bold bg-gray-200"
-                : "text-gray-500 hover:bg-gray-100"
+            className={`text-sm px-4 py-2 rounded-full font-semibold ${
+              activeTab === tab ? "text-black font-bold" : "text-gray-500"
             }`}
           >
             {tab}

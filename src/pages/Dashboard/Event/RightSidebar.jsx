@@ -13,7 +13,7 @@ const RightSidebar = () => {
   };
 
   return (
-    <div className="relative w-1/3 mt-2 mb-auto bg-white px-6 rounded-lg p-11">
+    <div className="relative w-1/3 mt-2 mb-auto bg-white px-2 rounded-lg p-11">
       {/* Create Event Button Positioned Top Right */}
       <div className="absolute top-2 right-8">
         <button
