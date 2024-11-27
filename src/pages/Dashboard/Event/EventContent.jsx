@@ -39,7 +39,7 @@ const EventContent = () => {
   ];
 
   return (
-    <div className="w-full lg:w-[75%] px-4 lg:px-6">
+    <div className="w-full lg:w-[78%] px-4 lg:px-3">
       {/* Tabs Section */}
       <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
         {tabs.map((tab) => (
@@ -56,12 +56,12 @@ const EventContent = () => {
       </div>
 
       {/* Event Content */}
-      <div className="p-4">
+      <div className="p-4 ">
         {/* Section: Sessions */}
-        <div className="mb-8">
+        <div className="mb-8 ">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold">Sessions</h2>
-            <button className="text-sm font-semibold text-blue-500 hover:underline">
+            <button className="text-sm font-semibold text-black hover:underline">
               Explore All
             </button>
           </div>
@@ -76,7 +76,7 @@ const EventContent = () => {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold">Workshops</h2>
-            <button className="text-sm font-semibold text-blue-500 hover:underline">
+            <button className="text-sm font-semibold text-black hover:underline">
               Explore All
             </button>
           </div>

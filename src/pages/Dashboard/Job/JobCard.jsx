@@ -79,7 +79,7 @@ const JobCard = ({
   };
 
   return (
-    <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between">
+    <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar ">
       {/* Job Image */}
       <div className="relative">
         <img
@@ -96,19 +96,19 @@ const JobCard = ({
           {company}{" "}
           <span className="text-blue-600 font-semibold">{location}</span>
         </p>
-        <p className="text-sm text-gray-600 mt-2">{description}</p>
+        <p className="text-sm text-gray-950 mt-2">{description}</p>
         <p className="text-xs text-gray-500 mt-2">
           Skills:{" "}
-          <span className="text-gray-800 font-medium">
+          <span className="text-gray-950 font-medium">
             {skills.length > 0 ? skills.join(", ") : "None specified"}
           </span>
         </p>
         <p className="text-xs text-gray-500 mt-2">
-          Type: <span className="text-blue-800 font-medium">{type}</span>
+          Type: <span className="text-red-600 font-medium">{type}</span>
         </p>
         <p className="text-xs text-gray-500 mt-2">
           Salary/Stipend:{" "}
-          <span className="text-green-800 font-medium">{stipendOrSalary}</span>
+          <span className="text-green-700 font-medium">{stipendOrSalary}</span>
         </p>
         <p className="text-xs text-gray-500 mt-2">
           Created By:{" "}
@@ -135,11 +135,11 @@ const JobCard = ({
       </div>
 
       {/* Bottom Section */}
-      <div className="flex justify-between items-center mt-2">
+      <div className="flex justify-between items-center mt-4">
         {/* Left Icons */}
         <div className="flex gap-4">
           {/* Bookmark Button */}
-          <button onClick={handleBookmarkToggle} className="w-5 h-5">
+          <button onClick={handleBookmarkToggle} className="w-5 h-5 mt-1.5">
             <img
               src={isBookmarked ? bookmarked : bookmark}
               alt="Bookmark"
