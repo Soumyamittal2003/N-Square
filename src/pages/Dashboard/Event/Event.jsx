@@ -1,15 +1,12 @@
 import EventContent from "../Event/EventContent";
 import RightSidebar from "../Event/RightSidebar";
 
-
 const Event = () => {
   return (
-    
-      <div className="flex w-full h-screen overflow-hidden">
-        <EventContent />
-        <RightSidebar />
-      </div>
-      
+    <div className="flex flex-col lg:flex-row w-full min-h-screen overflow-y-auto">
+      <EventContent />
+      <RightSidebar />
+    </div>
   );
 };
 
