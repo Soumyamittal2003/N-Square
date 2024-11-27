@@ -36,12 +36,12 @@ const SearchModal = () => (
 // Modal Component for Notifications
 const NotificationsModal = ({ notifications }) => (
   <div className="absolute top-full right-32 mt-2 w-auto bg-white shadow-lg rounded-lg z-2 p-4">
-    <div className="text-lg font-Bold text-black  m-2">Notifications</div>
+    <div className="text-lg font-Bold text-black m-2">Notifications</div>
     <ul>
       {notifications.map((notification, index) => (
         <li
           key={index}
-          className="flex gap-4 justify-between m-2 px-4 py-2 text-gray-700 hover:bg-gray-100  rounded"
+          className="flex gap-4 justify-between m-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded"
         >
           <span className="text-md text-black">{notification.text}</span>
           <span className="text-sm text-gray-500">{notification.time}</span>
@@ -160,28 +160,30 @@ const Header = () => {
     <div className="relative">
       <header className="w-full h-14 flex items-center justify-between px-4 py-4 bg-white border-b shadow-md">
         {/* Logo Section */}
-        <div className="flex items-center ">
+        <div className="flex items-center justify-start w-1/4">
           <img src={NsquareLogo} alt="Nsquare Logo" className="w-10 h-10" />
         </div>
-  
+
         {/* Navigation Section */}
-        <nav className="flex-grow space-x-20 lg:space-x-20 md:space-x-30 sm:space-x-30  px-60 ml-20"> {/* Added ml-auto here */}
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className={`text-xl font-semibold md:text-base sm:text-sm ${
-                location.pathname === link.path ? "text-black" : "text-gray-600"
-              } hover:text-black`}
-              aria-label={`Navigate to ${link.name}`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-  
+        <div className="flex-grow flex justify-center w-1/2">
+          <nav className="space-x-20 lg:space-x-20 md:space-x-30 sm:space-x-30">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`text-xl font-semibold md:text-base sm:text-sm ${
+                  location.pathname === link.path ? "text-black" : "text-gray-600"
+                } hover:text-black`}
+                aria-label={`Navigate to ${link.name}`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
         {/* Icon Section */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-end w-1/4 space-x-2">
           <button
             aria-label="Volunteer"
             onClick={() => {
@@ -221,7 +223,7 @@ const Header = () => {
               className="h-12 w-12 hover:opacity-80"
             />
           </button>
-  
+
           {/* Notifications Icon with Modal */}
           <button
             ref={notificationsRef}
@@ -237,7 +239,7 @@ const Header = () => {
               className="h-12 w-12 hover:opacity-80"
             />
           </button>
-  
+
           {/* Settings Icon with Modal */}
           <button
             ref={settingsRef}
@@ -255,7 +257,7 @@ const Header = () => {
           </button>
         </div>
       </header>
-  
+
       {/* Background Overlay */}
       {(showSearchMenu || showNotificationsMenu || showSettingsMenu) && (
         <div
