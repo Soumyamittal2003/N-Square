@@ -165,13 +165,13 @@ const Header = () => {
         </div>
 
         {/* Navigation Section */}
-        <nav className="flex space-x-20 lg:space-x-16 md:space-x-10 sm:space-x-6 ">
+        <nav className="flex space-x-28 lg:space-x-20 md:space-x-1 sm:space-x-10 ">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               to={link.path}
               className={`text-xl font-semibold md:text-base sm:text-sm ${
-                location.pathname === link.path ? "text-black" : "text-gray-800"
+                location.pathname === link.path ? "text-black" : "text-gray-600"
               } hover:text-black`}
               aria-label={`Navigate to ${link.name}`}
             >
