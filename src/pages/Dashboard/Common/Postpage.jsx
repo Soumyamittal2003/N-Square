@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import CreateStory from "../InspiringStory/CreateStory";
 import CreateJob from "../Job/CreateJob";
 import CreateEvent from "../Event/CreateEvent";
@@ -15,29 +16,19 @@ const PostPopup = ({ setPopupOpen }) => {
   const [showCreateVolunteer, setShowCreateVolunteer] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
 
-  const handleStoryClick = () => {
-    setShowCreateStory(true);
-  };
+  const navigate = useNavigate();
 
-  const handleJobClick = () => {
-    setShowCreateJob(true);
-  };
+  const handleStoryClick = () => setShowCreateStory(true);
+  const handleJobClick = () => setShowCreateJob(true);
+  const handleEventClick = () => setShowCreateEvent(true);
+  const handleResourceClick = () => setShowCreateResource(true);
+  const handleVolunteerClick = () => setShowCreateVolunteer(true);
+  const handlePostClick = () => setShowCreatePost(true);
 
-  const handleEventClick = () => {
-    setShowCreateEvent(true);
+  const handleProjectClick = () => {
+    setPopupOpen(false); // Close the popup
+    navigate("/dashboard/project/create-project"); // Navigate to the project creation page
   };
-
-  const handleResourceClick = () => {
-    setShowCreateResource(true);
-  };
-
-  const handleVolunteerClick = () => {
-    setShowCreateVolunteer(true);
-  };
-
-  const handlePostClick = () => {
-    setShowCreatePost(true);
-  }
 
   return (
     <>
@@ -54,48 +45,28 @@ const PostPopup = ({ setPopupOpen }) => {
               </button>
             </div>
             <div className="p-6 space-y-4">
-              {[  
+              {[
                 { label: "Post", visibility: "Anyone can view", onClick: handlePostClick },
-                { 
-                  label: "Project", 
-                  visibility: "Followed People can view", 
-                  link: "/dashboard/project/create-project" // Use Link for navigation
-                },
+                { label: "Project", visibility: "Followed People can view", onClick: handleProjectClick },
                 { label: "Event", visibility: "Anyone can view", onClick: handleEventClick },
                 { label: "Story", visibility: "Anyone can view", onClick: handleStoryClick },
                 { label: "Job", visibility: "Anyone can view", onClick: handleJobClick },
                 { label: "Volunteering", visibility: "Anyone can view", onClick: handleVolunteerClick },
                 { label: "Alma Resources", visibility: "Anyone can view", onClick: handleResourceClick },
               ].map((item, index) =>
-                item.link ? ( // Check if the item has a link
-                  <Link
-                    key={index}
-                    to={item.link}
-                    className="flex items-center justify-between w-full border px-3 py-2 rounded-md hover:bg-gray-100"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                        <span className="text-gray-500">👤</span>
-                      </div>
-                      <span className="text-sm font-medium">{item.label}</span>
+                <button
+                  key={index}
+                  onClick={item.onClick}
+                  className="flex items-center justify-between w-full border px-3 py-2 rounded-md hover:bg-gray-100"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <span className="text-gray-500">👤</span>
                     </div>
-                    <span className="text-xs text-gray-500">{item.visibility}</span>
-                  </Link>
-                ) : (
-                  <button
-                    key={index}
-                    onClick={item.onClick}
-                    className="flex items-center justify-between w-full border px-3 py-2 rounded-md hover:bg-gray-100"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                        <span className="text-gray-500">👤</span>
-                      </div>
-                      <span className="text-sm font-medium">{item.label}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">{item.visibility}</span>
-                  </button>
-                )
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </div>
+                  <span className="text-xs text-gray-500">{item.visibility}</span>
+                </button>
               )}
             </div>
           </div>
@@ -108,7 +79,7 @@ const PostPopup = ({ setPopupOpen }) => {
         <CreateEvent onClose={() => setShowCreateEvent(false)} />
       ) : showCreateResource ? (
         <CreateResources onClose={() => setShowCreateResource(false)} />
-      ) : showCreateVolunteer? (
+      ) : showCreateVolunteer ? (
         <CreateVolunteer onClose={() => setShowCreateVolunteer(false)} />
       ) : (
         <CreatePost onClose={() => setShowCreatePost(false)} />
