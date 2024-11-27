@@ -71,7 +71,7 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <div className="flex-grow flex flex-col">
         <nav className="mt-4 px-5 space-y-2">
-          <Link to="/dashboard/connection" >
+          <Link to="/dashboard/connection">
             <SidebarItem icon={Connections} label="Connection" />
           </Link>
           <div onClick={togglePopup}>

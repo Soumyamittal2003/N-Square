@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import PostCard from "./PostCard";
 import Cookies from "js-cookie";
-
+import { toast } from "react-toastify";
+import ProjectCard from "../Project/ProjectCard";
+import PostCard from "../Common/PostCard";
 const UserProfile = () => {
-  const [isEditingAbout, setIsEditingAbout] = useState(false);
-  const [isEditingProfileImage, setIsEditingProfileImage] = useState(false);
-  const [isEditingBannerImage, setIsEditingBannerImage] = useState(false);
-  const [activeTab, setActiveTab] = useState("My Posts");
-  const tabs = ["My Posts", "My Projects", "My Events", "My Job"];
-  const [profileInfo, setProfileInfo] = useState({
+  const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
     about: "",
@@ -18,33 +14,46 @@ const UserProfile = () => {
     followers: [],
     following: [],
   });
-  const [profileImage, setProfileImage] = useState("");
-  const [bannerImage, setBannerImage] = useState("");
+  const [userData, setUserData] = useState("");
+  const [profileimageUrl, setprofileimageUrl] = useState("");
+  const [backgroundimageUrl, setbackgroundimageUrl] = useState("");
   const [userPosts, setUserPosts] = useState([]);
+  const [userProjects, setUserProjects] = useState([]);
+  const [activeTab, setActiveTab] = useState("My Posts");
+  const [isEditingAbout, setIsEditingAbout] = useState(false);
+  const [isEditingProfileImage, setIsEditingProfileImage] = useState(false);
+  const [isEditingBannerImage, setIsEditingBannerImage] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const tabs = ["My Posts", "My Projects", "My Events", "My Job"];
+  const userId = Cookies.get("id");
+
+  // Fetch User Profile and Posts
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userId = Cookies.get("id");
-        const [userResponse, postsResponse] = await Promise.all([
-          axiosInstance.get(`/users/${userId}`),
-          axiosInstance.get(`/post/user/${userId}`),
-        ]);
+        const [userResponse, postsResponse, projectsResponse] =
+          await Promise.all([
+            axiosInstance.get(`/users/${userId}`),
+            axiosInstance.get(`/post/user/${userId}`),
+            axiosInstance.get(`/project/user/${userId}`),
+          ]);
 
-        const userData = userResponse.data.data;
-        setProfileInfo({
-          firstName: userData.firstName || "",
-          lastName: userData.lastName || "",
-          role: userData.role || "",
-          about: userData.about || "",
-          tagline: userData.tagLine || "",
-          followers: userData.followers || [],
-          following: userData.following || [],
+        const data = userResponse.data.data;
+        setUserData(data);
+        setProfileData({
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
+          about: data.about || "",
+          tagline: data.tagLine || "",
+          role: data.role || "",
+          followers: data.followers || [],
+          following: data.following || [],
         });
-        setProfileImage(userData.profileimageUrl || "");
-        setBannerImage(userData.backgroundimageUrl || "");
+        setprofileimageUrl(userData.profileimageUrl || "");
+        setbackgroundimageUrl(userData.backgroundimageUrl || "");
         setUserPosts(postsResponse.data || []);
+        setUserProjects(projectsResponse.data || []);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user data or posts:", error);
@@ -54,17 +63,12 @@ const UserProfile = () => {
     fetchUserData();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfileInfo({ ...profileInfo, [name]: value });
-  };
-
-  const updateProfileInfo = async () => {
+  // Update About Section
+  const updateAboutSection = async () => {
     try {
-      const userId = Cookies.get("id");
       await axiosInstance.put(`/users/update/${userId}`, {
-        about: profileInfo.about,
-        tagline: profileInfo.tagline,
+        about: profileData.about,
+        tagline: profileData.tagline,
       });
       alert("Profile updated successfully!");
       setIsEditingAbout(false);
@@ -73,37 +77,90 @@ const UserProfile = () => {
     }
   };
 
-  const handleImageChange = async (e, type) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      try {
-        const userId = Cookies.get("id");
-        const url =
-          type === "profile"
-            ? `/profile/updateProfileImage/${userId}`
-            : `/profile/updateBackgroundImage/${userId}`;
-        await axiosInstance.patch(url, formData);
+  // Handle Input Change for About Section
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProfileData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
-        const imagePreview = URL.createObjectURL(file);
-        if (type === "profile") setProfileImage(imagePreview);
-        else setBannerImage(imagePreview);
+  // Handle Image Upload (Profile or Banner)
+  // Handle Image Upload
+  const handleProfileImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
 
-        alert(
-          `${type === "profile" ? "Profile" : "Banner"} image updated successfully!`
+    const formData = new FormData();
+    formData.append("displayPicture", file); // Match the backend key
+
+    try {
+      const response = await axiosInstance.patch(
+        `/profile/updateProfileImage/${userId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200 && response.data.success) {
+        setprofileimageUrl(URL.createObjectURL(file)); // Update preview
+        toast.success("Profile image updated successfully!");
+      } else {
+        throw new Error(
+          response.data.message || "Failed to upload profile image."
         );
-        type === "profile"
-          ? setIsEditingProfileImage(false)
-          : setIsEditingBannerImage(false);
-      } catch (error) {
-        console.error("Error uploading image:", error);
       }
+    } catch (error) {
+      console.error("Error uploading profile image:", error);
+      toast.error(
+        "An error occurred while uploading the profile image. Please try again."
+      );
+    }
+  };
+
+  const handleBannerImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("displayPicture", file); // Match the backend key
+
+    try {
+      const response = await axiosInstance.patch(
+        `/profile/updateBackgroundImage/${userId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200 && response.data.success) {
+        setbackgroundimageUrl(URL.createObjectURL(file)); // Update preview
+        toast.success("Banner image updated successfully!");
+      } else {
+        throw new Error(
+          response.data.message || "Failed to upload banner image."
+        );
+      }
+    } catch (error) {
+      console.error("Error uploading banner image:", error);
+      toast.error(
+        "An error occurred while uploading the banner image. Please try again."
+      );
     }
   };
 
   const getBorderColor = () => {
-    switch (profileInfo.role) {
+    switch (profileData.role) {
       case "student":
         return "border-yellow-500";
       case "faculty":
@@ -126,9 +183,9 @@ const UserProfile = () => {
         <div className="flex flex-col items-center">
           {/* Profile Image */}
           <div className="relative">
-            <label htmlFor="profileImage">
+            <label htmlFor="profileimageUrl">
               <img
-                src={profileImage}
+                src={profileimageUrl || "default-profile.jpg"}
                 alt="Profile"
                 className={`rounded-full w-60 h-60 cursor-pointer border-8 ${getBorderColor()}`}
               />
@@ -136,10 +193,10 @@ const UserProfile = () => {
             {isEditingProfileImage && (
               <input
                 type="file"
-                id="profileImage"
+                id="profileimageUrl"
                 accept="image/*"
                 className="hidden"
-                onChange={(e) => handleImageChange(e, "profile")}
+                onChange={handleProfileImageUpload}
               />
             )}
             <button
@@ -149,19 +206,20 @@ const UserProfile = () => {
               {isEditingProfileImage ? "Save" : "Edit"}
             </button>
           </div>
+
           <h1 className="mt-3 text-4xl font-bold">
-            {profileInfo.firstName} {profileInfo.lastName}
+            {profileData.firstName} {profileData.lastName}
           </h1>
           <div className="flex space-x-6 gap-2 m-3 p-5 px-10 border rounded-3xl">
             <div className="text-center">
               <p className="font-bold text-lg">
-                {profileInfo.followers.length}
+                {profileData.followers.length}
               </p>
               <p className="text-gray-500">Followers</p>
             </div>
             <div className="text-center">
               <p className="font-bold text-lg">
-                {profileInfo.following.length}
+                {profileData.following.length}
               </p>
               <p className="text-gray-500">Following</p>
             </div>
@@ -170,48 +228,30 @@ const UserProfile = () => {
               <p className="text-gray-500">Posts</p>
             </div>
           </div>
-          {/* Tagline */}
-          {isEditingAbout ? (
-            <input
-              type="text"
-              name="tagline"
-              value={profileInfo.tagline}
-              onChange={handleInputChange}
-              className="text-gray-500 border-b-2 w-1/2 focus:outline-none text-center"
-            />
-          ) : (
-            <p className="text-gray-500">{profileInfo.tagline}</p>
-          )}
           {/* About Section */}
           <div className="bg-white text-center border rounded-lg shadow mt-6 p-6 w-full">
             <h3 className="text-lg font-bold">About</h3>
             {isEditingAbout ? (
               <textarea
                 name="about"
-                value={profileInfo.about}
+                value={profileData.about}
                 onChange={handleInputChange}
                 className="w-full mt-2 border p-2 rounded"
               />
             ) : (
-              <p className="text-gray-700 mt-2">{profileInfo.about}</p>
+              <p className="text-gray-700 mt-2">{profileData.about}</p>
             )}
           </div>
-          {isEditingAbout && (
-            <button
-              onClick={updateProfileInfo}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Save Changes
-            </button>
-          )}
-          {!isEditingAbout && (
-            <button
-              onClick={() => setIsEditingAbout(true)}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Edit About
-            </button>
-          )}
+          <button
+            onClick={
+              isEditingAbout
+                ? updateAboutSection
+                : () => setIsEditingAbout(true)
+            }
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
+          >
+            {isEditingAbout ? "Save Changes" : "Edit About"}
+          </button>
         </div>
       </div>
 
@@ -219,9 +259,9 @@ const UserProfile = () => {
       <div className="w-2/3 p-8">
         {/* Banner Image */}
         <div className="relative shadow-md rounded-lg">
-          <label htmlFor="bannerImage">
+          <label htmlFor="backgroundimageUrl">
             <img
-              src={bannerImage}
+              src={backgroundimageUrl || "default-banner.jpg"}
               alt="Banner"
               className="w-full h-60 object-cover cursor-pointer"
             />
@@ -229,10 +269,10 @@ const UserProfile = () => {
           {isEditingBannerImage && (
             <input
               type="file"
-              id="bannerImage"
+              id="backgroundimageUrl"
               accept="image/*"
               className="hidden"
-              onChange={(e) => handleImageChange(e, "banner")}
+              onChange={handleBannerImageUpload}
             />
           )}
           <button
@@ -244,7 +284,7 @@ const UserProfile = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border justify-around bg-white rounded-2xl shadow-md px-1 py-1 mt-6">
+        <div className="flex border justify-around bg-white rounded-2xl shadow-md px-1 py-1 m-3">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -257,9 +297,8 @@ const UserProfile = () => {
             </button>
           ))}
         </div>
-
         {/* Tab Content */}
-        <div className="mt-6 bg-white p-4 rounded-lg shadow">
+        <div className="bg-white ">
           {activeTab === "My Posts" && (
             <div className="h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
               {userPosts.length > 0 ? (
@@ -267,8 +306,15 @@ const UserProfile = () => {
                   <PostCard
                     key={post._id}
                     post={post}
-                    user={profileInfo}
-                    currentUserId={Cookies.get("id")}
+                    user={userData}
+                    currentUserId={userId}
+                    onLikePost={(postId) => console.log(`Liked post ${postId}`)}
+                    onDislikePost={(postId) =>
+                      console.log(`Disliked post ${postId}`)
+                    }
+                    onFollowUser={(userId) =>
+                      console.log(`Followed user ${userId}`)
+                    }
                   />
                 ))
               ) : (
@@ -277,13 +323,29 @@ const UserProfile = () => {
             </div>
           )}
           {activeTab === "My Projects" && (
-            <p className="text-center text-gray-500">No projects to show.</p>
+            <div className="h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
+              {userProjects.length > 0 ? (
+                userProjects.map((project) => (
+                  <ProjectCard key={project._id} project={project} />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">
+                  No projects to show.
+                </p>
+              )}
+            </div>
           )}
           {activeTab === "My Events" && (
-            <p className="text-center text-gray-500">No events to show.</p>
+            <div className="h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
+              {/* Placeholder for events */}
+              <p className="text-center text-gray-500">No events to show.</p>
+            </div>
           )}
           {activeTab === "My Job" && (
-            <p className="text-center text-gray-500">No jobs to show.</p>
+            <div className="h-[calc(75vh-200px)] overflow-y-auto hide-scrollbar">
+              {/* Placeholder for jobs */}
+              <p className="text-center text-gray-500">No jobs to show.</p>
+            </div>
           )}
         </div>
       </div>

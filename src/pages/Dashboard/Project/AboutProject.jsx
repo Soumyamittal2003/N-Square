@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { BsStars } from "react-icons/bs";
 import { TbCoinRupee } from "react-icons/tb";
 import axiosInstance from "../../../utils/axiosinstance";
+import { toast } from "react-toastify";
 
 const ProjectDetail = () => {
   const { projectId } = useParams(); // Get project ID from URL params
@@ -63,6 +64,10 @@ const ProjectDetail = () => {
 
   const toggleContributor = async () => {
     try {
+      if (projectData.createdBy === userId) {
+        toast.error("You cannot contribute to your own project.");
+        return; // Stop further execution
+      }
       if (isContributor) {
         // Remove contributor
         await axiosInstance.delete(`/project/contribute/${projectId}`, {
@@ -265,7 +270,7 @@ const ProjectDetail = () => {
                   Open for Mentors
                 </div>
               ) : projectData?.openForStudent ? (
-                <div className="px-6 py-1 border flex items-center gap-2 font-semibold text-sm rounded-lg text-white bg-green-400">
+                <div className="ml-6 px-6 py-1 border flex items-center gap-2 font-semibold text-sm rounded-lg text-white bg-green-400">
                   <BsStars />
                   Open for Students
                 </div>
