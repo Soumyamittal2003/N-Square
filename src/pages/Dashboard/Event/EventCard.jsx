@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
-import shareIcon from "../../../assets/icons/shareArrow.svg";
+
 
 const EventCard = ({ image, title, speaker, date, time, tags, attending, link }) => {
   const navigate = useNavigate();
@@ -32,9 +32,7 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, link })
       <div>
         <div className="flex justify-between items-center mt-2">
           <p className="text-sm text-gray-500">{date} • {time}</p>
-          <button aria-label="Share event">
-            <img src={shareIcon} alt="Share" className="w-5 h-5" />
-          </button>
+          
         </div>
         <h4 className="text-md font-semibold mt-1">{title}</h4>
         <p className="text-sm text-gray-500">{speaker}</p>

@@ -184,8 +184,10 @@ const Header = () => {
 
         {/* Icon Section */}
         <div className="flex items-center justify-end w-1/4 space-x-2">
+          {/* Volunteer Icon */}
           <button
             aria-label="Volunteer"
+            title="Volunteer" 
             onClick={() => {
               navigate("/dashboard/volunteer");
             }}
@@ -196,94 +198,64 @@ const Header = () => {
               className="h-12 w-12 hover:opacity-80"
             />
           </button>
+
+          {/* Alumni Resources Icon */}
           <button
-            aria-label="Alumni Resources "
+            aria-label="Alumni Resources"
+            title="Alumni Resources"
             onClick={() => {
               navigate("/dashboard/alumni-resources");
             }}
           >
             <img
               src={alumniresourceicon}
-              alt="AlmaResourceicon"
+              alt="Alumni Resources"
               className="h-12 w-12 hover:opacity-80"
             />
           </button>
+
           {/* Search Icon with Modal */}
           <button
             ref={searchRef}
             aria-label="Search"
-            onClick={() => {
-              closeAllMenus();
-              setShowSearchMenu(true);
-            }}
+            title="Search"
+            onClick={() => setShowSearchMenu(!showSearchMenu)}
           >
-            <img
-              src={search}
-              alt="Search Icon"
-              className="h-12 w-12 hover:opacity-80"
-            />
+            <img src={search} alt="search-icon" className="h-10 w-10" />
           </button>
+          {showSearchMenu && <SearchModal />}
 
           {/* Notifications Icon with Modal */}
           <button
             ref={notificationsRef}
             aria-label="Notifications"
-            onClick={() => {
-              closeAllMenus();
-              setShowNotificationsMenu(true);
-            }}
+            title="Notifications"
+            onClick={() => setShowNotificationsMenu(!showNotificationsMenu)}
           >
             <img
               src={notification}
-              alt="Notifications Icon"
-              className="h-12 w-12 hover:opacity-80"
+              alt="notification-icon"
+              className="h-10 w-10"
             />
           </button>
+          {showNotificationsMenu && <NotificationsModal notifications={notifications} />}
 
           {/* Settings Icon with Modal */}
           <button
             ref={settingsRef}
             aria-label="Settings"
-            onClick={() => {
-              closeAllMenus();
-              setShowSettingsMenu(true);
-            }}
+            title="Settings"
+            onClick={() => setShowSettingsMenu(!showSettingsMenu)}
           >
             <img
               src={setting}
-              alt="Settings Icon"
-              className="h-12 w-12 hover:opacity-80"
+              alt="setting-icon"
+              className="h-10 w-10"
             />
           </button>
+          {showSettingsMenu && <SettingsModal settingsOptions={settingsOptions} />}
         </div>
       </header>
-
-      {/* Background Overlay */}
-      {(showSearchMenu || showNotificationsMenu || showSettingsMenu) && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-10"
-          onClick={closeAllMenus}
-        />
-      )}
-
-      {/* Modals below the header */}
-      <div className="relative z-20">
-        {showSearchMenu && (
-          <div className="relative" ref={searchRef}>
-            <SearchModal />
-          </div>
-        )}
-        {showNotificationsMenu && (
-          <div className="relative" ref={notificationsRef}>
-            <NotificationsModal notifications={notifications} />
-          </div>
-        )}
-        {showSettingsMenu && (
-          <div className="relative" ref={settingsRef}>
-            <SettingsModal settingsOptions={settingsOptions} />
-          </div>
-        )}
-      </div>
     </div>
   );
 };
