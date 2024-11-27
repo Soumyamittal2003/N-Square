@@ -1,30 +1,81 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
 import bookmark from "../../../assets/icons/bookmark.svg";
+import bookmarked from "../../../assets/icons/bookmarked.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
-const JobCard = ({ job, createdByData }) => {
+const JobCard = ({
+  job,
+  currentUserId,
+  onLikePost,
+  onDislikePost,
+  onBookmarkJob,
+  bookmarks,
+}) => {
   const {
-    title,
-    company,
-    location,
-    description,
+    _id,
+    title = "Job Title",
+    company = "Unknown Company",
+    location = "Unknown Location",
+    description = "No description available.",
     jobphoto,
-    skills,
-    type,
-    stipendOrSalary,
+    skills = [],
+    type = "Full-time",
+    stipendOrSalary = "Not specified",
     applyLink,
-    createdBy,  // ID of the creator
+    createdBy = {},
     postedDate,
+    likes = [], // Default to empty array if undefined
+    dislikes = [], // Default to empty array if undefined
   } = job;
+
+  const [creatorName, setCreatorName] = useState("Loading...");
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  // Check if the current user has liked or disliked the job
+  const isLiked = likes.includes(currentUserId);
+  const isDisliked = dislikes.includes(currentUserId);
+
+  // Fetch creator's name dynamically
+  useEffect(() => {
+    if (createdBy?.firstName && createdBy?.lastName) {
+      setCreatorName(`${createdBy.firstName} ${createdBy.lastName}`);
+    } else if (createdBy?._id) {
+      const fetchCreatorDetails = async () => {
+        try {
+          const response = await axiosInstance.get(`/users/${createdBy._id}`);
+          if (response.data?.success) {
+            const { firstName, lastName } = response.data.data;
+            setCreatorName(`${firstName} ${lastName}`);
+          } else {
+            setCreatorName("Unknown");
+          }
+        } catch (error) {
+          console.error(`Error fetching creator details for job ${_id}:`, error);
+          setCreatorName("Error fetching user");
+        }
+      };
+      fetchCreatorDetails();
+    } else {
+      setCreatorName("Unknown");
+    }
+  }, [createdBy, _id]);
+
+  // Bookmark state management
+  useEffect(() => {
+    setIsBookmarked(bookmarks.includes(_id));
+  }, [bookmarks, _id]);
+
+  const handleBookmarkToggle = () => {
+    onBookmarkJob(_id);
+    setIsBookmarked((prev) => !prev);
+  };
 
   const [isApplied, setIsApplied] = useState(false);
 
-  // If createdByData exists, use it to get the name; otherwise, fallback to "Unknown"
-  const createdByName = createdByData ? createdByData.name : "Unknown";
-
   const handleApplyClick = () => {
-    setIsApplied(true); // This marks the job as applied
+    setIsApplied(true); // Mark the job as applied
   };
 
   return (
@@ -33,27 +84,23 @@ const JobCard = ({ job, createdByData }) => {
       <div className="relative">
         <img
           src={jobphoto || "https://via.placeholder.com/150"}
-          alt={title || "Job Image"}
+          alt={title}
           className="w-full h-[180px] rounded-t-lg object-cover"
         />
       </div>
 
       {/* Job Details */}
       <div className="mt-4 flex-1">
-        <h4 className="text-md font-semibold">{title || "Job Title"}</h4>
+        <h4 className="text-md font-semibold">{title}</h4>
         <p className="text-sm text-gray-500">
-          {company || "Company"}{" "}
-          <span className="text-blue-600 font-semibold">
-            {location || "Location"}
-          </span>
+          {company}{" "}
+          <span className="text-blue-600 font-semibold">{location}</span>
         </p>
-        <p className="text-sm text-gray-600 mt-2">
-          {description || "No description available."}
-        </p>
+        <p className="text-sm text-gray-600 mt-2">{description}</p>
         <p className="text-xs text-gray-500 mt-2">
           Skills:{" "}
           <span className="text-gray-800 font-medium">
-            {skills ? skills.join(", ") : "None specified"}
+            {skills.length > 0 ? skills.join(", ") : "None specified"}
           </span>
         </p>
         <p className="text-xs text-gray-500 mt-2">
@@ -65,14 +112,12 @@ const JobCard = ({ job, createdByData }) => {
         </p>
         <p className="text-xs text-gray-500 mt-2">
           Created By:{" "}
-          <span className="text-gray-800 font-medium">
-            {createdByName}
-          </span>
+          <span className="text-gray-800 font-medium">{creatorName}</span>
         </p>
         <p className="text-xs text-gray-500 mt-2">
           Created Date:{" "}
           <span className="text-gray-800 font-medium">
-            {new Date(postedDate).toLocaleDateString()}
+            {postedDate ? new Date(postedDate).toLocaleDateString() : "Unknown"}
           </span>
         </p>
 
@@ -90,27 +135,38 @@ const JobCard = ({ job, createdByData }) => {
       </div>
 
       {/* Bottom Section */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-2">
         {/* Left Icons */}
         <div className="flex gap-4">
-          <button className="w-5 h-5">
-            <img src={bookmark} alt="Bookmark" className="w-full h-full" />
-          </button>
-          <button className="flex items-center gap-1">
+          {/* Bookmark Button */}
+          <button onClick={handleBookmarkToggle} className="w-5 h-5">
             <img
-              src={arrowBlockUp}
-              alt="Up arrow"
-              className="w-5 h-5 object-contain"
+              src={isBookmarked ? bookmarked : bookmark}
+              alt="Bookmark"
+              className="w-full h-full"
             />
-            <span className="text-sm font-semibold">63K</span>
           </button>
-          <button className="flex items-center gap-1">
-            <img
-              src={arrowBlockdown}
-              alt="Down arrow"
-              className="w-5 h-5 object-contain"
-            />
-            <span className="text-sm font-semibold">13K</span>
+
+          {/* Like Button */}
+          <button
+            onClick={() => onLikePost(_id)}
+            className={`flex items-center gap-1 font-semibold  ${
+              isLiked ? "text-blue-500" : "text-gray-600"
+            } hover:text-blue-500 transition`}
+          >
+            <img src={arrowBlockUp} alt="Upvote" className="w-6 h-6" />
+            <span className="font-semibold text-xl">{likes.length}</span>
+          </button>
+
+          {/* Dislike Button */}
+          <button
+            onClick={() => onDislikePost(_id)}
+            className={`flex items-center gap-1 font-semibold ${
+              isDisliked ? "text-blue-500" : "text-gray-600"
+            } hover:text-blue-500 transition`}
+          >
+            <img src={arrowBlockdown} alt="Downvote" className="w-6 h-6" />
+            <span className="font-semibold text-xl">{dislikes.length}</span>
           </button>
         </div>
 
@@ -118,11 +174,11 @@ const JobCard = ({ job, createdByData }) => {
         <button
           onClick={handleApplyClick}
           className={`px-4 py-2 text-sm font-bold text-white rounded-2xl ${
-            isApplied ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+            isApplied ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
           }`}
           disabled={isApplied}
         >
-          {isApplied ? 'Applied' : 'Apply'}
+          {isApplied ? "Applied" : "Apply"}
         </button>
       </div>
     </div>

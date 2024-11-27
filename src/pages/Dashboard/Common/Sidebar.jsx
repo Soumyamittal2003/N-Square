@@ -3,6 +3,7 @@ import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
+import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
 import { Link } from "react-router-dom";
 import ProfileSection from "./ProfileSection";
 import { useState, useEffect } from "react";
@@ -78,6 +79,9 @@ const Sidebar = () => {
           </div>
           <Link to="/dashboard/chat">
             <SidebarItem icon={messageChat} label="Chat" />
+          </Link>
+          <Link to="/dashboard/video-call">
+            <SidebarItem icon={videoChatIcon} label="Video Call" />
           </Link>
           <Link to="/dashboard/job-internship-applied">
             <SidebarItem icon={briefcase} label="Job/Internship Applied" />
