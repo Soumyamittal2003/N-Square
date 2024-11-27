@@ -13,7 +13,7 @@ const ProjectDetail = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("About");
   const role = Cookies.get("role"); // Get user role from cookies
-  const userId = Cookies.get("userId"); // Get user ID from cookies
+  const userId = Cookies.get("id"); // Get user ID from cookies
 
   const [contributorDetails, setContributorDetails] = useState({
     mentorContributors: [],
@@ -23,6 +23,7 @@ const ProjectDetail = () => {
   const [isContributor, setIsContributor] = useState(false);
 
   useEffect(() => {
+    //api call to fetch projectdata
     const fetchProjectDetails = async () => {
       try {
         const response = await axiosInstance.get(`/project/${projectId}`);
