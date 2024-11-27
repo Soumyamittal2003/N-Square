@@ -51,7 +51,7 @@ const JobContent = () => {
           if (job.createdBy) {
             try {
               const response = await axiosInstance.get(
-                `/users/${job.createdBy._id}`
+                `/users/${job.createdBy}`
               );
               return {
                 ...job,
