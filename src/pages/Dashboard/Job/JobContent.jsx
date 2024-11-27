@@ -1,72 +1,165 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../../utils/axiosinstance"; // Make sure this is correctly pointing to your axios instance
+import axiosInstance from "../../../utils/axiosinstance";
 import JobCard from "./JobCard";
 
 const JobContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [jobs, setJobs] = useState([]);
-  const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const [rolesFetched, setRolesFetched] = useState(false);
+  const [userBookmarks, setUserBookmarks] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
   const tabs = ["All", "Alumni", "Faculty"];
 
-  // Function to fetch user by ID
-  const fetchUserById = async (userId) => {
-    try {
-      const response = await axiosInstance.get(`/users/${userId}`);
-      if (response.data.success) {
-        return response.data.user;  // Returns user data if successful
-      }
-      return null;
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-      return null;
-    }
-  };
-
+  // Fetch current user from localStorage
   useEffect(() => {
-    const fetchJobsAndUsers = async () => {
+    const fetchCurrentUser = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      if (storedUser && storedUser._id) {
+        setCurrentUserId(storedUser._id);
+      } else {
+        console.error("No current user found in localStorage");
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  // Fetch all jobs
+  useEffect(() => {
+    const fetchJobs = async () => {
       try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch jobs
-        const jobResponse = await axiosInstance.get("/jobs/all");
-        if (jobResponse.data.success) {
-          setJobs(jobResponse.data.jobs || []);
-        } else {
-          setError("Failed to fetch jobs.");
+        const response = await axiosInstance.get("/jobs/all");
+        if (response.data.success) {
+          setJobs(response.data.jobs || []);
         }
-
-        // Fetch users based on job createdBy IDs
-        const userData = {};
-        for (const job of jobResponse.data.jobs) {
-          const userId = job.createdBy?._id;
-          if (userId && !userData[userId]) {
-            const user = await fetchUserById(userId);
-            if (user) {
-              userData[userId] = user;
-            }
-          }
-        }
-        setUsers(userData);
-      } catch (err) {
-        setError("Failed to fetch data. Please check your connection.");
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchJobsAndUsers();
+    fetchJobs();
   }, []);
 
+  // Fetch roles dynamically for each job's creator
+  useEffect(() => {
+    const fetchRolesForJobs = async () => {
+      const updatedJobs = await Promise.all(
+        jobs.map(async (job) => {
+          if (job.createdBy) {
+            try {
+              const response = await axiosInstance.get(
+                `/users/${job.createdBy._id}`
+              );
+              return {
+                ...job,
+                createdBy: {
+                  ...job.createdBy,
+                  role: response.data.data.role,
+                  firstName: response.data.data.firstName,
+                  lastName: response.data.data.lastName,
+                },
+              };
+            } catch (error) {
+              console.error(`Failed to fetch role for job ${job._id}:`, error);
+              return job; // Fallback to original job
+            }
+          }
+          return job; // If no creator, return the job as-is
+        })
+      );
+
+      setJobs(updatedJobs);
+      setRolesFetched(true); // Mark roles as fetched
+    };
+
+    if (jobs.length && !rolesFetched) {
+      fetchRolesForJobs();
+    }
+  }, [jobs, rolesFetched]);
+
+  // Handle like action
+  const handleLikePost = async (jobId) => {
+    try {
+      await axiosInstance.post(`/jobs/${jobId}/like`, { userId: currentUserId });
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job._id === jobId
+            ? {
+                ...job,
+                likes: job.likes.includes(currentUserId)
+                  ? job.likes.filter((id) => id !== currentUserId)
+                  : [...job.likes, currentUserId],
+                dislikes: job.dislikes.filter((id) => id !== currentUserId),
+              }
+            : job
+        )
+      );
+    } catch (error) {
+      console.error(`Error liking job ${jobId}:`, error);
+    }
+  };
+
+  // Handle dislike action
+  const handleDislikePost = async (jobId) => {
+    try {
+      await axiosInstance.post(`/jobs/${jobId}/dislike`, {
+        userId: currentUserId,
+      });
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job._id === jobId
+            ? {
+                ...job,
+                dislikes: job.dislikes.includes(currentUserId)
+                  ? job.dislikes.filter((id) => id !== currentUserId)
+                  : [...job.dislikes, currentUserId],
+                likes: job.likes.filter((id) => id !== currentUserId),
+              }
+            : job
+        )
+      );
+    } catch (error) {
+      console.error(`Error disliking job ${jobId}:`, error);
+    }
+  };
+
+  // Handle bookmark action
+  const handleBookmarkJob = async (jobId) => {
+    try {
+      const isBookmarked = userBookmarks.includes(jobId);
+      await axiosInstance.post(`/jobs/${jobId}/bookmark`, {
+        userId: currentUserId,
+        action: isBookmarked ? "remove" : "add",
+      });
+
+      setUserBookmarks((prevBookmarks) =>
+        isBookmarked
+          ? prevBookmarks.filter((id) => id !== jobId)
+          : [...prevBookmarks, jobId]
+      );
+    } catch (error) {
+      console.error(`Error bookmarking job ${jobId}:`, error);
+    }
+  };
+
+  // Filtering logic
   const filteredJobs = jobs.filter((job) => {
     if (activeTab === "All") return true;
     if (activeTab === "Alumni") return job.createdBy?.role === "alumni";
     if (activeTab === "Faculty") return job.createdBy?.role === "faculty";
     return false;
   });
+
+  if (loading) {
+    return <p>Loading jobs...</p>;
+  }
+
+  if (!filteredJobs.length) {
+    return <p>No jobs found for {activeTab}.</p>;
+  }
 
   return (
     <div className="w-full">
@@ -87,30 +180,19 @@ const JobContent = () => {
 
       {/* Job Cards Section */}
       <div className="p-4">
-        {loading ? (
-          <p>Loading jobs...</p>
-        ) : error ? (
-          <div className="text-red-500 text-center p-4 bg-red-100 rounded-lg">
-            {error}
-          </div>
-        ) : filteredJobs.length > 0 ? (
-          <div className="grid grid-cols-3 gap-4">
-            {filteredJobs.map((job) => {
-              // Get user data by createdBy ID
-              const createdByData = users[job.createdBy?._id];
-
-              return (
-                <JobCard
-                  key={job._id}
-                  job={job}
-                  createdByData={createdByData}
-                />
-              );
-            })}
-          </div>
-        ) : (
-          <p>No jobs found for {activeTab}.</p>
-        )}
+        <div className="grid grid-cols-3 gap-4">
+          {filteredJobs.map((job) => (
+            <JobCard
+              key={job._id}
+              job={job}
+              currentUserId={currentUserId}
+              onLikePost={handleLikePost}
+              onDislikePost={handleDislikePost}
+              onBookmarkJob={handleBookmarkJob}
+              bookmarks={userBookmarks}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

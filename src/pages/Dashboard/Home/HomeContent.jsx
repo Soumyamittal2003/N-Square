@@ -138,7 +138,7 @@ const HomeContent = () => {
       </div>
 
       {/* Posts Section */}
-      <div className="w-full bg-[#ffffff] p-4 h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
+      <div className="w-full bg-[#ffffff] p-1 h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => {
             const user = users[post.createdBy];
