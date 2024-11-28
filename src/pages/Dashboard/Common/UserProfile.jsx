@@ -61,7 +61,7 @@ const UserProfile = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [userData.backgroundimageUrl, userData.profileimageUrl, userId]);
 
   // Update About Section
   const updateAboutSection = async () => {
@@ -185,7 +185,7 @@ const UserProfile = () => {
           <div className="relative">
             <label htmlFor="profileimageUrl">
               <img
-                src={profileimageUrl || "default-profile.jpg"}
+                src={profileimageUrl}
                 alt="Profile"
                 className={`rounded-full w-60 h-60 cursor-pointer border-8 ${getBorderColor()}`}
               />
