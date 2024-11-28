@@ -47,27 +47,6 @@ const Sidebar = () => {
         <ProfileSection userData={userData} />
       </Link>
 
-      {/* Followers and Following Section */}
-      <div className="flex items-center justify-around p-1 border border-gray-300 rounded-2xl shadow-sm mx-4 py-1">
-        <Link to="/dashboard/followers" className="text-center">
-          <div>
-            <span className="block text-lg font-semibold text-gray-800">
-              {userData.followers.length}
-            </span>
-            <span className="text-sm text-gray-500">Followers</span>
-          </div>
-        </Link>
-        <div className="border-l border-gray-300 h-8"></div>
-        <Link to="/dashboard/following" className="text-center">
-          <div>
-            <span className="block text-lg font-semibold text-gray-800">
-              {userData.following.length}
-            </span>
-            <span className="text-sm text-gray-500">Following</span>
-          </div>
-        </Link>
-      </div>
-
       {/* Navigation Links */}
       <div className="flex-grow flex flex-col overflow-auto hide-scrollbar">
         <nav className="px-4 py-4">

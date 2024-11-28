@@ -21,9 +21,9 @@ const AboutEvent = () => {
   }
 
   return (
-    <div className="flex justify-center p-8 ">
+    <div className="flex justify-center p-8 overflow-auto hide-scrollbar ">
       {/* Event Content */}
-      <div className="bg-white shadow-lg rounded-lg max-w-6xl w-full p-6">
+      <div className="bg-white shadow-lg rounded-lg max-w-6xl w-full p-6 overflow-auto hide-scrollbar">
         <img src={image}  className="w-full h-[300px] object-cover rounded-lg" />
         <p className="mt-2 text-gray-500">{date} {time}</p>
         
