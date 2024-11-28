@@ -221,7 +221,7 @@ const Header = () => {
             title="Search"
             onClick={() => setShowSearchMenu(!showSearchMenu)}
           >
-            <img src={search} alt="search-icon" className="h-10 w-10" />
+            <img src={search} alt="search-icon" className="h-12 w-12" />
           </button>
           {showSearchMenu && <SearchModal />}
 
@@ -235,7 +235,7 @@ const Header = () => {
             <img
               src={notification}
               alt="notification-icon"
-              className="h-10 w-10"
+              className="h-12 w-12"
             />
           </button>
           {showNotificationsMenu && <NotificationsModal notifications={notifications} />}
@@ -250,7 +250,7 @@ const Header = () => {
             <img
               src={setting}
               alt="setting-icon"
-              className="h-10 w-10"
+              className="h-12 w-12"
             />
           </button>
           {showSettingsMenu && <SettingsModal settingsOptions={settingsOptions} />}
