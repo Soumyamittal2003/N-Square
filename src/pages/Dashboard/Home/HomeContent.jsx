@@ -14,7 +14,7 @@ const HomeContent = () => {
     "Origination Post",
     "Alumni Post",
     "Student Post",
-    "Facility Post",
+    "Faculty Post",
   ];
 
   // Fetch posts and user data
@@ -106,19 +106,21 @@ const HomeContent = () => {
     }
   };
 
-  // Filter posts based on active tab
-  const filteredPosts = posts.filter((post) => {
-    const user = users[post.createdBy];
-    if (!user) return false;
+  // Filter posts based on active tab and sort by createdAt (descending)
+  const filteredPosts = posts
+    .filter((post) => {
+      const user = users[post.createdBy];
+      if (!user) return false;
 
-    if (activeTab === "All") return true;
-    if (activeTab === "Origination Post") return user.role === "organization";
-    if (activeTab === "Alumni Post") return user.role === "alumni";
-    if (activeTab === "Student Post") return user.role === "student";
-    if (activeTab === "Facility Post") return user.role === "faculty";
+      if (activeTab === "All") return true;
+      if (activeTab === "Origination Post") return user.role === "organization";
+      if (activeTab === "Alumni Post") return user.role === "alumni";
+      if (activeTab === "Student Post") return user.role === "student";
+      if (activeTab === "Facility Post") return user.role === "faculty";
 
-    return false;
-  });
+      return false;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort posts by createdAt, descending
 
   return (
     <div className="w-2/3">
