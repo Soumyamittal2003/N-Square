@@ -8,10 +8,10 @@ const JobContent = () => {
   const [loading, setLoading] = useState(true);
   const [rolesFetched, setRolesFetched] = useState(false);
   const [userBookmarks, setUserBookmarks] = useState([]);
-  const [appliedJobs, setAppliedJobs] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const tabs = ["All", "Alumni", "Faculty"];
 
+  // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
@@ -25,6 +25,7 @@ const JobContent = () => {
     fetchCurrentUser();
   }, []);
 
+  // Fetch all jobs
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -42,6 +43,7 @@ const JobContent = () => {
     fetchJobs();
   }, []);
 
+  // Fetch roles dynamically for each job's creator
   useEffect(() => {
     const fetchRolesForJobs = async () => {
       const updatedJobs = await Promise.all(
@@ -60,15 +62,15 @@ const JobContent = () => {
               };
             } catch (error) {
               console.error(`Failed to fetch role for job ${job._id}:`, error);
-              return job;
+              return job; // Fallback to original job
             }
           }
-          return job;
+          return job; // If no creator, return the job as-is
         })
       );
 
       setJobs(updatedJobs);
-      setRolesFetched(true);
+      setRolesFetched(true); // Mark roles as fetched
     };
 
     if (jobs.length && !rolesFetched) {
@@ -76,6 +78,7 @@ const JobContent = () => {
     }
   }, [jobs, rolesFetched]);
 
+  // Handle like action
   const handleLikePost = async (jobId) => {
     try {
       await axiosInstance.post(`/jobs/like/${jobId}`, { userId: currentUserId });
@@ -97,11 +100,10 @@ const JobContent = () => {
     }
   };
 
+  // Handle dislike action
   const handleDislikePost = async (jobId) => {
     try {
-      await axiosInstance.post(`/jobs/dislike/${jobId}`, {
-        userId: currentUserId,
-      });
+      await axiosInstance.post(`/jobs/dislike/${jobId}`, { userId: currentUserId });
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
           job._id === jobId
@@ -120,6 +122,7 @@ const JobContent = () => {
     }
   };
 
+  // Handle bookmark action
   const handleBookmarkJob = async (jobId) => {
     try {
       const isBookmarked = userBookmarks.includes(jobId);
@@ -138,15 +141,7 @@ const JobContent = () => {
     }
   };
 
-  const handleApplyJob = async (jobId) => {
-    try {
-      await axiosInstance.post(`/jobs/apply/${jobId}`, { userId: currentUserId });
-      setAppliedJobs((prevAppliedJobs) => [...prevAppliedJobs, jobId]);
-    } catch (error) {
-      console.error(`Error applying for job ${jobId}:`, error);
-    }
-  };
-
+  // Filtering logic
   const filteredJobs = jobs.filter((job) => {
     if (activeTab === "All") return true;
     if (activeTab === "Alumni") return job.createdBy?.role === "alumni";
@@ -191,33 +186,8 @@ const JobContent = () => {
               onDislikePost={handleDislikePost}
               onBookmarkJob={handleBookmarkJob}
               bookmarks={userBookmarks}
-              onApplyJob={handleApplyJob}
-              appliedJobs={appliedJobs}
             />
           ))}
-        </div>
-      </div>
-
-      {/* Applied Jobs Section */}
-      <div className="p-4">
-        <h3 className="font-semibold text-xl mb-4">Applied Jobs</h3>
-        <div className="grid grid-cols-3 gap-4">
-          {appliedJobs.map((jobId) => {
-            const job = jobs.find((job) => job._id === jobId);
-            return job ? (
-              <JobCard
-                key={job._id}
-                job={job}
-                currentUserId={currentUserId}
-                onLikePost={handleLikePost}
-                onDislikePost={handleDislikePost}
-                onBookmarkJob={handleBookmarkJob}
-                bookmarks={userBookmarks}
-                onApplyJob={handleApplyJob}
-                appliedJobs={appliedJobs}
-              />
-            ) : null;
-          })}
         </div>
       </div>
     </div>

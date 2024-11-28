@@ -21,6 +21,7 @@ import Volunteer from "./Volunteer/Volunteer";
 import AboutEvent from "./Event/AboutEvent";
 import AboutProject from "./Project/AboutProject";
 import Reunion from "./Reunion/Reunion";
+import AppliedJobs from "./AppliedJob/AppliedJob";
 
 import Chat from "./Chat/Chat";
 
@@ -55,6 +56,7 @@ const Dashboard = () => {
             <Route path="event" element={<Event />} />
             <Route path="event/about-event" element={<AboutEvent />} />
             <Route path="chat" element={<Chat />} />
+            <Route path="applied-jobs" element={<AppliedJobs />} />
             <Route path="project" element={<Project />} />
             <Route path="mentorship" element={<MentorShip />} />
             <Route path="project/:projectId" element={<AboutProject />} />

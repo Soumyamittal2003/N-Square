@@ -219,9 +219,16 @@ const Header = () => {
             ref={searchRef}
             aria-label="Search"
             title="Search"
-            onClick={() => setShowSearchMenu(!showSearchMenu)}
+            onClick={() => {
+              closeAllMenus();
+              setShowSearchMenu(true);
+            }}
           >
-            <img src={search} alt="search-icon" className="h-12 w-12" />
+            <img
+              src={search}
+              alt="Search Icon"
+              className="h-12 w-12 hover:opacity-80"
+            />
           </button>
           {showSearchMenu && <SearchModal />}
 
@@ -230,32 +237,63 @@ const Header = () => {
             ref={notificationsRef}
             aria-label="Notifications"
             title="Notifications"
-            onClick={() => setShowNotificationsMenu(!showNotificationsMenu)}
+            onClick={() => {
+              closeAllMenus();
+              setShowNotificationsMenu(true);
+            }}
           >
             <img
               src={notification}
-              alt="notification-icon"
-              className="h-12 w-12"
+              alt="Notifications Icon"
+              className="h-12 w-12 hover:opacity-80"
             />
           </button>
-          {showNotificationsMenu && <NotificationsModal notifications={notifications} />}
-
+  
           {/* Settings Icon with Modal */}
           <button
             ref={settingsRef}
             aria-label="Settings"
             title="Settings"
-            onClick={() => setShowSettingsMenu(!showSettingsMenu)}
+            onClick={() => {
+              closeAllMenus();
+              setShowSettingsMenu(true);
+            }}
           >
             <img
               src={setting}
-              alt="setting-icon"
-              className="h-12 w-12"
+              alt="Settings Icon"
+              className="h-12 w-12 hover:opacity-80"
             />
           </button>
-          {showSettingsMenu && <SettingsModal settingsOptions={settingsOptions} />}
         </div>
       </header>
+  
+      {/* Background Overlay */}
+      {(showSearchMenu || showNotificationsMenu || showSettingsMenu) && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-10"
+          onClick={closeAllMenus}
+        />
+      )}
+
+      {/* Modals below the header */}
+      <div className="relative z-20">
+        {showSearchMenu && (
+          <div className="relative" ref={searchRef}>
+            <SearchModal />
+          </div>
+        )}
+        {showNotificationsMenu && (
+          <div className="relative" ref={notificationsRef}>
+            <NotificationsModal notifications={notifications} />
+          </div>
+        )}
+        {showSettingsMenu && (
+          <div className="relative" ref={settingsRef}>
+            <SettingsModal settingsOptions={settingsOptions} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -83,7 +83,7 @@ const Sidebar = () => {
           <Link to="/dashboard/video-call" className="py-1">
             <SidebarItem icon={videoChatIcon} label="Video Call" />
           </Link>
-          <Link to="/dashboard/job-internship-applied" className="py-4">
+          <Link to="/dashboard/applied-jobs" className="py-4">
             <SidebarItem icon={briefcase} label="Job/Internship Applied" />
           </Link>
           <hr className="border-gray-300 py-1 mt-2" />

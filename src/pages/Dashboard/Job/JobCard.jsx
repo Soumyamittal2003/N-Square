@@ -12,8 +12,6 @@ const JobCard = ({
   onDislikePost,
   onBookmarkJob,
   bookmarks,
-  onApplyJob,
-  appliedJobs,
 }) => {
   const {
     _id,
@@ -28,17 +26,18 @@ const JobCard = ({
     applyLink,
     createdBy = {},
     postedDate,
-    likes = [],
-    dislikes = [],
+    likes = [], // Default to empty array if undefined
+    dislikes = [], // Default to empty array if undefined
   } = job;
 
   const [creatorName, setCreatorName] = useState("Loading...");
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isApplied, setIsApplied] = useState(false);
 
+  // Check if the current user has liked or disliked the job
   const isLiked = likes.includes(currentUserId);
   const isDisliked = dislikes.includes(currentUserId);
 
+  // Fetch creator's name dynamically
   useEffect(() => {
     if (createdBy?.firstName && createdBy?.lastName) {
       setCreatorName(`${createdBy.firstName} ${createdBy.lastName}`);
@@ -63,6 +62,7 @@ const JobCard = ({
     }
   }, [createdBy, _id]);
 
+  // Bookmark state management
   useEffect(() => {
     setIsBookmarked(bookmarks.includes(_id));
   }, [bookmarks, _id]);
@@ -72,17 +72,15 @@ const JobCard = ({
     setIsBookmarked((prev) => !prev);
   };
 
-  useEffect(() => {
-    setIsApplied(appliedJobs.includes(_id));
-  }, [appliedJobs, _id]);
+  const [isApplied, setIsApplied] = useState(false);
 
   const handleApplyClick = () => {
-    onApplyJob(_id);
-    setIsApplied(true);
+    setIsApplied(true); // Mark the job as applied
   };
 
   return (
     <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar ">
+      {/* Job Image */}
       <div className="relative">
         <img
           src={jobphoto || "https://via.placeholder.com/150"}
@@ -91,6 +89,7 @@ const JobCard = ({
         />
       </div>
 
+      {/* Job Details */}
       <div className="mt-4 flex-1">
         <h4 className="text-md font-semibold">{title}</h4>
         <p className="text-sm text-gray-500">
@@ -99,7 +98,7 @@ const JobCard = ({
         </p>
         <p className="text-sm text-gray-950 mt-2">{description}</p>
         <p className="text-xs text-gray-500 mt-2">
-          Skills:{" "}
+          Skills Required :{" "}
           <span className="text-gray-950 font-medium">
             {skills.length > 0 ? skills.join(", ") : "None specified"}
           </span>
@@ -121,6 +120,8 @@ const JobCard = ({
             {postedDate ? new Date(postedDate).toLocaleDateString() : "Unknown"}
           </span>
         </p>
+
+        {/* Apply Link */}
         <p className="text-xs text-gray-500 mt-2">
           <a
             href={applyLink}
@@ -133,8 +134,11 @@ const JobCard = ({
         </p>
       </div>
 
+      {/* Bottom Section */}
       <div className="flex justify-between items-center mt-4">
+        {/* Left Icons */}
         <div className="flex gap-4">
+          {/* Bookmark Button */}
           <button onClick={handleBookmarkToggle} className="w-5 h-5 mt-1.5">
             <img
               src={isBookmarked ? bookmarked : bookmark}
@@ -143,6 +147,7 @@ const JobCard = ({
             />
           </button>
 
+          {/* Like Button */}
           <button
             onClick={() => onLikePost(_id)}
             className={`flex items-center gap-1 font-semibold  ${
@@ -153,6 +158,7 @@ const JobCard = ({
             <span className="font-semibold text-xl">{likes.length}</span>
           </button>
 
+          {/* Dislike Button */}
           <button
             onClick={() => onDislikePost(_id)}
             className={`flex items-center gap-1 font-semibold ${
@@ -164,6 +170,7 @@ const JobCard = ({
           </button>
         </div>
 
+        {/* Apply Button */}
         <button
           onClick={handleApplyClick}
           className={`px-4 py-2 text-sm font-bold text-white rounded-2xl ${
