@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../../utils/axiosinstance";  // Assuming axiosInstance is configured similarly to JobContent
+import axiosInstance from "../../../utils/axiosinstance"; // Assuming axiosInstance is configured similarly to JobContent
 import StoryCard from "./StoryCard";
-import RightSidebar from "./RightSideBar";
+import RightSidebar from "./RigntSideBar";
 
 const InspiringStory = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -14,7 +14,9 @@ const InspiringStory = () => {
   // Fetching current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      const storedUser = JSON.parse(
+        localStorage.getItem("chat-app-current-user")
+      );
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -63,7 +65,10 @@ const InspiringStory = () => {
                 },
               };
             } catch (error) {
-              console.error(`Failed to fetch role for story ${story._id}:`, error);
+              console.error(
+                `Failed to fetch role for story ${story._id}:`,
+                error
+              );
               return story;
             }
           }
