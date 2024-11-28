@@ -171,8 +171,10 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className={`text-xl font-semibold md:text-base sm:text-sm ${
-                  location.pathname === link.path ? "text-black" : "text-gray-600"
+                className={`text-xl font-semibold ${
+                  location.pathname === link.path
+                    ? "text-black"
+                    : "text-gray-600"
                 } hover:text-black`}
                 aria-label={`Navigate to ${link.name}`}
               >
@@ -187,7 +189,7 @@ const Header = () => {
           {/* Volunteer Icon */}
           <button
             aria-label="Volunteer"
-            title="Volunteer" 
+            title="Volunteer"
             onClick={() => {
               navigate("/dashboard/volunteer");
             }}
@@ -195,7 +197,7 @@ const Header = () => {
             <img
               src={volunteer}
               alt="volunteer"
-              className="h-12 w-12 hover:opacity-80"
+              className="h-10 w-10 hover:opacity-80"
             />
           </button>
 
@@ -210,7 +212,7 @@ const Header = () => {
             <img
               src={alumniresourceicon}
               alt="Alumni Resources"
-              className="h-12 w-12 hover:opacity-80"
+              className="h-10 w-10 hover:opacity-80"
             />
           </button>
 
@@ -221,7 +223,7 @@ const Header = () => {
             title="Search"
             onClick={() => setShowSearchMenu(!showSearchMenu)}
           >
-            <img src={search} alt="search-icon" className="h-12 w-12" />
+            <img src={search} alt="search-icon" className="h-10 w-10" />
           </button>
           {showSearchMenu && <SearchModal />}
 
@@ -235,10 +237,12 @@ const Header = () => {
             <img
               src={notification}
               alt="notification-icon"
-              className="h-12 w-12"
+              className="h-10 w-10"
             />
           </button>
-          {showNotificationsMenu && <NotificationsModal notifications={notifications} />}
+          {showNotificationsMenu && (
+            <NotificationsModal notifications={notifications} />
+          )}
 
           {/* Settings Icon with Modal */}
           <button
@@ -247,13 +251,11 @@ const Header = () => {
             title="Settings"
             onClick={() => setShowSettingsMenu(!showSettingsMenu)}
           >
-            <img
-              src={setting}
-              alt="setting-icon"
-              className="h-12 w-12"
-            />
+            <img src={setting} alt="setting-icon" className="h-10 w-10" />
           </button>
-          {showSettingsMenu && <SettingsModal settingsOptions={settingsOptions} />}
+          {showSettingsMenu && (
+            <SettingsModal settingsOptions={settingsOptions} />
+          )}
         </div>
       </header>
     </div>

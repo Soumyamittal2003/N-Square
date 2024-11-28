@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import ProjectCard from "../Project/ProjectCard";
 import PostCard from "../Common/PostCard";
+import { FiEdit } from "react-icons/fi";
+
 const UserProfile = () => {
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -201,9 +203,13 @@ const UserProfile = () => {
             )}
             <button
               onClick={() => setIsEditingProfileImage(!isEditingProfileImage)}
-              className="absolute bottom-2 right-2 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
+              className="absolute bottom-2 right-2 bg-white bg-opacity-25 text-black p-2 rounded-full text-md"
             >
-              {isEditingProfileImage ? "Save" : "Edit"}
+              {isEditingProfileImage ? (
+                <span>Save</span>
+              ) : (
+                <FiEdit className="text-black" />
+              )}
             </button>
           </div>
 
@@ -229,7 +235,7 @@ const UserProfile = () => {
             </div>
           </div>
           {/* About Section */}
-          <div className="bg-white text-center border rounded-lg shadow mt-6 p-6 w-full">
+          <div className="relative bg-white text-center border rounded-lg shadow mt-4 p-6 w-full">
             <h3 className="text-lg font-bold">About</h3>
             {isEditingAbout ? (
               <textarea
@@ -241,17 +247,21 @@ const UserProfile = () => {
             ) : (
               <p className="text-gray-700 mt-2">{profileData.about}</p>
             )}
+            <button
+              onClick={
+                isEditingAbout
+                  ? updateAboutSection
+                  : () => setIsEditingAbout(true)
+              }
+              className="absolute top-1 right-1 bg-gray-200 px-2 text-sm py-1 text-black  rounded-md"
+            >
+              {isEditingAbout ? (
+                <span>Save</span>
+              ) : (
+                <FiEdit className="text-black" />
+              )}
+            </button>
           </div>
-          <button
-            onClick={
-              isEditingAbout
-                ? updateAboutSection
-                : () => setIsEditingAbout(true)
-            }
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
-          >
-            {isEditingAbout ? "Save Changes" : "Edit About"}
-          </button>
         </div>
       </div>
 
@@ -277,9 +287,13 @@ const UserProfile = () => {
           )}
           <button
             onClick={() => setIsEditingBannerImage(!isEditingBannerImage)}
-            className="absolute bottom-2 left-2 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
+            className="absolute top-2 right-2 bg-white bg-opacity-25 text-white px-2 text-center rounded-full text-md"
           >
-            {isEditingBannerImage ? "Save" : "Edit"}
+            {isEditingBannerImage ? (
+              <span>Save</span>
+            ) : (
+              <FiEdit className="text-white" />
+            )}
           </button>
         </div>
 
