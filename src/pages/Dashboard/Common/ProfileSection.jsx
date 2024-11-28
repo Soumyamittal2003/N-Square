@@ -30,12 +30,10 @@ const ProfileSection = ({ userData }) => {
 
       {/* User Info */}
       <div className="  absolute top-32 inset-x-0 justify-center text-center">
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-white">
           {userData.firstName} {userData.lastName}
         </h2>
-        <p className="text-sm text-gray-500">
-          {userData.tagLine || "BTech CSE"}
-        </p>
+        <p className="text-sm text-white">{userData.tagLine || "BTech CSE"}</p>
       </div>
     </div>
   );
