@@ -329,7 +329,7 @@ const CreateEvent = ({onClose}) => {
               name="contactDetails"
               value={formData.contactDetails}
               onChange={handleInputChange}
-              placeholder="Contact Details- Email/ Phone"
+              placeholder="Contact Details- Phone"
               className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
