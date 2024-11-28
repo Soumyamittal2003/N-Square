@@ -2,7 +2,7 @@ const ProfileSection = ({ userData }) => {
   return (
     <div className="relative">
       {/* Background Image */}
-      <div className="w-full h-58 bg-white">
+      <div className="w-full h-48 bg-white">
         {userData.backgroundimageUrl && (
           <img
             alt="University background"
