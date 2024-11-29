@@ -1,86 +1,80 @@
-
-import { useNavigate } from "react-router-dom"; // For navigation to AboutEvent page
+import { useNavigate } from "react-router-dom";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
-import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
-import shareIcon from "../../../assets/icons/shareArrow.svg";
+import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
-const EventCard = ({ image, title, speaker, date, time, tags, attending, link }) => {
+
+const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
     navigate(`/dashboard/event/about-event`, {
       state: {
-        image,
-        title,
-        speaker,
-        date,
-        time,
-        tags,
-        attending,
-        link,
+        ...event,
       },
     });
   };
 
+  const handleLike = (e) => {
+    e.stopPropagation();  // Prevent navigation
+    onLikeEvent(event._id);
+  };
+
+  const handleDislike = (e) => {
+    e.stopPropagation();  // Prevent navigation
+    onDislikeEvent(event._id);
+  };
+
   return (
-    <div
-      className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between"
-      onClick={handleNavigate}
-    >
+    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
       {/* Event Image */}
       <div className="relative">
-        <img src={image} alt={title} className="w-45 h-30 rounded-lg object-cover" />
+        <img src={event.eventphoto} alt={event.title} className="w-45 h-30 rounded-lg object-cover" />
       </div>
 
       {/* Event Details */}
       <div>
         <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
-          <p className="text-sm text-gray-500">{date} • {time}</p>
-          <button aria-label="Share event" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square">
-            <img src={shareIcon} alt="Share" className="object-contain rounded-none aspect-[0.83] w-[25px]" />
-          </button>
+          <p className="text-sm text-gray-500">{new Date(event.date).toLocaleDateString()} • {event.time}</p>
+          
         </div>
-        <h4 className="text-md font-semibold mt-1">{title}</h4>
-        <p className="text-sm text-gray-500 flex items-center">
-          {speaker}
-        </p>
+        <h4 className="text-md font-semibold mt-1">{event.title}</h4>
+        <p className="text-sm text-gray-500 flex items-center">{event.speaker}</p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-5 mt-2">
-          {tags.map((tag, index) => (
+          {event.tagsTopic.map((tag, index) => (
             <span key={index} className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full">
               {tag}
             </span>
           ))}
         </div>
-        <div className="flex gap-3 items-center mt-2 text-sm text-gray-500">
-          <span>{link}</span>
-        </div>
-          
-        {/* Attending */}
-        <div className="flex gap-3 items-center mt-2 text-sm text-gray-500">
-          <span>{attending}</span>
-        </div>
       </div>
 
-      {/* Register Button */}
-      <footer className="flex justify-between items-start self-center mt-4 w-full">
-        <div className="flex items-center gap-3">
-          <button className="flex gap-1 items-center font-semibold justify-center">
+     
+
+      {/* Footer with Register Button and Like/Dislike Buttons */}
+      <footer className="flex justify-between items-center mt-4 w-full">
+        <div className="flex gap-3 items-center">
+          <button
+            className="flex gap-1 items-center font-semibold justify-center"
+            onClick={handleLike}
+          >
             <img src={arrowBlockUp} alt="Thumbs Up" />
-            <span>63K</span>
+            <span>{event.likes.length}</span>
           </button>
-          <button className="flex gap-1 items-center font-semibold justify-center">
-            <img src={arrowBlockdown} alt="Thumbs Down" />
-            <span>13K</span>
+          <button
+            className="flex gap-1 items-center font-semibold justify-center"
+            onClick={handleDislike}
+          >
+            <img src={arrowBlockDown} alt="Thumbs Down" />
+            <span>{event.dislikes.length}</span>
           </button>
         </div>
         <button
           className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
           onClick={(e) => {
-            e.stopPropagation(); // Prevent navigation from the card click
+            e.stopPropagation();  // Prevent navigation from like/dislike click
             handleNavigate();
-            
           }}
         >
           Register
@@ -91,4 +85,3 @@ const EventCard = ({ image, title, speaker, date, time, tags, attending, link })
 };
 
 export default EventCard;
-
