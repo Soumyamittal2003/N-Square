@@ -34,12 +34,12 @@ const Project = () => {
       </div>
       <div className="flex justify-center">
         {/* Main Content */}
-        <div className=" p-3 w-[60%]">
+        <div className=" p-3 w-[65%]">
           <ProjectList activeTab={activeTab} />
         </div>
 
         {/* Sidebar: Popular Projects */}
-        <div className="p-3 flex  w-[40%]">
+        <div className="p-3 flex  w-[35%]">
           <PopularProjectCard />
         </div>
       </div>

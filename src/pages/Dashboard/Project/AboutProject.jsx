@@ -238,9 +238,11 @@ const ProjectDetail = () => {
             </button>
 
             <div className="flex items-center">
-              <button>
-                <TbCoinRupee className="h-10 w-10 bg-yellow-500 rounded-full text-white p-2" />
-              </button>
+              <Link to={`/dashboard/project/${projectId}/donation`}>
+                <button>
+                  <TbCoinRupee className="h-10 w-10 bg-yellow-500 rounded-full text-white p-2" />
+                </button>
+              </Link>
             </div>
           </div>
         </div>
