@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance"; // Importing the axiosInstance you set up
-import Cookies from "js-cookie";
 
 const CreateJob = ({ onClose }) => {
   const [jobphoto, setJobphoto] = useState(null);
