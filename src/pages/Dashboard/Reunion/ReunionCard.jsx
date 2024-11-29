@@ -1,46 +1,66 @@
-const ReunionCard = ({ title, name, batch, date, organizer, status }) => {
-    return (
-      <div className="h-[170px]  border border-gray-200 shadow-lg rounded-lg p-4 relative flex flex-col">
-        {/* Online Status at Top Right */}
-        <div className="absolute top-2 right-2">
-          <span
-            className={`px-2 py-1 text-sm rounded-md ${
-              status === "Online"
-                ? "bg-green-200 text-green-800"
-                : "bg-red-200 text-red-800"
-            }`}
-          >
-            {status}
-          </span>
-        </div>
-  
-        {/* Content Section */}
-        <div className="flex items-center relative">
-          <div className="mr-4">
-            <img
-              src="/path/to/reunion-image-placeholder.png" // Replace with real image or API
-              alt="Reunion"
-              className="w-16 h-16 rounded-md"
-            />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold">{title}</h3>
-            <p>Name: {name}</p>
-            <p>Batch: {batch}</p>
-            <p>Date: {date}</p>
-            <p>Organized By: {organizer}</p>
-          </div>
-        </div>
-  
-        {/* RSVP Button at Bottom Right */}
-        <div className="absolute bottom-2 right-2">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-md">
-            RSVP
-          </button>
-        </div>
+import { useState, useEffect } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
+
+// ReunionCard Component
+const ReunionCard = ({ reunion }) => {
+  // Destructuring safely with default values to avoid destructuring errors
+  const {
+    _id,
+    typeOfEvent = "Unknown Event",  // Default values for undefined properties
+    batch = "N/A",
+    date = "N/A",
+    time = "N/A",
+    venue = "Unknown Venue",
+    contact = "N/A",
+    eligibility = "N/A",
+    createdBy = { _id: null },  // Default to an object with _id as null
+  } = reunion || {}; // Ensure reunion is not undefined
+
+  const [organizerName, setOrganizerName] = useState("Loading...");
+
+  // Fetch organizer details
+  useEffect(() => {
+    if (createdBy._id) {
+      const fetchOrganizerDetails = async () => {
+        try {
+          const response = await axiosInstance.get(`/users/${createdBy._id}`);
+          if (response.data?.success) {
+            const { firstName, lastName } = response.data.data;
+            setOrganizerName(`${firstName} ${lastName}`);
+          } else {
+            setOrganizerName("Unknown");
+          }
+        } catch (error) {
+          console.error("Error fetching organizer details:", error);
+          setOrganizerName("Error fetching organizer");
+        }
+      };
+      fetchOrganizerDetails();
+    }
+  }, [createdBy]);
+
+  return (
+    <div className="relative border p-4 m-2 border-gray-300 rounded-lg shadow-md bg-white cursor-pointer hover:shadow-lg">
+      {/* Event Details */}
+      <div className="flex flex-col">
+        <h3 className="text-lg font-semibold text-gray-900">{typeOfEvent}</h3>
+        <p className="text-sm text-gray-600">Batch: {batch}</p>
+        <p className="text-sm text-gray-600">Date: {new Date(date).toLocaleDateString()}</p>
+        <p className="text-sm text-gray-600">Time: {time}</p>
+        <p className="text-sm text-gray-600">Venue: {venue}</p>
+        <p className="text-sm text-gray-600">Eligibility: {eligibility}</p>
+        <p className="text-sm text-gray-600">Contact: {contact}</p>
       </div>
-    );
-  };
-  
-  export default ReunionCard;
-  
+
+      {/* Organizer Info */}
+      <div className="absolute bottom-4 right-4">
+        <p className="text-sm text-gray-500 font-medium underline">
+          Organized By -{" "}
+          <span className="text-gray-700 font-semibold">{organizerName}</span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default ReunionCard;

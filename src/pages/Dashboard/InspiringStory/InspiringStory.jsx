@@ -1,24 +1,28 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../../utils/axiosinstance";
 import StoryCard from "./StoryCard";
 import RightSidebar from "./RigntSideBar";
-import axiosInstance from "../../../utils/axiosinstance";
 
 // InspiringStory Component
 const InspiringStory = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userId, setUserId] = useState(null);
-  //const [userBookmarks, setUserBookmarks] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
   const tabs = ["All", "Funding Stories", "Impact Stories"];
 
   // Fetch current user ID from localStorage
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
-    if (currentUser) {
-      setUserId(currentUser._id);
-    }
+    const fetchCurrentUser = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      if (storedUser && storedUser._id) {
+        setCurrentUserId(storedUser._id);
+      } else {
+        console.error("No current user found in localStorage");
+      }
+    };
+
+    fetchCurrentUser();
   }, []);
 
   // Fetch stories data from the backend API
@@ -49,21 +53,31 @@ const InspiringStory = () => {
     return false;
   });
 
-  // Handle like/unlike functionality
-  const handleLikeDislike = async (storyId, action) => {
+  // Handle like functionality
+  const handleLike = async (storyId) => {
     try {
-      const response = await axios.post(`/stories/like-story/${storyId}`, { userId, action });
+      const response = await axiosInstance.post(`/stories/like-story/${storyId}`, { userId: currentUserId });
       if (response.data.success) {
         setStories((prevStories) =>
           prevStories.map((story) =>
-            story._id === storyId
-              ? { ...story, likedBy: response.data.likedBy }
-              : story
+            story._id === storyId ? { ...story, likedBy: response.data.likedBy } : story
           )
         );
       }
     } catch (error) {
-      console.error("Error liking/disliking story:", error);
+      console.error("Error liking story:", error);
+    }
+  };
+
+  // Handle follow functionality
+  const handleFollowUser = async (userIdToFollow) => {
+    try {
+      const response = await axiosInstance.post(`/users/follow`, { followerId: currentUserId, followingId: userIdToFollow });
+      if (response.data.success) {
+        console.log("User followed successfully");
+      }
+    } catch (error) {
+      console.error("Error following user:", error);
     }
   };
 
@@ -85,9 +99,7 @@ const InspiringStory = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`text-sm px-4 py-2 rounded-full font-semibold ${
-                activeTab === tab ? "text-black font-bold" : "text-gray-500"
-              }`}
+              className={`text-sm px-4 py-2 rounded-full font-semibold ${activeTab === tab ? "text-black font-bold" : "text-gray-500"}`}
             >
               {tab}
             </button>
@@ -110,11 +122,12 @@ const InspiringStory = () => {
                 description={story.content}
                 createdBy={story.createdBy}
                 createdAt={story.createdAt}
-                content={story.content}
                 likes={story.likedBy.length}
-                onLikeDislike={handleLikeDislike}
-                userId={userId}
+                onLike={handleLike}
+                onFollowUser={handleFollowUser}
+                currentUserId={currentUserId}
                 storyId={story._id}
+                likedBy={story.likedBy}
               />
             ))}
           </div>
