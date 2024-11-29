@@ -9,11 +9,16 @@ const StoryCard = ({ story, currentUserId }) => {
 
       {/* Story Author */}
       <p className="text-sm text-gray-600">
-        By {story.createdBy ? `${story.createdBy.firstName} ${story.createdBy.lastName}` : 'Unknown Author'}
+        By{" "}
+        {story.createdBy
+          ? `${story.createdBy.firstName} ${story.createdBy.lastName}`
+          : "Unknown Author"}
       </p>
 
       {/* Story Content Preview */}
-      <p className="text-sm text-gray-700 mt-2">{story.content?.slice(0, 100)}...</p>
+      <p className="text-sm text-gray-700 mt-2">
+        {story.content?.slice(0, 100)}...
+      </p>
 
       {/* Link to full story */}
       <Link
