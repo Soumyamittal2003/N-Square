@@ -6,7 +6,7 @@ const CreateProject = () => {
   // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     projectType: "",
-    profilePhoto: null,
+    projectPhoto: null,
     technologyUsed: "",
     fundingRequired: "true",
     department: "",
@@ -124,17 +124,22 @@ const CreateProject = () => {
       "projectLinks",
       JSON.stringify(formData.projectLinks)
     );
-    if (formData.profilePhoto) {
-      formDataToSubmit.append("profilePhoto", formData.profilePhoto);
+    if (formData.projectPhoto) {
+      formDataToSubmit.append("projectPhoto", formData.projectPhoto);
     }
     formDataToSubmit.append("openForMentor", formData.openForMentor);
     formDataToSubmit.append("openForStudent", formData.openForStudent);
-
+    console.log("Data to be posted:");
+    formDataToSubmit.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
     try {
       const response = await axiosInstance.post(
         "/project/create",
         formDataToSubmit,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
 
       toast.success("Project created successfully!");
@@ -189,7 +194,7 @@ const CreateProject = () => {
 
               <div className="flex flex-col items-center mt-6">
                 <label
-                  htmlFor="profilePhoto"
+                  htmlFor="projectPhoto"
                   className="w-24 h-24 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200"
                 >
                   {profileImagePreview ? (
@@ -204,8 +209,8 @@ const CreateProject = () => {
                 </label>
                 <input
                   type="file"
-                  id="profilePhoto"
-                  name="profilePhoto"
+                  id="projectPhoto"
+                  name="projectPhoto"
                   accept="image/*"
                   onChange={handleInputChange}
                   className="hidden"
