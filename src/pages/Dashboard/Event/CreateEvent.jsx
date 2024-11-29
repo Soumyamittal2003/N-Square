@@ -1,12 +1,11 @@
 import { useState } from "react";
 import CheckmarkAnimation from "../../../assets/animations/checkmark.gif";
-import { title } from "process";
 
 const CreateEvent = ({ onClose }) => {
   const [step, setStep] = useState(1);
-  const [reminder, setReminder] = useState("");
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
+  const [previewImage, setPreviewImage] = useState(null); // Preview state for image
 
   // Initialize formData state
   const [formData, setFormData] = useState({
@@ -38,6 +37,7 @@ const CreateEvent = ({ onClose }) => {
         ...prevData,
         [name]: files[0], // Store the first selected file
       }));
+      setPreviewImage();
     } else if (type === "checkbox" || type === "radio") {
       // Handle checkbox or radio input
       setFormData((prevData) => ({
@@ -50,10 +50,6 @@ const CreateEvent = ({ onClose }) => {
         ...prevData,
         [name]: value,
       }));
-    }
-
-    if (name === "reminder") {
-      setReminder(value);
     }
   };
 
