@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CheckmarkAnimation from "../../../assets/animations/checkmark.gif";
+import { title } from "process";
 
 const CreateEvent = ({ onClose }) => {
   const [step, setStep] = useState(1);

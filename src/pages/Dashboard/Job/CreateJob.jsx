@@ -12,9 +12,9 @@ const CreateJob = ({ onClose }) => {
   const [type, setType] = useState("");
   const [stipendOrSalary, setStipendOrSalary] = useState("");
   const [applyLink, setApplyLink] = useState("");
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value, type, files, checked } = e.target;
@@ -22,6 +22,8 @@ const CreateJob = ({ onClose }) => {
       // Update the corresponding state for file input (jobphoto)
       if (name === "jobphoto") {
         setJobphoto(files[0]);
+        setProfileImagePreview(URL.createObjectURL(files[0]));
+        console.log(profileImagePreview);
       }
     } else if (type === "checkbox") {
       // Handle checkbox (if there are any in the future)
@@ -79,16 +81,26 @@ const CreateJob = ({ onClose }) => {
     formDataToSend.append("applyLink", applyLink);
 
     try {
-      console.log(formDataToSend); 
+      console.log(formDataToSend);
       const response = await axiosInstance.post(
         "/jobs/create",
-        formDataToSend,
+        {
+          title,
+          company,
+          location,
+          description,
+          skills,
+          type,
+          stipendOrSalary,
+          applyLink,
+          jobphoto,
+        },
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       // Handle successful job creation
       console.log("Job created successfully:", response.data);
-      onClose();  // Close the modal after successful submission
+      onClose(); // Close the modal after successful submission
     } catch (err) {
       console.error("Error creating job:", err);
       setError("An error occurred while creating the job. Please try again.");
@@ -101,7 +113,7 @@ const CreateJob = ({ onClose }) => {
     <div className="fixed inset-0 z-70 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white w-[100%] max-w-lg rounded-lg shadow-lg p-6">
         {/* Modal Header */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-2">
           <h2 className="text-xl font-bold justify-center">Create a Job</h2>
           <button
             onClick={onClose}
@@ -112,20 +124,28 @@ const CreateJob = ({ onClose }) => {
         </div>
         <form className="space-y-3" onSubmit={handleSubmit}>
           {/* Profile Photo */}
-          <div className="mb-4 flex flex-col items-center">
+          <div className="flex flex-col items-center">
             <label
               htmlFor="jobphoto"
-              className="w-10 h-10 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition ease-in-out duration-200"
+              className="w-14 h-14 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition ease-in-out duration-200"
             >
-              <input
-                type="file"
-                name="jobphoto"
-                id="jobphoto"
-                onChange={handleInputChange}
-                className="hidden"
-              />
-              <span className="text-2xl text-gray-500">📎</span>
+              {profileImagePreview ? (
+                <img
+                  src={profileImagePreview}
+                  alt="Profile Preview"
+                  className="rounded-full w-12 h-12 object-cover"
+                />
+              ) : (
+                <span className="text-2xl text-gray-500">📎</span>
+              )}
             </label>
+            <input
+              type="file"
+              name="jobphoto"
+              id="jobphoto"
+              onChange={handleInputChange}
+              className="hidden"
+            />
             <span className="text-sm text-gray-600 mt-2">Upload Job Photo</span>
           </div>
 
@@ -193,9 +213,9 @@ const CreateJob = ({ onClose }) => {
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select Job Type</option>
-              <option value="Internship">Internship</option>
-              <option value="Apprenticeship">Apprenticeship</option>
-              <option value="Job">Job</option>
+              <option value="internship">Internship</option>
+              <option value="apprenticeship">Apprenticeship</option>
+              <option value="job">Job</option>
             </select>
           </div>
 
@@ -231,7 +251,9 @@ const CreateJob = ({ onClose }) => {
 
           {/* Job Description */}
           <div>
-            <label className="block text-sm font-medium mb-1">Job Description</label>
+            <label className="block text-sm font-medium mb-1">
+              Job Description
+            </label>
             <textarea
               name="description"
               value={description}
@@ -243,17 +265,17 @@ const CreateJob = ({ onClose }) => {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex justify-between items-center mt-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200"
+              className="px-3 py-1 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200"
             >
               Back
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+              className="px-3 py-1 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit"}
