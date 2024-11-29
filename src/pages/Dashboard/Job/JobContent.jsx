@@ -175,7 +175,7 @@ const JobContent = () => {
       </div>
 
       {/* Job Cards Section */}
-      <div className="p-4">
+      <div className="p-4 overflow-y-auto hide-scrollbar" style={{ maxHeight: 'calc(100vh - 160px)' }}>
         <div className="grid grid-cols-3 gap-4">
           {filteredJobs.map((job) => (
             <JobCard
