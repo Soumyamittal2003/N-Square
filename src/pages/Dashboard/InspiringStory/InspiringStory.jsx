@@ -3,10 +3,10 @@
 =======
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
->>>>>>> 97d48c2c7bb3e2cc8ee33909cda1d83b4635613a
 import StoryCard from "./StoryCard";
 import VideoStory from "./VideoStory";
 import RightSidebar from "./RigntSideBar";
+import axiosInstance from "../../../utils/axiosinstance";
 
 // InspiringStory Component
 const InspiringStory = () => {
@@ -16,7 +16,6 @@ const InspiringStory = () => {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
->>>>>>> 97d48c2c7bb3e2cc8ee33909cda1d83b4635613a
   const tabs = ["All", "Funding Stories", "Impact Stories"];
   const trendingStories = [
     { id: 1, title: "Soumya", description: "Join our global network of seasoned forex traders for deep insights." },
@@ -36,23 +35,17 @@ const InspiringStory = () => {
 =======
   // Fetch current user ID from localStorage
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
-      if (storedUser && storedUser._id) {
-        setCurrentUserId(storedUser._id);
-      } else {
-        console.error("No current user found in localStorage");
-      }
-    };
-
-    fetchCurrentUser();
+    const currentUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+    if (currentUser) {
+      setUserId(currentUser._id);
+    }
   }, []);
 
   // Fetch stories data from the backend API
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await axiosInstance.get("/stories/all");
+        const response = await axiosInstance.get("/stories/all/");
         if (response.data.success) {
           setStories(response.data.data || []);
         } else {
@@ -76,10 +69,10 @@ const InspiringStory = () => {
     return false;
   });
 
-  // Handle like/dislike functionality
+  // Handle like/unlike functionality
   const handleLikeDislike = async (storyId, action) => {
     try {
-      const response = await axiosInstance.post(`/stories/like-story/${storyId}`, { userId: currentUserId, action });
+      const response = await axios.post(`/stories/like-story/${storyId}`, { userId, action });
       if (response.data.success) {
         setStories((prevStories) =>
           prevStories.map((story) =>
@@ -149,12 +142,12 @@ const InspiringStory = () => {
                 description={story.content}
                 createdBy={story.createdBy}
                 createdAt={story.createdAt}
+                content={story.content}
                 likes={story.likedBy.length}
                 onLikeDislike={handleLikeDislike}
-                currentUserId={currentUserId}
+                userId={userId}
                 storyId={story._id}
                 likedBy={story.likedBy}
->>>>>>> 97d48c2c7bb3e2cc8ee33909cda1d83b4635613a
               />
             ))}
           </div>
