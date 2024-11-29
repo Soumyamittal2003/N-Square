@@ -68,8 +68,7 @@ const JobCard = ({
   }, [bookmarks, _id]);
 
   const handleBookmarkToggle = () => {
-    onBookmarkJob(_id);
-    setIsBookmarked((prev) => !prev);
+    onBookmarkJob(_id); // Toggle bookmark state
   };
 
   const [isApplied, setIsApplied] = useState(false);
@@ -79,7 +78,7 @@ const JobCard = ({
   };
 
   return (
-    <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar ">
+    <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar">
       {/* Job Image */}
       <div className="relative">
         <img
@@ -98,7 +97,7 @@ const JobCard = ({
         </p>
         <p className="text-sm text-gray-950 mt-2">{description}</p>
         <p className="text-xs text-gray-500 mt-2">
-          Skills Required :{" "}
+          Skills Required:{" "}
           <span className="text-gray-950 font-medium">
             {skills.length > 0 ? skills.join(", ") : "None specified"}
           </span>
@@ -150,7 +149,7 @@ const JobCard = ({
           {/* Like Button */}
           <button
             onClick={() => onLikePost(_id)}
-            className={`flex items-center gap-1 font-semibold  ${
+            className={`flex items-center gap-1 font-semibold ${
               isLiked ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500 transition`}
           >

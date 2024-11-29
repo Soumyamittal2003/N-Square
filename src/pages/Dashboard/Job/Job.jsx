@@ -8,7 +8,7 @@ const Home = () => {
       <div className="w-[80%] p-2">
         <JobContent />
       </div>
-      <div className="w-[30%] p-2">
+      <div className="w-[20%] p-2">
         <RightSidebar />
       </div>
       </div>

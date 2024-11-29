@@ -7,7 +7,7 @@ const JobContent = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rolesFetched, setRolesFetched] = useState(false);
-  const [userBookmarks, setUserBookmarks] = useState([]);
+  const [userBookmarks, setUserBookmarks] = useState([]); // Track bookmarked jobs
   const [currentUserId, setCurrentUserId] = useState(null);
   const tabs = ["All", "Alumni", "Faculty"];
 
@@ -126,16 +126,22 @@ const JobContent = () => {
   const handleBookmarkJob = async (jobId) => {
     try {
       const isBookmarked = userBookmarks.includes(jobId);
-      await axiosInstance.post(`/jobs/save-job/${jobId}`, {
+      const action = isBookmarked ? "remove" : "add"; // toggle action
+      const response = await axiosInstance.patch(`jobs/save-job/${jobId}`, {
         userId: currentUserId,
-        action: isBookmarked ? "remove" : "add",
+        action: action,
       });
 
-      setUserBookmarks((prevBookmarks) =>
-        isBookmarked
-          ? prevBookmarks.filter((id) => id !== jobId)
-          : [...prevBookmarks, jobId]
-      );
+      if (response.data.success) {
+        // Update user bookmarks in state
+        setUserBookmarks((prevBookmarks) =>
+          action === "add"
+            ? [...prevBookmarks, jobId]
+            : prevBookmarks.filter((id) => id !== jobId)
+        );
+      } else {
+        console.error("Failed to bookmark job:", jobId);
+      }
     } catch (error) {
       console.error(`Error bookmarking job ${jobId}:`, error);
     }
@@ -160,7 +166,7 @@ const JobContent = () => {
   return (
     <div className="w-full">
       {/* Tabs Section */}
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-3 py-1 m-2">
         {tabs.map((tab) => (
           <button
             key={tab}
