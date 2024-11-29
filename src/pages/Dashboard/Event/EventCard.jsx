@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom"; // For navigation to AboutEvent page
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
+import shareIcon from "../../../assets/icons/shareArrow.svg";
 
-const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
-  const { image, title, speaker, date, time, tags, attending, link, likes, dislikes, _id } = event;
+const EventCard = ({ image, title, speaker, date, time, tags, attending, link }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -20,59 +21,66 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
       },
     });
   };
-  const isLiked = likes.includes(currentUserId);
-  const isDisliked = dislikes.includes(currentUserId);
 
   return (
     <div
-      className="w-full max-w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between"
+      className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between"
       onClick={handleNavigate}
     >
+      {/* Event Image */}
       <div className="relative">
-        <img src={image || "/default-image.jpg"} alt={title} className="w-full h-40 rounded-lg object-cover" />
+        <img src={image} alt={title} className="w-45 h-30 rounded-lg object-cover" />
       </div>
+
+      {/* Event Details */}
       <div>
-        <div className="flex justify-between items-center mt-2">
+        <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
           <p className="text-sm text-gray-500">{date} • {time}</p>
+          <button aria-label="Share event" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square">
+            <img src={shareIcon} alt="Share" className="object-contain rounded-none aspect-[0.83] w-[25px]" />
+          </button>
         </div>
         <h4 className="text-md font-semibold mt-1">{title}</h4>
-        <p className="text-sm text-gray-500">{speaker}</p>
-        <div className="flex flex-wrap gap-2 mt-2">
+        <p className="text-sm text-gray-500 flex items-center">
+          {speaker}
+        </p>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-5 mt-2">
           {tags.map((tag, index) => (
             <span key={index} className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full">
               {tag}
             </span>
           ))}
         </div>
-        <div className="mt-2 text-sm text-gray-500">{link}</div>
-        <div className="mt-2 text-sm text-gray-500">{attending}</div>
+        <div className="flex gap-3 items-center mt-2 text-sm text-gray-500">
+          <span>{link}</span>
+        </div>
+          
+        {/* Attending */}
+        <div className="flex gap-3 items-center mt-2 text-sm text-gray-500">
+          <span>{attending}</span>
+        </div>
       </div>
-      <footer className="flex justify-between items-center mt-4">
-        <div className="flex gap-2">
-        <button
-            onClick={() => onLikeEvent(_id)}
-            className={`flex items-center gap-1 font-semibold  ${
-              isLiked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-500 transition`}
-          >
-            <img src={arrowBlockUp} alt="Upvote" className="w-6 h-6" />
-            <span className="font-semibold text-xl">{likes.length}</span>
+
+      {/* Register Button */}
+      <footer className="flex justify-between items-start self-center mt-4 w-full">
+        <div className="flex items-center gap-3">
+          <button className="flex gap-1 items-center font-semibold justify-center">
+            <img src={arrowBlockUp} alt="Thumbs Up" />
+            <span>63K</span>
           </button>
-          <button
-            onClick={() => onDislikeEvent(_id)}
-            className={`flex items-center gap-1 font-semibold ${
-              isDisliked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-500 transition`}
-          >
-            <img src={arrowBlockdown} alt="Downvote" className="w-6 h-6" />
-            <span className="font-semibold text-xl">{dislikes.length}</span>
+          <button className="flex gap-1 items-center font-semibold justify-center">
+            <img src={arrowBlockdown} alt="Thumbs Down" />
+            <span>13K</span>
           </button>
         </div>
         <button
-          className="px-4 py-1 text-white bg-blue-600 rounded-lg"
+          className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // Prevent navigation from the card click
             handleNavigate();
+            
           }}
         >
           Register
@@ -83,3 +91,4 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
 };
 
 export default EventCard;
+
