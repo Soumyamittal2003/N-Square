@@ -12,6 +12,18 @@ const Donation = () => {
   });
   const [loading, setLoading] = useState(false); // Added loading state
 
+  // Function to load Razorpay script dynamically
+  const loadRazorpayScript = () => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve();
+      script.onerror = () =>
+        reject(new Error("Failed to load Razorpay script"));
+      document.body.appendChild(script);
+    });
+  };
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -24,6 +36,15 @@ const Donation = () => {
       }
     };
     fetchUserDetails();
+
+    // Load Razorpay script on component mount
+    loadRazorpayScript()
+      .then(() => {
+        console.log("Razorpay script loaded successfully!");
+      })
+      .catch((error) => {
+        console.error("Error loading Razorpay script:", error);
+      });
   }, [userId]);
 
   const handleChange = (e) => {
@@ -44,12 +65,14 @@ const Donation = () => {
   const checkoutHandler = async (amount) => {
     try {
       setLoading(true); // Set loading state to true when processing starts
+
       const {
         data: { key },
       } = await axios.get(
         "https://network-next-backend.onrender.com/api/network-next/v1/donation/get-key"
       );
       console.log(key);
+
       const {
         data: { order },
       } = await axios.post(
@@ -61,31 +84,37 @@ const Donation = () => {
 
       console.log(order);
 
-      const options = {
-        key,
-        amount: order.amount,
-        currency: "INR",
-        name: "Network Next",
-        description: "Tutorial of RazorPay",
-        image: Image, // Corrected the image path
-        order_id: order.id,
-        callback_url:
-          "https://network-next-backend.onrender.com/api/network-next/v1/donation/payment-verfication",
-        prefill: {
-          name: `${userData.firstName} ${userData.lastName}`,
-          email: userData.email,
-          contact: userData.phone,
-        },
-        notes: {
-          address: "Razorpay Corporate Office",
-        },
-        theme: {
-          color: "#121212",
-        },
-      };
+      // Check if Razorpay is loaded
+      if (window.Razorpay) {
+        const options = {
+          key,
+          amount: order.amount,
+          currency: "INR",
+          name: "Network Next",
+          description: "Tutorial of RazorPay",
+          image: Image, // Corrected the image path
+          order_id: order.id,
+          callback_url:
+            "https://network-next-backend.onrender.com/api/network-next/v1/donation/payment-verfication",
+          prefill: {
+            name: `${userData.firstName} ${userData.lastName}`,
+            email: userData.email,
+            contact: userData.phone,
+          },
+          notes: {
+            address: "Razorpay Corporate Office",
+          },
+          theme: {
+            color: "#121212",
+          },
+        };
 
-      const razor = new window.Razorpay(options);
-      razor.open();
+        const razor = new window.Razorpay(options);
+        razor.open();
+      } else {
+        console.error("Razorpay SDK not loaded");
+      }
+
       setLoading(false); // Set loading state to false once Razorpay modal is opened
     } catch (error) {
       console.error("Error in payment processing:", error);
