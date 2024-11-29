@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home/Home";
 import Event from "./Event/Event";
 import Job from "./Job/Job";
+import Help from "./Help/Help";
 import Project from "./Project/Project";
 import MentorShip from "./MentorShip/Mentor";
 import InspiringStory from "./InspiringStory/InspiringStory";
@@ -53,6 +54,7 @@ const Dashboard = () => {
             <Route path="home" element={<Home />} />
             <Route path="profile" element={<UserProfile />} />
             <Route path="job" element={<Job />} />
+            <Route path="help" element={<Help />} />
             <Route path="event" element={<Event />} />
             <Route path="event/about-event" element={<AboutEvent />} />
             <Route path="chat" element={<Chat />} />
