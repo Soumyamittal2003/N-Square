@@ -98,7 +98,7 @@ const AppliedCard = ({
         </p>
         <p className="text-sm text-gray-950 mt-2">{description}</p>
         <p className="text-xs text-gray-500 mt-2">
-          Skills:{" "}
+          Skills Required :{" "}
           <span className="text-gray-950 font-medium">
             {skills.length > 0 ? skills.join(", ") : "None specified"}
           </span>
