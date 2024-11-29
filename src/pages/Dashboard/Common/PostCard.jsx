@@ -2,7 +2,7 @@ import { useState } from "react";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 import comment from "../../../assets/icons/comment.svg";
-
+import Cookies from "js-cookie";
 const PostCard = ({
   post,
   user,
@@ -10,7 +10,9 @@ const PostCard = ({
   onLikePost,
   onDislikePost,
   onFollowUser,
+  loading,
 }) => {
+  const localUserId = Cookies.get("id");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -39,7 +41,7 @@ const PostCard = ({
           </span>
         );
       }
-      return part;
+      return part ? part : null; // Avoid rendering empty parts
     });
   };
 
@@ -64,12 +66,14 @@ const PostCard = ({
               <h4 className="font-semibold text-gray-800">
                 {user ? `${user.firstName} ${user.lastName}` : "Unknown User"}
               </h4>
-              <button
-                onClick={() => onFollowUser(user?._id)}
-                className="ml-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold hover:bg-blue-700 transition"
-              >
-                Follow
-              </button>
+              {currentUserId !== localUserId && (
+                <button
+                  onClick={() => onFollowUser(user?._id)}
+                  className="ml-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold hover:bg-blue-700 transition"
+                >
+                  Follow
+                </button>
+              )}
             </div>
             <p className="text-sm text-gray-500">
               {user?.tagline || "Tagline not present"}
@@ -90,6 +94,7 @@ const PostCard = ({
           <span
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-blue-600 font-bold cursor-pointer ml-1"
+            title={isExpanded ? "Show less" : "Show more"}
           >
             ({isExpanded ? "Less" : "More"})
           </span>
@@ -102,7 +107,7 @@ const PostCard = ({
           src={post.postPhoto}
           alt="Post"
           onClick={() => openImageModal(post.postPhoto)}
-          className="mt-4 rounded-lg object-scale-down cursor-pointer"
+          className="mt-4 rounded-lg w-full   object-scale-down cursor-pointer"
         />
       )}
       {isModalOpen && (
@@ -111,9 +116,11 @@ const PostCard = ({
             <button
               onClick={closeModal}
               className="absolute top-0 right-0 m-4 text-white text-2xl"
+              aria-label="Close image"
             >
               &times;
             </button>
+
             <img
               src={currentImage}
               alt="Full Size"
@@ -130,6 +137,7 @@ const PostCard = ({
           {/* Like Button */}
           <button
             onClick={() => onLikePost(post._id)}
+            disabled={isLiked || loading}
             className={`flex items-center gap-1 font-semibold ${
               isLiked ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500 transition`}
@@ -141,6 +149,7 @@ const PostCard = ({
           {/* Dislike Button */}
           <button
             onClick={() => onDislikePost(post._id)}
+            disabled={isLiked || loading}
             className={`flex items-center gap-1 font-semibold ${
               isDisliked ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500 transition`}

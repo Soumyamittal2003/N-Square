@@ -6,6 +6,7 @@ const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState({});
+  const [loading, setLoading] = useState(false);
   const fetchCurrentUserId = localStorage.getItem("chat-app-current-user");
   const currentUserId = fetchCurrentUserId?._id;
 
@@ -53,6 +54,8 @@ const HomeContent = () => {
 
   // Handle like post
   const handleLikePost = async (postId) => {
+    if (loading) return; // Prevent multiple clicks if already loading
+    setLoading(true);
     try {
       await axiosInstance.post(`/post/${postId}/like`);
       setPosts((prevPosts) =>
@@ -70,11 +73,15 @@ const HomeContent = () => {
       );
     } catch (error) {
       console.error("Error liking the post:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Handle dislike post
   const handleDislikePost = async (postId) => {
+    if (loading) return; // Prevent multiple clicks if already loading
+    setLoading(true);
     try {
       await axiosInstance.post(`/post/${postId}/dislike`);
       setPosts((prevPosts) =>
@@ -92,17 +99,23 @@ const HomeContent = () => {
       );
     } catch (error) {
       console.error("Error disliking the post:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Handle follow user
   const handleFollowUser = async (userId) => {
+    if (loading) return; // Prevent multiple clicks if already loading
+    setLoading(true);
     try {
       await axiosInstance.post(`/users/follow-user/${userId}`, {
         currentUserId,
       });
     } catch (error) {
       console.error("Error following user:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,6 +166,7 @@ const HomeContent = () => {
                 onLikePost={handleLikePost}
                 onDislikePost={handleDislikePost}
                 onFollowUser={handleFollowUser}
+                loading={loading}
               />
             );
           })
