@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import EventCard from "./MyEventCard"; 
 import { useNavigate } from "react-router-dom";
-//import RightSidebar from "./RightSidebar";
 
 const MyEventContent = () => { 
-  const [activeTab, setActiveTab] = useState("All");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
-  const tabs = ["All", "Student", "Faculty", "Alma"];
+
   const navigate = useNavigate();
 
   // Fetch current user from localStorage
@@ -95,42 +93,21 @@ const MyEventContent = () => {
     }
   };
 
-  // Filtering logic
-  const filteredEvents = events.filter((event) => {
-    if (activeTab === "All") return true;
-    if (activeTab === "Student") return event.createdBy?.role === "student";
-    if (activeTab === "Faculty") return event.createdBy?.role === "faculty";
-    if (activeTab === "Alma") return event.createdBy?.role === "alumni";
-    return false; 
-  });
-
   if (loading) {
     return <p>Loading events...</p>;
   }
 
-  if (!filteredEvents.length) {
-    return <p>No events found for {activeTab}.</p>;
+  if (!events.length) {
+    return <p>No events found.</p>;
   }
 
   return (
     <div className="w-full flex">
       {/* Event Cards */}
-      <div >
-        <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`text-sm px-4 py-2 rounded-full font-semibold ${activeTab === tab ? "text-black font-bold" : "text-gray-500"}`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
+      <div className="w-full">
         <div className="p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map((event) => (
+            {events.map((event) => (
               <EventCard
                 key={event._id}
                 event={event}
@@ -144,9 +121,6 @@ const MyEventContent = () => {
           </div>
         </div>
       </div>
-
-      {/* Right Sidebar */}
-     {/* <RightSidebar selectedEvent={selectedEvent} /> */}
     </div>
   );
 };
