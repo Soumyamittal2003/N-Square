@@ -17,6 +17,7 @@ import Following from "./Connection/Following";
 import CreateJob from "./Job/RightSideBar";
 //import PostPopup from "./Connection/Postpage";
 import CreateProject from "./Project/CreateProject";
+import Memories from "./Reunion/Memories";
 import AlmaResource from "./AlmaResource/AlmaResource";
 import Volunteer from "./Volunteer/Volunteer";
 import AboutEvent from "./Event/AboutEvent";
@@ -65,6 +66,7 @@ const Dashboard = () => {
             <Route path="project/:projectId" element={<AboutProject />} />
             <Route path="project/:projectId/donation" element={<Donation />} />
             <Route path="project/create-project" element={<CreateProject />} />
+            <Route path="Reunion/Memories" element={<Memories />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
             <Route path="job/create-job" element={<CreateJob />} />
             <Route path="alumni-resources" element={<AlmaResource />} />
