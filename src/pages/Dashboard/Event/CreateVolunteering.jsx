@@ -2,13 +2,11 @@ import { useState } from "react";
 
 const CreateVolunteer = ({ onClose }) => {
   const [formData, setFormData] = useState({
-    eventType: "",
-    batch: "",
-    date: "",
-    time: "",
-    venue: "",
-    contact: "",
-    eligibility: "",
+    PositionTittle: "",
+    RolesResposiblity: "",
+    Eligibility: "",
+    SkillsQualification: "",
+    VolunteerRequired: "",
   });
 
   const handleInputChange = (e) => {
@@ -25,13 +23,11 @@ const CreateVolunteer = ({ onClose }) => {
 
   const handleDiscard = () => {
     setFormData({
-      eventType: "",
-      batch: "",
-      date: "",
-      time: "",
-      venue: "",
-      contact: "",
-      eligibility: "",
+      PositionTittle: "",
+      RolesResposiblity: "",
+      Eligibility: "",
+      SkillsQualification: "",
+      VolunteerRequired: "",
     });
     onClose(); // Close the popup when discard is clicked
   };
@@ -54,105 +50,72 @@ const CreateVolunteer = ({ onClose }) => {
           {/* Fields */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Type of Event
+              Position Tittle
             </label>
             <select
-              name="eventType"
-              value={formData.eventType}
+              name="PositionTittle"
+              value={formData.PositionTittle}
               onChange={handleInputChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="">Select</option>
-              <option value="Workshop">Workshop</option>
-              <option value="Seminar">Seminar</option>
-              <option value="Competition">Competition</option>
+              <option value="Workshop">Event Coordinator</option>
+              <option value="Seminar">manager</option>
+              <option value="Competition">Support</option>
+              <option value="Competition">Others</option>
             </select>
           </div>
 
           {/* Add other fields here without any changes */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Select Batch
-            </label>
-            <select
-              name="batch"
-              value={formData.batch}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            >
-              <option value="">Select</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-            </select>
-          </div>
-
-
-          {/* Date */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
-
-          {/* Time */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Time</label>
-            <input
-              type="time"
-              name="time"
-              value={formData.time}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
-
-          {/* Select Venue */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Select Venue
+              Roles/Responsiblity
             </label>
             <input
               type="text"
-              name="venue"
-              value={formData.venue}
+              name="RolesResposiblity"
+              value={formData.RolesResposiblity}
               onChange={handleInputChange}
-              placeholder="Enter Venue"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
 
-          {/* Contact */}
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Contact
+            Eligibility
             </label>
             <input
               type="text"
-              name="contact"
-              value={formData.contact}
+              name="Eligibility"
+              value={formData.Eligibility}
               onChange={handleInputChange}
-              placeholder="Enter Contact"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
 
-          {/* Eligibility */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Eligibility
+            Skills/Qualification
             </label>
             <input
               type="text"
-              name="eligibility"
-              value={formData.eligibility}
+              name="SkillsQualification"
+              value={formData.SkillsQualification}
               onChange={handleInputChange}
-              placeholder="Enter Eligibility"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+            No.of Volunteer Required
+            </label>
+            <input
+              type="text"
+              name="VolunteerRequired"
+              value={formData.VolunteerRequired}
+              onChange={handleInputChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
