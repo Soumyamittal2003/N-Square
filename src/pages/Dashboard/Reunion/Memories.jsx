@@ -7,7 +7,7 @@ const Memories = () => {
     // Load folders from localStorage or use a default value
     const savedFolders = JSON.parse(localStorage.getItem('folders'));
     return savedFolders || [
-      { id: 1, name: 'Teachers Day', year: '2022', icon: folderIcon, link: 'https://chatgpt.com/g/g-ZRRDkMB4w-figmato-react-code-expert/c/674a8caa-45dc-8005-a8ea-0af5fb147e58' },
+      { id: 1, name: 'Teachers Day', year: '2022', icon: folderIcon, link: 'https://sih.gov.in/' },
       { id: 2, name: 'Farewell', year: '2021', icon: folderIcon, link: 'https://example.com/family' },
       { id: 3, name: 'Technorolix', year: '2023', icon: folderIcon, link: 'https://example.com/work' },
     ];
