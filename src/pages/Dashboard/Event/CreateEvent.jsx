@@ -1,16 +1,19 @@
 import { useState } from "react";
 import CheckmarkAnimation from "../../../assets/animations/checkmark.gif";
+import axiosInstance from "../../../utils/axiosinstance"; // Import the axios instance
+import { toast } from "react-toastify"; // Import toast for notifications
 
 const CreateEvent = ({ onClose }) => {
   const [step, setStep] = useState(1);
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
-  const [previewImage, setPreviewImage] = useState(null); // Preview state for image
+  const [previewImage, setPreviewImage] = useState(null);
+  const [error, setError] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize formData state
   const [formData, setFormData] = useState({
     title: "",
-    eventphoto: "",
+    eventphoto: null, // Updated to null for file handling
     type: "",
     mode: "",
     venue: "",
@@ -30,22 +33,18 @@ const CreateEvent = ({ onClose }) => {
   const handleInputChange = (e) => {
     const { name, value, type, files, checked } = e.target;
 
-    // Handle file input
     if (type === "file") {
-      // If file is selected, update the form data with the file object
       setFormData((prevData) => ({
         ...prevData,
         [name]: files[0], // Store the first selected file
       }));
-      setPreviewImage();
+      setPreviewImage(URL.createObjectURL(files[0])); // Set preview image
     } else if (type === "checkbox" || type === "radio") {
-      // Handle checkbox or radio input
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked ? value : prevData[name],
       }));
     } else {
-      // Handle regular text input (e.g., text, select, etc.)
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
@@ -53,25 +52,35 @@ const CreateEvent = ({ onClose }) => {
     }
   };
 
-  // Add tag to the tags array
-  const handleAddTag = () => {
-    if (tagInput.trim() && tags.length < 7 && !tags.includes(tagInput)) {
-      setTags([...tags, tagInput.trim()]);
-      setTagInput("");
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.title) errors.title = "Event Title is required.";
+    if (!formData.date) errors.date = "Event Date is required.";
+    if (!formData.time) errors.time = "Event Time is required.";
+    if (!formData.eventDescription)
+      errors.eventDescription = "Event Description is required.";
+    if (!formData.eventCoordinator)
+      errors.eventCoordinator = "Coordinator is required.";
+    if (!formData.coordinatorphone)
+      errors.coordinatorphone = "Coordinator Phone is required.";
+    if (!tags.length) errors.tagsTopic = "At least 2 tags are required.";
+    if (!formData.eligibility) errors.eligibility = "Eligibility is required.";
+    if (!formData.speaker) errors.speaker = "Speaker is required.";
+    if (!formData.organizedBy) errors.organizedBy = "Organizer is required.";
+    return errors;
+  };
+
+  const handleSubmit = async () => {
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setError(validationErrors);
+      return;
     }
-  };
 
-  // Remove tag from the tags array
-  const handleRemoveTag = (tagToRemove) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
+    setError({});
+    setIsLoading(true);
 
-  // Handle form submission
-  const handleSubmit = () => {
-    // Prepare FormData for the API submission
     const formPayload = new FormData();
-
-    // Append the text fields to the FormData object
     formPayload.append("title", formData.title);
     formPayload.append("type", formData.type);
     formPayload.append("mode", formData.mode);
@@ -80,27 +89,42 @@ const CreateEvent = ({ onClose }) => {
     formPayload.append("eventDescription", formData.eventDescription);
     formPayload.append("eventCoordinator", formData.eventCoordinator);
     formPayload.append("coordinatorphone", formData.coordinatorphone);
-    formPayload.append("tagsTopic", tags.join(", ")); // Joining tags as a comma-separated string
+    formPayload.append("tagsTopic", tags.join(", "));
     formPayload.append("eligibility", formData.eligibility);
     formPayload.append("speaker", formData.speaker);
     formPayload.append("organizedBy", formData.organizedBy);
     formPayload.append("reminder", formData.reminder);
 
-    // Handle the eventphoto (image upload)
     if (formData.eventphoto) {
       formPayload.append("eventphoto", formData.eventphoto);
     }
 
-    // Handle the venue and link based on mode
-    if (formData.mode === "Offline") {
-      formPayload.append("venue", formData.venue);
-    } else if (formData.mode === "Online") {
-      formPayload.append("link", formData.link);
+    try {
+      const response = await axiosInstance.post(
+        "/event/create-event",
+        formPayload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      toast.success("Event created successfully!");
+      setStep(5); // Move to the success step
+    } catch (error) {
+      console.error("Error creating event:", error);
+      toast.error("Error creating event. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
+  };
+  const handleAddTag = () => {
+    if (tagInput.trim() && tags.length < 7) {
+      setTags((prevTags) => [...prevTags, tagInput.trim()]);
+      setTagInput(""); // Clear the input field
+    }
+  };
 
-    // Log the form data before sending to the API (for debugging purposes)
-    console.log("Form Data with image for API submission:", formPayload);
-    setStep(5);
+  const handleRemoveTag = (tagToRemove) => {
+    setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
   };
 
   const handleNext = () => {
@@ -114,7 +138,7 @@ const CreateEvent = ({ onClose }) => {
   const handleDiscard = () => {
     setFormData({
       title: "",
-      eventphoto: "",
+      eventphoto: null,
       type: "",
       mode: "",
       venue: "",
@@ -139,7 +163,6 @@ const CreateEvent = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white w-[90%] max-w-lg rounded-lg shadow-lg p-6 relative">
-        {/* Header */}
         <button
           onClick={handleDiscard}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-lg font-bold"
@@ -153,7 +176,6 @@ const CreateEvent = ({ onClose }) => {
         </div>
         {step === 1 && (
           <div>
-            {/* Title Input */}
             <div>
               <label className="block text-sm font-semibold mb-2">
                 Event Title
@@ -166,43 +188,42 @@ const CreateEvent = ({ onClose }) => {
                 placeholder="Enter Event Title"
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error.title && (
+                <span className="text-red-500 text-sm">{error.title}</span>
+              )}
             </div>
 
-            {/* Cover Image Upload */}
             <div className="mt-6">
               <label className="block text-sm font-semibold mb-2">
                 Upload Cover Image
               </label>
-              <div className="w-full h-40 border border-gray-300 bg-gray-100 flex items-center justify-center rounded-lg cursor-pointer">
-                <label
-                  htmlFor="eventphoto"
-                  className="text-gray-500 font-semibold"
-                >
-                  Add Image
-                  <input
-                    type="file"
-                    name="eventphoto"
-                    id="eventphoto"
-                    onChange={handleInputChange}
-                    className="hidden"
+              {previewImage ? (
+                <div className="w-full h-40 border border-gray-300 bg-gray-100 flex items-center justify-center rounded-lg">
+                  <img
+                    src={previewImage}
+                    alt="Cover Preview"
+                    className="w-full h-full object-cover rounded-md"
                   />
-                </label>
-              </div>
+                </div>
+              ) : (
+                <div className="w-full h-40 border border-gray-300 bg-gray-100 flex items-center justify-center rounded-lg cursor-pointer">
+                  <label
+                    htmlFor="eventphoto"
+                    className="text-gray-500 font-semibold"
+                  >
+                    Add Image
+                    <input
+                      type="file"
+                      name="eventphoto"
+                      id="eventphoto"
+                      onChange={handleInputChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              )}
             </div>
 
-            {/* Preview of Uploaded Image */}
-            {formData.eventphoto && (
-              <div className="mt-4">
-                <p className="text-sm font-semibold mb-2">Preview:</p>
-                <img
-                  src={URL.createObjectURL(formData.eventphoto)}
-                  alt="Cover Preview"
-                  className="w-full h-40 object-cover rounded-md"
-                />
-              </div>
-            )}
-
-            {/* Next Button */}
             <button
               onClick={handleNext}
               className="mt-6 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
@@ -213,7 +234,6 @@ const CreateEvent = ({ onClose }) => {
         )}
         {step === 2 && (
           <div>
-            {/* Event Type Selection */}
             <div>
               <label className="block text-sm font-semibold mb-2">
                 Type of Event
@@ -235,7 +255,6 @@ const CreateEvent = ({ onClose }) => {
               </select>
             </div>
 
-            {/* Event Mode: Online or Offline */}
             <div className="flex gap-4 mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Event Mode
@@ -266,8 +285,6 @@ const CreateEvent = ({ onClose }) => {
               </div>
             </div>
 
-            {/* Conditional Fields based on Event Mode */}
-            {/* If Event Mode is "Offline", ask for Venue */}
             {formData.mode === "Offline" && (
               <div className="mt-4">
                 <label className="block text-sm font-semibold mb-2">
@@ -284,7 +301,6 @@ const CreateEvent = ({ onClose }) => {
               </div>
             )}
 
-            {/* If Event Mode is "Online", ask for Event Link */}
             {formData.mode === "Online" && (
               <div className="mt-4">
                 <label className="block text-sm font-semibold mb-2">
@@ -301,7 +317,6 @@ const CreateEvent = ({ onClose }) => {
               </div>
             )}
 
-            {/* Event Date */}
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Event Date
@@ -313,9 +328,11 @@ const CreateEvent = ({ onClose }) => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error.date && (
+                <span className="text-red-500 text-sm">{error.date}</span>
+              )}
             </div>
 
-            {/* Event Time */}
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Event Time
@@ -327,24 +344,11 @@ const CreateEvent = ({ onClose }) => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error.time && (
+                <span className="text-red-500 text-sm">{error.time}</span>
+              )}
             </div>
 
-            {/* Event Description */}
-            <div className="mt-4">
-              <label className="block text-sm font-semibold mb-2">
-                Event Description
-              </label>
-              <textarea
-                name="eventDescription"
-                value={formData.eventDescription}
-                onChange={handleInputChange}
-                rows="3"
-                placeholder="Add a brief description about the event"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
-            </div>
-
-            {/* Navigation Buttons */}
             <div className="flex justify-between items-center mt-6">
               <button
                 onClick={handleBack}
@@ -362,11 +366,8 @@ const CreateEvent = ({ onClose }) => {
           </div>
         )}
 
-        {/* Remaining Steps */}
-        {/* Step 3: Coordinators */}
         {step === 3 && (
           <div className="mt-4">
-            {/* Event Coordinator */}
             <div>
               <label className="block text-sm font-semibold mb-2">
                 Event Coordinator
@@ -379,9 +380,13 @@ const CreateEvent = ({ onClose }) => {
                 placeholder="Enter Event Coordinator's Name"
                 className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error.eventCoordinator && (
+                <span className="text-red-500 text-sm">
+                  {error.eventCoordinator}
+                </span>
+              )}
             </div>
 
-            {/* Contact Details */}
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Contact Details
@@ -394,16 +399,22 @@ const CreateEvent = ({ onClose }) => {
                 placeholder="Enter coordinator phone"
                 className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error.coordinatorphone && (
+                <span className="text-red-500 text-sm">
+                  {error.coordinatorphone}
+                </span>
+              )}
             </div>
 
-            {/* Tags / Topics */}
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Tags / Topics
               </label>
               <div className="w-full border border-gray-300 rounded-lg p-3">
-                {/* Display Tags */}
-                <div className="flex flex-wrap gap-2 mb-3">
+                <div
+                  className="flex flex-wrap gap-2 ```javascript
+                mb-3"
+                >
                   {tags.map((tag, index) => (
                     <span
                       key={index}
@@ -420,7 +431,6 @@ const CreateEvent = ({ onClose }) => {
                   ))}
                 </div>
 
-                {/* Tag Input Form */}
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -444,7 +454,6 @@ const CreateEvent = ({ onClose }) => {
                   </button>
                 </form>
 
-                {/* Error Message for Tag Count */}
                 {tags.length < 2 && (
                   <p className="mt-2 text-sm text-red-500">
                     You must add at least 2 tags before proceeding.
@@ -458,7 +467,6 @@ const CreateEvent = ({ onClose }) => {
               </div>
             </div>
 
-            {/* Eligibility */}
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Eligibility
@@ -478,9 +486,13 @@ const CreateEvent = ({ onClose }) => {
                 <option value="Only Alumni">Only Alumni</option>
                 <option value="Only Student">Only Student</option>
               </select>
+              {error.eligibility && (
+                <span className="text-red-500 text-sm">
+                  {error.eligibility}
+                </span>
+              )}
             </div>
 
-            {/* Speaker Name */}
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Speaker Name
@@ -493,9 +505,11 @@ const CreateEvent = ({ onClose }) => {
                 placeholder="Enter Speaker's Name"
                 className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error.speaker && (
+                <span className="text-red-500 text-sm">{error.speaker}</span>
+              )}
             </div>
 
-            {/* Organized By */}
             <div className="mt-4">
               <label className="block text-sm font-semibold mb-2">
                 Organized By
@@ -508,9 +522,13 @@ const CreateEvent = ({ onClose }) => {
                 placeholder="Enter Name of Organizer"
                 className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error.organizedBy && (
+                <span className="text-red-500 text-sm">
+                  {error.organizedBy}
+                </span>
+              )}
             </div>
 
-            {/* Navigation Buttons */}
             <div className="flex justify-between items-center mt-6">
               <button
                 onClick={handleBack}
@@ -527,15 +545,16 @@ const CreateEvent = ({ onClose }) => {
             </div>
           </div>
         )}
-        {/* Step 4 and 5 follow the same structure */}
-        {/* Step 4: Add Reminder */}
+
         {step === 4 && (
           <div className="mt-4">
-            <h2 className="text-2xl font-bold mb-6 text-center">
+            <h2
+              className="text-2xl font ```javascript
+            bold mb-6 text-center"
+            >
               Schedule Reminder
             </h2>
 
-            {/* Reminder Notification Options */}
             <label className="block text-sm font-semibold mb-4">
               Notify your Viewer
             </label>
@@ -575,7 +594,6 @@ const CreateEvent = ({ onClose }) => {
               </label>
             </div>
 
-            {/* Navigation Buttons */}
             <div className="flex justify-between items-center mt-6">
               <button
                 onClick={handleBack}
@@ -588,13 +606,12 @@ const CreateEvent = ({ onClose }) => {
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 disabled={!formData.reminder} // Disable if no reminder is selected
               >
-                {step === 4 ? "Submit" : "Next"}
+                Submit
               </button>
             </div>
           </div>
         )}
 
-        {/* Final Step 5: Success */}
         {step === 5 && (
           <div className="flex flex-col items-center justify-center">
             <p className="text-lg font-bold mb-4">
