@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-
 import AppliedCard from "./AppliedJob";
 
 const AppliedContent = () => {
-  const [activeTab, setActiveTab] = useState("All");
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [rolesFetched, setRolesFetched] = useState(false);
-  const [userBookmarks, setUserBookmarks] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
-  const tabs = ["All", "Alumni", "Faculty"];
 
   // Fetch current user from localStorage
   useEffect(() => {
@@ -26,170 +21,47 @@ const AppliedContent = () => {
     fetchCurrentUser();
   }, []);
 
-  // Fetch all jobs
+  // Fetch applied jobs for the current user
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchAppliedJobs = async () => {
       try {
-        const response = await axiosInstance.get("/jobs/all");
-        if (response.data.success) {
-          setJobs(response.data.jobs || []);
+        if (currentUserId) {
+          const response = await axiosInstance.get(`/jobs/apply/${currentUserId}`);
+          if (response.data.success) {
+            const appliedJobs = response.data.appliedJobs || [];
+            // Fetch job details for each applied job
+            const jobDetailsPromises = appliedJobs.map(async (jobId) => {
+              const jobResponse = await axiosInstance.get(`/jobs/${jobId}`);
+              return jobResponse.data.job;
+            });
+            const fetchedJobs = await Promise.all(jobDetailsPromises);
+            setJobs(fetchedJobs);
+          }
         }
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        console.error("Error fetching applied jobs:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchJobs();
-  }, []);
-
-  // Fetch roles dynamically for each job's creator
-  useEffect(() => {
-    const fetchRolesForJobs = async () => {
-      const updatedJobs = await Promise.all(
-        jobs.map(async (job) => {
-          if (job.createdBy) {
-            try {
-              const response = await axiosInstance.get(`/users/${job.createdBy}`);
-              return {
-                ...job,
-                createdBy: {
-                  ...job.createdBy,
-                  role: response.data.data.role,
-                  firstName: response.data.data.firstName,
-                  lastName: response.data.data.lastName,
-                },
-              };
-            } catch (error) {
-              console.error(`Failed to fetch role for job ${job._id}:`, error);
-              return job; // Fallback to original job
-            }
-          }
-          return job; // If no creator, return the job as-is
-        })
-      );
-
-      setJobs(updatedJobs);
-      setRolesFetched(true); // Mark roles as fetched
-    };
-
-    if (jobs.length && !rolesFetched) {
-      fetchRolesForJobs();
-    }
-  }, [jobs, rolesFetched]);
-
-  // Handle like action
-  const handleLikePost = async (jobId) => {
-    try {
-      await axiosInstance.post(`/jobs/like/${jobId}`, { userId: currentUserId });
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId
-            ? {
-                ...job,
-                likes: job.likes.includes(currentUserId)
-                  ? job.likes.filter((id) => id !== currentUserId)
-                  : [...job.likes, currentUserId],
-                dislikes: job.dislikes.filter((id) => id !== currentUserId),
-              }
-            : job
-        )
-      );
-    } catch (error) {
-      console.error(`Error liking job ${jobId}:`, error);
-    }
-  };
-
-  // Handle dislike action
-  const handleDislikePost = async (jobId) => {
-    try {
-      await axiosInstance.post(`/jobs/dislike/${jobId}`, { userId: currentUserId });
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId
-            ? {
-                ...job,
-                dislikes: job.dislikes.includes(currentUserId)
-                  ? job.dislikes.filter((id) => id !== currentUserId)
-                  : [...job.dislikes, currentUserId],
-                likes: job.likes.filter((id) => id !== currentUserId),
-              }
-            : job
-        )
-      );
-    } catch (error) {
-      console.error(`Error disliking job ${jobId}:`, error);
-    }
-  };
-
-  // Handle bookmark action
-  const handleBookmarkJob = async (jobId) => {
-    try {
-      const isBookmarked = userBookmarks.includes(jobId);
-      await axiosInstance.post(`/jobs/save-job/${jobId}`, {
-        userId: currentUserId,
-        action: isBookmarked ? "remove" : "add",
-      });
-
-      setUserBookmarks((prevBookmarks) =>
-        isBookmarked
-          ? prevBookmarks.filter((id) => id !== jobId)
-          : [...prevBookmarks, jobId]
-      );
-    } catch (error) {
-      console.error(`Error bookmarking job ${jobId}:`, error);
-    }
-  };
-
-  // Filtering logic
-  const filteredJobs = jobs.filter((job) => {
-    if (activeTab === "All") return true;
-    if (activeTab === "Alumni") return job.createdBy?.role === "alumni";
-    if (activeTab === "Faculty") return job.createdBy?.role === "faculty";
-    return false;
-  });
+    fetchAppliedJobs();
+  }, [currentUserId]);
 
   if (loading) {
-    return <p>Loading jobs...</p>;
+    return <p>Loading applied jobs...</p>;
   }
 
-  if (!filteredJobs.length) {
-    return <p>No jobs found for {activeTab}.</p>;
+  if (!jobs.length) {
+    return <p>No applied jobs found.</p>;
   }
 
   return (
-    <div className="w-full">
-      {/* Tabs Section */}
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`text-sm px-4 py-2 rounded-full font-semibold ${
-              activeTab === tab ? "text-black font-bold" : "text-gray-500"
-            }`}
-          >
-            {tab}
-          </button>
+    <div className="w-full p-4 overflow-y-auto hide-scrollbar" style={{ maxHeight: "calc(100vh - 160px)" }}>
+      <div className="grid grid-cols-3 gap-4">
+        {jobs.map((job) => (
+          <AppliedCard key={job._id} job={job} currentUserId={currentUserId} />
         ))}
-      </div>
-
-      {/* Job Cards Section */}
-      <div className="p-4 overflow-y-auto hide-scrollbar" style={{ maxHeight: 'calc(100vh - 160px)' }}>
-        <div className="grid grid-cols-3 gap-4">
-          {filteredJobs.map((job) => (
-            <AppliedCard
-              key={job._id}
-              job={job}
-              currentUserId={currentUserId}
-              onLikePost={handleLikePost}
-              onDislikePost={handleDislikePost}
-              onBookmarkJob={handleBookmarkJob}
-              bookmarks={userBookmarks}
-            />
-          ))}
-        </div>
       </div>
     </div>
   );
