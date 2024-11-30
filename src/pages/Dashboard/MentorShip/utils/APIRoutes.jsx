@@ -1,4 +1,4 @@
-export const host = "http://localhost:3000/";
+export const host = "https://n-square.onrender.com";
 export const loginRoute = `/users/login`;
 export const registerRoute = `/users/register`;
 export const logoutRoute = `${host}/users/logout`;

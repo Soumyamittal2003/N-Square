@@ -1,29 +1,23 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import styled from "styled-components";
-import { allUsersRoute, host, allGroupRoutes } from "./utils/APIRoutes";
+import { host, allGroupRoutes } from "./utils/APIRoutes";
 import ChatContainer from "./components/ChatContainer";
 import Contacts from "./components/Contacts";
 import Welcome from "./components/Welcome";
 import axiosInstance from "../../../utils/axiosinstance";
 
-export default function Mentor() {
+export default function Chat() {
   const navigate = useNavigate();
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const currentUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
 
   function handleMyGroup(data) {
-    // Parse the user groups from localStorage
     const user = JSON.parse(localStorage.getItem("chat-app-current-user"));
     const userGroups = user?.groups || [];
-
-    // Extract only groupId from the user's groups
     const userGroupIds = userGroups.map((group) => group.groupId);
-
-    // Filter the data to include only those groups for which the user is a member
     const filteredData = data.filter((group) =>
       userGroupIds.includes(group._id)
     );
@@ -38,13 +32,12 @@ export default function Mentor() {
     }
   }, [currentUser]);
 
-  // Fixed useEffect for fetching groups asynchronously
   useEffect(() => {
     const fetchGroups = async () => {
       if (currentUser) {
         try {
-          const { data } = await axiosInstance.get(`${allGroupRoutes}`);
-          const filteredData = handleMyGroup(data.groups);
+          const data = await axiosInstance.get(`${allGroupRoutes}`);
+          const filteredData = handleMyGroup(data.data.groups);
           console.log(filteredData);
           setContacts(filteredData);
         } catch (error) {
@@ -53,7 +46,7 @@ export default function Mentor() {
       }
     };
 
-    fetchGroups(); // Call the async function
+    fetchGroups();
   }, [currentUser]);
 
   const handleChatChange = (chat) => {
@@ -61,36 +54,17 @@ export default function Mentor() {
   };
 
   return (
-    <Container>
-      <div className="container">
-        <Contacts contacts={contacts} changeChat={handleChatChange} />
-        {currentChat === undefined ? (
-          <Welcome />
-        ) : (
-          <ChatContainer currentChat={currentChat} socket={socket} />
-        )}
+    <>
+      <div className="h-screen w-screen flex flex-col justify-center items-center bg-[#131324]">
+        <div className="h-[85vh] w-[85vw] bg-[#00000076] grid grid-cols-[25%,75%] md:grid-cols-[35%,65%]">
+          <Contacts contacts={contacts} changeChat={handleChatChange} />
+          {currentChat === undefined ? (
+            <Welcome />
+          ) : (
+            <ChatContainer currentChat={currentChat} socket={socket} />
+          )}
+        </div>
       </div>
-    </Container>
+    </>
   );
 }
-
-const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1rem;
-  align-items: center;
-  background-color: #131324;
-  .container {
-    height: 85vh;
-    width: 85vw;
-    background-color: #00000076;
-    display: grid;
-    grid-template-columns: 25% 75%;
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%;
-    }
-  }
-`;
