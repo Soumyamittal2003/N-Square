@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import EventCard from "./EventCard"; 
+import EventCard from "./MyEventCard"; 
 import { useNavigate } from "react-router-dom";
-import RightSidebar from "./RightSidebar";
+//import RightSidebar from "./RightSidebar";
 
-const EventContent = () => {
+const MyEventContent = () => { 
   const [activeTab, setActiveTab] = useState("All");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,23 +27,32 @@ const EventContent = () => {
     fetchCurrentUser();
   }, []);
 
-  // Fetch all events
+  // Fetch registered events for the current user
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchUserAndEvents = async () => {
       try {
-        const response = await axiosInstance.get("/event/all");
-        if (response.data && Array.isArray(response.data)) {
-          setEvents(response.data);
-        }
+        const userResponse = await axiosInstance.get(`/users/${currentUserId}`);
+        const registeredEventIds = userResponse.data.data.registeredEvent;
+
+        // Fetch event data for each registered event
+        const eventPromises = registeredEventIds.map((eventId) =>
+          axiosInstance.get(`/event/${eventId}`)
+        );
+        const eventResponses = await Promise.all(eventPromises);
+
+        const fetchedEvents = eventResponses.map((response) => response.data.event);
+        setEvents(fetchedEvents);
       } catch (error) {
-        console.error("Error fetching events:", error);
+        console.error("Error fetching user or events:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchEvents();
-  }, []);
+    if (currentUserId) {
+      fetchUserAndEvents();
+    }
+  }, [currentUserId]);
 
   // Handle like action
   const handleLikeEvent = async (eventId) => {
@@ -104,9 +113,9 @@ const EventContent = () => {
   }
 
   return (
-    <div className="w-[100%] flex">
+    <div className="w-full flex">
       {/* Event Cards */}
-      <div className="w-2/3">
+      <div >
         <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
           {tabs.map((tab) => (
             <button
@@ -137,9 +146,9 @@ const EventContent = () => {
       </div>
 
       {/* Right Sidebar */}
-      <RightSidebar selectedEvent={selectedEvent} />
+     {/* <RightSidebar selectedEvent={selectedEvent} /> */}
     </div>
   );
 };
 
-export default EventContent;
+export default MyEventContent;

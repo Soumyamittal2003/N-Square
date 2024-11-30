@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
-const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelectEvent, isSelected }) => {
+const MyEventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelectEvent, isSelected }) => { 
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -71,13 +71,13 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
           </button>
         </div>
         <button
-          className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
+          className="px-7 py-1.5 text-white bg-slate-500 rounded-xl"
           onClick={(e) => {
             e.stopPropagation();  // Prevent navigation from like/dislike click
             handleNavigate();
           }}
         >
-          Register
+          Registered
         </button>
       </footer>
 
@@ -95,4 +95,4 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
   );
 };
 
-export default EventCard;
+export default MyEventCard;

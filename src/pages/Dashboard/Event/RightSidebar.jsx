@@ -1,11 +1,21 @@
 import { useState } from "react";
 import CreateEvent from "./CreateEvent";
+import CreateVolunteer from "./CreateVolunteering";
 
-const RightSidebar = () => {
+const RightSidebar = ({ selectedEvent }) => {
   const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
+  const [isCreateVolunteerOpen, setIsCreateVolunteerOpen] = useState(false);
 
   const handleOpenCreateEvent = () => {
     setIsCreateEventOpen(true);
+  };
+
+  const handleOpenCreateVolunteer = () => {
+    setIsCreateVolunteerOpen(true);
+  };
+
+  const handleCloseCreateVolunteer = () => {
+    setIsCreateVolunteerOpen(false);
   };
 
   const handleCloseCreateEvent = () => {
@@ -15,7 +25,20 @@ const RightSidebar = () => {
   return (
     <div className="relative w-1/3 mt-2 mb-auto bg-white px-2 rounded-lg p-11">
       {/* Create Event Button Positioned Top Right */}
-      <div className="absolute top-2 right-8">
+      <div className="absolute top-2 right-8 mx-auto">
+        {/* Conditionally render the Create Volunteer Position button */}
+        {selectedEvent && (
+          <button
+            onClick={handleOpenCreateVolunteer}
+            className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white mr-2"
+          >
+            Create Volunteer Position
+          </button>
+        )}
+        {isCreateVolunteerOpen && (
+        <CreateVolunteer onClose={handleCloseCreateVolunteer} />
+      )}
+
         <button
           onClick={handleOpenCreateEvent}
           className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
@@ -25,6 +48,7 @@ const RightSidebar = () => {
       </div>
 
       {/* Create Event Popup */}
+      
       {isCreateEventOpen && <CreateEvent onClose={handleCloseCreateEvent} />}
 
       <div className="mt-16 mb-0 p-2"> {/* Adjust spacing below the button */}
@@ -37,7 +61,7 @@ const RightSidebar = () => {
             </button>
           </div>
 
-          {/* Event Card */}
+          {/* Event Cards */}
           {[1, 2].map((event, index) => (
             <div key={index} className="p-2 rounded-lg my-2 flex">
               <img
