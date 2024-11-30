@@ -7,7 +7,7 @@ const ProjectList = ({ activeTab }) => {
   const [loading, setLoading] = useState(true);
   const [rolesFetched, setRolesFetched] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("All"); // State for additional filter selection
-  const [userTechnologies, setUserTechnologies] = useState([]); // To store user's familiar technologies
+  // const [userTechnologies, setUserTechnologies] = useState([]); // To store user's familiar technologies
 
   // Fetch all projects
   useEffect(() => {
@@ -28,23 +28,23 @@ const ProjectList = ({ activeTab }) => {
   }, []);
 
   // Fetch the user's familiar technologies
-  useEffect(() => {
-    const fetchUserTechnologies = async () => {
-      try {
-        // Example response for now
-        const response = {
-          data: { success: true, data: ["React", "Node.js", "MongoDB"] },
-        };
-        if (response.data.success) {
-          setUserTechnologies(response.data.data); // Assume this is an array of 7 technologies
-        }
-      } catch (error) {
-        console.error("Error fetching user technologies:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUserTechnologies = async () => {
+  //     try {
+  //       // Example response for now
+  //       const response = {
+  //         data: { success: true, data: ["React", "Node.js", "MongoDB"] },
+  //       };
+  //       if (response.data.success) {
+  //         setUserTechnologies(response.data.data); // Assume this is an array of 7 technologies
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user technologies:", error);
+  //     }
+  //   };
 
-    fetchUserTechnologies();
-  }, []);
+  //   fetchUserTechnologies();
+  // }, []);
 
   // Fetch roles dynamically for each project's creator (existing functionality)
   useEffect(() => {
@@ -85,29 +85,29 @@ const ProjectList = ({ activeTab }) => {
   }, [projects, rolesFetched]);
 
   // Filtering logic based on technologies
-  const filteredProjects = projects.filter((project) => {
-    if (activeTab === "All" && selectedFilter === "All") return true;
-    if (activeTab === "Student" && project.createdBy?.role === "student")
-      return true;
-    if (activeTab === "Faculty" && project.createdBy?.role === "faculty")
-      return true;
-    if (activeTab === "Alumni" && project.createdBy?.role === "alumni")
-      return true;
+  // const filteredProjects = projects.filter((project) => {
+  //   if (activeTab === "All" && selectedFilter === "All") return true;
+  //   if (activeTab === "Student" && project.createdBy?.role === "student")
+  //     return true;
+  //   if (activeTab === "Faculty" && project.createdBy?.role === "faculty")
+  //     return true;
+  //   if (activeTab === "Alumni" && project.createdBy?.role === "alumni")
+  //     return true;
 
-    // Filter based on selected technologies
-    if (selectedFilter.startsWith("Tech") && userTechnologies.length) {
-      const projectTechnologies = project.technologies || [];
+  // Filter based on selected technologies
+  //   if (selectedFilter.startsWith("Tech") && userTechnologies.length) {
+  //     const projectTechnologies = project.technologies || [];
 
-      // If the filter is for a specific technology (like "Tech1"), compare the project's technologies
-      const isTechMatch = projectTechnologies.some((tech) =>
-        userTechnologies.includes(tech)
-      );
+  //     // If the filter is for a specific technology (like "Tech1"), compare the project's technologies
+  //     const isTechMatch = projectTechnologies.some((tech) =>
+  //       userTechnologies.includes(tech)
+  //     );
 
-      return isTechMatch;
-    }
+  //     return isTechMatch;
+  //   }
 
-    return false;
-  });
+  //   return false;
+  // });
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
@@ -117,9 +117,9 @@ const ProjectList = ({ activeTab }) => {
     return <div>Loading projects...</div>;
   }
 
-  if (!filteredProjects.length) {
-    return <div>No projects found for this filter.</div>;
-  }
+  // if (!filteredProjects.length) {
+  //   return <div>No projects found for this filter.</div>;
+  // }
 
   return (
     <div>
@@ -214,7 +214,7 @@ const ProjectList = ({ activeTab }) => {
           </h2>
 
           <div className="flex flex-col self-stretch h-[calc(100vh-225px)] overflow-y-auto hide-scrollbar mt-3.5 w-full max-md:max-w-full">
-            {filteredProjects.map((project) => (
+            {projects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))}
           </div>

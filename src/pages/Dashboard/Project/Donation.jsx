@@ -64,27 +64,21 @@ const Donation = () => {
 
   const checkoutHandler = async (amount) => {
     try {
-      setLoading(true); // Set loading state to true when processing starts
+      setLoading(true);
 
       const {
         data: { key },
       } = await axios.get(
         "https://network-next-backend.onrender.com/api/network-next/v1/donation/get-key"
       );
-      console.log(key);
 
       const {
         data: { order },
       } = await axios.post(
         "https://network-next-backend.onrender.com/api/network-next/v1/donation/checkout",
-        {
-          amount,
-        }
+        { amount }
       );
 
-      console.log(order);
-
-      // Check if Razorpay is loaded
       if (window.Razorpay) {
         const options = {
           key,
@@ -92,10 +86,35 @@ const Donation = () => {
           currency: "INR",
           name: "Network Next",
           description: "Tutorial of RazorPay",
-          image: Image, // Corrected the image path
+          image: Image,
           order_id: order.id,
-          callback_url:
-            "https://network-next-backend.onrender.com/api/network-next/v1/donation/payment-verfication",
+          handler: async function (response) {
+            // Razorpay provides `response.razorpay_payment_id`, `response.razorpay_order_id`, etc.
+            const {
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature,
+            } = response;
+            console.log(razorpay_payment_id);
+            console.log(razorpay_order_id);
+            console.log(razorpay_signature);
+
+            // Send the response to your backend for verification
+            try {
+              await axios.post(
+                "https://network-next-backend.onrender.com/api/network-next/v1/donation/payment-verification",
+                {
+                  razorpay_payment_id,
+                  razorpay_order_id,
+                  razorpay_signature,
+                }
+              );
+              alert("Payment Successful!");
+            } catch (error) {
+              console.error("Error verifying payment:", error);
+              alert("Payment verification failed!");
+            }
+          },
           prefill: {
             name: `${userData.firstName} ${userData.lastName}`,
             email: userData.email,
@@ -115,10 +134,10 @@ const Donation = () => {
         console.error("Razorpay SDK not loaded");
       }
 
-      setLoading(false); // Set loading state to false once Razorpay modal is opened
+      setLoading(false);
     } catch (error) {
       console.error("Error in payment processing:", error);
-      setLoading(false); // Reset loading state in case of error
+      setLoading(false);
     }
   };
 
