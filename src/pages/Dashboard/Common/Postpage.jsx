@@ -42,7 +42,7 @@ const PostPopup = ({ setPopupOpen }) => {
       !showCreateVolunteer &&
       !showCreatePost &&
       !showCreateReunion ? (
-        <div className="fixed inset-0-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-[500px] shadow-lg">
             <div className="p-6 border-b flex justify-between items-center">
               <h2 className="text-lg font-semibold">
