@@ -1,6 +1,6 @@
 import AppliedContent from "./AppliedContent";
 
-const Home = () => {
+const AppliedJob = () => {
   return (
     
     <div className="flex flex-col lg:flex-row w-full min-h-screen overflow-y-auto">
@@ -11,4 +11,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AppliedJob;

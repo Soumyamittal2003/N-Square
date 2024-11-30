@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import EventCard from "./EventCard";
+import EventCard from "./EventCard"; 
 
 const EventContent = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -8,6 +8,7 @@ const EventContent = () => {
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
   const tabs = ["All", "Student", "Faculty", "Alma"];
+  const navigate = useNavigate();
 
   // Fetch current user from localStorage
   useEffect(() => {
@@ -89,7 +90,8 @@ const EventContent = () => {
     if (activeTab === "Student") return event.createdBy?.role === "student";
     if (activeTab === "Faculty") return event.createdBy?.role === "faculty";
     if (activeTab === "Alma") return event.createdBy?.role === "alumni";
-    return false;
+    return false; 
+
   });
 
   if (loading) {
@@ -123,6 +125,7 @@ const EventContent = () => {
               currentUserId={currentUserId}
               onLikeEvent={handleLikeEvent}
               onDislikeEvent={handleDislikeEvent}
+              onEventClick={() => navigate(`/about-event/${event._id}`, { state: event })}
             />
           ))}
         </div>
