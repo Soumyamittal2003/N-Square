@@ -181,59 +181,76 @@ const UserProfile = () => {
   return (
     <div className="flex w-full min-h-screen">
       {/* Left Section */}
-      <div className="w-1/3 m-2 p-2 overflow-y-auto hide-scrollbar h-[calc(100vh-100px)]">
+      <div className="w-[40%] p-4 overflow-y-auto hide-scrollbar h-[calc(100vh-100px)]">
         <div className="flex flex-col items-center">
-          {/* Profile Image */}
-          <div className="relative">
-            <label htmlFor="profileimageUrl">
+          {/* Profile Image Section */}
+          <div className="w-full p-3 bg-white rounded-lg shadow-lg border mx-auto flex flex-col items-center justify-center">
+            <div className="relative w-fit">
+              {/* Dimmed Background Overlay */}
+              {isEditingProfileImage && (
+                <div className="absolute inset-0 rounded-full m-2 bg-black bg-opacity-50 flex justify-center items-center z-10">
+                  <input
+                    type="file"
+                    id="profileimageUrl"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleProfileImageUpload}
+                  />
+                  <button
+                    onClick={() =>
+                      document.getElementById("profileimageUrl").click()
+                    }
+                    className="bg-white text-black p-1 rounded-lg font-semibold z-20"
+                  >
+                    Upload Image
+                  </button>
+                </div>
+              )}
+
+              {/* Profile Image */}
               <img
-                src={profileimageUrl}
+                src={profileimageUrl || "default-profile.jpg"}
                 alt="Profile"
                 className={`rounded-full w-60 h-60 cursor-pointer border-8 ${getBorderColor()}`}
+                onClick={() => setIsEditingProfileImage(true)}
               />
-            </label>
-            {isEditingProfileImage && (
-              <input
-                type="file"
-                id="profileimageUrl"
-                accept="image/*"
-                className="hidden"
-                onChange={handleProfileImageUpload}
-              />
-            )}
-            <button
-              onClick={() => setIsEditingProfileImage(!isEditingProfileImage)}
-              className="absolute bottom-2 right-2 bg-white bg-opacity-25 text-black p-2 rounded-full text-md"
-            >
-              {isEditingProfileImage ? (
-                <span>Save</span>
-              ) : (
-                <FiEdit className="text-black" />
-              )}
-            </button>
+
+              {/* Edit Button */}
+              <button
+                onClick={() => setIsEditingProfileImage(!isEditingProfileImage)}
+                className="absolute bottom-2 right-2 bg-white bg-opacity-25 text-black p-2 rounded-full text-md"
+              >
+                {isEditingProfileImage ? (
+                  <span>Save</span>
+                ) : (
+                  <FiEdit className="text-black" />
+                )}
+              </button>
+            </div>
+
+            <h1 className="mt-2 text-4xl font-bold text-center">
+              {profileData.firstName} {profileData.lastName}
+            </h1>
+            <div className="flex space-x-6 gap-2 m-2 p-3 px-4 border rounded-3xl justify-center">
+              <div className="text-center">
+                <p className="font-bold text-lg">
+                  {profileData.followers.length}
+                </p>
+                <p className="text-gray-500">Followers</p>
+              </div>
+              <div className="text-center">
+                <p className="font-bold text-lg">
+                  {profileData.following.length}
+                </p>
+                <p className="text-gray-500">Following</p>
+              </div>
+              <div className="text-center">
+                <p className="font-bold text-lg">{userPosts.length}</p>
+                <p className="text-gray-500">Posts</p>
+              </div>
+            </div>
           </div>
 
-          <h1 className="mt-3 text-4xl font-bold">
-            {profileData.firstName} {profileData.lastName}
-          </h1>
-          <div className="flex space-x-6 gap-2 m-3 p-5 px-10 border rounded-3xl">
-            <div className="text-center">
-              <p className="font-bold text-lg">
-                {profileData.followers.length}
-              </p>
-              <p className="text-gray-500">Followers</p>
-            </div>
-            <div className="text-center">
-              <p className="font-bold text-lg">
-                {profileData.following.length}
-              </p>
-              <p className="text-gray-500">Following</p>
-            </div>
-            <div className="text-center">
-              <p className="font-bold text-lg">{userPosts.length}</p>
-              <p className="text-gray-500">Posts</p>
-            </div>
-          </div>
           {/* About Section */}
           <div className="relative bg-white text-center border rounded-lg shadow mt-4 p-6 w-full">
             <h3 className="text-lg font-bold">About</h3>
@@ -266,28 +283,42 @@ const UserProfile = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-2/3 p-8">
-        {/* Banner Image */}
+      <div className="w-[60%] p-4">
+        {/* Banner Image Section */}
         <div className="relative shadow-md rounded-lg">
-          <label htmlFor="backgroundimageUrl">
-            <img
-              src={backgroundimageUrl || "default-banner.jpg"}
-              alt="Banner"
-              className="w-full h-60 object-cover cursor-pointer"
-            />
-          </label>
+          {/* Dimmed Background Overlay */}
           {isEditingBannerImage && (
-            <input
-              type="file"
-              id="backgroundimageUrl"
-              accept="image/*"
-              className="hidden"
-              onChange={handleBannerImageUpload}
-            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+              <input
+                type="file"
+                id="backgroundimageUrl"
+                accept="image/*"
+                className="hidden"
+                onChange={handleBannerImageUpload}
+              />
+              <button
+                onClick={() =>
+                  document.getElementById("backgroundimageUrl").click()
+                }
+                className="bg-white text-black p-1 rounded-lg font-semibold z-20"
+              >
+                Upload Image
+              </button>
+            </div>
           )}
+
+          {/* Banner Image */}
+          <img
+            src={backgroundimageUrl || "default-banner.jpg"}
+            alt="Banner"
+            className="w-full h-60 object-cover cursor-pointer"
+            onClick={() => setIsEditingBannerImage(true)}
+          />
+
+          {/* Edit Button */}
           <button
             onClick={() => setIsEditingBannerImage(!isEditingBannerImage)}
-            className="absolute top-2 right-2 bg-white bg-opacity-25 text-white px-2 text-center rounded-full text-md"
+            className="absolute top-2 right-2 bg-white bg-opacity-25 text-white px-2 text-center rounded-full text-md z-20"
           >
             {isEditingBannerImage ? (
               <span>Save</span>
