@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { FaPlus } from 'react-icons/fa'; // Add icon for folder
-import folderIcon from "../../../assets/icons/folder.svg"; // Folder icon SVG
+import { FaPlus } from 'react-icons/fa'; 
+import folderIcon from "../../../assets/icons/folder.svg"; 
 
 const Memories = () => {
   const [folders, setFolders] = useState(() => {
