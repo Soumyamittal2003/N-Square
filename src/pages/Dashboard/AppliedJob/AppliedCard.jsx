@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import axiosInstance from "../../../utils/axiosinstance";
+//import { useState, useEffect } from "react";
+//import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
-const AppliedCard = ({ job, currentUserId }) => {
+const AppliedCard = ({ job, currentUserId, creatorName }) => {
   const {
-    _id,
+    
     title = "Job Title",
     company = "Unknown Company",
     location = "Unknown Location",
@@ -15,38 +15,10 @@ const AppliedCard = ({ job, currentUserId }) => {
     type = "Full-time",
     stipendOrSalary = "Not specified",
     applyLink,
-    createdBy = {},
     postedDate,
     likes = [],
     dislikes = [],
   } = job;
-
-  const [creatorName, setCreatorName] = useState("Loading...");
-
-  // Fetch creator's name dynamically
-  useEffect(() => {
-    if (createdBy?.firstName && createdBy?.lastName) {
-      setCreatorName(`${createdBy.firstName} ${createdBy.lastName}`);
-    } else if (createdBy?._id) {
-      const fetchCreatorDetails = async () => {
-        try {
-          const response = await axiosInstance.get(`/users/${createdBy._id}`);
-          if (response.data?.success) {
-            const { firstName, lastName } = response.data.data;
-            setCreatorName(`${firstName} ${lastName}`);
-          } else {
-            setCreatorName("Unknown");
-          }
-        } catch (error) {
-          console.error(`Error fetching creator details for job ${_id}:`, error);
-          setCreatorName("Error fetching user");
-        }
-      };
-      fetchCreatorDetails();
-    } else {
-      setCreatorName("Unknown");
-    }
-  }, [createdBy, _id]);
 
   return (
     <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar ">

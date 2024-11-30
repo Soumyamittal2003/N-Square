@@ -6,6 +6,7 @@ const AppliedContent = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [rolesFetched, setRolesFetched] = useState(false);
 
   // Fetch current user from localStorage
   useEffect(() => {
@@ -48,6 +49,35 @@ const AppliedContent = () => {
     fetchAppliedJobs();
   }, [currentUserId]);
 
+  useEffect(() => {
+    const fetchRolesForJobs = async () => {
+      const updatedJobs = await Promise.all(
+        jobs.map(async (job) => {
+          if (job.createdBy) {
+            try {
+              const response = await axiosInstance.get(`/users/${job.createdBy}`);
+              return {
+                ...job,
+                creatorName: `${response.data.data.firstName} ${response.data.data.lastName}`,
+              };
+            } catch (error) {
+              console.error(`Failed to fetch role for job ${job._id}:`, error);
+              return job; // Fallback to original job
+            }
+          }
+          return job; // If no creator, return the job as-is
+        })
+      );
+
+      setJobs(updatedJobs);
+      setRolesFetched(true); // Mark roles as fetched
+    };
+
+    if (jobs.length && !rolesFetched) {
+      fetchRolesForJobs();
+    }
+  }, [jobs, rolesFetched]);
+
   if (loading) {
     return <p>Loading applied jobs...</p>;
   }
@@ -60,7 +90,12 @@ const AppliedContent = () => {
     <div className="w-full p-8 overflow-y-auto hide-scrollbar" style={{ maxHeight: "calc(100vh - 160px)" }}>
       <div className="grid grid-cols-4 gap-2 ">
         {jobs.map((job) => (
-          <AppliedCard key={job._id} job={job} currentUserId={currentUserId} />
+          <AppliedCard
+            key={job._id}
+            job={job}
+            currentUserId={currentUserId}
+            creatorName={job.creatorName} // Pass the creatorName prop
+          />
         ))}
       </div>
     </div>
