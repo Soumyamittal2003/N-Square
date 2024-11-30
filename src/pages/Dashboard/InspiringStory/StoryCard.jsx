@@ -4,7 +4,19 @@ import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
 // StoryCard Component
-const StoryCard = ({ title, createdBy, content, createdAt, likes, onLike, onFollowUser, currentUserId, storyId, likedBy }) => {
+const StoryCard = ({
+  title,
+  storyImage,
+  createdBy,
+  content,
+  createdAt,
+  likes,
+  onLike,
+  onFollowUser,
+  currentUserId,
+  storyId,
+  likedBy,
+}) => {
   const [creatorName, setCreatorName] = useState("Loading...");
   const [isLiked, setIsLiked] = useState(false);
 
@@ -46,18 +58,27 @@ const StoryCard = ({ title, createdBy, content, createdAt, likes, onLike, onFoll
     <div className="bg-white border shadow-lg rounded-lg p-4 flex flex-col items-center text-center">
       {/* Story Image or Content */}
       <div className="mt-4 mb-6">
-        <img src={content} alt={title}  className="w-full h-48 object-cover rounded-lg" />
+        <img
+          src={storyImage}
+          alt={title}
+          className="w-full h-48 object-cover rounded-lg"
+        />
       </div>
 
       {/* Title and Story Info */}
       <h3 className="text-lg font-semibold">{title}</h3>
       <p className="text-xs text-gray-500 mt-1">By {creatorName}</p>
-      <p className="text-xs text-gray-500">{new Date(createdAt).toLocaleDateString()}</p>
+      <p className="text-xs text-gray-500">
+        {new Date(createdAt).toLocaleDateString()}
+      </p>
 
       {/* Like, Dislike, and Follow buttons */}
       <div className="flex justify-between mt-4 p-2 text-sm">
         <div className="flex items-center gap-3">
-          <button onClick={handleLike} className="flex gap-1 font-semibold justify-center">
+          <button
+            onClick={handleLike}
+            className="flex gap-1 font-semibold justify-center"
+          >
             <img src={arrowBlockUp} alt="Up Arrow" />
             <span>{isLiked ? likes + 1 : likes}</span>
           </button>
@@ -66,7 +87,10 @@ const StoryCard = ({ title, createdBy, content, createdAt, likes, onLike, onFoll
             <span>0</span>
           </button>
         </div>
-        <button onClick={handleFollow} className="ml-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold hover:bg-blue-700 transition">
+        <button
+          onClick={handleFollow}
+          className="ml-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold hover:bg-blue-700 transition"
+        >
           Follow
         </button>
       </div>

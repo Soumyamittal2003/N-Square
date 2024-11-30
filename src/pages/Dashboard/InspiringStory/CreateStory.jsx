@@ -2,16 +2,37 @@ import { useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import uploadMedia from "../../../assets/images/upload.png";
 import emoji from "../../../assets/images/emoji.png";
+import axiosInstance from "../../../utils/axiosinstance"; // Ensure axios instance is correctly set up
+import Cookies from "js-cookie"; // For user ID
+import { toast } from "react-toastify";
 
 const CreateStory = ({ onClose }) => {
+  const userId = Cookies.get("id"); // Assuming user ID is stored in cookies
+  const [userData, setUserData] = useState("");
   const [formData, setFormData] = useState({
-    content: "",
+    title: "",
     storyType: "Story", // Default story type
-    attachedFile: null,
+    storyImage: null,
   });
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null); // Preview state for image
+  const [error, setError] = useState(""); // To display form errors
+
+  // Fetch user data for profile image
+  const fetchUserData = async () => {
+    try {
+      const response = await axiosInstance.get(`/users/${userId}`);
+      setUserData(response.data.data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  useState(() => {
+    fetchUserData();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,33 +46,90 @@ const CreateStory = ({ onClose }) => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFormData((prev) => ({ ...prev, attachedFile: file }));
+
+    // Validate file type (images or videos only)
+    if (
+      file &&
+      (file.type.startsWith("image/") || file.type.startsWith("video/"))
+    ) {
+      setFormData((prev) => ({ ...prev, storyImage: file }));
+      setError(""); // Clear error
+      const fileURL = URL.createObjectURL(file); // Generate preview URL
+      setPreviewImage(fileURL);
+    } else {
+      setError("Please upload a valid image or video.");
+      setPreviewImage(null); // Reset preview
+    }
   };
 
   const handleEmojiClick = (emojiObject) => {
     setFormData((prev) => ({
       ...prev,
-      content: prev.content + emojiObject.emoji, // Append emoji to content
+      title: prev.title + emojiObject.emoji, // Append emoji to content
     }));
-    setEmojiPickerOpen(false); // Close the emoji picker after selection
+    setEmojiPickerOpen(false); // Close emoji picker
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add form submission logic here
+
+    // Validation for content
+    if (!formData.title.trim()) {
+      setError("Story title cannot be empty.");
+      return;
+    }
+
+    // Create FormData to send to API
+    const postData = new FormData();
+    postData.append("title", formData.title); // Map content to title (API request)
+
+    // Attach file if selected
+
+    if (formData.storyImage) {
+      postData.append("storyImage", formData.storyImage); // Attach the selected file
+    }
+
+    try {
+      // Make API call to create story
+      const response = await axiosInstance.post(
+        "/stories/new-story", // The API endpoint to create a new story
+        postData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // For file upload
+          },
+        }
+      );
+      console.log(response);
+      toast.success("Story created successfully");
+
+      // Reset form and close modal
+      setFormData({
+        title: "",
+        storyType: "Story",
+        storyImage: null,
+      });
+      setError(""); // Clear any previous errors
+      onClose(); // Close the modal after successful submission
+    } catch (error) {
+      console.error("Error creating story:", error);
+      setError("Failed to create story. Please try again.");
+    }
   };
 
   const handleDiscard = () => {
     setFormData({
-      content: "",
+      title: "",
       storyType: "Story",
-      attachedFile: null,
+      storyImage: null,
     });
-    onClose(); // Call the onClose function passed as a prop
+    setPreviewImage(null); // Reset image preview
+    setError(""); // Clear any errors
+    onClose(); // Close the modal without submitting
   };
 
   return (
-    <div className="fixed h-full inset-0 z-100 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed h-full inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-3xl relative">
         {/* Discard Button */}
         <button
@@ -65,12 +143,15 @@ const CreateStory = ({ onClose }) => {
           {/* User Info */}
           <div className="flex items-center mb-6">
             <img
-              src="/path-to-profile-image.jpg" // Replace with actual profile image
+              src={userData?.profileimageUrl || "/path-to-profile-image.jpg"} // Profile image or default path
               alt="Profile"
               className="w-12 h-12 rounded-full mr-3"
             />
             <div className="relative">
-              <h2 className="font-semibold text-gray-800">Lauy Rahil</h2>
+              <h2 className="font-semibold text-gray-800">
+                {userData.firstName + " " + userData.lastName}
+              </h2>
+              {/* Story Type Dropdown */}
               <div
                 className="relative cursor-pointer mt-1 text-gray-500"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -105,13 +186,27 @@ const CreateStory = ({ onClose }) => {
 
           {/* Text Area */}
           <textarea
-            name="content"
-            value={formData.content}
+            name="title"
+            value={formData.title}
             onChange={handleInputChange}
-            placeholder="Share Your Insights: Engage, Schedule, Poll"
+            placeholder="Share your insights"
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring focus:border-blue-300"
             rows="8"
           ></textarea>
+
+          {/* Display Error Message */}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+          {/* Image Preview */}
+          {previewImage && (
+            <div className="mt-4">
+              <img
+                src={previewImage}
+                alt="Image Preview"
+                className="max-w-full h-16 rounded-lg border border-gray-300"
+              />
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex justify-between items-center mt-6">
@@ -141,7 +236,7 @@ const CreateStory = ({ onClose }) => {
               onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
               className="flex items-center text-gray-500 hover:text-gray-800"
             >
-              <img src={emoji} alt="Attach File" className="w-5 h-5 mr-1" />
+              <img src={emoji} alt="Emoji Picker" className="w-5 h-5 mr-1" />
               <span className="ml-1">Emoji</span>
             </button>
             {emojiPickerOpen && (

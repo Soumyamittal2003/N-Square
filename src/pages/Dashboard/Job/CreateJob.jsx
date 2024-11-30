@@ -109,7 +109,7 @@ const CreateJob = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-70 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white w-[100%] max-w-lg rounded-lg shadow-lg p-6">
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-2">

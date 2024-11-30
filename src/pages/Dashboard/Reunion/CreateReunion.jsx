@@ -49,13 +49,17 @@ const CreateReunion = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="fixed z-20 inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4 text-center">Create Reunion Party</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">
+          Create Reunion Party
+        </h2>
         <form onSubmit={handleSubmit}>
           {/* Event Type */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Type of Event</label>
+            <label className="block text-sm font-medium mb-2">
+              Type of Event
+            </label>
             <select
               name="eventType"
               value={formData.eventType}
@@ -71,7 +75,9 @@ const CreateReunion = ({ onClose }) => {
 
           {/* Batch */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Select Batch</label>
+            <label className="block text-sm font-medium mb-2">
+              Select Batch
+            </label>
             <select
               name="batch"
               value={formData.batch}
@@ -113,7 +119,9 @@ const CreateReunion = ({ onClose }) => {
 
           {/* Mode */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Select Mode</label>
+            <label className="block text-sm font-medium mb-2">
+              Select Mode
+            </label>
             <div className="flex items-center space-x-4">
               <label className="flex items-center">
                 <input
@@ -143,7 +151,9 @@ const CreateReunion = ({ onClose }) => {
           {/* Online Mode Field */}
           {mode === "Online" && (
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Event Link</label>
+              <label className="block text-sm font-medium mb-2">
+                Event Link
+              </label>
               <input
                 type="text"
                 name="link"

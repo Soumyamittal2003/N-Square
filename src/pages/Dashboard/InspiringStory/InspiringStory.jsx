@@ -2,38 +2,30 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import StoryCard from "./StoryCard";
 import RightSidebar from "./RigntSideBar";
+import Cookies from "js-cookie";
 
 // InspiringStory Component
 const InspiringStory = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentUserId, setCurrentUserId] = useState(null);
+  const currentUserId = Cookies.get("id");
   const tabs = ["All", "Funding Stories", "Impact Stories"];
 
-  // Fetch current user ID from localStorage
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
-      if (storedUser && storedUser._id) {
-        setCurrentUserId(storedUser._id);
-      } else {
-        console.error("No current user found in localStorage");
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
-
   // Fetch stories data from the backend API
+  // In your API response handler, sanitize the story data
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        console.log("Fetching stories...");
         const response = await axiosInstance.get("/stories/all");
-        console.log(response);
         if (response.data.success) {
-          setStories(response.data.data || []);
+          // Ensure that each story has a valid likedBy array (fallback to empty array)
+          const sanitizedStories = response.data.data.map((story) => ({
+            ...story,
+            likedBy: Array.isArray(story.likedBy) ? story.likedBy : [],
+            content: story.content || "No content available.", // Default content message
+          }));
+          setStories(sanitizedStories);
         } else {
           console.error("Error fetching stories:", response.data.message);
         }
@@ -48,7 +40,7 @@ const InspiringStory = () => {
   }, []);
 
   // Filter stories based on the active tab
-  const filteredStories = stories.filter((story) => {
+  const filteredStories = (stories || []).filter((story) => {
     if (activeTab === "All") return true;
     if (activeTab === "Funding Stories") return story.title.includes("Funding");
     if (activeTab === "Impact Stories") return story.title.includes("Impact");
@@ -58,11 +50,21 @@ const InspiringStory = () => {
   // Handle like functionality
   const handleLike = async (storyId) => {
     try {
-      const response = await axiosInstance.post(`/stories/like-story/${storyId}`, { userId: currentUserId });
+      const response = await axiosInstance.post(
+        `/stories/like-story/${storyId}`,
+        { userId: currentUserId }
+      );
       if (response.data.success) {
         setStories((prevStories) =>
           prevStories.map((story) =>
-            story._id === storyId ? { ...story, likedBy: response.data.likedBy } : story
+            story._id === storyId
+              ? {
+                  ...story,
+                  likedBy: Array.isArray(response.data.likedBy)
+                    ? response.data.likedBy
+                    : [], // Ensure it's an array
+                }
+              : story
           )
         );
       }
@@ -73,10 +75,51 @@ const InspiringStory = () => {
 
   // Handle follow functionality
   const handleFollowUser = async (userIdToFollow) => {
+    if (!currentUserId) {
+      console.error("User is not logged in.");
+      return;
+    }
+
     try {
-      const response = await axiosInstance.post(`/users/follow`, { followerId: currentUserId, followingId: userIdToFollow });
+      // Check if the user is already following the target user
+      const alreadyFollowing = stories.some(
+        (story) =>
+          story.createdBy._id === userIdToFollow &&
+          story.likedBy.includes(currentUserId)
+      );
+
+      if (alreadyFollowing) {
+        console.log("Already following this user.");
+        return;
+      }
+
+      // Optimistic UI update: Temporarily mark as followed
+      setStories((prevStories) =>
+        prevStories.map((story) =>
+          story.createdBy._id === userIdToFollow
+            ? { ...story, followedBy: [...story.followedBy, currentUserId] }
+            : story
+        )
+      );
+
+      // Perform API request to follow user
+      const response = await axiosInstance.post(`/users/follow`, {
+        // followerId: currentUserId,
+        followingId: userIdToFollow,
+      });
+
       if (response.data.success) {
         console.log("User followed successfully");
+        // Optionally, update followed state after successful API call if needed
+        setStories((prevStories) =>
+          prevStories.map((story) =>
+            story.createdBy._id === userIdToFollow
+              ? { ...story, followedBy: [...story.followedBy, currentUserId] }
+              : story
+          )
+        );
+      } else {
+        console.error("Failed to follow user:", response.data.message);
       }
     } catch (error) {
       console.error("Error following user:", error);
@@ -120,8 +163,9 @@ const InspiringStory = () => {
             {filteredStories.map((story) => (
               <StoryCard
                 key={story._id}
+                storyImage={story.storyImage}
                 title={story.title}
-                description={story.content}
+                description={story.content || "No content available."} // Default message if no content
                 createdBy={story.createdBy}
                 createdAt={story.createdAt}
                 likes={story.likedBy.length}

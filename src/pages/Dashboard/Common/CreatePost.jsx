@@ -136,7 +136,7 @@ const CreatePost = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-3xl relative">
         {/* Discard Button */}
         <button

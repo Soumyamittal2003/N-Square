@@ -7,6 +7,7 @@ import CreateEvent from "../Event/CreateEvent";
 import CreateResources from "../AlmaResource/CreateResource";
 import CreateVolunteer from "../Volunteer/CreateVolunteer";
 import CreatePost from "./CreatePost";
+import CreateReunion from "../Reunion/CreateReunion";
 
 const PostPopup = ({ setPopupOpen }) => {
   const [showCreateStory, setShowCreateStory] = useState(false);
@@ -15,6 +16,7 @@ const PostPopup = ({ setPopupOpen }) => {
   const [showCreateResource, setShowCreateResource] = useState(false);
   const [showCreateVolunteer, setShowCreateVolunteer] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const [showCreateReunion, setShowCreateReunion] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,6 +26,7 @@ const PostPopup = ({ setPopupOpen }) => {
   const handleResourceClick = () => setShowCreateResource(true);
   const handleVolunteerClick = () => setShowCreateVolunteer(true);
   const handlePostClick = () => setShowCreatePost(true);
+  const handleReunionClick = () => setShowCreateReunion(true);
 
   const handleProjectClick = () => {
     setPopupOpen(false); // Close the popup
@@ -32,11 +35,19 @@ const PostPopup = ({ setPopupOpen }) => {
 
   return (
     <>
-      {!showCreateStory && !showCreateJob && !showCreateEvent && !showCreateResource && !showCreateVolunteer && !showCreatePost ? (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      {!showCreateStory &&
+      !showCreateJob &&
+      !showCreateEvent &&
+      !showCreateResource &&
+      !showCreateVolunteer &&
+      !showCreatePost &&
+      !showCreateReunion ? (
+        <div className="fixed inset-0-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-[500px] shadow-lg">
             <div className="p-6 border-b flex justify-between items-center">
-              <h2 className="text-lg font-semibold">What do you want to Post?</h2>
+              <h2 className="text-lg font-semibold">
+                What do you want to Post?
+              </h2>
               <button
                 className="text-gray-500 hover:text-gray-800"
                 onClick={() => setPopupOpen(false)}
@@ -46,14 +57,47 @@ const PostPopup = ({ setPopupOpen }) => {
             </div>
             <div className="p-6 space-y-4">
               {[
-                { label: "Post", visibility: "Anyone can view", onClick: handlePostClick },
-                { label: "Project", visibility: "Followed People can view", onClick: handleProjectClick },
-                { label: "Event", visibility: "Anyone can view", onClick: handleEventClick },
-                { label: "Story", visibility: "Anyone can view", onClick: handleStoryClick },
-                { label: "Job", visibility: "Anyone can view", onClick: handleJobClick },
-                { label: "Volunteering", visibility: "Anyone can view", onClick: handleVolunteerClick },
-                { label: "Alma Resources", visibility: "Anyone can view", onClick: handleResourceClick },
-              ].map((item, index) =>
+                {
+                  label: "Post",
+                  visibility: "Anyone can view",
+                  onClick: handlePostClick,
+                },
+                {
+                  label: "Project",
+                  visibility: "Followed People can view",
+                  onClick: handleProjectClick,
+                },
+                {
+                  label: "Event",
+                  visibility: "Anyone can view",
+                  onClick: handleEventClick,
+                },
+                {
+                  label: "Story",
+                  visibility: "Anyone can view",
+                  onClick: handleStoryClick,
+                },
+                {
+                  label: "Job",
+                  visibility: "Anyone can view",
+                  onClick: handleJobClick,
+                },
+                {
+                  label: "Volunteering",
+                  visibility: "Anyone can view",
+                  onClick: handleVolunteerClick,
+                },
+                {
+                  label: "Alma Resources",
+                  visibility: "Anyone can view",
+                  onClick: handleResourceClick,
+                },
+                {
+                  label: "Reunion",
+                  visibility: "Anyone can view",
+                  onClick: handleReunionClick,
+                },
+              ].map((item, index) => (
                 <button
                   key={index}
                   onClick={item.onClick}
@@ -65,9 +109,11 @@ const PostPopup = ({ setPopupOpen }) => {
                     </div>
                     <span className="text-sm font-medium">{item.label}</span>
                   </div>
-                  <span className="text-xs text-gray-500">{item.visibility}</span>
+                  <span className="text-xs text-gray-500">
+                    {item.visibility}
+                  </span>
                 </button>
-              )}
+              ))}
             </div>
           </div>
         </div>
@@ -81,8 +127,10 @@ const PostPopup = ({ setPopupOpen }) => {
         <CreateResources onClose={() => setShowCreateResource(false)} />
       ) : showCreateVolunteer ? (
         <CreateVolunteer onClose={() => setShowCreateVolunteer(false)} />
-      ) : (
+      ) : showCreatePost ? (
         <CreatePost onClose={() => setShowCreatePost(false)} />
+      ) : (
+        <CreateReunion onClose={() => setShowCreateReunion(false)} />
       )}
     </>
   );
