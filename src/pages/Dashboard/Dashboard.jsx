@@ -10,6 +10,7 @@ import Project from "./Project/Project";
 import MentorShip from "./MentorShip/Mentor";
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
+import MyEvent from "./MyEvent/MyEvent";
 import UserProfile from "./Common/UserProfile";
 import Error404 from "../Error404";
 import Followers from "./Connection/Followers";
@@ -59,6 +60,7 @@ const Dashboard = () => {
             <Route path="help" element={<Help />} />
             <Route path="event" element={<Event />} />
             <Route path="event/about-event" element={<AboutEvent />} />
+            <Route path="my-events" element={<MyEvent />} />
             <Route path="chat" element={<Chat />} />
             <Route path="applied-jobs" element={<AppliedJobs />} />
             <Route path="project" element={<Project />} />
