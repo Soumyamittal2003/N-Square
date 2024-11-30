@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import EventCard from "./EventCard"; 
+import { useNavigate } from "react-router-dom";
+import RightSidebar from "./RightSidebar";
 
 const EventContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
   const tabs = ["All", "Student", "Faculty", "Alma"];
   const navigate = useNavigate();
 
   // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(
-        localStorage.getItem("chat-app-current-user")
-      );
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -51,11 +52,7 @@ const EventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? {
-                ...event,
-                likes: response.data.likes,
-                dislikes: response.data.dislikes,
-              }
+            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
             : event
         )
       );
@@ -71,16 +68,21 @@ const EventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? {
-                ...event,
-                likes: response.data.likes,
-                dislikes: response.data.dislikes,
-              }
+            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
             : event
         )
       );
     } catch (error) {
       console.error(`Error disliking event ${eventId}:`, error);
+    }
+  };
+
+  // Handle event selection for conditional button display
+  const handleSelectEvent = (eventId, isSelected) => {
+    if (isSelected) {
+      setSelectedEvent(events.find((event) => event._id === eventId));
+    } else {
+      setSelectedEvent(null);
     }
   };
 
@@ -91,7 +93,6 @@ const EventContent = () => {
     if (activeTab === "Faculty") return event.createdBy?.role === "faculty";
     if (activeTab === "Alma") return event.createdBy?.role === "alumni";
     return false; 
-
   });
 
   if (loading) {
@@ -103,33 +104,40 @@ const EventContent = () => {
   }
 
   return (
-    <div className="w-[72%]">
-      {/* <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`text-sm px-4 py-2 rounded-full font-semibold ${activeTab === tab ? "text-black font-bold" : "text-gray-500"}`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div> */}
-
-      <div className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredEvents.map((event) => (
-            <EventCard
-              key={event._id}
-              event={event}
-              currentUserId={currentUserId}
-              onLikeEvent={handleLikeEvent}
-              onDislikeEvent={handleDislikeEvent}
-              onEventClick={() => navigate(`/about-event/${event._id}`, { state: event })}
-            />
+    <div className="w-[100%] flex">
+      {/* Event Cards */}
+      <div className="w-2/3">
+        <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`text-sm px-4 py-2 rounded-full font-semibold ${activeTab === tab ? "text-black font-bold" : "text-gray-500"}`}
+            >
+              {tab}
+            </button>
           ))}
         </div>
+
+        <div className="p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEvents.map((event) => (
+              <EventCard
+                key={event._id}
+                event={event}
+                currentUserId={currentUserId}
+                onLikeEvent={handleLikeEvent}
+                onDislikeEvent={handleDislikeEvent}
+                onSelectEvent={handleSelectEvent}
+                isSelected={selectedEvent?._id === event._id}
+              />
+            ))}
+          </div>
+        </div>
       </div>
+
+      {/* Right Sidebar */}
+      <RightSidebar selectedEvent={selectedEvent} />
     </div>
   );
 };
