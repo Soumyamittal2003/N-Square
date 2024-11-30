@@ -15,7 +15,12 @@ const RightSidebar = () => {
   return (
     <div className="relative w-1/3 mt-2 mb-auto bg-white px-2 rounded-lg p-11">
       {/* Create Event Button Positioned Top Right */}
-      <div className="absolute top-2 right-8">
+      <div className="absolute top-2 right-8 mx-auto">
+        <button
+          className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white mr-2"
+        >
+          Create Volunteer Position
+        </button>
         <button
           onClick={handleOpenCreateEvent}
           className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"

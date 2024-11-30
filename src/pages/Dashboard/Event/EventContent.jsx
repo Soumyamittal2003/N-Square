@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import EventCard from "./EventCard"; 
+import EventCard from "./EventCard";
 
 const EventContent = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -12,7 +12,9 @@ const EventContent = () => {
   // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      const storedUser = JSON.parse(
+        localStorage.getItem("chat-app-current-user")
+      );
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -48,7 +50,11 @@ const EventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
+            ? {
+                ...event,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
             : event
         )
       );
@@ -64,7 +70,11 @@ const EventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
+            ? {
+                ...event,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
             : event
         )
       );
@@ -79,8 +89,7 @@ const EventContent = () => {
     if (activeTab === "Student") return event.createdBy?.role === "student";
     if (activeTab === "Faculty") return event.createdBy?.role === "faculty";
     if (activeTab === "Alma") return event.createdBy?.role === "alumni";
-    return false; 
-
+    return false;
   });
 
   if (loading) {
@@ -93,7 +102,7 @@ const EventContent = () => {
 
   return (
     <div className="w-[72%]">
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
+      {/* <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -103,7 +112,7 @@ const EventContent = () => {
             {tab}
           </button>
         ))}
-      </div>
+      </div> */}
 
       <div className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

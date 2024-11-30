@@ -10,7 +10,7 @@ const PostCard = ({
   onLikePost,
   onDislikePost,
   onFollowUser,
-  loading,
+  isLoading,
 }) => {
   const localUserId = Cookies.get("id");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,11 +27,9 @@ const PostCard = ({
     setIsModalOpen(false);
   };
 
-  // Check if the current user has liked or disliked the post
   const isLiked = post.likes.includes(currentUserId);
   const isDisliked = post.dislikes.includes(currentUserId);
 
-  // Parse hashtags in text
   const parseTextWithHashtags = (text) => {
     return text.split(/(#[a-zA-Z0-9_]+)/g).map((part, index) => {
       if (part.startsWith("#")) {
@@ -45,7 +43,6 @@ const PostCard = ({
     });
   };
 
-  // Truncate the text for preview
   const truncatedText =
     post.description.length > 150
       ? post.description.slice(0, 150) + "..."
@@ -137,7 +134,7 @@ const PostCard = ({
           {/* Like Button */}
           <button
             onClick={() => onLikePost(post._id)}
-            disabled={isLiked || loading}
+            disabled={isLiked || isLoading}
             className={`flex items-center gap-1 font-semibold ${
               isLiked ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500 transition`}
@@ -149,7 +146,7 @@ const PostCard = ({
           {/* Dislike Button */}
           <button
             onClick={() => onDislikePost(post._id)}
-            disabled={isLiked || loading}
+            disabled={isLiked || isLoading}
             className={`flex items-center gap-1 font-semibold ${
               isDisliked ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500 transition`}
