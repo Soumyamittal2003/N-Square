@@ -29,7 +29,9 @@ const InspiringStory = () => {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await axiosInstance.get("/stories/all/");
+        console.log("Fetching stories...");
+        const response = await axiosInstance.get("/stories/all");
+        console.log(response);
         if (response.data.success) {
           setStories(response.data.data || []);
         } else {

@@ -1,19 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
-
-const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
-  const navigate = useNavigate();
-
-  const handleNavigate = () => {
-    navigate(`/dashboard/event/about-event`, {
-      state: {
-        ...event,
-      },
-    });
-  };
-
+const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onEventClick }) => {
   const handleLike = (e) => {
     e.stopPropagation();  // Prevent navigation
     onLikeEvent(event._id);
@@ -25,7 +13,7 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
   };
 
   return (
-    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
+    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between" onClick={onEventClick}>
       {/* Event Image */}
       <div className="relative">
         <img src={event.eventphoto} alt={event.title} className="w-45 h-30 rounded-lg object-cover" />
@@ -35,7 +23,6 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
       <div>
         <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
           <p className="text-sm text-gray-500">{new Date(event.date).toLocaleDateString()} • {event.time}</p>
-          
         </div>
         <h4 className="text-md font-semibold mt-1">{event.title}</h4>
         <p className="text-sm text-gray-500 flex items-center">{event.speaker}</p>
@@ -50,33 +37,19 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
         </div>
       </div>
 
-     
-
       {/* Footer with Register Button and Like/Dislike Buttons */}
       <footer className="flex justify-between items-center mt-4 w-full">
         <div className="flex gap-3 items-center">
-          <button
-            className="flex gap-1 items-center font-semibold justify-center"
-            onClick={handleLike}
-          >
+          <button className="flex gap-1 items-center font-semibold justify-center" onClick={handleLike}>
             <img src={arrowBlockUp} alt="Thumbs Up" />
             <span>{event.likes.length}</span>
           </button>
-          <button
-            className="flex gap-1 items-center font-semibold justify-center"
-            onClick={handleDislike}
-          >
+          <button className="flex gap-1 items-center font-semibold justify-center" onClick={handleDislike}>
             <img src={arrowBlockDown} alt="Thumbs Down" />
             <span>{event.dislikes.length}</span>
           </button>
         </div>
-        <button
-          className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
-          onClick={(e) => {
-            e.stopPropagation();  // Prevent navigation from like/dislike click
-            handleNavigate();
-          }}
-        >
+        <button className="px-7 py-1.5 text-white bg-blue-600 rounded-xl">
           Register
         </button>
       </footer>

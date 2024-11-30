@@ -1,18 +1,9 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import bookmark from "../../../assets/icons/bookmark.svg";
-import bookmarked from "../../../assets/icons/bookmarked.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
-const AppliedCard = ({
-  job,
-  currentUserId,
-  onLikePost,
-  onDislikePost,
-  onBookmarkJob,
-  bookmarks,
-}) => {
+const AppliedCard = ({ job, currentUserId }) => {
   const {
     _id,
     title = "Job Title",
@@ -26,16 +17,11 @@ const AppliedCard = ({
     applyLink,
     createdBy = {},
     postedDate,
-    likes = [], // Default to empty array if undefined
-    dislikes = [], // Default to empty array if undefined
+    likes = [],
+    dislikes = [],
   } = job;
 
   const [creatorName, setCreatorName] = useState("Loading...");
-  const [isBookmarked, setIsBookmarked] = useState(false);
-
-  // Check if the current user has liked or disliked the job
-  const isLiked = likes.includes(currentUserId);
-  const isDisliked = dislikes.includes(currentUserId);
 
   // Fetch creator's name dynamically
   useEffect(() => {
@@ -62,22 +48,6 @@ const AppliedCard = ({
     }
   }, [createdBy, _id]);
 
-  // Bookmark state management
-  useEffect(() => {
-    setIsBookmarked(bookmarks.includes(_id));
-  }, [bookmarks, _id]);
-
-  const handleBookmarkToggle = () => {
-    onBookmarkJob(_id);
-    setIsBookmarked((prev) => !prev);
-  };
-
-  const [isApplied, setIsApplied] = useState(false);
-
-  const handleApplyClick = () => {
-    setIsApplied(true); // Mark the job as applied
-  };
-
   return (
     <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar ">
       {/* Job Image */}
@@ -98,7 +68,7 @@ const AppliedCard = ({
         </p>
         <p className="text-sm text-gray-950 mt-2">{description}</p>
         <p className="text-xs text-gray-500 mt-2">
-          Skills Required :{" "}
+          Skills Required:{" "}
           <span className="text-gray-950 font-medium">
             {skills.length > 0 ? skills.join(", ") : "None specified"}
           </span>
@@ -138,47 +108,31 @@ const AppliedCard = ({
       <div className="flex justify-between items-center mt-4">
         {/* Left Icons */}
         <div className="flex gap-4">
-          {/* Bookmark Button */}
-          <button onClick={handleBookmarkToggle} className="w-5 h-5 mt-1.5">
-            <img
-              src={isBookmarked ? bookmarked : bookmark}
-              alt="Bookmark"
-              className="w-full h-full"
-            />
-          </button>
-
-          {/* Like Button */}
+          {/* Like Button (Not needed for applied job view) */}
           <button
-            onClick={() => onLikePost(_id)}
-            className={`flex items-center gap-1 font-semibold  ${
-              isLiked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-500 transition`}
+            disabled
+            className="flex items-center gap-1 font-semibold text-gray-600"
           >
             <img src={arrowBlockUp} alt="Upvote" className="w-6 h-6" />
             <span className="font-semibold text-xl">{likes.length}</span>
           </button>
 
-          {/* Dislike Button */}
+          {/* Dislike Button (Not needed for applied job view) */}
           <button
-            onClick={() => onDislikePost(_id)}
-            className={`flex items-center gap-1 font-semibold ${
-              isDisliked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-500 transition`}
+            disabled
+            className="flex items-center gap-1 font-semibold text-gray-600"
           >
             <img src={arrowBlockdown} alt="Downvote" className="w-6 h-6" />
             <span className="font-semibold text-xl">{dislikes.length}</span>
           </button>
         </div>
 
-        {/* Apply Button */}
+        {/* Applied Button */}
         <button
-          onClick={handleApplyClick}
-          className={`px-4 py-2 text-sm font-bold text-white rounded-2xl ${
-            isApplied ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-          }`}
-          disabled={isApplied}
+          className="px-4 py-2 text-sm font-bold text-white rounded-2xl bg-gray-400 cursor-not-allowed"
+          disabled
         >
-          {isApplied ? "Applied" : "Apply"}
+          Applied
         </button>
       </div>
     </div>

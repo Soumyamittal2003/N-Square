@@ -11,6 +11,7 @@ const JobCard = ({
   onLikePost,
   onDislikePost,
   onBookmarkJob,
+  onApplyJob,
   bookmarks,
 }) => {
   const {
@@ -28,6 +29,7 @@ const JobCard = ({
     postedDate,
     likes = [], // Default to empty array if undefined
     dislikes = [], // Default to empty array if undefined
+    isApplied = false, // Check if job is applied by current user
   } = job;
 
   const [creatorName, setCreatorName] = useState("Loading...");
@@ -42,40 +44,22 @@ const JobCard = ({
     if (createdBy?.firstName && createdBy?.lastName) {
       setCreatorName(`${createdBy.firstName} ${createdBy.lastName}`);
     } else if (createdBy?._id) {
-      const fetchCreatorDetails = async () => {
+      const fetchCreatorName = async () => {
         try {
           const response = await axiosInstance.get(`/users/${createdBy._id}`);
-          if (response.data?.success) {
-            const { firstName, lastName } = response.data.data;
-            setCreatorName(`${firstName} ${lastName}`);
-          } else {
-            setCreatorName("Unknown");
-          }
+          setCreatorName(`${response.data.firstName} ${response.data.lastName}`);
         } catch (error) {
-          console.error(`Error fetching creator details for job ${_id}:`, error);
-          setCreatorName("Error fetching user");
+          console.error("Error fetching creator name:", error);
         }
       };
-      fetchCreatorDetails();
-    } else {
-      setCreatorName("Unknown");
+      fetchCreatorName();
     }
-  }, [createdBy, _id]);
+  }, [createdBy]);
 
-  // Bookmark state management
+  // Check if the job is bookmarked
   useEffect(() => {
     setIsBookmarked(bookmarks.includes(_id));
   }, [bookmarks, _id]);
-
-  const handleBookmarkToggle = () => {
-    onBookmarkJob(_id); // Toggle bookmark state
-  };
-
-  const [isApplied, setIsApplied] = useState(false);
-
-  const handleApplyClick = () => {
-    setIsApplied(true); // Mark the job as applied
-  };
 
   return (
     <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar">
@@ -138,13 +122,16 @@ const JobCard = ({
         {/* Left Icons */}
         <div className="flex gap-4">
           {/* Bookmark Button */}
-          <button onClick={handleBookmarkToggle} className="w-5 h-5 mt-1.5">
-            <img
-              src={isBookmarked ? bookmarked : bookmark}
-              alt="Bookmark"
-              className="w-full h-full"
-            />
-          </button>
+          <button
+          className="px-4 py-2 rounded-xl gap-1 flex items-center"
+          onClick={() => onBookmarkJob(_id)}
+        >
+          <img
+            src={isBookmarked ? bookmarked : bookmark}
+            alt="bookmark"
+            className="w-6 h-6"
+          />
+        </button>
 
           {/* Like Button */}
           <button
@@ -171,10 +158,8 @@ const JobCard = ({
 
         {/* Apply Button */}
         <button
-          onClick={handleApplyClick}
-          className={`px-4 py-2 text-sm font-bold text-white rounded-2xl ${
-            isApplied ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-          }`}
+          className="px-4 py-2 bg-blue-600 text-white rounded-xl"
+          onClick={() => onApplyJob(_id)}
           disabled={isApplied}
         >
           {isApplied ? "Applied" : "Apply"}

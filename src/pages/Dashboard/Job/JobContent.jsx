@@ -124,26 +124,59 @@ const JobContent = () => {
 
   // Handle bookmark action
   const handleBookmarkJob = async (jobId) => {
+    if (!currentUserId) {
+      console.error("User not logged in.");
+      return;
+    }
+
     try {
-      const isBookmarked = userBookmarks.includes(jobId);
-      const action = isBookmarked ? "remove" : "add"; // toggle action
-      const response = await axiosInstance.patch(`jobs/save-job/${jobId}`, {
-        userId: currentUserId,
-        action: action,
-      });
+      // Assuming the API expects both userId and jobId in the request body
+      const response = await axiosInstance.patch(
+        `/jobs/save-job/${jobId}`,
+        { userId: currentUserId }
+      );
 
       if (response.data.success) {
-        // Update user bookmarks in state
         setUserBookmarks((prevBookmarks) =>
-          action === "add"
-            ? [...prevBookmarks, jobId]
-            : prevBookmarks.filter((id) => id !== jobId)
+          prevBookmarks.includes(jobId)
+            ? prevBookmarks.filter((id) => id !== jobId)
+            : [...prevBookmarks, jobId]
         );
       } else {
         console.error("Failed to bookmark job:", jobId);
       }
     } catch (error) {
       console.error(`Error bookmarking job ${jobId}:`, error);
+    }
+  };
+
+  // Handle apply action
+  const handleApplyJob = async (jobId) => {
+    if (!currentUserId) {
+      console.error("User not logged in.");
+      return;
+    }
+
+    try {
+      // Assuming the API expects a payload with jobId and userId
+      const response = await axiosInstance.post(
+        `/jobs/apply/${jobId}`,
+        { userId: currentUserId }
+      );
+
+      if (response.data.success) {
+        setJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job._id === jobId
+              ? { ...job, isApplied: true }
+              : job
+          )
+        );
+      } else {
+        console.error("Failed to apply for job:", jobId);
+      }
+    } catch (error) {
+      console.error(`Error applying for job ${jobId}:`, error);
     }
   };
 
@@ -171,9 +204,7 @@ const JobContent = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`text-sm px-4 py-2 rounded-full font-semibold ${
-              activeTab === tab ? "text-black font-bold" : "text-gray-500"
-            }`}
+            className={`text-sm px-4 py-2 rounded-full font-semibold ${activeTab === tab ? "text-black font-bold" : "text-gray-500"}`}
           >
             {tab}
           </button>
@@ -191,6 +222,7 @@ const JobContent = () => {
               onLikePost={handleLikePost}
               onDislikePost={handleDislikePost}
               onBookmarkJob={handleBookmarkJob}
+              onApplyJob={handleApplyJob}
               bookmarks={userBookmarks}
             />
           ))}
