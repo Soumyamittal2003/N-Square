@@ -30,16 +30,31 @@ const CreateEvent = ({ onClose }) => {
     reminder: "",
   });
 
-  const handleInputChange = (e) => {
-    const { name, value, type, files, checked } = e.target;
+  const handleImageInputChange = (event) => {
+    const file = event.target.files[0]; // Get the selected file
 
-    if (type === "file") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0], // Store the first selected file
-      }));
-      setPreviewImage(URL.createObjectURL(files[0])); // Set preview image
-    } else if (type === "checkbox" || type === "radio") {
+    if (file) {
+      // Check if the file is an image
+      if (file.type.startsWith("image/")) {
+        // Generate a preview URL for the image
+        const previewUrl = URL.createObjectURL(file);
+
+        // Update state with the file and preview URL
+        setFormData({
+          ...formData,
+          eventphoto: file,
+        });
+        setPreviewImage(previewUrl);
+      } else {
+        alert("Please select a valid image file.");
+      }
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    if (type === "checkbox" || type === "radio") {
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked ? value : prevData[name],
@@ -50,6 +65,18 @@ const CreateEvent = ({ onClose }) => {
         [name]: value,
       }));
     }
+  };
+  const handleAddTag = (e) => {
+    if (tagInput && tags.length < 7) {
+      setTags([...tags, tagInput]);
+      setTagInput("");
+      console.log("Updated tags: ", tags); // Log updated tags
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+    console.log("Updated tags after removal: ", tags); // Log updated tags
   };
 
   const validateForm = () => {
@@ -71,6 +98,8 @@ const CreateEvent = ({ onClose }) => {
   };
 
   const handleSubmit = async () => {
+    console.log("Form Data Submitted:", formData);
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setError(validationErrors);
@@ -95,6 +124,11 @@ const CreateEvent = ({ onClose }) => {
     formPayload.append("organizedBy", formData.organizedBy);
     formPayload.append("reminder", formData.reminder);
 
+    if (formData.mode === "Offline") {
+      formPayload.append("venue", formData.venue);
+    } else if (formData.mode === "Online") {
+      formPayload.append("link", formData.link);
+    }
     if (formData.eventphoto) {
       formPayload.append("eventphoto", formData.eventphoto);
     }
@@ -115,16 +149,6 @@ const CreateEvent = ({ onClose }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-  const handleAddTag = () => {
-    if (tagInput.trim() && tags.length < 7) {
-      setTags((prevTags) => [...prevTags, tagInput.trim()]);
-      setTagInput(""); // Clear the input field
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove) => {
-    setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
   };
 
   const handleNext = () => {
@@ -216,8 +240,8 @@ const CreateEvent = ({ onClose }) => {
                       type="file"
                       name="eventphoto"
                       id="eventphoto"
-                      onChange={handleInputChange}
-                      className="hidden"
+                      onChange={handleImageInputChange}
+                      className=""
                     />
                   </label>
                 </div>
@@ -247,11 +271,11 @@ const CreateEvent = ({ onClose }) => {
                 <option value="" className="font-semibold text-gray-300">
                   Select Event Type
                 </option>
-                <option value="Workshop">Workshop</option>
-                <option value="Seminar">Seminar</option>
-                <option value="Conference">Conference</option>
-                <option value="Webinar">Webinar</option>
-                <option value="Training">Training</option>
+                <option value="workshop">workshop</option>
+                <option value="seminar">seminar</option>
+                <option value="conference">conference</option>
+                <option value="webinar">webinar</option>
+                <option value="training">training</option>
               </select>
             </div>
 
@@ -348,6 +372,19 @@ const CreateEvent = ({ onClose }) => {
                 <span className="text-red-500 text-sm">{error.time}</span>
               )}
             </div>
+            <div className="mt-4">
+              <label className="block text-sm font-semibold mb-2">
+                Event Description
+              </label>
+              <textarea
+                name="eventDescription"
+                value={formData.eventDescription}
+                onChange={handleInputChange}
+                rows="3"
+                placeholder="Add a brief description about the event"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
+            </div>
 
             <div className="flex justify-between items-center mt-6">
               <button
@@ -411,10 +448,7 @@ const CreateEvent = ({ onClose }) => {
                 Tags / Topics
               </label>
               <div className="w-full border border-gray-300 rounded-lg p-3">
-                <div
-                  className="flex flex-wrap gap-2 ```javascript
-                mb-3"
-                >
+                <div className="flex flex-wrap gap-2 mb-3">
                   {tags.map((tag, index) => (
                     <span
                       key={index}
@@ -548,10 +582,7 @@ const CreateEvent = ({ onClose }) => {
 
         {step === 4 && (
           <div className="mt-4">
-            <h2
-              className="text-2xl font ```javascript
-            bold mb-6 text-center"
-            >
+            <h2 className="text-2xl font bold mb-6 text-center">
               Schedule Reminder
             </h2>
 
