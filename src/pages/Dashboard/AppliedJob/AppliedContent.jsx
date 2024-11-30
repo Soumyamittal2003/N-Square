@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import AppliedCard from "./AppliedJob";
+import AppliedCard from "./AppliedCard";
 
 const AppliedContent = () => {
   const [jobs, setJobs] = useState([]);
@@ -26,13 +26,13 @@ const AppliedContent = () => {
     const fetchAppliedJobs = async () => {
       try {
         if (currentUserId) {
-          const response = await axiosInstance.get(`/jobs/apply/${currentUserId}`);
+          const response = await axiosInstance.get(`/users/${currentUserId}`);
           if (response.data.success) {
-            const appliedJobs = response.data.appliedJobs || [];
+            const appliedJobs = response.data.data.appliedJobs || [];
             // Fetch job details for each applied job
             const jobDetailsPromises = appliedJobs.map(async (jobId) => {
               const jobResponse = await axiosInstance.get(`/jobs/${jobId}`);
-              return jobResponse.data.job;
+              return jobResponse.data;
             });
             const fetchedJobs = await Promise.all(jobDetailsPromises);
             setJobs(fetchedJobs);
@@ -57,8 +57,8 @@ const AppliedContent = () => {
   }
 
   return (
-    <div className="w-full p-4 overflow-y-auto hide-scrollbar" style={{ maxHeight: "calc(100vh - 160px)" }}>
-      <div className="grid grid-cols-3 gap-4">
+    <div className="w-full p-8 overflow-y-auto hide-scrollbar" style={{ maxHeight: "calc(100vh - 160px)" }}>
+      <div className="grid grid-cols-4 gap-2 ">
         {jobs.map((job) => (
           <AppliedCard key={job._id} job={job} currentUserId={currentUserId} />
         ))}

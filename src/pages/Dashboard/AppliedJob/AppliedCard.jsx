@@ -17,8 +17,8 @@ const AppliedCard = ({ job, currentUserId }) => {
     applyLink,
     createdBy = {},
     postedDate,
-    likes = [], // Default to empty array if undefined
-    dislikes = [], // Default to empty array if undefined
+    likes = [],
+    dislikes = [],
   } = job;
 
   const [creatorName, setCreatorName] = useState("Loading...");
@@ -68,7 +68,7 @@ const AppliedCard = ({ job, currentUserId }) => {
         </p>
         <p className="text-sm text-gray-950 mt-2">{description}</p>
         <p className="text-xs text-gray-500 mt-2">
-          Skills Required :{" "}
+          Skills Required:{" "}
           <span className="text-gray-950 font-medium">
             {skills.length > 0 ? skills.join(", ") : "None specified"}
           </span>
