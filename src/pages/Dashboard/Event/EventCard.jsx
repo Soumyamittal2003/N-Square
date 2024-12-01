@@ -14,12 +14,12 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
   };
 
   const handleLike = (e) => {
-    e.stopPropagation();  // Prevent navigation
+    e.stopPropagation(); // Prevent navigation
     onLikeEvent(event._id);
   };
 
   const handleDislike = (e) => {
-    e.stopPropagation();  // Prevent navigation
+    e.stopPropagation(); // Prevent navigation
     onDislikeEvent(event._id);
   };
 
@@ -37,7 +37,9 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
       {/* Event Details */}
       <div>
         <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
-          <p className="text-sm text-gray-500">{new Date(event.date).toLocaleDateString()} • {event.time}</p>
+          <p className="text-sm text-gray-500">
+            {new Date(event.date).toLocaleDateString()} • {event.time}
+          </p>
         </div>
         <h4 className="text-md font-semibold mt-1">{event.title}</h4>
         <p className="text-sm text-gray-500 flex items-center">{event.speaker}</p>
@@ -73,23 +75,25 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
         <button
           className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
           onClick={(e) => {
-            e.stopPropagation();  // Prevent navigation from like/dislike click
-            handleNavigate();
+            e.stopPropagation(); // Prevent navigation from like/dislike click
+            
           }}
         >
           Register
         </button>
       </footer>
 
-      {/* Checkbox for selecting the event */}
-      <div className="mt-2 flex justify-start items-center">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={handleSelectChange}
-          className="mr-2"
-        />
-        <label>Select this event</label>
+      {/* Details Button */}
+      <div className="mt-2">
+        <button
+          className="text-sm text-blue-600 underline mt-2 self-start"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent navigation from like/dislike click
+            handleNavigate();
+          }}
+        >
+          Click here for more details
+        </button>
       </div>
     </div>
   );
