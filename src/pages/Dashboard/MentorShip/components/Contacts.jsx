@@ -53,7 +53,7 @@ export default function Contacts({ contacts, changeChat }) {
                     alt=""
                     className="w-10 h-10 rounded-full"
                   />
-                  <h3 className="text-lg text-white">{contact.name}</h3>
+                  <h3 className="text-lg text-black">{contact.name}</h3>
                 </div>
               );
             })}

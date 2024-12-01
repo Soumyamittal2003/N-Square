@@ -1,34 +1,4 @@
-import { useState } from "react";
-
-const CreateResources = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    fileName: "",
-    uploadFile: null,
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // Add your API logic here
-    onClose(); // Close the popup after submission
-  };
-
-  const handleDiscard = () => {
-    setFormData({
-      fileName: "",
-      uploadFile: null,
-    });
-    onClose(); // Close the popup when discard is clicked
-  };
-
+const CreateResource = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white w-[100%] max-w-md rounded-lg shadow-lg p-6 relative">
@@ -110,8 +80,8 @@ const CreateResources = ({ onClose }) => {
           </div>
         </form>
       </div>
-    </div>
+    </>
   );
 };
 
-export default CreateResources;
+export default CreateResource;

@@ -6,7 +6,8 @@ const HelpContent = () => {
 
   const faqs = [
     {
-      question: "How will this platform keep alumni information accurate and up-to-date?",
+      question:
+        "How will this platform keep alumni information accurate and up-to-date?",
       answer:
         "The platform uses regular updates and verification processes, allowing users to edit their profiles and administrators to validate information.",
     },
@@ -16,7 +17,8 @@ const HelpContent = () => {
         "Through networking tools, discussion forums, and event organization features, the platform encourages alumni to connect and collaborate.",
     },
     {
-      question: "Can the platform help alumni and students find career opportunities or support professional development?",
+      question:
+        "Can the platform help alumni and students find career opportunities or support professional development?",
       answer:
         "Yes, the platform provides job boards, mentorship programs, and resources for skill-building and career growth.",
     },
@@ -38,11 +40,14 @@ const HelpContent = () => {
 
   return (
     <div className="w-100 mx-auto py-12 px-6 bg-white">
-      <h2 className="text-3xl font-extrabold text-gray-800 mb-4 text-center">Help Center</h2>
+      <h2 className="text-3xl font-extrabold text-gray-800 mb-4 text-center">
+        Help Center
+      </h2>
       <p className="text-gray-600 mb-6 text-center">
-        Find answers to your questions or learn more about the functionalities of the platform.
+        Find answers to your questions or learn more about the functionalities
+        of the platform.
       </p>
-      
+
       {/* Search Bar */}
       <div className="mb-8">
         <input

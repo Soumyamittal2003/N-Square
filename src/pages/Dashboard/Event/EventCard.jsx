@@ -3,13 +3,21 @@ import { useNavigate } from "react-router-dom";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
-const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelectEvent, isSelected }) => {
+const EventCard = ({
+  event,
+  currentUserId,
+  onLikeEvent,
+  onDislikeEvent,
+  onSelectEvent,
+  isSelected,
+}) => {
   const navigate = useNavigate();
   const [isRegistered, setIsRegistered] = useState(false); // State to track registration
 
   // Load registration status from localStorage
   useEffect(() => {
-    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+    const registeredEvents =
+      JSON.parse(localStorage.getItem("registeredEvents")) || [];
     if (registeredEvents.includes(event._id)) {
       setIsRegistered(true);
     }
@@ -37,27 +45,29 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
     e.stopPropagation(); // Prevent navigation
     setIsRegistered(true);
     // Save registration status to localStorage
-    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+    const registeredEvents =
+      JSON.parse(localStorage.getItem("registeredEvents")) || [];
     if (!registeredEvents.includes(event._id)) {
       registeredEvents.push(event._id);
-      localStorage.setItem("registeredEvents", JSON.stringify(registeredEvents));
+      localStorage.setItem(
+        "registeredEvents",
+        JSON.stringify(registeredEvents)
+      );
     }
   };
 
   return (
-        <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
+    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
       {/* Event Image */}
       <div className="relative">
-        <img 
-          src={event.eventphoto} 
-          alt={event.title} 
-          className="w-full h-[150px] rounded-lg object-cover" 
-          style={{ aspectRatio: "16/9" }} 
+        <img
+          src={event.eventphoto}
+          alt={event.title}
+          className="w-full h-[150px] rounded-lg object-cover"
+          style={{ aspectRatio: "16/9" }}
         />
       </div>
 
-
-      
       <div>
         <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
           <p className="text-sm text-gray-500">
@@ -72,7 +82,10 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
         {/* Tags */}
         <div className="flex flex-wrap gap-5 mt-2">
           {event.tagsTopic.map((tag, index) => (
-            <span key={index} className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full">
+            <span
+              key={index}
+              className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full"
+            >
               {tag}
             </span>
           ))}

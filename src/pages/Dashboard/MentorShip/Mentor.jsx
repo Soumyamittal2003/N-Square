@@ -55,10 +55,10 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen">
-      <div className="w-1/4 bg-gray-800 text-white p-4">
+      <div className="w-1/4 bg-gray-200 text-black p-4">
         <Contacts contacts={contacts} changeChat={handleChatChange} />
       </div>
-      <div className="flex-1 bg-gray-900 text-white p-4">
+      <div className="flex-1 bg-gray-100 text-black p-4">
         {currentChat === undefined ? (
           <Welcome />
         ) : (

@@ -38,13 +38,18 @@ const InspiringStory = () => {
         `/stories/like/${storyId}`,
         { userId: currentUserId }
       );
-      setStories((prevStories) =>
-        prevStories.map((story) =>
-          story._id === storyId
-            ? { ...story, likes: response.data.likes, dislikes: response.data.dislikes }
-            : story
-        )
-      );
+      if (response.data.success) {
+        setStories((prevStories) =>
+          prevStories.map((story) =>
+            story._id === storyId
+              ? {
+                  ...story,
+                  likedBy: Array.isArray(response.data.likedBy) ? response.data.likedBy : [],
+                }
+              : story
+          )
+        );
+      }
     } catch (error) {
       console.error("Error liking story:", error);
     }
@@ -57,13 +62,18 @@ const InspiringStory = () => {
         `/stories/dislike/${storyId}`,
         { userId: currentUserId }
       );
-      setStories((prevStories) =>
-        prevStories.map((story) =>
-          story._id === storyId
-            ? { ...story, dislikes: response.data.dislikes, likes: response.data.likes }
-            : story
-        )
-      );
+      if (response.data.success) {
+        setStories((prevStories) =>
+          prevStories.map((story) =>
+            story._id === storyId
+              ? {
+                  ...story,
+                  dislikedBy: Array.isArray(response.data.dislikedBy) ? response.data.dislikedBy : [],
+                }
+              : story
+          )
+        );
+      }
     } catch (error) {
       console.error("Error disliking story:", error);
     }

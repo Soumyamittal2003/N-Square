@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import EventCard from "./EventCard"; 
+import EventCard from "./EventCard";
 import { useNavigate } from "react-router-dom";
 import RightSidebar from "./RightSidebar";
 
@@ -16,7 +16,9 @@ const EventContent = () => {
   // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      const storedUser = JSON.parse(
+        localStorage.getItem("chat-app-current-user")
+      );
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -52,7 +54,11 @@ const EventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
+            ? {
+                ...event,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
             : event
         )
       );
@@ -68,7 +74,11 @@ const EventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
+            ? {
+                ...event,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
             : event
         )
       );
@@ -92,7 +102,7 @@ const EventContent = () => {
     if (activeTab === "Student") return event.createdBy?.role === "student";
     if (activeTab === "Faculty") return event.createdBy?.role === "faculty";
     if (activeTab === "Alma") return event.createdBy?.role === "alumni";
-    return false; 
+    return false;
   });
 
   if (loading) {
@@ -137,7 +147,7 @@ const EventContent = () => {
       </div>
 
       {/* Right Sidebar */}
-      <RightSidebar  selectedEvent={selectedEvent} />
+      <RightSidebar selectedEvent={selectedEvent} />
     </div>
   );
 };

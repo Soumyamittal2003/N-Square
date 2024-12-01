@@ -7,13 +7,34 @@ const VolunteerContent = () => {
   const [volunteerPositions, setVolunteerPositions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch volunteer positions from the API
+  // Fetch volunteer positions with event details
   useEffect(() => {
     const fetchVolunteerPositions = async () => {
       try {
-        const response = await axiosInstance.get("/volunteer/get-all-volunteer-position");
+        const response = await axiosInstance.get(
+          "/volunteer/get-all-volunteer-position"
+        );
         if (response.data && Array.isArray(response.data)) {
-          setVolunteerPositions(response.data);
+          const positionsWithEvents = await Promise.all(
+            response.data.map(async (position) => {
+              try {
+                const eventResponse = await axiosInstance.get(
+                  `/event/${position.eventId}`
+                );
+                return {
+                  ...position,
+                  eventDetails: eventResponse.data?.event,
+                };
+              } catch (eventError) {
+                console.error(
+                  `Error fetching event for position ${position._id}:`,
+                  eventError
+                );
+                return position; // Fallback to just the position details
+              }
+            })
+          );
+          setVolunteerPositions(positionsWithEvents);
         } else {
           console.error("Invalid response format");
         }
@@ -58,12 +79,19 @@ const VolunteerContent = () => {
         {filteredPositions.map((position) => (
           <VolunteerCard
             key={position._id}
-            functionName={position.positionTitle}
-            date={new Date(position.createdAt).toLocaleDateString()} // Format date from `createdAt`
-            time={new Date(position.createdAt).toLocaleTimeString()} // Format time from `createdAt`
-            venue={`Available Positions: ${position.availablePositions}`}
-            organizer={position.rolesResponsibility}
-            contact={`Eligibility: ${position.eligibility}, Skills: ${position.skills}`}
+            positionTitle={position.positionTitle}
+            skills={position.skills}
+            availablePositions={position.availablePositions}
+            createdAt={position.createdAt}
+            rolesResponsibility={position.rolesResponsibility}
+            eligibility={position.eligibility}
+            eventTitle={position.eventDetails?.title}
+            venue={position.eventDetails?.venue}
+            link={position.eventDetails?.link}
+            date={position.eventDetails?.date}
+            time={position.eventDetails?.time}
+            eventCoordinator={position.eventDetails?.eventCoordinator}
+            coordinatorPhone={position.eventDetails?.coordinatorphone}
           />
         ))}
       </div>

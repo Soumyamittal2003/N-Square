@@ -1,5 +1,3 @@
-
-
 const ReunionVideo = () => {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow border border-gray-200">
