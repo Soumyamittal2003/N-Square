@@ -8,9 +8,6 @@ const Help = () => {
       <div className="w-[80%] p-2">
         <HelpContent />
       </div>
-      {/* <div className="w-[20%] p-2">
-        <RightSidebar />
-      </div> */}
     </div>
   );
 };
