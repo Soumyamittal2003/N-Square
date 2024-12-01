@@ -47,7 +47,7 @@ const UserProfile = () => {
           firstName: data.firstName || "",
           lastName: data.lastName || "",
           about: data.about || "",
-          tagline: data.tagLine || "",
+          tagline: data.tagline || "",
           role: data.role || "",
           followers: data.followers || [],
           following: data.following || [],
@@ -181,7 +181,7 @@ const UserProfile = () => {
   return (
     <div className="flex w-full min-h-screen">
       {/* Left Section */}
-      <div className="w-[40%] p-4 overflow-y-auto hide-scrollbar h-[calc(100vh-100px)]">
+      <div className="w-[40%] p-4 ">
         <div className="flex flex-col items-center">
           {/* Profile Image Section */}
           <div className="w-full p-3 bg-white rounded-lg shadow-lg border mx-auto flex flex-col items-center justify-center">
@@ -211,7 +211,7 @@ const UserProfile = () => {
               <img
                 src={profileimageUrl || "default-profile.jpg"}
                 alt="Profile"
-                className={`rounded-full w-60 h-60 cursor-pointer border-8 ${getBorderColor()}`}
+                className={`rounded-full w-52 h-52 cursor-pointer border-8 ${getBorderColor()}`}
                 onClick={() => setIsEditingProfileImage(true)}
               />
 
@@ -231,6 +231,21 @@ const UserProfile = () => {
             <h1 className="mt-2 text-4xl font-bold text-center">
               {profileData.firstName} {profileData.lastName}
             </h1>
+
+            {/* show tagline here */}
+            <div className="text-lg text-gray-600 text-center">
+              {isEditingAbout ? (
+                <textarea
+                  name="tagline"
+                  value={profileData.tagline}
+                  onChange={handleInputChange}
+                  className="w-full mt-2 border p-2 rounded"
+                />
+              ) : (
+                <p className="text-gray-700 mt-2">{profileData.tagline}</p>
+              )}
+            </div>
+
             <div className="flex space-x-6 gap-2 m-2 p-3 px-4 border rounded-3xl justify-center">
               <div className="text-center">
                 <p className="font-bold text-lg">
@@ -252,25 +267,14 @@ const UserProfile = () => {
           </div>
 
           {/* About Section */}
-          <div className="relative bg-white text-center border rounded-lg shadow mt-4 p-6 w-full">
-            <h3 className="text-lg font-bold">About</h3>
-            {isEditingAbout ? (
-              <textarea
-                name="about"
-                value={profileData.about}
-                onChange={handleInputChange}
-                className="w-full mt-2 border p-2 rounded"
-              />
-            ) : (
-              <p className="text-gray-700 mt-2">{profileData.about}</p>
-            )}
+          <div className="relative bg-white text-center border rounded-lg shadow mt-4 p-6 w-full h-[300px] overflow-y-auto hide-scrollbar">
             <button
               onClick={
                 isEditingAbout
                   ? updateAboutSection
                   : () => setIsEditingAbout(true)
               }
-              className="absolute top-1 right-1 bg-gray-200 px-2 text-sm py-1 text-black  rounded-md"
+              className="absolute top-1 right-1 bg-gray-50 px-2 text-sm py-1 text-black  rounded-md"
             >
               {isEditingAbout ? (
                 <span>Save</span>
@@ -278,6 +282,59 @@ const UserProfile = () => {
                 <FiEdit className="text-black" />
               )}
             </button>
+
+            <div className=" border mt-4 rounded-lg shadow-sm">
+              <h3 className="text-lg font-bold">About</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="about"
+                  value={profileData.about}
+                  onChange={handleInputChange}
+                  className="w-full mt-2 border p-2 rounded"
+                />
+              ) : (
+                <p className="text-gray-700 mt-2">{profileData.about}</p>
+              )}
+            </div>
+            <div className=" border mt-4  rounded-lg shadow-sm">
+              <h3 className="text-lg font-bold">About</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="about"
+                  value={profileData.about}
+                  onChange={handleInputChange}
+                  className="w-full mt-2 border p-2 rounded"
+                />
+              ) : (
+                <p className="text-gray-700 mt-2">{profileData.about}</p>
+              )}
+            </div>
+            <div className=" border mt-4 rounded-lg shadow-sm">
+              <h3 className="text-lg font-bold">About</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="about"
+                  value={profileData.about}
+                  onChange={handleInputChange}
+                  className="w-full mt-2 border p-2 rounded"
+                />
+              ) : (
+                <p className="text-gray-700 mt-2">{profileData.about}</p>
+              )}
+            </div>
+            <div className=" border mt-4 rounded-lg shadow-sm">
+              <h3 className="text-lg font-bold">About</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="about"
+                  value={profileData.about}
+                  onChange={handleInputChange}
+                  className="w-full mt-2 border p-2 rounded"
+                />
+              ) : (
+                <p className="text-gray-700 mt-2">{profileData.about}</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
