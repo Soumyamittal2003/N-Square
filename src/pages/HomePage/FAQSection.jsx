@@ -5,7 +5,8 @@ const FAQSection = () => {
 
   const faqs = [
     {
-      question: "How will this platform keep alumni information accurate and up-to-date?",
+      question:
+        "How will this platform keep alumni information accurate and up-to-date?",
       answer:
         "The platform uses regular updates and verification processes, allowing users to edit their profiles and administrators to validate information.",
     },
@@ -15,7 +16,8 @@ const FAQSection = () => {
         "Through networking tools, discussion forums, and event organization features, the platform encourages alumni to connect and collaborate.",
     },
     {
-      question: "Can the platform help alumni and students find career opportunities or support professional development?",
+      question:
+        "Can the platform help alumni and students find career opportunities or support professional development?",
       answer:
         "Yes, the platform provides job boards, mentorship programs, and resources for skill-building and career growth.",
     },
@@ -34,7 +36,8 @@ const FAQSection = () => {
     <div className="max-w-7xl mx-auto py-12 px-6 bg-gray-50">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">FAQs</h2>
       <p className="text-gray-600 mb-8">
-        Get your questions answered quickly. Browse through our FAQs for instant support on common topics of inquiry.
+        Get your questions answered quickly. Browse through our FAQs for instant
+        support on common topics of inquiry.
       </p>
       <div className="space-y-3">
         {faqs.map((faq, index) => (

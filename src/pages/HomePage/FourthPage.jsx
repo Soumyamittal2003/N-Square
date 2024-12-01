@@ -1,14 +1,18 @@
-import backgroundImage from '../../assets/images/Background4.png'; // Replace with the actual path to the image
+import backgroundImage from "../../assets/images/Background4.png"; // Replace with the actual path to the image
 
 const FourthPage = () => {
   return (
     <div className="px-10 py-1 bg-white flex flex-col md:flex-row items-center justify-between gap-6 mx-16">
       {/* Left Section: Text Content */}
       <div className="w-full md:w-2/3">
-        <h2 className="text-4xl md:text-6xl font-bold mb-8" style={{
-                textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)', // Adding shadow effect
-            }}>
-          Elevate Your Connection,<br/> Job Journey with <br /> 
+        <h2
+          className="text-4xl md:text-6xl font-bold mb-8"
+          style={{
+            textShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)", // Adding shadow effect
+          }}
+        >
+          Elevate Your Connection,
+          <br /> Job Journey with <br />
           <span className="text-blue-600 p-40">Network_Next!</span>
         </h2>
 
@@ -16,9 +20,12 @@ const FourthPage = () => {
         <div className="flex flex-col md:flex-row gap-8 py-10 justify-center">
           {/* Feature 1 */}
           <div className="text-center md:text-left">
-            <h3 className="text-lg font-semibold text-blue-600">Discover Connection</h3>
+            <h3 className="text-lg font-semibold text-blue-600">
+              Discover Connection
+            </h3>
             <p className="text-gray-600 mt-2">
-              Join a network of passionate traders and grow your expertise together.
+              Join a network of passionate traders and grow your expertise
+              together.
             </p>
           </div>
 
@@ -27,9 +34,12 @@ const FourthPage = () => {
 
           {/* Feature 2 */}
           <div className="text-center md:text-left">
-            <h3 className="text-lg font-semibold text-blue-600">Fast Service</h3>
+            <h3 className="text-lg font-semibold text-blue-600">
+              Fast Service
+            </h3>
             <p className="text-gray-600 mt-2">
-              Learn from the best in the industry through expert-led live, interactive webinars.
+              Learn from the best in the industry through expert-led live,
+              interactive webinars.
             </p>
           </div>
 
@@ -38,9 +48,12 @@ const FourthPage = () => {
 
           {/* Feature 3 */}
           <div className="text-center md:text-left">
-            <h3 className="text-lg font-semibold text-blue-600">Enhance Experience</h3>
+            <h3 className="text-lg font-semibold text-blue-600">
+              Enhance Experience
+            </h3>
             <p className="text-gray-600 mt-2">
-              Transform your trading performance with advanced techniques and insights.
+              Transform your trading performance with advanced techniques and
+              insights.
             </p>
           </div>
         </div>

@@ -6,14 +6,50 @@ const VolunteerContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [volunteerPositions, setVolunteerPositions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
-  // Fetch volunteer positions from the API
+  // Fetch the current user ID from localStorage
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      if (storedUser && storedUser._id) {
+        setCurrentUserId(storedUser._id);
+      } else {
+        console.error("No current user found in localStorage");
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  // Fetch volunteer positions with event details
   useEffect(() => {
     const fetchVolunteerPositions = async () => {
       try {
-        const response = await axiosInstance.get("/volunteer/get-all-volunteer-position");
+        const response = await axiosInstance.get(
+          "/volunteer/get-all-volunteer-position"
+        );
         if (response.data && Array.isArray(response.data)) {
-          setVolunteerPositions(response.data);
+          const positionsWithEvents = await Promise.all(
+            response.data.map(async (position) => {
+              try {
+                const eventResponse = await axiosInstance.get(
+                  `/event/${position.eventId}`
+                );
+                return {
+                  ...position,
+                  eventDetails: eventResponse.data?.event,
+                };
+              } catch (eventError) {
+                console.error(
+                  `Error fetching event for position ${position._id}:`,
+                  eventError
+                );
+                return position; // Fallback to just the position details
+              }
+            })
+          );
+          setVolunteerPositions(positionsWithEvents);
         } else {
           console.error("Invalid response format");
         }
@@ -31,6 +67,41 @@ const VolunteerContent = () => {
   const filteredPositions = volunteerPositions.filter((position) =>
     position.positionTitle.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Function to handle the apply action
+  const handleApply = async (positionId) => {
+    if (!currentUserId) {
+      alert("Please log in to apply.");
+      return;
+    }
+
+    try {
+      console.log("Applying for position:", positionId);
+      const response = await axiosInstance.post(
+        `/volunteer/apply-volunteer/${positionId}`,
+        {
+          userId: currentUserId,
+        }
+      );
+
+      if (response.data.success) {
+        alert("Successfully applied for the volunteer position!");
+        // Update the state to mark the position as applied
+        setVolunteerPositions((prevPositions) =>
+          prevPositions.map((position) =>
+            position._id === positionId
+              ? { ...position, applied: true }
+              : position
+          )
+        );
+      } else {
+        alert(response.data.message || "Failed to apply.");
+      }
+    } catch (error) {
+      console.error("Error applying for volunteer position:", error);
+      alert("Error applying for the position. Please try again later.");
+    }
+  };
 
   if (loading) {
     return <p>Loading volunteer positions...</p>;
@@ -58,12 +129,8 @@ const VolunteerContent = () => {
         {filteredPositions.map((position) => (
           <VolunteerCard
             key={position._id}
-            functionName={position.positionTitle}
-            date={new Date(position.createdAt).toLocaleDateString()} // Format date from `createdAt`
-            time={new Date(position.createdAt).toLocaleTimeString()} // Format time from `createdAt`
-            venue={`Available Positions: ${position.availablePositions}`}
-            organizer={position.rolesResponsibility}
-            contact={`Eligibility: ${position.eligibility}, Skills: ${position.skills}`}
+            position={position}
+            onApply={handleApply}
           />
         ))}
       </div>

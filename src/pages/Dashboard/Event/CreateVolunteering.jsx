@@ -26,7 +26,10 @@ const CreateVolunteer = ({ onClose, eventId }) => {
       console.log("Volunteer Position Created:", response.data);
       onClose(); // Close the popup after successful creation
     } catch (error) {
-      console.error("Error creating volunteer position:", error.response || error);
+      console.error(
+        "Error creating volunteer position:",
+        error.response || error
+      );
     }
   };
 

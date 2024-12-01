@@ -4,7 +4,6 @@ import StoryCard from "./StoryCard";
 import RightSidebar from "./RigntSideBar";
 import Cookies from "js-cookie";
 
-// InspiringStory Component
 const InspiringStory = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [stories, setStories] = useState([]);
@@ -18,14 +17,7 @@ const InspiringStory = () => {
       try {
         const response = await axiosInstance.get("/stories/all");
         if (response.data.success) {
-          // Ensure that each story has a valid likedBy and dislikedBy arrays
-          const sanitizedStories = response.data.data.map((story) => ({
-            ...story,
-            likedBy: Array.isArray(story.likedBy) ? story.likedBy : [],
-            dislikedBy: Array.isArray(story.dislikedBy) ? story.dislikedBy : [],
-             // Default content message
-          }));
-          setStories(sanitizedStories);
+          setStories(response.data.data || []);
         } else {
           console.error("Error fetching stories:", response.data.message);
         }
@@ -39,33 +31,20 @@ const InspiringStory = () => {
     fetchStories();
   }, []);
 
-  // Filter stories based on the active tab
-  const filteredStories = (stories || []).filter((story) => {
-    if (activeTab === "All") return true;
-    if (activeTab === "Funding Stories") return story.title.includes("Funding");
-    if (activeTab === "Impact Stories") return story.title.includes("Impact");
-    return false;
-  });
-
   // Handle like functionality
   const handleLike = async (storyId) => {
     try {
       const response = await axiosInstance.post(
-        `/stories/like-story/${storyId}`,
+        `/stories/like/${storyId}`,
         { userId: currentUserId }
       );
-      if (response.data.success) {
-        setStories((prevStories) =>
-          prevStories.map((story) =>
-            story._id === storyId
-              ? {
-                  ...story,
-                  likedBy: Array.isArray(response.data.likedBy) ? response.data.likedBy : [],
-                }
-              : story
-          )
-        );
-      }
+      setStories((prevStories) =>
+        prevStories.map((story) =>
+          story._id === storyId
+            ? { ...story, likes: response.data.likes, dislikes: response.data.dislikes }
+            : story
+        )
+      );
     } catch (error) {
       console.error("Error liking story:", error);
     }
@@ -75,25 +54,28 @@ const InspiringStory = () => {
   const handleDislike = async (storyId) => {
     try {
       const response = await axiosInstance.post(
-        `/stories/dislike-story/${storyId}`,
+        `/stories/dislike/${storyId}`,
         { userId: currentUserId }
       );
-      if (response.data.success) {
-        setStories((prevStories) =>
-          prevStories.map((story) =>
-            story._id === storyId
-              ? {
-                  ...story,
-                  dislikedBy: Array.isArray(response.data.dislikedBy) ? response.data.dislikedBy : [],
-                }
-              : story
-          )
-        );
-      }
+      setStories((prevStories) =>
+        prevStories.map((story) =>
+          story._id === storyId
+            ? { ...story, dislikes: response.data.dislikes, likes: response.data.likes }
+            : story
+        )
+      );
     } catch (error) {
       console.error("Error disliking story:", error);
     }
   };
+
+  // Filter stories based on the active tab
+  const filteredStories = (stories || []).filter((story) => {
+    if (activeTab === "All") return true;
+    if (activeTab === "Funding Stories") return story.title.includes("Funding");
+    if (activeTab === "Impact Stories") return story.title.includes("Impact");
+    return false;
+  });
 
   if (loading) {
     return <p>Loading stories...</p>;
@@ -113,7 +95,9 @@ const InspiringStory = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`text-sm px-4 py-2 rounded-full font-semibold ${activeTab === tab ? "text-black font-bold" : "text-gray-500"}`}
+              className={`text-sm px-4 py-2 rounded-full font-semibold ${
+                activeTab === tab ? "text-black font-bold" : "text-gray-500"
+              }`}
             >
               {tab}
             </button>
@@ -132,18 +116,10 @@ const InspiringStory = () => {
             {filteredStories.map((story) => (
               <StoryCard
                 key={story._id}
-                storyImage={story.storyImage}
-                title={story.title}
-                createdBy={story.createdBy}
-                createdAt={story.createdAt}
-                likes={story.likedBy.length}
-                dislikes={story.dislikedBy.length}
+                story={story}
+                currentUserId={currentUserId}
                 onLike={handleLike}
                 onDislike={handleDislike}
-                currentUserId={currentUserId}
-                storyId={story._id}
-                likedBy={story.likedBy}
-                dislikedBy={story.dislikedBy}
               />
             ))}
           </div>

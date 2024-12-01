@@ -87,10 +87,11 @@ const CreateVolunteer = ({ onClose }) => {
             </select>
           </div>
 
-
           {/* Date */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Date
+            </label>
             <input
               type="date"
               name="date"
@@ -102,7 +103,9 @@ const CreateVolunteer = ({ onClose }) => {
 
           {/* Time */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Time</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Time
+            </label>
             <input
               type="time"
               name="time"
@@ -158,8 +161,8 @@ const CreateVolunteer = ({ onClose }) => {
           </div>
 
           {/* Buttons */}
-           {/* Buttons */}
-           <div className="flex justify-between">
+          {/* Buttons */}
+          <div className="flex justify-between">
             <button
               type="button"
               onClick={handleDiscard}

@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import NsquareLogo from "../../assets/icons/nsqure.svg";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 
@@ -85,7 +85,9 @@ const Footer = () => {
 
         {/* "Still Have Questions?" Section */}
         <div>
-          <h3 className="text-base font-semibold mb-1">Still have questions?</h3>
+          <h3 className="text-base font-semibold mb-1">
+            Still have questions?
+          </h3>
           <p className="text-sm text-gray-600 mb-4 leading-6">
             Feel free to reach out, and our dedicated support team will be happy
             to assist you on your financial journey.
@@ -101,7 +103,7 @@ const Footer = () => {
         <div className="container mx-auto px-6 py-3 flex flex-col md:flex-row md:items-center justify-center text-sm text-center">
           {/* Copyright */}
           <p className="text-gray-600 md:mb-0 mr-4">
-            ©2024 N Sqaure.  All rights reserved.
+            ©2024 N Sqaure. All rights reserved.
           </p>
           {/* Links */}
           <div className="flex space-x-3">

@@ -5,7 +5,6 @@ import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
 const AppliedCard = ({ job, currentUserId, creatorName }) => {
   const {
-    
     title = "Job Title",
     company = "Unknown Company",
     location = "Unknown Location",

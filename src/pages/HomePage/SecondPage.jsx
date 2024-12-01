@@ -1,19 +1,19 @@
-
-import alumniIcon from '../../assets/icons/alumni-directory-icon.svg'; // Replace with actual icon paths
-import networkingIcon from '../../assets/icons/networking-icon.svg';
-import jobsIcon from '../../assets/icons/jobs-icon.svg';
+import alumniIcon from "../../assets/icons/alumni-directory-icon.svg"; // Replace with actual icon paths
+import networkingIcon from "../../assets/icons/networking-icon.svg";
+import jobsIcon from "../../assets/icons/jobs-icon.svg";
 
 const SecondPage = () => {
   return (
     <div className="h-[500] px-10 py-16 text-center bg-white ">
       {/* Title Section */}
       <h4 className="z-10 text-6xl md:text-4xl font-bold mb-4 p-8 ">
-        Unlock Your <span className="text-blue-600 ">Networking Potential</span> with <span className="underline text-red-700">Network Next</span> ! ! !
+        Unlock Your <span className="text-blue-600 ">Networking Potential</span>{" "}
+        with <span className="underline text-red-700">Network Next</span> ! ! !
       </h4>
       <p className="text-md md:text-lg text-gray-700 max-w-3xl mx-auto mb-10">
-        Join our vibrant community on Trade Gospel,
-         where you can watch and participate in live trading sessions. 
-        Get real-time insights, expert strategies, and make informed trades with confidence.
+        Join our vibrant community on Trade Gospel, where you can watch and
+        participate in live trading sessions. Get real-time insights, expert
+        strategies, and make informed trades with confidence.
       </p>
 
       {/* Features Section */}
@@ -29,7 +29,8 @@ const SecondPage = () => {
           </div>
           <h2 className="text-lg font-semibold mb-2">Alumni Directory</h2>
           <p className="text-gray-600">
-            Access real-time Resources and make informed decisions to maximize your profits.
+            Access real-time Resources and make informed decisions to maximize
+            your profits.
           </p>
         </div>
 
@@ -44,7 +45,8 @@ const SecondPage = () => {
           </div>
           <h2 className="text-lg font-semibold mb-2">Networking</h2>
           <p className="text-gray-600">
-            Join our vibrant community of Alumni, Faculty to share insights and learn from each other.
+            Join our vibrant community of Alumni, Faculty to share insights and
+            learn from each other.
           </p>
         </div>
 
@@ -59,7 +61,8 @@ const SecondPage = () => {
           </div>
           <h2 className="text-lg font-semibold mb-2">Jobs & Referral</h2>
           <p className="text-gray-600">
-            Access educational resources designed to equip you with knowledge needed to navigate the financial markets effectively.
+            Access educational resources designed to equip you with knowledge
+            needed to navigate the financial markets effectively.
           </p>
         </div>
       </div>
