@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import axiosInstance from "../../../utils/axiosinstance";
 import CreateVolunteering from "./CreateVolunteering"; // Import the modal component
 
 const AboutEvent = () => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null); // State for current user
+  const [currentUserId, setCurrentUserId] = useState(null); // State for current user ID
   const [isEventCreator, setIsEventCreator] = useState(false); // State for event ownership
 
   const {
@@ -20,35 +21,41 @@ const AboutEvent = () => {
     attending,
   } = location.state || {};
 
-  // Fetch current user and verify event ownership
+  // Fetch current user ID from local storage
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Fetch the current user by ID
-        const userResponse = await fetch(
-          "/users/674323ad871fe8cca6985035"
-        );
-        const userData = await userResponse.json();
-        setCurrentUser(userData);
-
-        if (userData && _id) {
-          // Fetch events created by the current user
-          const eventsResponse = await fetch(
-            `/event/user/${userData._id}`
-          );
-          const eventsData = await eventsResponse.json();
-
-          // Check if the user created the current event
-          const userCreatedEvent = eventsData.some(event => event._id === _id);
-          setIsEventCreator(userCreatedEvent);
-        }
-      } catch (error) {
-        console.error("Error fetching user or event data:", error);
+    const fetchCurrentUserId = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      if (storedUser && storedUser._id) {
+        setCurrentUserId(storedUser._id);
+      } else {
+        console.error("No current user found in localStorage");
       }
     };
 
-    fetchUserData();
-  }, [_id]);
+    fetchCurrentUserId();
+  }, []);
+
+  // Verify if the current user is the event creator
+  useEffect(() => {
+    const checkEventCreator = async () => {
+      try {
+        if (currentUserId && _id) {
+          const response = await axiosInstance.get(
+            `/event/user/${currentUserId}`
+          );
+          const userEvents = response.data.events;
+          console.log("Fetched User's Events:", userEvents); // Debugging log
+
+          const userCreatedEvent = userEvents.some((event) => event._id === _id);
+          setIsEventCreator(userCreatedEvent);
+        }
+      } catch (error) {
+        console.error("Error verifying event creator:", error.response || error);
+      }
+    };
+
+    checkEventCreator();
+  }, [currentUserId, _id]);
 
   // Check if the event details are missing
   if (!title) {
@@ -122,11 +129,6 @@ const AboutEvent = () => {
           <p className="text-sm text-gray-600">
             Total Attending: {attending?.length || 0}
           </p>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-6">
-          <p className="text-sm text-gray-500">Event ID: {_id}</p>
         </div>
       </div>
 
