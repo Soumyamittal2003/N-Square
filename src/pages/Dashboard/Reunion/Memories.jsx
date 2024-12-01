@@ -1,41 +1,65 @@
-import { useState } from 'react';
-import { FaPlus } from 'react-icons/fa'; 
-import folderIcon from "../../../assets/icons/folder.svg"; 
+import { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import folderIcon from "../../../assets/icons/folder.svg";
 
 const Memories = () => {
   const [folders, setFolders] = useState(() => {
     // Load folders from localStorage or use a default value
-    const savedFolders = JSON.parse(localStorage.getItem('folders'));
-    return savedFolders || [
-      { id: 1, name: 'Teachers Day', year: '2022', icon: folderIcon, link: 'https://sih.gov.in/' },
-      { id: 2, name: 'Farewell', year: '2021', icon: folderIcon, link: 'https://example.com/family' },
-      { id: 3, name: 'Technorolix', year: '2023', icon: folderIcon, link: 'https://example.com/work' },
-    ];
+    const savedFolders = JSON.parse(localStorage.getItem("folders"));
+    return (
+      savedFolders || [
+        {
+          id: 1,
+          name: "Teachers Day",
+          year: "2022",
+          icon: folderIcon,
+          link: "https://sih.gov.in/",
+        },
+        {
+          id: 2,
+          name: "Farewell",
+          year: "2021",
+          icon: folderIcon,
+          link: "https://example.com/family",
+        },
+        {
+          id: 3,
+          name: "Technorolix",
+          year: "2023",
+          icon: folderIcon,
+          link: "https://example.com/work",
+        },
+      ]
+    );
   });
 
   const [selectedFolderIds, setSelectedFolderIds] = useState([]); // Track selected folders
-  const [newLink, setNewLink] = useState('');
-  const [newName, setNewName] = useState('');
+  const [newLink, setNewLink] = useState("");
+  const [newName, setNewName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolderIdForEdit, setSelectedFolderIdForEdit] = useState(null); // Track folder being edited
-  
+
   // Function to add a new folder
   const addFolder = () => {
     const newFolder = {
       id: folders.length + 1,
       name: `New Folder ${folders.length + 1}`,
-      year: '2024',
+      year: "2024",
       icon: folderIcon,
       link: `https://example.com/new-folder-${folders.length + 1}`,
     };
     const updatedFolders = [...folders, newFolder];
     setFolders(updatedFolders);
-    localStorage.setItem('folders', JSON.stringify(updatedFolders)); // Save updated folders to localStorage
+    localStorage.setItem("folders", JSON.stringify(updatedFolders)); // Save updated folders to localStorage
   };
 
   // Function to handle renaming and updating folder link
   const handleRename = () => {
-    if (selectedFolderIds.length > 0 && newName.trim() !== '' && newLink.trim() !== '') {
+    if (
+      selectedFolderIds.length > 0 &&
+      newName.trim() !== "" &&
+      newLink.trim() !== ""
+    ) {
       const updatedFolders = folders.map((folder) => {
         if (selectedFolderIds.includes(folder.id)) {
           return { ...folder, name: newName, link: newLink }; // Update selected folder's name and link
@@ -43,9 +67,9 @@ const Memories = () => {
         return folder;
       });
       setFolders(updatedFolders);
-      localStorage.setItem('folders', JSON.stringify(updatedFolders)); // Save updated folders to localStorage
-      setNewName('');
-      setNewLink('');
+      localStorage.setItem("folders", JSON.stringify(updatedFolders)); // Save updated folders to localStorage
+      setNewName("");
+      setNewLink("");
       setSelectedFolderIds([]); // Clear selected folders after renaming
       setIsModalOpen(false); // Close modal
     }
@@ -53,16 +77,20 @@ const Memories = () => {
 
   // Function to handle deleting selected folders
   const handleDelete = () => {
-    const updatedFolders = folders.filter((folder) => !selectedFolderIds.includes(folder.id)); // Remove selected folders
+    const updatedFolders = folders.filter(
+      (folder) => !selectedFolderIds.includes(folder.id)
+    ); // Remove selected folders
     setFolders(updatedFolders);
-    localStorage.setItem('folders', JSON.stringify(updatedFolders)); // Save updated folders to localStorage
+    localStorage.setItem("folders", JSON.stringify(updatedFolders)); // Save updated folders to localStorage
     setSelectedFolderIds([]); // Clear selected folders after deletion
   };
 
   // Function to handle folder selection for renaming or deletion (using checkbox)
   const handleFolderSelect = (id) => {
     if (selectedFolderIds.includes(id)) {
-      setSelectedFolderIds(selectedFolderIds.filter((folderId) => folderId !== id)); // Deselect folder
+      setSelectedFolderIds(
+        selectedFolderIds.filter((folderId) => folderId !== id)
+      ); // Deselect folder
     } else {
       setSelectedFolderIds([...selectedFolderIds, id]); // Select folder
     }
@@ -70,7 +98,7 @@ const Memories = () => {
 
   // Function to open folder in a new tab when clicking on the folder icon
   const handleFolderClick = (link) => {
-    window.open(link, '_blank'); // Open the link in a new tab
+    window.open(link, "_blank"); // Open the link in a new tab
   };
 
   // Function to open modal for updating folder name and link
@@ -99,7 +127,11 @@ const Memories = () => {
           {selectedFolderIds.length > 0 && (
             <>
               <button
-                onClick={() => openEditModal(folders.find(f => selectedFolderIds.includes(f.id)))}
+                onClick={() =>
+                  openEditModal(
+                    folders.find((f) => selectedFolderIds.includes(f.id))
+                  )
+                }
                 className="bg-green-400 text-Black px-6 py-2 rounded-md flex items-center hover:bg-green-500 transition"
               >
                 Rename Folder
@@ -122,7 +154,7 @@ const Memories = () => {
           {folders.map((folder) => (
             <div
               key={folder.id}
-              className={`flex flex-col items-center justify-center hover:bg-gray-50 transition w-56 h-56 cursor-pointer relative ${selectedFolderIds.includes(folder.id) ? 'bg-gray-200' : ''}`} // Highlight selected folder
+              className={`flex flex-col items-center justify-center hover:bg-gray-50 transition w-56 h-56 cursor-pointer relative ${selectedFolderIds.includes(folder.id) ? "bg-gray-200" : ""}`} // Highlight selected folder
             >
               {/* Folder Icon (clickable to open in new tab) */}
               <div
@@ -144,8 +176,12 @@ const Memories = () => {
                   onChange={() => handleFolderSelect(folder.id)} // Select/Deselect folder
                   className="absolute top-2 right-2"
                 />
-                <span className="text-lg font-medium text-center">{folder.name}</span>
-                <span className="mb-4 text-sm text-gray-500">{folder.year}</span>
+                <span className="text-lg font-medium text-center">
+                  {folder.name}
+                </span>
+                <span className="mb-4 text-sm text-gray-500">
+                  {folder.year}
+                </span>
               </div>
             </div>
           ))}
@@ -159,7 +195,9 @@ const Memories = () => {
             <h3 className="text-2xl font-bold mb-4">Edit Folder</h3>
             {/* Folder Name Input */}
             <div className="mb-4">
-              <label htmlFor="folderName" className="block text-lg mb-1">Folder Name</label>
+              <label htmlFor="folderName" className="block text-lg mb-1">
+                Folder Name
+              </label>
               <input
                 type="text"
                 id="folderName"
@@ -171,7 +209,9 @@ const Memories = () => {
             </div>
             {/* Folder Link Input */}
             <div className="mb-4">
-              <label htmlFor="folderLink" className="block text-lg mb-1">Folder Link</label>
+              <label htmlFor="folderLink" className="block text-lg mb-1">
+                Folder Link
+              </label>
               <input
                 type="text"
                 id="folderLink"

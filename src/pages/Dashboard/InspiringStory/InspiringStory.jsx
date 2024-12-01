@@ -23,7 +23,7 @@ const InspiringStory = () => {
             ...story,
             likedBy: Array.isArray(story.likedBy) ? story.likedBy : [],
             dislikedBy: Array.isArray(story.dislikedBy) ? story.dislikedBy : [],
-             // Default content message
+            // Default content message
           }));
           setStories(sanitizedStories);
         } else {
@@ -60,7 +60,9 @@ const InspiringStory = () => {
             story._id === storyId
               ? {
                   ...story,
-                  likedBy: Array.isArray(response.data.likedBy) ? response.data.likedBy : [],
+                  likedBy: Array.isArray(response.data.likedBy)
+                    ? response.data.likedBy
+                    : [],
                 }
               : story
           )
@@ -84,7 +86,9 @@ const InspiringStory = () => {
             story._id === storyId
               ? {
                   ...story,
-                  dislikedBy: Array.isArray(response.data.dislikedBy) ? response.data.dislikedBy : [],
+                  dislikedBy: Array.isArray(response.data.dislikedBy)
+                    ? response.data.dislikedBy
+                    : [],
                 }
               : story
           )

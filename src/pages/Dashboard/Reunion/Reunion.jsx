@@ -23,9 +23,9 @@ const Reunion = () => {
             Create Reunion
           </button>
           <Link to={"memories"}>
-          <button className="px-4 py-2 text-black border border-black rounded-md hover:bg-black hover:text-white">
-            Memories
-          </button>
+            <button className="px-4 py-2 text-black border border-black rounded-md hover:bg-black hover:text-white">
+              Memories
+            </button>
           </Link>
         </div>
       </div>
@@ -40,7 +40,9 @@ const Reunion = () => {
         </div>
       </div>
       {/* Create Reunion Popup */}
-      {isCreateReunionOpen && <CreateReunion onClose={handleCloseCreateReunion} />}
+      {isCreateReunionOpen && (
+        <CreateReunion onClose={handleCloseCreateReunion} />
+      )}
     </div>
   );
 };

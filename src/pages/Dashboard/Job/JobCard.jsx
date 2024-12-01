@@ -47,7 +47,9 @@ const JobCard = ({
       const fetchCreatorName = async () => {
         try {
           const response = await axiosInstance.get(`/users/${createdBy._id}`);
-          setCreatorName(`${response.data.firstName} ${response.data.lastName}`);
+          setCreatorName(
+            `${response.data.firstName} ${response.data.lastName}`
+          );
         } catch (error) {
           console.error("Error fetching creator name:", error);
         }
@@ -123,15 +125,15 @@ const JobCard = ({
         <div className="flex gap-4">
           {/* Bookmark Button */}
           <button
-          className="px-4 py-2 rounded-xl gap-1 flex items-center"
-          onClick={() => onBookmarkJob(_id)}
-        >
-          <img
-            src={isBookmarked ? bookmarked : bookmark}
-            alt="bookmark"
-            className="w-6 h-6"
-          />
-        </button>
+            className="px-4 py-2 rounded-xl gap-1 flex items-center"
+            onClick={() => onBookmarkJob(_id)}
+          >
+            <img
+              src={isBookmarked ? bookmarked : bookmark}
+              alt="bookmark"
+              className="w-6 h-6"
+            />
+          </button>
 
           {/* Like Button */}
           <button

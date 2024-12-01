@@ -36,8 +36,8 @@ const RightSidebar = ({ selectedEvent }) => {
           </button>
         )}
         {isCreateVolunteerOpen && (
-        <CreateVolunteer onClose={handleCloseCreateVolunteer} />
-      )}
+          <CreateVolunteer onClose={handleCloseCreateVolunteer} />
+        )}
 
         <button
           onClick={handleOpenCreateEvent}
@@ -48,10 +48,12 @@ const RightSidebar = ({ selectedEvent }) => {
       </div>
 
       {/* Create Event Popup */}
-      
+
       {isCreateEventOpen && <CreateEvent onClose={handleCloseCreateEvent} />}
 
-      <div className="mt-16 mb-0 p-2"> {/* Adjust spacing below the button */}
+      <div className="mt-16 mb-0 p-2">
+        {" "}
+        {/* Adjust spacing below the button */}
         {/* Upcoming Events Section */}
         <div className="border p-2 rounded-lg shadow-md">
           <div className="flex justify-between items-center">
@@ -71,7 +73,8 @@ const RightSidebar = ({ selectedEvent }) => {
               />
               <div className="ml-3 flex-1">
                 <p className="text-sm font-semibold">
-                  Investing Live: Opportunities and Risk Management #investingtips
+                  Investing Live: Opportunities and Risk Management
+                  #investingtips
                 </p>
                 <div className="flex justify-evenly mx-auto mt-2">
                   <button className="bg-[#1F6BFF] text-white font-semibold px-4 mx-4 w-1/2 py-1 rounded-lg text-sm">

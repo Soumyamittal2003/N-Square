@@ -24,7 +24,9 @@ const AboutEvent = () => {
   // Fetch current user ID from local storage
   useEffect(() => {
     const fetchCurrentUserId = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      const storedUser = JSON.parse(
+        localStorage.getItem("chat-app-current-user")
+      );
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -45,11 +47,16 @@ const AboutEvent = () => {
           );
           const userEvents = response.data.events;
 
-          const userCreatedEvent = userEvents.some((event) => event._id === _id);
+          const userCreatedEvent = userEvents.some(
+            (event) => event._id === _id
+          );
           setIsEventCreator(userCreatedEvent);
         }
       } catch (error) {
-        console.error("Error verifying event creator:", error.response || error);
+        console.error(
+          "Error verifying event creator:",
+          error.response || error
+        );
       }
     };
 
