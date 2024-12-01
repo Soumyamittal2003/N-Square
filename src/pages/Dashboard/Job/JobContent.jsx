@@ -14,9 +14,7 @@ const JobContent = () => {
   // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(
-        localStorage.getItem("chat-app-current-user")
-      );
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -52,9 +50,7 @@ const JobContent = () => {
         jobs.map(async (job) => {
           if (job.createdBy) {
             try {
-              const response = await axiosInstance.get(
-                `/users/${job.createdBy}`
-              );
+              const response = await axiosInstance.get(`/users/${job.createdBy}`);
               return {
                 ...job,
                 createdBy: {
@@ -85,9 +81,7 @@ const JobContent = () => {
   // Handle like action
   const handleLikePost = async (jobId) => {
     try {
-      await axiosInstance.post(`/jobs/like/${jobId}`, {
-        userId: currentUserId,
-      });
+      await axiosInstance.post(`/jobs/like/${jobId}`, { userId: currentUserId });
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
           job._id === jobId
@@ -109,9 +103,7 @@ const JobContent = () => {
   // Handle dislike action
   const handleDislikePost = async (jobId) => {
     try {
-      await axiosInstance.post(`/jobs/dislike/${jobId}`, {
-        userId: currentUserId,
-      });
+      await axiosInstance.post(`/jobs/dislike/${jobId}`, { userId: currentUserId });
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
           job._id === jobId
@@ -138,9 +130,11 @@ const JobContent = () => {
     }
 
     try {
-      const response = await axiosInstance.patch(`/jobs/save-job/${jobId}`, {
-        userId: currentUserId,
-      });
+      // Assuming the API expects both userId and jobId in the request body
+      const response = await axiosInstance.patch(
+        `/jobs/save-job/${jobId}`,
+        { userId: currentUserId }
+      );
 
       if (response.data.success) {
         setUserBookmarks((prevBookmarks) =>
@@ -156,6 +150,7 @@ const JobContent = () => {
     }
   };
 
+  // Handle apply action
   const handleApplyJob = async (jobId) => {
     if (!currentUserId) {
       console.error("User not logged in.");
@@ -163,14 +158,18 @@ const JobContent = () => {
     }
 
     try {
-      const response = await axiosInstance.post(`/jobs/apply/${jobId}`, {
-        userId: currentUserId,
-      });
+      // Assuming the API expects a payload with jobId and userId
+      const response = await axiosInstance.post(
+        `/jobs/apply/${jobId}`,
+        { userId: currentUserId }
+      );
 
       if (response.data.success) {
         setJobs((prevJobs) =>
           prevJobs.map((job) =>
-            job._id === jobId ? { ...job, isApplied: true } : job
+            job._id === jobId
+              ? { ...job, isApplied: true }
+              : job
           )
         );
       } else {
@@ -213,10 +212,7 @@ const JobContent = () => {
       </div>
 
       {/* Job Cards Section */}
-      <div
-        className="p-4 overflow-y-auto hide-scrollbar"
-        style={{ maxHeight: "calc(100vh - 160px)" }}
-      >
+      <div className="p-4 overflow-y-auto hide-scrollbar" style={{ maxHeight: 'calc(100vh - 160px)' }}>
         <div className="grid grid-cols-3 gap-4">
           {filteredJobs.map((job) => (
             <JobCard
