@@ -8,17 +8,19 @@ const StoryCard = ({
   title,
   storyImage,
   createdBy,
-  content,
   createdAt,
   likes,
+  dislikes,
   onLike,
-  onFollowUser,
+  onDislike,
   currentUserId,
   storyId,
   likedBy,
+  dislikedBy,
 }) => {
   const [creatorName, setCreatorName] = useState("Loading...");
   const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
 
   // Fetch creator name based on creator's user ID
   useEffect(() => {
@@ -38,10 +40,11 @@ const StoryCard = ({
     fetchCreatorDetails();
   }, [createdBy]);
 
-  // Check if the current user has liked the story
+  // Check if the current user has liked or disliked the story
   useEffect(() => {
     setIsLiked(likedBy.includes(currentUserId));
-  }, [likedBy, currentUserId]);
+    setIsDisliked(dislikedBy.includes(currentUserId));
+  }, [likedBy, dislikedBy, currentUserId]);
 
   // Handle like
   const handleLike = () => {
@@ -49,9 +52,10 @@ const StoryCard = ({
     onLike(storyId); // Trigger the onLike method passed from InspiringStory
   };
 
-  // Handle follow
-  const handleFollow = () => {
-    onFollowUser(createdBy._id); // Follow the user who created this story
+  // Handle dislike
+  const handleDislike = () => {
+    setIsDisliked((prev) => !prev);
+    onDislike(storyId); // Trigger the onDislike method passed from InspiringStory
   };
 
   return (
@@ -82,17 +86,14 @@ const StoryCard = ({
             <img src={arrowBlockUp} alt="Up Arrow" />
             <span>{isLiked ? likes + 1 : likes}</span>
           </button>
-          <button className="flex gap-1 font-semibold justify-center">
+          <button
+            onClick={handleDislike}
+            className="flex gap-1 font-semibold justify-center"
+          >
             <img src={arrowBlockdown} alt="Down Arrow" />
-            <span>0</span>
+            <span>{isDisliked ? dislikes + 1 : dislikes}</span>
           </button>
         </div>
-        <button
-          onClick={handleFollow}
-          className="ml-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold hover:bg-blue-700 transition"
-        >
-          Follow
-        </button>
       </div>
     </div>
   );

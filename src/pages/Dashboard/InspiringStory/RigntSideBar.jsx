@@ -12,7 +12,7 @@ const RightSidebar = () => {
   return (
     <div className="w-full p-4 space-y-2 ">
       {/* Create Story Button */}
-      <div className="flex justify-center mb-2">
+      <div className="flex justify-end mb-9">
         <button
           onClick={handleOpenCreateStory}
           className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
@@ -24,7 +24,7 @@ const RightSidebar = () => {
       {/* Trending Stories Section */}
       <div>
         <h2 className="text-lg font-semibold text-gray-800">Trending Stories</h2>
-        <div className="flex space-x-4 mt-4">
+        <div className="flex space-x-4 mt-6">
           {/* Story Card 1 */}
           <div className="w-32 h-48 bg-white shadow-md rounded-lg overflow-hidden relative">
             <img

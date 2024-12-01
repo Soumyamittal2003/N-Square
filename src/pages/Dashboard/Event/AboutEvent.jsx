@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import axiosInstance from "../../../utils/axiosinstance";
 import CreateVolunteering from "./CreateVolunteering"; // Import the modal component
 
 const AboutEvent = () => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null); // State for current user ID
+  const [isEventCreator, setIsEventCreator] = useState(false); // State for event ownership
 
   const {
     _id,
@@ -17,6 +20,42 @@ const AboutEvent = () => {
     link,
     attending,
   } = location.state || {};
+
+  // Fetch current user ID from local storage
+  useEffect(() => {
+    const fetchCurrentUserId = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      if (storedUser && storedUser._id) {
+        setCurrentUserId(storedUser._id);
+      } else {
+        console.error("No current user found in localStorage");
+      }
+    };
+
+    fetchCurrentUserId();
+  }, []);
+
+  // Verify if the current user is the event creator
+  useEffect(() => {
+    const checkEventCreator = async () => {
+      try {
+        if (currentUserId && _id) {
+          const response = await axiosInstance.get(
+            `/event/user/${currentUserId}`
+          );
+          const userEvents = response.data.events;
+          console.log("Fetched User's Events:", userEvents); // Debugging log
+
+          const userCreatedEvent = userEvents.some((event) => event._id === _id);
+          setIsEventCreator(userCreatedEvent);
+        }
+      } catch (error) {
+        console.error("Error verifying event creator:", error.response || error);
+      }
+    };
+
+    checkEventCreator();
+  }, [currentUserId, _id]);
 
   // Check if the event details are missing
   if (!title) {
@@ -73,12 +112,15 @@ const AboutEvent = () => {
             Register for the event
           </button>
 
-          <button
-            onClick={() => setIsModalOpen(true)} // Open modal on click
-            className="px-6 py-2 bg-blue-600 text-white rounded-xl w-full sm:w-auto"
-          >
-            Create Volunteer Position
-          </button>
+          {/* Conditionally Render Button for Event Creator */}
+          {isEventCreator && (
+            <button
+              onClick={() => setIsModalOpen(true)} // Open modal on click
+              className="px-6 py-2 bg-blue-600 text-white rounded-xl w-full sm:w-auto"
+            >
+              Create Volunteer Position
+            </button>
+          )}
         </div>
 
         {/* Attending Information */}
@@ -88,22 +130,15 @@ const AboutEvent = () => {
             Total Attending: {attending?.length || 0}
           </p>
         </div>
-
-        {/* Footer */}
-        <div className="mt-6">
-          <p className="text-sm text-gray-500">Event ID: {_id}</p>
-        </div>
       </div>
 
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          
-            <CreateVolunteering
-              onClose={() => setIsModalOpen(false)} // Pass close handler
-            />
-          </div>
-        
+          <CreateVolunteering
+            onClose={() => setIsModalOpen(false)} // Pass close handler
+          />
+        </div>
       )}
     </div>
   );
