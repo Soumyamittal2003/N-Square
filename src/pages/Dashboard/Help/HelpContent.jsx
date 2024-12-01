@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const FAQSection = () => {
+const HelpContent = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
@@ -37,10 +37,10 @@ const FAQSection = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto py-12 px-6 bg-white">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Get Help</h2>
-      <p className="text-gray-600 mb-8">
-        Get your questions answered quickly. Browse through our FAQs for instant support on common topics of inquiry.
+    <div className="w-100 mx-auto py-12 px-6 bg-white">
+      <h2 className="text-3xl font-extrabold text-gray-800 mb-4 text-center">Help Center</h2>
+      <p className="text-gray-600 mb-6 text-center">
+        Find answers to your questions or learn more about the functionalities of the platform.
       </p>
       
       {/* Search Bar */}
@@ -48,7 +48,7 @@ const FAQSection = () => {
         <input
           type="text"
           placeholder="Search FAQs..."
-          className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
         />
@@ -64,10 +64,10 @@ const FAQSection = () => {
               className="border border-gray-300 rounded-lg bg-white shadow-md"
             >
               <button
-                className="w-full text-left px-5 py-3 flex justify-between items-center focus:outline-none"
+                className="w-full text-left px-5 py-4 flex justify-between items-center focus:outline-none"
                 onClick={() => toggleFAQ(index)}
               >
-                <span className="text-gray-800 font-medium text-base">
+                <span className="text-gray-800 font-medium text-lg">
                   {faq.question}
                 </span>
                 <span className="text-gray-500 text-lg font-bold">
@@ -75,7 +75,7 @@ const FAQSection = () => {
                 </span>
               </button>
               {activeIndex === index && (
-                <div className="px-5 py-3 text-gray-700 text-sm leading-relaxed">
+                <div className="px-5 py-4 text-gray-700 text-base leading-relaxed">
                   {faq.answer}
                 </div>
               )}
@@ -87,4 +87,4 @@ const FAQSection = () => {
   );
 };
 
-export default FAQSection;
+export default HelpContent;
