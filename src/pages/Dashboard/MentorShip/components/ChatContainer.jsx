@@ -75,7 +75,7 @@ export default function ChatContainer({ currentChat, socket }) {
   }, [messages]);
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 h-full">
+    <div className="bg-gray-200 rounded-lg p-4 h-full">
       {/* Chat Header */}
       <div className="flex items-center gap-4 mb-4">
         <img
@@ -83,7 +83,7 @@ export default function ChatContainer({ currentChat, socket }) {
           alt="group-avatar"
           className="w-12 h-12 rounded-full"
         />
-        <h3 className="text-xl text-white">{currentChat.name}</h3>
+        <h3 className="text-xl text-black">{currentChat.name}</h3>
       </div>
 
       {/* Message List */}
@@ -93,7 +93,7 @@ export default function ChatContainer({ currentChat, socket }) {
             <div key={uuidv4()} className="mb-4 flex">
               <div
                 className={`${
-                  message.fromSelf ? "ml-auto bg-indigo-600" : "bg-gray-700"
+                  message.fromSelf ? "mr-auto bg-indigo-600" : "bg-gray-700"
                 } p-3 rounded-xl max-w-[75%] text-white`}
               >
                 <p>{message.message}</p>

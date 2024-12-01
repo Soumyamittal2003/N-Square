@@ -25,7 +25,7 @@ export default function ChatInput({ handleSendMsg }) {
   };
 
   return (
-    <div className="grid grid-cols-[5%_95%] items-center bg-[#080420] p-4 md:p-6">
+    <div className="grid grid-cols-[5%_95%] items-center bg-gray-300 p-4 md:p-6">
       {/* Emoji Picker Button */}
       <div className="flex items-center justify-center text-white gap-4">
         <div className="relative">
