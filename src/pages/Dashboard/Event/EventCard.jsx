@@ -1,9 +1,19 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
 const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelectEvent, isSelected }) => {
   const navigate = useNavigate();
+  const [isRegistered, setIsRegistered] = useState(false); // State to track registration
+
+  // Load registration status from localStorage
+  useEffect(() => {
+    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+    if (registeredEvents.includes(event._id)) {
+      setIsRegistered(true);
+    }
+  }, [event._id]);
 
   const handleNavigate = () => {
     navigate(`/dashboard/event/about-event`, {
@@ -23,8 +33,15 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
     onDislikeEvent(event._id);
   };
 
-  const handleSelectChange = (e) => {
-    onSelectEvent(event._id, e.target.checked);
+  const handleRegister = (e) => {
+    e.stopPropagation(); // Prevent navigation
+    setIsRegistered(true);
+    // Save registration status to localStorage
+    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+    if (!registeredEvents.includes(event._id)) {
+      registeredEvents.push(event._id);
+      localStorage.setItem("registeredEvents", JSON.stringify(registeredEvents));
+    }
   };
 
   return (
@@ -42,7 +59,9 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
           </p>
         </div>
         <h4 className="text-md font-semibold mt-1">{event.title}</h4>
-        <p className="text-sm text-gray-500 flex items-center">{event.speaker}</p>
+        <p className="text-sm text-gray-500 flex items-center">
+          <strong>Speaker:-</strong> {event.speaker}
+        </p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-5 mt-2">
@@ -73,13 +92,13 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
           </button>
         </div>
         <button
-          className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent navigation from like/dislike click
-            
-          }}
+          className={`px-7 py-1.5 text-white rounded-xl ${
+            isRegistered ? "bg-green-600" : "bg-blue-600"
+          }`}
+          onClick={handleRegister}
+          disabled={isRegistered} // Disable button if already registered
         >
-          Register
+          {isRegistered ? "Registered" : "Register"}
         </button>
       </footer>
 
