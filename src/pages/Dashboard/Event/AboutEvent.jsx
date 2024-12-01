@@ -44,7 +44,6 @@ const AboutEvent = () => {
             `/event/user/${currentUserId}`
           );
           const userEvents = response.data.events;
-          console.log("Fetched User's Events:", userEvents); // Debugging log
 
           const userCreatedEvent = userEvents.some((event) => event._id === _id);
           setIsEventCreator(userCreatedEvent);
@@ -64,34 +63,25 @@ const AboutEvent = () => {
 
   return (
     <div className="flex justify-center p-8 overflow-auto hide-scrollbar">
-      {/* Event Content */}
       <div className="bg-white shadow-lg rounded-lg max-w-6xl w-full p-6 overflow-auto hide-scrollbar">
-        {/* Event Image */}
         <img
           src={eventphoto}
           className="w-full h-[300px] object-cover rounded-lg"
           alt={title}
         />
 
-        {/* Event Date and Time */}
         <p className="mt-2 text-gray-500">
           {new Date(date).toLocaleDateString()} {time}
         </p>
 
-        {/* Event Title */}
         <h1 className="mt-4 text-2xl font-bold">{title}</h1>
 
-        {/* Speaker Info */}
         <p className="text-blue-600 text-sm font-medium">{speaker}</p>
 
-        {/* Event Description */}
         <p className="mt-4 text-gray-800">
           Join us for an engaging session on <b>{title}</b> with {speaker}.
-          Learn from the best in the industry and gain valuable insights into
-          the world of trading.
         </p>
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-4 mt-4">
           {tagsTopic?.map((tag, index) => (
             <span
@@ -103,7 +93,6 @@ const AboutEvent = () => {
           ))}
         </div>
 
-        {/* Registration and Action Buttons */}
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => window.open(link, "_blank")}
@@ -112,10 +101,9 @@ const AboutEvent = () => {
             Register for the event
           </button>
 
-          {/* Conditionally Render Button for Event Creator */}
           {isEventCreator && (
             <button
-              onClick={() => setIsModalOpen(true)} // Open modal on click
+              onClick={() => setIsModalOpen(true)}
               className="px-6 py-2 bg-blue-600 text-white rounded-xl w-full sm:w-auto"
             >
               Create Volunteer Position
@@ -123,7 +111,6 @@ const AboutEvent = () => {
           )}
         </div>
 
-        {/* Attending Information */}
         <div className="mt-6">
           <h3 className="text-lg font-semibold">Attendees</h3>
           <p className="text-sm text-gray-600">
@@ -132,11 +119,11 @@ const AboutEvent = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <CreateVolunteering
-            onClose={() => setIsModalOpen(false)} // Pass close handler
+            eventId={_id} // Pass event ID as a prop
+            onClose={() => setIsModalOpen(false)}
           />
         </div>
       )}

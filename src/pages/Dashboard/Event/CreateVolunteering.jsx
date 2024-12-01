@@ -1,34 +1,41 @@
 import { useState } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
 
-const CreateVolunteer = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    PositionTittle: "",
-    RolesResposiblity: "",
-    Eligibility: "",
-    SkillsQualification: "",
-    VolunteerRequired: "",
-  });
+const CreateVolunteer = ({ onClose, eventId }) => {
+  const [positionTitle, setPositionTitle] = useState("");
+  const [rolesResponsibility, setRolesResponsibility] = useState("");
+  const [eligibility, setEligibility] = useState("");
+  const [skills, setSkills] = useState("");
+  const [volunteerCount, setVolunteerCount] = useState("");
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // You can add API submission logic here
-    onClose(); // Close the popup after submission
+    try {
+      const payload = {
+        eventId,
+        positionTitle,
+        rolesResponsibility,
+        eligibility,
+        skills,
+        volunteerCount,
+      };
+      const response = await axiosInstance.post(
+        "http://localhost:5000/api/network-next/v1/volunteer/create",
+        payload
+      );
+      console.log("Volunteer Position Created:", response.data);
+      onClose(); // Close the popup after successful creation
+    } catch (error) {
+      console.error("Error creating volunteer position:", error.response || error);
+    }
   };
 
   const handleDiscard = () => {
-    setFormData({
-      PositionTittle: "",
-      RolesResposiblity: "",
-      Eligibility: "",
-      SkillsQualification: "",
-      VolunteerRequired: "",
-    });
+    setPositionTitle("");
+    setRolesResponsibility("");
+    setEligibility("");
+    setSkills("");
+    setVolunteerCount("");
     onClose(); // Close the popup when discard is clicked
   };
 
@@ -41,101 +48,85 @@ const CreateVolunteer = ({ onClose }) => {
         >
           &times;
         </button>
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Creating Volunteering Position
-          </h1>
-        </div>
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+          Creating Volunteering Position
+        </h1>
         <form onSubmit={handleSubmit}>
-          {/* Fields */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Volunteer Position Tittle
+              Volunteer Position Title
             </label>
             <select
-              name="PositionTittle"
-              value={formData.PositionTittle}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              value={positionTitle}
+              onChange={(e) => setPositionTitle(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border rounded-lg"
             >
               <option value="">Select</option>
-              <option value="Workshop">Event Coordinator</option>
-              <option value="Seminar">manager</option>
-              <option value="Competition">Support</option>
-              <option value="Competition">Others</option>
+              <option value="Event Coordinator">Event Coordinator</option>
+              <option value="Manager">Manager</option>
+              <option value="Support">Support</option>
+              <option value="Others">Others</option>
             </select>
           </div>
-
-          {/* Add other fields here without any changes */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Roles/Responsibility
             </label>
             <input
               type="text"
-              name="RolesResposiblity"
-              value={formData.RolesResposiblity}
-              onChange={handleInputChange}
-              placeholder="Enter roles and responsibility" // Added placeholder
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              value={rolesResponsibility}
+              onChange={(e) => setRolesResponsibility(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border rounded-lg"
+              placeholder="Enter roles and responsibility"
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Eligibility
             </label>
             <input
               type="text"
-              name="Eligibility"
-              value={formData.Eligibility}
-              placeholder="Describe eligibility criteria" // Added placeholder
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              value={eligibility}
+              onChange={(e) => setEligibility(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border rounded-lg"
+              placeholder="Describe eligibility criteria"
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Skills/Qualification
             </label>
             <input
               type="text"
-              name="SkillsQualification"
-              value={formData.SkillsQualification}
-              placeholder="Enter skills and qualifications Required" // Added placeholder
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              value={skills}
+              onChange={(e) => setSkills(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border rounded-lg"
+              placeholder="Enter skills and qualifications required"
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              No.of Volunteer Required for this Position
+              Number of Volunteers Required
             </label>
             <input
-              type="text"
-              name="VolunteerRequired"
-              value={formData.VolunteerRequired}
-              placeholder="Enter Volunteer Required" // Added placeholder
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              type="number"
+              value={volunteerCount}
+              onChange={(e) => setVolunteerCount(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border rounded-lg"
+              placeholder="Enter number of volunteers"
             />
           </div>
-
-          {/* Buttons */}
-          {/* Buttons */}
           <div className="flex justify-between">
             <button
               type="button"
               onClick={handleDiscard}
-              className="px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-100"
+              className="px-4 py-2 bg-gray-300 rounded-lg"
             >
               Discard
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
             >
               Submit
             </button>
