@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosinstance";
 import Image from "../../../assets/icons/logo nsqaure 1.svg"; // Ensure the correct path for the image
 import Cookies from "js-cookie";
@@ -6,6 +7,7 @@ import axios from "axios";
 
 const Donation = () => {
   const userId = Cookies.get("id");
+  const projectId = useParams();
   const [userData, setUserData] = useState("");
   const [formData, setFormData] = useState({
     amount: "",
@@ -95,20 +97,22 @@ const Donation = () => {
               razorpay_order_id,
               razorpay_signature,
             } = response;
-            console.log(razorpay_payment_id);
-            console.log(razorpay_order_id);
-            console.log(razorpay_signature);
+            const donationFrom = { userId };
 
             // Send the response to your backend for verification
             try {
-              await axios.post(
+              const response = await axios.post(
                 "https://network-next-backend.onrender.com/api/network-next/v1/donation/payment-verification",
                 {
                   razorpay_payment_id,
                   razorpay_order_id,
                   razorpay_signature,
+                  donationFrom,
+                  amount,
+                  projectId,
                 }
               );
+              console.log(response);
               alert("Payment Successful!");
             } catch (error) {
               console.error("Error verifying payment:", error);

@@ -66,7 +66,8 @@ const Dashboard = () => {
             <Route path="project" element={<Project />} />
             <Route path="mentorship" element={<MentorShip />} />
             <Route path="project/:projectId" element={<AboutProject />} />
-            <Route path="project/:projectId/donation" element={<Donation />} />
+            {/* <Route path="project/:projectId/donation" element={<Donation />} /> */}
+            <Route path="project/donate/:projectId" element={<Donation />} />
             <Route path="project/create-project" element={<CreateProject />} />
             <Route path="Reunion/Memories" element={<Memories />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
