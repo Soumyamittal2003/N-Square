@@ -1,9 +1,19 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
 const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelectEvent, isSelected }) => {
   const navigate = useNavigate();
+  const [isRegistered, setIsRegistered] = useState(false); // State to track registration
+
+  // Load registration status from localStorage
+  useEffect(() => {
+    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+    if (registeredEvents.includes(event._id)) {
+      setIsRegistered(true);
+    }
+  }, [event._id]);
 
   const handleNavigate = () => {
     navigate(`/dashboard/event/about-event`, {
@@ -14,17 +24,24 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
   };
 
   const handleLike = (e) => {
-    e.stopPropagation();  // Prevent navigation
+    e.stopPropagation(); // Prevent navigation
     onLikeEvent(event._id);
   };
 
   const handleDislike = (e) => {
-    e.stopPropagation();  // Prevent navigation
+    e.stopPropagation(); // Prevent navigation
     onDislikeEvent(event._id);
   };
 
-  const handleSelectChange = (e) => {
-    onSelectEvent(event._id, e.target.checked);
+  const handleRegister = (e) => {
+    e.stopPropagation(); // Prevent navigation
+    setIsRegistered(true);
+    // Save registration status to localStorage
+    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+    if (!registeredEvents.includes(event._id)) {
+      registeredEvents.push(event._id);
+      localStorage.setItem("registeredEvents", JSON.stringify(registeredEvents));
+    }
   };
 
   return (
@@ -37,10 +54,14 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
       {/* Event Details */}
       <div>
         <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
-          <p className="text-sm text-gray-500">{new Date(event.date).toLocaleDateString()} • {event.time}</p>
+          <p className="text-sm text-gray-500">
+            {new Date(event.date).toLocaleDateString()} • {event.time}
+          </p>
         </div>
         <h4 className="text-md font-semibold mt-1">{event.title}</h4>
-        <p className="text-sm text-gray-500 flex items-center">{event.speaker}</p>
+        <p className="text-sm text-gray-500 flex items-center">
+          <strong>Speaker:-</strong> {event.speaker}
+        </p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-5 mt-2">
@@ -71,25 +92,27 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
           </button>
         </div>
         <button
-          className="px-7 py-1.5 text-white bg-blue-600 rounded-xl"
-          onClick={(e) => {
-            e.stopPropagation();  // Prevent navigation from like/dislike click
-            handleNavigate();
-          }}
+          className={`px-7 py-1.5 text-white rounded-xl ${
+            isRegistered ? "bg-green-600" : "bg-blue-600"
+          }`}
+          onClick={handleRegister}
+          disabled={isRegistered} // Disable button if already registered
         >
-          Register
+          {isRegistered ? "Registered" : "Register"}
         </button>
       </footer>
 
-      {/* Checkbox for selecting the event */}
-      <div className="mt-2 flex justify-start items-center">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={handleSelectChange}
-          className="mr-2"
-        />
-        <label>Select this event</label>
+      {/* Details Button */}
+      <div className="mt-2">
+        <button
+          className="text-sm text-blue-600 underline mt-2 self-start"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent navigation from like/dislike click
+            handleNavigate();
+          }}
+        >
+          Click here for more details
+        </button>
       </div>
     </div>
   );

@@ -69,26 +69,27 @@ const CreateVolunteer = ({ onClose }) => {
           {/* Add other fields here without any changes */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Roles/Responsiblity
+              Roles/Responsibility
             </label>
             <input
               type="text"
               name="RolesResposiblity"
               value={formData.RolesResposiblity}
               onChange={handleInputChange}
+              placeholder="Enter roles and responsibility" // Added placeholder
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
 
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-            Eligibility
+              Eligibility
             </label>
             <input
               type="text"
               name="Eligibility"
               value={formData.Eligibility}
+              placeholder="Describe eligibility criteria" // Added placeholder
               onChange={handleInputChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
@@ -96,12 +97,13 @@ const CreateVolunteer = ({ onClose }) => {
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-            Skills/Qualification
+              Skills/Qualification
             </label>
             <input
               type="text"
               name="SkillsQualification"
               value={formData.SkillsQualification}
+              placeholder="Enter skills and qualifications Required" // Added placeholder
               onChange={handleInputChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
@@ -109,20 +111,21 @@ const CreateVolunteer = ({ onClose }) => {
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-            No.of Volunteer Required
+              No.of Volunteer Required for this Position
             </label>
             <input
               type="text"
               name="VolunteerRequired"
               value={formData.VolunteerRequired}
+              placeholder="Enter No.of Volunteer Required for this Position" // Added placeholder
               onChange={handleInputChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
 
           {/* Buttons */}
-           {/* Buttons */}
-           <div className="flex justify-between">
+          {/* Buttons */}
+          <div className="flex justify-between">
             <button
               type="button"
               onClick={handleDiscard}
