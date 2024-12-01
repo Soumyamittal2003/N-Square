@@ -7,7 +7,7 @@ import Event from "./Event/Event";
 import Job from "./Job/Job";
 import Help from "./Help/Help";
 import Project from "./Project/Project";
-import MentorShip from "./MentorShip/Mentor";
+import Mentor from "./MentorShip/Mentor";
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import MyEvent from "./MyEvent/MyEvent";
@@ -28,6 +28,8 @@ import AppliedJobs from "./AppliedJob/AppliedJob";
 import Donation from "./Project/Donation";
 
 import Chat from "./Chat/Chat";
+import MentorContent from "./MentorShip/MentorContent";
+import FindGroup from "./MentorShip/FindGroup";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -64,7 +66,9 @@ const Dashboard = () => {
             <Route path="chat" element={<Chat />} />
             <Route path="applied-jobs" element={<AppliedJobs />} />
             <Route path="project" element={<Project />} />
-            <Route path="mentorship" element={<MentorShip />} />
+            <Route path="mentorship" element={<MentorContent />} />
+            <Route path="mentorship/groups" element={<Mentor />} />
+            <Route path="mentorship/find-group" element={<FindGroup />} />
             <Route path="project/:projectId" element={<AboutProject />} />
             {/* <Route path="project/:projectId/donation" element={<Donation />} /> */}
             <Route path="project/donate/:projectId" element={<Donation />} />
