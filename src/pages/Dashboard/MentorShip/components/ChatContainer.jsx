@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
-import ChatInput from "./ChatInput";
-import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axiosInstance from "../../../../utils/axiosinstance";
 import {
   sendGroupMessageRoute,
   recieveGroupMessageRoute,
 } from "../utils/APIRoutes";
+import ChatInput from "./ChatInput";
 
 export default function ChatContainer({ currentChat, socket }) {
   const [messages, setMessages] = useState([]);
-
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const user = JSON.parse(localStorage.getItem("chat-app-current-user"));
@@ -78,113 +75,40 @@ export default function ChatContainer({ currentChat, socket }) {
   }, [messages]);
 
   return (
-    <Container>
-      <div className="chat-header">
-        <div className="user-details">
-          <div className="avatar">
-            <img src={"avatarImage"} alt="" />
-          </div>
-          <div className="username">
-            <h3>{currentChat.name}</h3>
-          </div>
-        </div>
-        <Logout />
+    <div className="bg-gray-800 rounded-lg p-4 h-full">
+      {/* Chat Header */}
+      <div className="flex items-center gap-4 mb-4">
+        <img
+          src={currentChat.groupProfileImage || "avatarImage"}
+          alt="group-avatar"
+          className="w-12 h-12 rounded-full"
+        />
+        <h3 className="text-xl text-white">{currentChat.name}</h3>
       </div>
-      <div className="chat-messages">
+
+      {/* Message List */}
+      <div className="overflow-y-auto h-[calc(100vh-200px)] hide-scrollbar">
         {messages?.map((message) => {
           return (
-            <div ref={scrollRef} key={uuidv4()}>
+            <div key={uuidv4()} className="mb-4 flex">
               <div
-                className={`message ${message.fromSelf ? "sended" : "recieved"}`}
+                className={`${
+                  message.fromSelf ? "ml-auto bg-indigo-600" : "bg-gray-700"
+                } p-3 rounded-xl max-w-[75%] text-white`}
               >
-                <div className="content ">
-                  <p>{message.message}</p>
-                </div>
+                <p>{message.message}</p>
               </div>
             </div>
           );
         })}
+        <div ref={scrollRef} />
       </div>
-      {
-        // Conditional rendering using &&
-        (currentChat.hasOwnProperty("gender") ||
-          currentChat.createdBy === user._id) && (
-          <ChatInput handleSendMsg={handleSendMsg} />
-        )
-      }
-    </Container>
+
+      {/* Message Input */}
+      {(currentChat.hasOwnProperty("gender") ||
+        currentChat.createdBy === user._id) && (
+        <ChatInput handleSendMsg={handleSendMsg} />
+      )}
+    </div>
   );
 }
-
-const Container = styled.div`
-  display: grid;
-  grid-template-rows: 10% 80% 10%;
-  gap: 0.1rem;
-  overflow: hidden;
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
-    grid-template-rows: 15% 70% 15%;
-  }
-  .chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2rem;
-    .user-details {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
-      .username {
-        h3 {
-          color: white;
-        }
-      }
-    }
-  }
-  .chat-messages {
-    padding: 1rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    overflow: auto;
-    &::-webkit-scrollbar {
-      width: 0.2rem;
-      &-thumb {
-        background-color: #ffffff39;
-        width: 0.1rem;
-        border-radius: 1rem;
-      }
-    }
-    .message {
-      display: flex;
-      align-items: center;
-      .content {
-        max-width: 40%;
-        overflow-wrap: break-word;
-        padding: 1rem;
-        font-size: 1.1rem;
-        border-radius: 1rem;
-        color: #d1d1d1;
-        @media screen and (min-width: 720px) and (max-width: 1080px) {
-          max-width: 70%;
-        }
-      }
-    }
-    .sended {
-      justify-content: flex-end;
-      .content {
-        background-color: #4f04ff21;
-      }
-    }
-    .recieved {
-      justify-content: flex-start;
-      .content {
-        background-color: #9900ff20;
-      }
-    }
-  }
-`;

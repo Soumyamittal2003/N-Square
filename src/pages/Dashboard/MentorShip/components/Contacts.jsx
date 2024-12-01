@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 
 export default function Contacts({ contacts, changeChat }) {
@@ -29,142 +28,48 @@ export default function Contacts({ contacts, changeChat }) {
     setCurrentSelected(index);
     changeChat(contact);
   };
+
   return (
     <>
       {currentUserName && currentUserImage && (
-        <Container>
-          <div className="brand">
-            <img src={Logo} alt="logo" />
-            <h3>N-square</h3>
+        <div className="p-4 ">
+          {/* Logo and App Name */}
+          <div className="flex items-center mb-4">
+            <img src={Logo} alt="logo" className="w-12 h-12" />
+            <h3 className="text-2xl font-semibold ml-2">N-square</h3>
           </div>
-          <div className="contacts">
+
+          {/* Contacts List */}
+          <div className="space-y-2 overflow-y-auto h-[calc(100vh-200px)] hide-scrollbar">
             {contacts.map((contact, index) => {
               return (
                 <div
                   key={contact._id}
-                  className={`contact ${
-                    index === currentSelected ? "selected" : ""
-                  }`}
-                  onClick={() => {
-                    console.log(index, contact);
-                    changeCurrentChat(index, contact);
-                  }}
+                  onClick={() => changeCurrentChat(index, contact)}
+                  className="flex items-center gap-4 p-2 hover:bg-gray-700 cursor-pointer rounded-lg"
                 >
-                  <div className="avatar">
-                    <img
-                      style={{ borderRadius: "50%" }}
-                      src={`${contact.groupProfileImage}`}
-                      alt=""
-                    />
-                  </div>
-
-                  <div className="username">
-                    <h3>{contact.name}</h3>
-                  </div>
+                  <img
+                    src={`${contact.groupProfileImage}`}
+                    alt=""
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <h3 className="text-lg text-white">{contact.name}</h3>
                 </div>
               );
             })}
           </div>
-          <div className="current-user">
-            <div className="avatar">
-              <img
-                style={{ borderRadius: "50%" }}
-                src={`${currentUserImage}`}
-                alt="avatar"
-              />
-            </div>
-            <div className="username">
-              <h2>{currentUserName}</h2>
-            </div>
+
+          {/* Current User Info */}
+          <div className="flex items-center gap-4 mt-4 p-2 bg-gray-700 rounded-lg">
+            <img
+              src={`${currentUserImage}`}
+              alt="avatar"
+              className="w-10 h-10 rounded-full"
+            />
+            <h2 className="text-xl text-white">{currentUserName}</h2>
           </div>
-        </Container>
+        </div>
       )}
     </>
   );
 }
-const Container = styled.div`
-  display: grid;
-  grid-template-rows: 10% 75% 15%;
-  overflow: hidden;
-  background-color: #080420;
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: center;
-    img {
-      height: 2rem;
-    }
-    h3 {
-      color: white;
-      text-transform: uppercase;
-    }
-  }
-  .contacts {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: auto;
-    gap: 0.8rem;
-    &::-webkit-scrollbar {
-      width: 0.2rem;
-      &-thumb {
-        background-color: #ffffff39;
-        width: 0.1rem;
-        border-radius: 1rem;
-      }
-    }
-    .contact {
-      background-color: #ffffff34;
-      min-height: 5rem;
-      cursor: pointer;
-      width: 90%;
-      border-radius: 0.2rem;
-      padding: 0.4rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      transition: 0.5s ease-in-out;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
-      .username {
-        h3 {
-          color: white;
-        }
-      }
-    }
-    .selected {
-      background-color: #9a86f3;
-    }
-  }
-
-  .current-user {
-    background-color: #0d0d30;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    .avatar {
-      img {
-        height: 4rem;
-        max-inline-size: 100%;
-      }
-    }
-    .username {
-      h2 {
-        color: white;
-      }
-    }
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      gap: 0.5rem;
-      .username {
-        h2 {
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-`;
