@@ -1,4 +1,3 @@
-
 import Header from "./Header";
 import FirstPage from "./FirstPage";
 import SecondPage from "./SecondPage";
@@ -25,10 +24,10 @@ const HomePage = () => {
       <SixthPage />
       <SeventhPage />
       <EighthPage />
-      <JoinCommunitySection/>
-      <FAQSection/>
-      <Testimonials/>
-      <Footer/>
+      <JoinCommunitySection />
+      <FAQSection />
+      <Testimonials />
+      <Footer />
     </div>
   );
 };

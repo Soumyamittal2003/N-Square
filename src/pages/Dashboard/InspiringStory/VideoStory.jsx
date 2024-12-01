@@ -1,5 +1,3 @@
-
-
 const VideoStory = ({ videoSrc }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden h-60">

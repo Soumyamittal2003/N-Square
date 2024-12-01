@@ -1,4 +1,3 @@
-
 import ResourceContent from "./ResourceContent";
 
 const AlmaResource = () => {

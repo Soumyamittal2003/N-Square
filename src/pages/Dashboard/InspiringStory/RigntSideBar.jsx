@@ -1,6 +1,6 @@
-import  { useState } from "react";
+import { useState } from "react";
 import CreateStory from "./CreateStory";
- // Import the CreateStory component
+// Import the CreateStory component
 
 const RightSidebar = () => {
   const [isCreateStoryOpen, setIsCreateStoryOpen] = useState(false);
@@ -23,7 +23,9 @@ const RightSidebar = () => {
       {isCreateStoryOpen && <CreateStory onClose={handleCloseCreateStory} />}
       {/* Trending Stories Section */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-800">Trending Stories</h2>
+        <h2 className="text-lg font-semibold text-gray-800">
+          Trending Stories
+        </h2>
         <div className="flex space-x-4 mt-6">
           {/* Story Card 1 */}
           <div className="w-32 h-48 bg-white shadow-md rounded-lg overflow-hidden relative">
@@ -56,7 +58,6 @@ const RightSidebar = () => {
       </div>
 
       {/* CreateStory Popup */}
-      
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import EventCard from "./MyEventCard"; 
+import EventCard from "./MyEventCard";
 import { useNavigate } from "react-router-dom";
 
-const MyEventContent = () => { 
+const MyEventContent = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -14,7 +14,9 @@ const MyEventContent = () => {
   // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      const storedUser = JSON.parse(
+        localStorage.getItem("chat-app-current-user")
+      );
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -38,7 +40,9 @@ const MyEventContent = () => {
         );
         const eventResponses = await Promise.all(eventPromises);
 
-        const fetchedEvents = eventResponses.map((response) => response.data.event);
+        const fetchedEvents = eventResponses.map(
+          (response) => response.data.event
+        );
         setEvents(fetchedEvents);
       } catch (error) {
         console.error("Error fetching user or events:", error);
@@ -59,7 +63,11 @@ const MyEventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
+            ? {
+                ...event,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
             : event
         )
       );
@@ -75,7 +83,11 @@ const MyEventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
+            ? {
+                ...event,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
             : event
         )
       );

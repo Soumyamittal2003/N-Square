@@ -14,7 +14,6 @@ const RightSidebar = () => {
 
   return (
     <div className="w-full p-4 space-y-2 bg-white">
-
       {/* Popup for CreateVolunteer */}
       {isCreateVolunteerOpen && (
         <CreateVolunteer onClose={handleCloseCreateVolunteer} />

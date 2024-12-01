@@ -1,5 +1,4 @@
-
-import backgroundImage from '../../assets/images/graduationImage.png'; // Replace with the actual background image path
+import backgroundImage from "../../assets/images/graduationImage.png"; // Replace with the actual background image path
 
 const FirstPage = () => {
   return (
@@ -16,7 +15,9 @@ const FirstPage = () => {
 
       {/* Subtitle */}
       <p className="text-md md:text-lg text-gray-800 max-w-2xl mb-8">
-        Welcome to <span className="font-bold">Network_Next</span>, where we empower individuals with the knowledge and tools to succeed in their professional journeys through{" "}
+        Welcome to <span className="font-bold">Network_Next</span>, where we
+        empower individuals with the knowledge and tools to succeed in their
+        professional journeys through{" "}
         <span className="font-bold">Making Connections</span>.
       </p>
 

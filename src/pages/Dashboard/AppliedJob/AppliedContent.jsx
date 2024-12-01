@@ -11,7 +11,9 @@ const AppliedContent = () => {
   // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      const storedUser = JSON.parse(
+        localStorage.getItem("chat-app-current-user")
+      );
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -55,7 +57,9 @@ const AppliedContent = () => {
         jobs.map(async (job) => {
           if (job.createdBy) {
             try {
-              const response = await axiosInstance.get(`/users/${job.createdBy}`);
+              const response = await axiosInstance.get(
+                `/users/${job.createdBy}`
+              );
               return {
                 ...job,
                 creatorName: `${response.data.data.firstName} ${response.data.data.lastName}`,
@@ -87,7 +91,10 @@ const AppliedContent = () => {
   }
 
   return (
-    <div className="w-full p-8 overflow-y-auto hide-scrollbar" style={{ maxHeight: "calc(100vh - 160px)" }}>
+    <div
+      className="w-full p-8 overflow-y-auto hide-scrollbar"
+      style={{ maxHeight: "calc(100vh - 160px)" }}
+    >
       <div className="grid grid-cols-4 gap-2 ">
         {jobs.map((job) => (
           <AppliedCard

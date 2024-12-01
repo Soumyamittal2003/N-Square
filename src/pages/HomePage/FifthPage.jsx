@@ -1,13 +1,13 @@
-
-
 const FifthPage = () => {
   return (
     <div className="px-8 py-16 bg-gray-50 text-center  drop-shadow-inner">
       {/* Title */}
-      <h2 className="text-2xl md:text-5xl font-bold mb-12"style={{
-                textShadow: '2px 2px 5px rgba(0, 0, 0, 0.5)', // Adding shadow effect
-            }}
-            > 
+      <h2
+        className="text-2xl md:text-5xl font-bold mb-12"
+        style={{
+          textShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)", // Adding shadow effect
+        }}
+      >
         Empowering Connections, Careers, and Communities.
       </h2>
 

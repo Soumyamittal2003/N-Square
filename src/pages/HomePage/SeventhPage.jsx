@@ -1,5 +1,4 @@
-
-import chatImage from '../../assets/images/Background7.jpg'; // Replace with the actual path of the chat interface image
+import chatImage from "../../assets/images/Background7.jpg"; // Replace with the actual path of the chat interface image
 
 const SeventhPage = () => {
   return (
@@ -7,8 +6,9 @@ const SeventhPage = () => {
       {/* Header Section */}
       <div className=" px-10 mx-6 flex items-center justify-between mb-10">
         <h2 className="text-3xl md:text-5xl font-extrabold text-gray-800 tracking-tight leading-tight">
-    Real-time Chat - <span className="text-blue-600">With Connections, Alumni</span>
-    </h2>
+          Real-time Chat -{" "}
+          <span className="text-blue-600">With Connections, Alumni</span>
+        </h2>
         <button className="px-6 py-2 border-2 border-black bg-white font-semibold text-black text-lg rounded-full hover:bg-black hover:text-white transition">
           Learn More
         </button>
