@@ -138,10 +138,7 @@ const JobContent = () => {
     }
 
     try {
-<<<<<<< HEAD
-=======
       // Assuming the API expects both userId and jobId in the request body
->>>>>>> 289b8c7f67ea3f6341a3a4da5c4fe97ed93f8b13
       const response = await axiosInstance.patch(`/jobs/save-job/${jobId}`, {
         userId: currentUserId,
       });
@@ -167,10 +164,7 @@ const JobContent = () => {
     }
 
     try {
-<<<<<<< HEAD
-=======
       // Assuming the API expects a payload with jobId and userId
->>>>>>> 289b8c7f67ea3f6341a3a4da5c4fe97ed93f8b13
       const response = await axiosInstance.post(`/jobs/apply/${jobId}`, {
         userId: currentUserId,
       });
