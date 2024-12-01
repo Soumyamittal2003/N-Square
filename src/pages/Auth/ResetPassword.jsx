@@ -36,7 +36,7 @@ const ResetPassword = () => {
 
     try {
       // Make API call to reset password with token
-      
+
       await toast.promise(
         axiosInstance.post("/users/reset-password", {
           token,

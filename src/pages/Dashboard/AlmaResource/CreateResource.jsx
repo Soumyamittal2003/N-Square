@@ -39,8 +39,9 @@ const CreateResources = ({ onClose }) => {
           &times;
         </button>
         <div className="text-center mb-6">
-          
-          <h1 className="text-xl font-bold text-gray-800">Post Alma Resource</h1>
+          <h1 className="text-xl font-bold text-gray-800">
+            Post Alma Resource
+          </h1>
         </div>
         <form onSubmit={handleSubmit}>
           {/* File Name */}
