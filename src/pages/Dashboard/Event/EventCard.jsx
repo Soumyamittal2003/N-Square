@@ -45,13 +45,19 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent, onSelect
   };
 
   return (
-    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
+        <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
       {/* Event Image */}
       <div className="relative">
-        <img src={event.eventphoto} alt={event.title} className="w-45 h-30 rounded-lg object-cover" />
+        <img 
+          src={event.eventphoto} 
+          alt={event.title} 
+          className="w-full h-[150px] rounded-lg object-cover" 
+          style={{ aspectRatio: "16/9" }} 
+        />
       </div>
 
-      {/* Event Details */}
+
+      
       <div>
         <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
           <p className="text-sm text-gray-500">
