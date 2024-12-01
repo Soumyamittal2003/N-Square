@@ -130,11 +130,9 @@ const JobContent = () => {
     }
 
     try {
-      // Assuming the API expects both userId and jobId in the request body
-      const response = await axiosInstance.patch(
-        `/jobs/save-job/${jobId}`,
-        { userId: currentUserId }
-      );
+      const response = await axiosInstance.patch(`/jobs/save-job/${jobId}`, {
+        userId: currentUserId,
+      });
 
       if (response.data.success) {
         setUserBookmarks((prevBookmarks) =>
@@ -150,7 +148,6 @@ const JobContent = () => {
     }
   };
 
-  // Handle apply action
   const handleApplyJob = async (jobId) => {
     if (!currentUserId) {
       console.error("User not logged in.");
@@ -158,18 +155,14 @@ const JobContent = () => {
     }
 
     try {
-      // Assuming the API expects a payload with jobId and userId
-      const response = await axiosInstance.post(
-        `/jobs/apply/${jobId}`,
-        { userId: currentUserId }
-      );
+      const response = await axiosInstance.post(`/jobs/apply/${jobId}`, {
+        userId: currentUserId,
+      });
 
       if (response.data.success) {
         setJobs((prevJobs) =>
           prevJobs.map((job) =>
-            job._id === jobId
-              ? { ...job, isApplied: true }
-              : job
+            job._id === jobId ? { ...job, isApplied: true } : job
           )
         );
       } else {
