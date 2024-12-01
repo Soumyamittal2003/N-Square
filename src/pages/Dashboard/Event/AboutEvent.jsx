@@ -24,18 +24,21 @@ const AboutEvent = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // Fetch the current user by ID
         const userResponse = await fetch(
           "/users/674323ad871fe8cca6985035"
         );
         const userData = await userResponse.json();
         setCurrentUser(userData);
 
-        if (_id) {
+        if (userData && _id) {
           // Fetch events created by the current user
           const eventsResponse = await fetch(
             `/event/user/${userData._id}`
           );
           const eventsData = await eventsResponse.json();
+
+          // Check if the user created the current event
           const userCreatedEvent = eventsData.some(event => event._id === _id);
           setIsEventCreator(userCreatedEvent);
         }
