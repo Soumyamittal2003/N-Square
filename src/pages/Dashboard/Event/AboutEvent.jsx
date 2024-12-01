@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import CreateVolunteering from "./CreateVolunteering"; // Import the modal component
 
 const AboutEvent = () => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null); // State for current user
+  const [isEventCreator, setIsEventCreator] = useState(false); // State for event ownership
 
   const {
     _id,
@@ -17,6 +19,33 @@ const AboutEvent = () => {
     link,
     attending,
   } = location.state || {};
+
+  // Fetch current user and verify event ownership
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userResponse = await fetch(
+          "/users/674323ad871fe8cca6985035"
+        );
+        const userData = await userResponse.json();
+        setCurrentUser(userData);
+
+        if (_id) {
+          // Fetch events created by the current user
+          const eventsResponse = await fetch(
+            `/event/user/${userData._id}`
+          );
+          const eventsData = await eventsResponse.json();
+          const userCreatedEvent = eventsData.some(event => event._id === _id);
+          setIsEventCreator(userCreatedEvent);
+        }
+      } catch (error) {
+        console.error("Error fetching user or event data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [_id]);
 
   // Check if the event details are missing
   if (!title) {
@@ -73,12 +102,15 @@ const AboutEvent = () => {
             Register for the event
           </button>
 
-          <button
-            onClick={() => setIsModalOpen(true)} // Open modal on click
-            className="px-6 py-2 bg-blue-600 text-white rounded-xl w-full sm:w-auto"
-          >
-            Create Volunteer Position
-          </button>
+          {/* Conditionally Render Button for Event Creator */}
+          {isEventCreator && (
+            <button
+              onClick={() => setIsModalOpen(true)} // Open modal on click
+              className="px-6 py-2 bg-blue-600 text-white rounded-xl w-full sm:w-auto"
+            >
+              Create Volunteer Position
+            </button>
+          )}
         </div>
 
         {/* Attending Information */}
@@ -98,12 +130,10 @@ const AboutEvent = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          
-            <CreateVolunteering
-              onClose={() => setIsModalOpen(false)} // Pass close handler
-            />
-          </div>
-        
+          <CreateVolunteering
+            onClose={() => setIsModalOpen(false)} // Pass close handler
+          />
+        </div>
       )}
     </div>
   );
