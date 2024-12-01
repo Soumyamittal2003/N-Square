@@ -1,19 +1,25 @@
- // Update with the correct path to your icon
+const VolunteerCard = ({ position, onApply }) => {
+  const {
+    _id: positionId,
+    positionTitle,
+    skills,
+    availablePositions,
+    rolesResponsibility,
+    eligibility,
+    eventDetails,
+    applied, // Flag to check if already applied
+  } = position;
 
-const VolunteerCard = ({
-  positionTitle,
-  skills,
-  availablePositions,
-  rolesResponsibility,
-  eligibility,
-  eventTitle,
-  venue,
-  link,
-  date,
-  time,
-  eventCoordinator,
-  coordinatorPhone,
-}) => {
+  const {
+    title: eventTitle,
+    venue,
+    link,
+    date,
+    time,
+    eventCoordinator,
+    coordinatorphone,
+  } = eventDetails || {};
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col justify-between">
       {/* Main Content */}
@@ -44,7 +50,7 @@ const VolunteerCard = ({
           <strong>Coordinator:</strong> {eventCoordinator}
         </p>
         <p className="text-sm text-gray-500 mb-1">
-          <strong>Phone:</strong> {coordinatorPhone}
+          <strong>Phone:</strong> {coordinatorphone}
         </p>
         <p className="text-sm text-gray-500 mb-1">
           <strong>Skills:</strong> {skills}
@@ -60,14 +66,18 @@ const VolunteerCard = ({
         </p>
       </div>
 
-      {/* Footer with Apply and Share */}
+      {/* Footer with Apply Button */}
       <div className="flex justify-center items-center mt-2">
-        {/* Share Icon */}
-        
-
-        {/* Apply Button */}
-        <button className="px-12 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          Apply
+        <button
+          onClick={() => onApply(positionId)}
+          className={`px-12 py-2 rounded-lg ${
+            applied
+              ? "bg-gray-500 text-white cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
+          disabled={applied}
+        >
+          {applied ? "Applied" : "Apply"}
         </button>
       </div>
     </div>

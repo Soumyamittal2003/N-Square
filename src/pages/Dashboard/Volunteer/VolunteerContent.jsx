@@ -6,6 +6,21 @@ const VolunteerContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [volunteerPositions, setVolunteerPositions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  // Fetch the current user ID from localStorage
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      if (storedUser && storedUser._id) {
+        setCurrentUserId(storedUser._id);
+      } else {
+        console.error("No current user found in localStorage");
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   // Fetch volunteer positions with event details
   useEffect(() => {
@@ -53,6 +68,41 @@ const VolunteerContent = () => {
     position.positionTitle.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Function to handle the apply action
+  const handleApply = async (positionId) => {
+    if (!currentUserId) {
+      alert("Please log in to apply.");
+      return;
+    }
+
+    try {
+      console.log("Applying for position:", positionId);
+      const response = await axiosInstance.post(
+        `/volunteer/apply-volunteer/${positionId}`,
+        {
+          userId: currentUserId,
+        }
+      );
+
+      if (response.data.success) {
+        alert("Successfully applied for the volunteer position!");
+        // Update the state to mark the position as applied
+        setVolunteerPositions((prevPositions) =>
+          prevPositions.map((position) =>
+            position._id === positionId
+              ? { ...position, applied: true }
+              : position
+          )
+        );
+      } else {
+        alert(response.data.message || "Failed to apply.");
+      }
+    } catch (error) {
+      console.error("Error applying for volunteer position:", error);
+      alert("Error applying for the position. Please try again later.");
+    }
+  };
+
   if (loading) {
     return <p>Loading volunteer positions...</p>;
   }
@@ -79,19 +129,8 @@ const VolunteerContent = () => {
         {filteredPositions.map((position) => (
           <VolunteerCard
             key={position._id}
-            positionTitle={position.positionTitle}
-            skills={position.skills}
-            availablePositions={position.availablePositions}
-            createdAt={position.createdAt}
-            rolesResponsibility={position.rolesResponsibility}
-            eligibility={position.eligibility}
-            eventTitle={position.eventDetails?.title}
-            venue={position.eventDetails?.venue}
-            link={position.eventDetails?.link}
-            date={position.eventDetails?.date}
-            time={position.eventDetails?.time}
-            eventCoordinator={position.eventDetails?.eventCoordinator}
-            coordinatorPhone={position.eventDetails?.coordinatorphone}
+            position={position}
+            onApply={handleApply}
           />
         ))}
       </div>
