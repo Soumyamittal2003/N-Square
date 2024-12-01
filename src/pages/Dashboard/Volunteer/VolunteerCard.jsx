@@ -1,4 +1,4 @@
-import shareIcon from "../../../assets/icons/shareArrow.svg"; // Update with the correct path to your icon
+ // Update with the correct path to your icon
 
 const VolunteerCard = ({
   positionTitle,
@@ -61,18 +61,12 @@ const VolunteerCard = ({
       </div>
 
       {/* Footer with Apply and Share */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-center items-center mt-2">
         {/* Share Icon */}
-        <button className="flex items-center justify-center">
-          <img
-            src={shareIcon}
-            alt="Share"
-            className="object-contain w-[25px] aspect-square"
-          />
-        </button>
+        
 
         {/* Apply Button */}
-        <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <button className="px-12 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
           Apply
         </button>
       </div>
