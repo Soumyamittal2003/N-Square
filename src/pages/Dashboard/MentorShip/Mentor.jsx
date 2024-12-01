@@ -55,8 +55,8 @@ export default function Chat() {
 
   return (
     <>
-      <div className="h-screen w-screen flex flex-col justify-center items-center bg-[#131324]">
-        <div className="h-[85vh] w-[85vw] bg-[#00000076] grid grid-cols-[25%,75%] md:grid-cols-[35%,65%]">
+      <div className="h-screen w-screen flex flex-col justify-center items-center bg-white">
+        <div className="h-[85vh] w-[85vw] bg-white grid grid-cols-[25%,75%] md:grid-cols-[35%,65%]">
           <Contacts contacts={contacts} changeChat={handleChatChange} />
           {currentChat === undefined ? (
             <Welcome />
