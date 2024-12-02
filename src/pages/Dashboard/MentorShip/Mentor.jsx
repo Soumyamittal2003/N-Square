@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import Cookies from "js-cookie";
 import { host, allGroupRoutes } from "./utils/APIRoutes";
 import ChatContainer from "./components/ChatContainer";
 import Contacts from "./components/Contacts";
@@ -8,15 +8,13 @@ import Welcome from "./components/Welcome";
 import axiosInstance from "../../../utils/axiosinstance";
 
 export default function Chat() {
-  const navigate = useNavigate();
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
-  const currentUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+  const [currentUser, setCurrentUser] = useState(null);
 
   function handleMyGroup(data) {
-    const user = JSON.parse(localStorage.getItem("chat-app-current-user"));
-    const userGroups = user?.groups || [];
+    const userGroups = currentUser?.groups || [];
     const userGroupIds = userGroups.map((group) => group.groupId);
     const filteredData = data.filter((group) =>
       userGroupIds.includes(group._id)
@@ -24,6 +22,27 @@ export default function Chat() {
 
     return filteredData;
   }
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const currentUserId = Cookies.get("id");
+      if (currentUserId) {
+        try {
+          const user = await axiosInstance.get(`/users/${currentUserId}`);
+          const userData = user.data.data;
+          localStorage.setItem(
+            "chat-app-current-user",
+            JSON.stringify(userData)
+          );
+          setCurrentUser(userData);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
