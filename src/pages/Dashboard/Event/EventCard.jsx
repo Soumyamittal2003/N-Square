@@ -5,12 +5,7 @@ import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const EventCard = ({
-  event,
-  currentUserId,
-  onLikeEvent,
-  onDislikeEvent,
-}) => {
+const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
   const [isRegistered, setIsRegistered] = useState(false); // State to track registration
   const [loading, setLoading] = useState(false); // Loading state for registration
   const navigate = useNavigate();
@@ -136,7 +131,11 @@ const EventCard = ({
           onClick={handleRegister}
           disabled={isRegistered || loading}
         >
-          {loading ? "Registering..." : isRegistered ? "Registered" : "Register"}
+          {loading
+            ? "Registering..."
+            : isRegistered
+              ? "Registered"
+              : "Register"}
         </button>
       </footer>
 
