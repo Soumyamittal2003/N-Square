@@ -13,15 +13,11 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(null);
 
-  function handleMyGroup(data) {
-    const userGroups = currentUser?.groups || [];
-    const userGroupIds = userGroups.map((group) => group.groupId);
-    const filteredData = data.filter((group) =>
-      userGroupIds.includes(group._id)
-    );
-
-    return filteredData;
-  }
+  const handleMyGroup = (data) => {
+    if (!currentUser || !currentUser.groups) return [];
+    const userGroupIds = currentUser.groups.map((group) => group.groupId);
+    return data.filter((group) => userGroupIds.includes(group._id));
+  };
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -73,7 +69,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-[650px] w-5/6">
+    <div className="flex h-[650px] w-full md:w-5/6">
       <div className="w-1/3 h-[600px] bg-gray-200 text-black p-4">
         <Contacts contacts={contacts} changeChat={handleChatChange} />
       </div>
