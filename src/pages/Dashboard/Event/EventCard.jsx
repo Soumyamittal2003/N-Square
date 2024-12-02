@@ -10,11 +10,11 @@ const EventCard = ({
   currentUserId,
   onLikeEvent,
   onDislikeEvent,
-  
 }) => {
   const [isRegistered, setIsRegistered] = useState(false); // State to track registration
   const [loading, setLoading] = useState(false); // Loading state for registration
   const navigate = useNavigate();
+
   // Load registration status from localStorage
   useEffect(() => {
     const registeredEvents =
@@ -42,13 +42,11 @@ const EventCard = ({
     onDislikeEvent(event._id);
   };
 
-  // Handle Registration Action
   const handleRegister = async (e) => {
     e.stopPropagation(); // Prevent navigation
     setLoading(true); // Start loading
 
     try {
-      // Send API request to register the user
       const response = await axiosInstance.post(
         `/event/register-event/${event._id}`,
         { userId: currentUserId } // Sending the user ID to register the user
@@ -57,8 +55,6 @@ const EventCard = ({
       if (response.data.message === true) {
         toast.success("Registered successfully!");
         setIsRegistered(true);
-
-        // Update localStorage to reflect the registration status
         const registeredEvents =
           JSON.parse(localStorage.getItem("registeredEvents")) || [];
         if (!registeredEvents.includes(event._id)) {
@@ -79,34 +75,32 @@ const EventCard = ({
   };
 
   return (
-    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
+    <div className="max-w-[300px] border border-gray-200 rounded-2xl shadow-lg bg-gradient-to-r from-white via-gray-50 to-white p-5 cursor-pointer flex flex-col justify-between hover:shadow-xl transition-shadow duration-300">
       {/* Event Image */}
-      <div className="relative">
+      <div className="relative rounded-xl overflow-hidden shadow-md">
         <img
           src={event.eventphoto}
           alt={event.title}
-          className="w-full h-[150px] rounded-lg object-cover"
-          style={{ aspectRatio: "16/9" }}
+          className="w-full h-[180px] object-cover"
         />
       </div>
 
-      <div>
-        <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
-          <p className="text-sm text-gray-500">
+      {/* Event Details */}
+      <div className="mt-4">
+        <div className="flex justify-between items-center">
+          <p className="text-xs text-gray-400 font-medium">
             {new Date(event.date).toLocaleDateString()} • {event.time}
           </p>
         </div>
-        <h4 className="text-md font-semibold mt-1">{event.title}</h4>
-        <p className="text-sm text-gray-500 flex items-center">
-          <strong>Speaker:-</strong> {event.speaker}
+        <h4 className="text-lg font-bold mt-2 text-gray-800">{event.title}</h4>
+        <p className="text-sm text-gray-600 mt-1 flex items-center">
+          <strong>Speaker:</strong> {event.speaker}
         </p>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-5 mt-2">
+        <div className="flex flex-wrap gap-2 mt-3">
           {event.tagsTopic.map((tag, index) => (
             <span
               key={index}
-              className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full"
+              className="text-xs bg-blue-100 text-blue-600 py-1 px-3 rounded-full shadow-sm"
             >
               {tag}
             </span>
@@ -114,18 +108,18 @@ const EventCard = ({
         </div>
       </div>
 
-      {/* Footer with Register Button and Like/Dislike Buttons */}
-      <footer className="flex justify-between items-center mt-4 w-full">
-        <div className="flex gap-3 items-center">
+      {/* Footer */}
+      <footer className="flex justify-between items-center mt-6">
+        <div className="flex items-center gap-4">
           <button
-            className="flex gap-1 items-center font-semibold justify-center"
+            className="flex items-center gap-1 text-gray-600 hover:text-blue-600 transition duration-300"
             onClick={handleLike}
           >
             <img src={arrowBlockUp} alt="Thumbs Up" />
             <span>{event.likes.length}</span>
           </button>
           <button
-            className="flex gap-1 items-center font-semibold justify-center"
+            className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition duration-300"
             onClick={handleDislike}
           >
             <img src={arrowBlockDown} alt="Thumbs Down" />
@@ -133,30 +127,29 @@ const EventCard = ({
           </button>
         </div>
 
-        {/* Register Button */}
         <button
-          className={`px-7 py-1.5 text-white rounded-xl ${
-            isRegistered ? "bg-green-600" : "bg-blue-600"
-          }`}
+          className={`px-5 py-2 text-white text-sm font-medium rounded-lg shadow-md transition-transform duration-300 ${
+            isRegistered
+              ? "bg-green-600 hover:bg-green-500"
+              : "bg-blue-600 hover:bg-blue-500"
+          } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           onClick={handleRegister}
-          disabled={isRegistered || loading} // Disable if already registered or loading
+          disabled={isRegistered || loading}
         >
           {loading ? "Registering..." : isRegistered ? "Registered" : "Register"}
         </button>
       </footer>
 
       {/* Details Button */}
-      <div className="mt-2">
-        <button
-          className="text-sm text-blue-600 underline mt-2 self-start"
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent navigation from like/dislike click
-            handleNavigate();
-          }}
-        >
-          Click here for more details
-        </button>
-      </div>
+      <button
+        className="mt-3 text-blue-600 text-sm font-medium underline hover:text-blue-800"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleNavigate();
+        }}
+      >
+        Click here for more details
+      </button>
     </div>
   );
 };
