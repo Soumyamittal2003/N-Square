@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const CreateVolunteer = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,18 @@ const CreateVolunteer = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    try{
+      if (formData.data.success === true) {
+        toast.success("Volunteer Position created successfully!");
+      } else {
+        toast.error("Failed to create Volunteer Position");
+      }
+    } catch (error) {
+      console.error("Error creating Volunteer Position:", error);
+      alert("An error occurred");
+    
+    }
+
     console.log("Form Submitted:", formData);
     // You can add API submission logic here
     onClose(); // Close the popup after submission

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import axiosInstance from "../../../utils/axiosinstance"; // Importing the axiosInstance you set up
+import axiosInstance from "../../../utils/axiosinstance";
+import { toast } from "react-toastify";
 
 const CreateJob = ({ onClose }) => {
   const [jobphoto, setJobphoto] = useState(null);
@@ -15,22 +16,26 @@ const CreateJob = ({ onClose }) => {
   const [error, setError] = useState("");
   const [profileImagePreview, setProfileImagePreview] = useState(null);
 
+  const validateAndFormatApplyLink = (value) => {
+    // Basic URL validation regex
+    const urlRegex =
+      /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+    if (!value) return ""; // Allow empty input
+    if (urlRegex.test(value)) {
+      // Ensure it starts with https://
+      return value.startsWith("http") ? value : `https://${value}`;
+    }
+    return null; // Return null if invalid
+  };
+
   const handleInputChange = (e) => {
-    const { name, value, type, files, checked } = e.target;
+    const { name, value, type, files } = e.target;
     if (type === "file") {
-      // Update the corresponding state for file input (jobphoto)
       if (name === "jobphoto") {
         setJobphoto(files[0]);
         setProfileImagePreview(URL.createObjectURL(files[0]));
-        console.log(profileImagePreview);
-      }
-    } else if (type === "checkbox") {
-      // Handle checkbox (if there are any in the future)
-      if (name === "someCheckbox") {
-        // Handle the checkbox state here
       }
     } else {
-      // Update the corresponding state for text inputs
       switch (name) {
         case "title":
           setTitle(value);
@@ -53,9 +58,16 @@ const CreateJob = ({ onClose }) => {
         case "stipendOrSalary":
           setStipendOrSalary(value);
           break;
-        case "applyLink":
-          setApplyLink(value);
+        case "applyLink":{
+          const formattedLink = validateAndFormatApplyLink(value);
+          if (formattedLink !== null) {
+            setError(""); // Clear error if valid
+            setApplyLink(formattedLink);
+          } else {
+            setError("Please enter a valid URL.");
+          }
           break;
+        }
         default:
           break;
       }
@@ -67,39 +79,36 @@ const CreateJob = ({ onClose }) => {
     setIsSubmitting(true);
     setError("");
 
-    // Prepare FormData to send as multipart/form-data
-    const formDataToSend = new FormData();
-    formDataToSend.append("jobphoto", jobphoto);
-    formDataToSend.append("title", title);
-    formDataToSend.append("company", company);
-    formDataToSend.append("location", location);
-    formDataToSend.append("description", description);
-    formDataToSend.append("skills", skills);
-    formDataToSend.append("type", type);
-    formDataToSend.append("stipendOrSalary", stipendOrSalary);
-    formDataToSend.append("applyLink", applyLink);
+    if (!applyLink || validateAndFormatApplyLink(applyLink) === null) {
+      setError("Please provide a valid Apply Link.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Prepare FormData for submission
+    const formData = new FormData();
+    formData.append("jobphoto", jobphoto);
+    formData.append("title", title);
+    formData.append("company", company);
+    formData.append("location", location);
+    formData.append("description", description);
+    formData.append("skills", skills);
+    formData.append("type", type);
+    formData.append("stipendOrSalary", stipendOrSalary);
+    formData.append("applyLink", applyLink);
 
     try {
-      console.log(formDataToSend);
-      const response = await axiosInstance.post(
-        "/jobs/create",
-        {
-          title,
-          company,
-          location,
-          description,
-          skills,
-          type,
-          stipendOrSalary,
-          applyLink,
-          jobphoto,
-        },
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const response = await axiosInstance.post("/jobs/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response.data.success === true) {
+        toast.success("Job created successfully!");
+      } else {
+        toast.error("Failed to create Job");
+      }
 
-      // Handle successful job creation
       console.log("Job created successfully:", response.data);
-      onClose(); // Close the modal after successful submission
+      onClose(); // Close the modal on success
     } catch (err) {
       console.error("Error creating job:", err);
       setError("An error occurred while creating the job. Please try again.");
@@ -110,10 +119,10 @@ const CreateJob = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white w-[100%] max-w-lg rounded-lg shadow-lg p-6">
+      <div className="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xl font-bold justify-center">Create a Job</h2>
+          <h2 className="text-xl font-bold">Create a Job</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-lg font-bold"
@@ -121,9 +130,14 @@ const CreateJob = ({ onClose }) => {
             &times;
           </button>
         </div>
-        <form className="space-y-3" onSubmit={handleSubmit}>
+
+        <form
+          className="space-y-3 overflow-y-auto hide-scrollbar"
+          style={{ maxHeight: "calc(80vh - 160px)" }}
+          onSubmit={handleSubmit}
+        >
           {/* Profile Photo */}
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center ">
             <label
               htmlFor="jobphoto"
               className="w-14 h-14 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition ease-in-out duration-200"
@@ -148,59 +162,33 @@ const CreateJob = ({ onClose }) => {
             <span className="text-sm text-gray-600 mt-2">Upload Job Photo</span>
           </div>
 
-          {/* Job Title */}
-          <div>
-            <label className="block text-sm font-medium mb-0">Job Title</label>
-            <input
-              type="text"
-              name="title"
-              value={title}
-              onChange={handleInputChange}
-              placeholder="Job Title"
-              className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Company */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Company</label>
-            <input
-              type="text"
-              name="company"
-              value={company}
-              onChange={handleInputChange}
-              placeholder="Company Name"
-              className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Job Location */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Job Location
-            </label>
-            <input
-              type="text"
-              name="location"
-              value={location}
-              onChange={handleInputChange}
-              placeholder="City, State, Country"
-              className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Skills */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Skills</label>
-            <input
-              type="text"
-              name="skills"
-              value={skills}
-              onChange={handleInputChange}
-              placeholder="Skills Required"
-              className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          {/* Input Fields */}
+          {[
+            { label: "Job Title", name: "title", value: title, type: "text" },
+            { label: "Company", name: "company", value: company, type: "text" },
+            { label: "Job Location", name: "location", value: location, type: "text" },
+            { label: "Skills", name: "skills", value: skills, type: "text" },
+            {
+              label: "Stipend Or Salary",
+              name: "stipendOrSalary",
+              value: stipendOrSalary,
+              type: "text",
+            },
+          ].map((field, index) => (
+            <div key={index}>
+              <label className="block text-sm font-medium mb-1">
+                {field.label}
+              </label>
+              <input
+                type={field.type}
+                name={field.name}
+                value={field.value}
+                onChange={handleInputChange}
+                placeholder={field.label}
+                className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          ))}
 
           {/* Job Type */}
           <div>
@@ -218,34 +206,20 @@ const CreateJob = ({ onClose }) => {
             </select>
           </div>
 
-          {/* Stipend Or Salary */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Stipend Or Salary
-            </label>
-            <input
-              type="text"
-              name="stipendOrSalary"
-              value={stipendOrSalary}
-              onChange={handleInputChange}
-              placeholder="Stipend or Salary"
-              className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
           {/* Apply Link */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Apply Link (This Will be provided to all registered Users)
             </label>
             <input
-              type="url"
+              type="applyLink"
               name="applyLink"
               value={applyLink}
               onChange={handleInputChange}
-              placeholder="Apply Link"
+              placeholder="Apply Link (e.g., linkedin.com, https://example.com)"
               className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
           </div>
 
           {/* Job Description */}
@@ -268,13 +242,13 @@ const CreateJob = ({ onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200"
+              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200"
             >
               Back
             </button>
             <button
               type="submit"
-              className="px-3 py-1 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+              className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit"}

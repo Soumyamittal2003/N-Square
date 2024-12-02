@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
+import { toast } from "react-toastify";
 
 const CreateVolunteer = ({ onClose, eventId }) => {
   const [positionTitle, setPositionTitle] = useState("");
@@ -20,9 +21,14 @@ const CreateVolunteer = ({ onClose, eventId }) => {
         volunteerCount,
       };
       const response = await axiosInstance.post(
-        "http://localhost:5000/api/network-next/v1/volunteer/create",
+        "/volunteer/create",
         payload
       );
+      if (response.data.success === true) {
+        toast.success("Volunteer Position created successfully!");
+      } else {
+        toast.error("Failed to create Volunteer Position");
+      }
       console.log("Volunteer Position Created:", response.data);
       onClose(); // Close the popup after successful creation
     } catch (error) {
