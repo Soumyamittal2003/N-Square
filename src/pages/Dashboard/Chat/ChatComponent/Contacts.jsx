@@ -47,7 +47,7 @@ export default function Contacts({ changeChat, currentUser }) {
   return (
     <>
       {currentUserName && currentUserImage && (
-        <div className="grid grid-rows-[15%_70%_15%] h-full bg-gray-50 rounded-lg shadow">
+        <div className="grid grid-rows-[15%_70%_15%] h-[600px] bg-gray-50 rounded-lg shadow">
           {/* Brand Section */}
           <div className="flex items-center justify-center gap-4 p-4 bg-gray-200 rounded-t-lg shadow-inner">
             <img src={Logo} alt="logo" className="h-8" />
