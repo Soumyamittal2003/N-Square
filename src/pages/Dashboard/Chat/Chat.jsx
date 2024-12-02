@@ -4,6 +4,7 @@ import ChatContainer from "./ChatComponent/ChatContainer";
 import Contacts from "./ChatComponent/Contacts";
 import Welcome from "./ChatComponent/Welcome";
 import axiosInstance from "../../../utils/axiosinstance";
+import Cookies from "js-cookie"; // Import Cookies library
 
 export default function Chat() {
   // WebSocket reference
@@ -12,9 +13,27 @@ export default function Chat() {
   // State for contacts and current chat
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // Fetch the current user from localStorage
-  const currentUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+  // Fetch the current user and set it in localStorage
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const currentUserId = Cookies.get("id"); // Get user ID from cookies
+        const response = await axiosInstance.get(`/users/${currentUserId}`);
+        const userData = response.data.data;
+        console.log(userData);
+
+        // Set user data in localStorage and state
+        localStorage.setItem("chat-app-current-user", JSON.stringify(userData));
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   // Establish WebSocket connection
   useEffect(() => {
@@ -51,6 +70,7 @@ export default function Chat() {
       }
     };
   }, [currentUser]);
+
   // Fetch all contacts from the server
   useEffect(() => {
     const fetchContacts = async () => {
