@@ -72,7 +72,7 @@ export default function Chat() {
   };
 
   return (
-    <div className=" bg-white shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-[30%_70%] gap-4 p-4">
+    <div className="h-[650px] w-11/12 bg-white shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-[30%_70%] gap-4 p-4">
       {/* Contacts Section */}
       <Contacts
         contacts={contacts}

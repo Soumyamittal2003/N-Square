@@ -11,8 +11,14 @@ const UserProfile = () => {
     firstName: "",
     lastName: "",
     about: "",
-    tagline: "",
+    tagLine: "edit your tagline",
     role: "",
+    email: "",
+    education: "enter your qualifications",
+    skills: "enter your skills",
+    experience: "enter your experience",
+    certificationAndLicensePublication: "",
+    publicationAndResearchWorks: "",
     followers: [],
     following: [],
   });
@@ -29,7 +35,6 @@ const UserProfile = () => {
 
   const tabs = ["My Posts", "My Projects", "My Events", "My Job"];
   const userId = Cookies.get("id");
-
   // Fetch User Profile and Posts
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,8 +52,9 @@ const UserProfile = () => {
           firstName: data.firstName || "",
           lastName: data.lastName || "",
           about: data.about || "",
-          tagline: data.tagLine || "",
+          tagLine: data.tagLine || "",
           role: data.role || "",
+          email: data.email || "",
           followers: data.followers || [],
           following: data.following || [],
         });
@@ -70,7 +76,7 @@ const UserProfile = () => {
     try {
       await axiosInstance.put(`/users/update/${userId}`, {
         about: profileData.about,
-        tagline: profileData.tagline,
+        tagLine: profileData.tagLine,
       });
       alert("Profile updated successfully!");
       setIsEditingAbout(false);
@@ -87,15 +93,31 @@ const UserProfile = () => {
 
   // Handle Image Upload (Profile or Banner)
   // Handle Image Upload
-  const handleProfileImageUpload = async (event) => {
+  const handleProfileImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
       toast.error("Please select a file to upload.");
       return;
     }
 
+    const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const maxSizeMB = 2; // 2MB
+
+    if (!validFileTypes.includes(file.type)) {
+      toast.error("Invalid file type. Please upload a JPG or PNG image.");
+      return;
+    }
+
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      toast.error(
+        `File size exceeds ${maxSizeMB}MB. Please upload a smaller image.`
+      );
+      return;
+    }
+
+    // Create FormData for the API call
     const formData = new FormData();
-    formData.append("displayPicture", file); // Match the backend key
+    formData.append("displayPicture", file);
 
     try {
       const response = await axiosInstance.patch(
@@ -109,7 +131,8 @@ const UserProfile = () => {
       );
 
       if (response.status === 200 && response.data.success) {
-        setprofileimageUrl(URL.createObjectURL(file)); // Update preview
+        const updatedImageUrl = URL.createObjectURL(file); // Temporary preview URL
+        setprofileimageUrl(updatedImageUrl); // Update the actual image URL state
         toast.success("Profile image updated successfully!");
       } else {
         throw new Error(
@@ -118,21 +141,35 @@ const UserProfile = () => {
       }
     } catch (error) {
       console.error("Error uploading profile image:", error);
-      toast.error(
-        "An error occurred while uploading the profile image. Please try again."
-      );
+      toast.error("An error occurred while saving the profile image.");
     }
   };
 
-  const handleBannerImageUpload = async (event) => {
+  const handleBannerImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
       toast.error("Please select a file to upload.");
       return;
     }
 
+    const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const maxSizeMB = 2; // 2MB
+
+    if (!validFileTypes.includes(file.type)) {
+      toast.error("Invalid file type. Please upload a JPG or PNG image.");
+      return;
+    }
+
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      toast.error(
+        `File size exceeds ${maxSizeMB}MB. Please upload a smaller image.`
+      );
+      return;
+    }
+
+    // Create FormData for the API call
     const formData = new FormData();
-    formData.append("displayPicture", file); // Match the backend key
+    formData.append("displayPicture", file);
 
     try {
       const response = await axiosInstance.patch(
@@ -146,7 +183,8 @@ const UserProfile = () => {
       );
 
       if (response.status === 200 && response.data.success) {
-        setbackgroundimageUrl(URL.createObjectURL(file)); // Update preview
+        const updatedBannerUrl = URL.createObjectURL(file); // Temporary preview URL
+        setbackgroundimageUrl(updatedBannerUrl); // Update the actual banner image URL state
         toast.success("Banner image updated successfully!");
       } else {
         throw new Error(
@@ -155,9 +193,7 @@ const UserProfile = () => {
       }
     } catch (error) {
       console.error("Error uploading banner image:", error);
-      toast.error(
-        "An error occurred while uploading the banner image. Please try again."
-      );
+      toast.error("An error occurred while saving the banner image.");
     }
   };
 
@@ -181,57 +217,69 @@ const UserProfile = () => {
   return (
     <div className="flex w-full min-h-screen">
       {/* Left Section */}
-      <div className="w-[40%] p-4 overflow-y-auto hide-scrollbar h-[calc(100vh-100px)]">
+      <div className="w-[40%] p-4 ">
         <div className="flex flex-col items-center">
-          {/* Profile Image Section */}
-          <div className="w-full p-3 bg-white rounded-lg shadow-lg border mx-auto flex flex-col items-center justify-center">
+          {/* Profile Section */}
+          <div className="w-full h-80 p-3 bg-white rounded-lg shadow-lg border mx-auto flex flex-col items-center justify-center">
             <div className="relative w-fit">
               {/* Dimmed Background Overlay */}
               {isEditingProfileImage && (
                 <div className="absolute inset-0 rounded-full m-2 bg-black bg-opacity-50 flex justify-center items-center z-10">
+                  <label
+                    htmlFor="profileimageUrl"
+                    className="bg-white text-black px-1 rounded-lg font-semibold z-20 cursor-pointer"
+                  >
+                    Upload Image
+                  </label>
                   <input
                     type="file"
                     id="profileimageUrl"
                     accept="image/*"
                     className="hidden"
-                    onChange={handleProfileImageUpload}
+                    onChange={handleProfileImageChange} // Combined upload and save handler
                   />
-                  <button
-                    onClick={() =>
-                      document.getElementById("profileimageUrl").click()
-                    }
-                    className="bg-white text-black p-1 rounded-lg font-semibold z-20"
-                  >
-                    Upload Image
-                  </button>
                 </div>
               )}
 
               {/* Profile Image */}
               <img
-                src={profileimageUrl || "default-profile.jpg"}
+                src={profileimageUrl} // Use temp preview if available
                 alt="Profile"
-                className={`rounded-full w-60 h-60 cursor-pointer border-8 ${getBorderColor()}`}
-                onClick={() => setIsEditingProfileImage(true)}
+                className={`rounded-full w-36 h-36 cursor-pointer border-8 ${getBorderColor()}`}
+                onClick={() => setIsEditingProfileImage(true)} // Open editing mode
               />
 
               {/* Edit Button */}
-              <button
-                onClick={() => setIsEditingProfileImage(!isEditingProfileImage)}
-                className="absolute bottom-2 right-2 bg-white bg-opacity-25 text-black p-2 rounded-full text-md"
-              >
-                {isEditingProfileImage ? (
-                  <span>Save</span>
-                ) : (
+              {!isEditingProfileImage && (
+                <button
+                  onClick={() => setIsEditingProfileImage(true)}
+                  className="absolute bottom-2 right-2 bg-white bg-opacity-25 text-black p-2 rounded-full text-md"
+                >
                   <FiEdit className="text-black" />
-                )}
-              </button>
+                </button>
+              )}
             </div>
 
-            <h1 className="mt-2 text-4xl font-bold text-center">
+            <h1 className=" text-xl font-bold text-center">
               {profileData.firstName} {profileData.lastName}
             </h1>
-            <div className="flex space-x-6 gap-2 m-2 p-3 px-4 border rounded-3xl justify-center">
+            <p className="text-gray-700 text-xs">{profileData.email}</p>
+
+            {/* show tagLine here */}
+            <div className="text-md text-gray-600 text-center">
+              {isEditingAbout ? (
+                <textarea
+                  name="tagLine"
+                  value={profileData.tagLine}
+                  onChange={handleInputChange}
+                  className="w-full border rounded h-8 py-0 px-2 overflow-hidden "
+                />
+              ) : (
+                <p className="text-gray-700">{profileData.tagLine}</p>
+              )}
+            </div>
+
+            <div className="flex space-x-6 gap-2 p-1 mt-1 px-4 border rounded-3xl justify-center">
               <div className="text-center">
                 <p className="font-bold text-lg">
                   {profileData.followers.length}
@@ -252,25 +300,14 @@ const UserProfile = () => {
           </div>
 
           {/* About Section */}
-          <div className="relative bg-white text-center border rounded-lg shadow mt-4 p-6 w-full">
-            <h3 className="text-lg font-bold">About</h3>
-            {isEditingAbout ? (
-              <textarea
-                name="about"
-                value={profileData.about}
-                onChange={handleInputChange}
-                className="w-full mt-2 border p-2 rounded"
-              />
-            ) : (
-              <p className="text-gray-700 mt-2">{profileData.about}</p>
-            )}
+          <div className="relative bg-white text-center border rounded-lg shadow mt-4 p-4 w-full h-[360px] overflow-y-auto hide-scrollbar">
             <button
               onClick={
                 isEditingAbout
                   ? updateAboutSection
                   : () => setIsEditingAbout(true)
               }
-              className="absolute top-1 right-1 bg-gray-200 px-2 text-sm py-1 text-black  rounded-md"
+              className="absolute top-1 right-1 bg-gray-50 px-2 text-sm py-1 text-black  rounded-md"
             >
               {isEditingAbout ? (
                 <span>Save</span>
@@ -278,6 +315,98 @@ const UserProfile = () => {
                 <FiEdit className="text-black" />
               )}
             </button>
+            {/* this is about section */}
+            <div>
+              <h3 className="text-lg font-bold">About</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="about"
+                  value={profileData.about}
+                  onChange={handleInputChange}
+                  className="w-full border py-0 h-8 px-2 rounded"
+                />
+              ) : (
+                <p className="text-gray-700">{profileData.about}</p>
+              )}
+            </div>
+            {/* experience section */}
+            <div>
+              <h3 className="text-lg font-bold">Experience</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="experience"
+                  value={profileData.experience}
+                  onChange={handleInputChange}
+                  className="w-full border py-0 h-8 px-2 rounded"
+                />
+              ) : (
+                <p className="text-gray-700">{profileData.experience}</p>
+              )}
+            </div>
+            {/* education */}
+            <div>
+              <h3 className="text-lg font-bold">Education</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="education"
+                  value={profileData.education}
+                  onChange={handleInputChange}
+                  className="w-full border py-0 h-8 px-2  rounded"
+                />
+              ) : (
+                <p className="text-gray-700">{profileData.education}</p>
+              )}
+            </div>
+            {/* skills */}
+            <div>
+              <h3 className="text-lg font-bold">Skills</h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="skills"
+                  value={profileData.skills}
+                  onChange={handleInputChange}
+                  className="w-full border py-0 h-8 px-2  rounded"
+                />
+              ) : (
+                <p className="text-gray-700">{profileData.skills}</p>
+              )}
+            </div>
+            {/* publication */}
+            <div>
+              <h3 className="text-lg font-bold">
+                publication and research works
+              </h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="publicationAndResearchWorks"
+                  value={profileData.publicationAndResearchWorks}
+                  onChange={handleInputChange}
+                  className="w-full border py-0 h-8 px-2  rounded"
+                />
+              ) : (
+                <p className="text-gray-700">
+                  {profileData.publicationAndResearchWorks}
+                </p>
+              )}
+            </div>
+            {/* certification */}
+            <div>
+              <h3 className="text-lg font-bold">
+                Certification and License Publication
+              </h3>
+              {isEditingAbout ? (
+                <textarea
+                  name="certificationAndLicensePublication"
+                  value={profileData.certificationAndLicensePublication}
+                  onChange={handleInputChange}
+                  className="w-full border py-0 h-8 px-2  rounded"
+                />
+              ) : (
+                <p className="text-gray-700">
+                  {profileData.certificationAndLicensePublication}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -289,43 +418,39 @@ const UserProfile = () => {
           {/* Dimmed Background Overlay */}
           {isEditingBannerImage && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+              <label
+                htmlFor="backgroundimageUrl"
+                className="bg-white text-black p-1 rounded-lg font-semibold z-20 cursor-pointer"
+              >
+                Upload Image
+              </label>
               <input
                 type="file"
                 id="backgroundimageUrl"
                 accept="image/*"
                 className="hidden"
-                onChange={handleBannerImageUpload}
+                onChange={handleBannerImageChange} // Combined upload and save handler
               />
-              <button
-                onClick={() =>
-                  document.getElementById("backgroundimageUrl").click()
-                }
-                className="bg-white text-black p-1 rounded-lg font-semibold z-20"
-              >
-                Upload Image
-              </button>
             </div>
           )}
 
           {/* Banner Image */}
           <img
-            src={backgroundimageUrl || "default-banner.jpg"}
+            src={backgroundimageUrl} // Use temp preview if available
             alt="Banner"
             className="w-full h-60 object-cover cursor-pointer"
-            onClick={() => setIsEditingBannerImage(true)}
+            onClick={() => setIsEditingBannerImage(true)} // Open editing mode
           />
 
           {/* Edit Button */}
-          <button
-            onClick={() => setIsEditingBannerImage(!isEditingBannerImage)}
-            className="absolute top-2 right-2 bg-white bg-opacity-25 text-white px-2 text-center rounded-full text-md z-20"
-          >
-            {isEditingBannerImage ? (
-              <span>Save</span>
-            ) : (
+          {!isEditingBannerImage && (
+            <button
+              onClick={() => setIsEditingBannerImage(true)}
+              className="absolute top-2 right-2 bg-white bg-opacity-25 text-white px-2 text-center rounded-full text-md z-20"
+            >
               <FiEdit className="text-white" />
-            )}
-          </button>
+            </button>
+          )}
         </div>
 
         {/* Tab Navigation */}

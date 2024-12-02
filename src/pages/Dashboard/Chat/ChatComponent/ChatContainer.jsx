@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import ChatInput from "./ChatInput";
 import { v4 as uuidv4 } from "uuid";
 
 export default function ChatContainer({ currentChat, socket }) {
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const scrollRef = useRef();
 
   // Fetch the current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
@@ -86,13 +85,8 @@ export default function ChatContainer({ currentChat, socket }) {
     }
   }, [arrivalMessage]);
 
-  // Scroll to the latest message
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   return (
-    <div className="grid grid-rows-[10%_80%_10%] gap-2 h-full bg-gray-50 rounded-lg shadow">
+    <div className="grid grid-rows-[10%_80%_10%] gap-2 h-[600px] bg-gray-50 rounded-lg shadow">
       {/* Chat Header */}
       <div className="flex justify-between items-center px-6 py-2 bg-gray-200 rounded-t-lg shadow-inner">
         <div className="flex items-center gap-4">
@@ -110,10 +104,9 @@ export default function ChatContainer({ currentChat, socket }) {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex flex-col gap-2 p-4 overflow-auto bg-white rounded-lg shadow-inner scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-        {messages.map((message, index) => (
+      <div className="flex flex-col gap-2 p-4 overflow-auto bg-white rounded-lg shadow-inner hide-scrollbar">
+        {messages.map((message) => (
           <div
-            ref={index === messages.length - 1 ? scrollRef : null}
             key={uuidv4()}
             className={`flex ${
               message.fromSelf ? "justify-end" : "justify-start"

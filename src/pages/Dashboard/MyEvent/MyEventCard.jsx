@@ -4,11 +4,10 @@ import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
 const MyEventCard = ({
   event,
-  currentUserId,
+  
   onLikeEvent,
   onDislikeEvent,
-  onSelectEvent,
-  isSelected,
+  
 }) => {
   const navigate = useNavigate();
 
@@ -35,56 +34,60 @@ const MyEventCard = ({
   // };
 
   return (
-    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
+    <div className="w-[320px] border border-gray-200 rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-100 p-6 hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2 cursor-pointer flex flex-col justify-between">
       {/* Event Image */}
-      <div className="relative">
+      <div className="relative overflow-hidden rounded-xl">
         <img
           src={event.eventphoto}
           alt={event.title}
-          className="w-45 h-30 rounded-lg object-cover"
+          className="w-full h-44 object-cover transition-transform duration-300 hover:scale-105"
         />
       </div>
-
+  
       {/* Event Details */}
-      <div>
-        <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
-          <p className="text-sm text-gray-500">
-            {new Date(event.date).toLocaleDateString()} • {event.time}
-          </p>
-        </div>
-        <h4 className="text-md font-semibold mt-1">{event.title}</h4>
+      <div className="mt-4">
         <p className="text-sm text-gray-500 flex items-center">
-          {event.speaker}
+          📅 {new Date(event.date).toLocaleDateString()} • ⏰ {event.time}
         </p>
-
+        <h4 className="text-xl font-semibold text-gray-800 mt-2">{event.title}</h4>
+        <p className="text-sm text-gray-600 mt-1">🎤 {event.speaker}</p>
+  
         {/* Tags */}
-        <div className="flex flex-wrap gap-5 mt-2">
+        <div className="flex flex-wrap gap-2 mt-3">
           {event.tagsTopic.map((tag, index) => (
             <span
               key={index}
-              className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full"
+              className="text-xs bg-blue-200 text-blue-700 py-1 px-3 rounded-full font-medium shadow-sm"
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>
       </div>
-
+  
       {/* Footer with Register Button and Like/Dislike Buttons */}
-      <footer className="flex justify-between items-center mt-4 w-full">
+      <footer className="flex justify-between items-center mt-6">
         <div className="flex gap-3 items-center">
           <button
-            className="flex gap-1 items-center font-semibold justify-center"
+            className="flex gap-2 items-center font-semibold text-gray-600 hover:text-green-600 transition-colors"
             onClick={handleLike}
           >
-            <img src={arrowBlockUp} alt="Thumbs Up" />
+            <img
+              src={arrowBlockUp}
+              alt="Thumbs Up"
+              className="w-5 h-5 transition-transform duration-200 hover:scale-110"
+            />
             <span>{event.likes.length}</span>
           </button>
           <button
-            className="flex gap-1 items-center font-semibold justify-center"
+            className="flex gap-2 items-center font-semibold text-gray-600 hover:text-red-600 transition-colors"
             onClick={handleDislike}
           >
-            <img src={arrowBlockDown} alt="Thumbs Down" />
+            <img
+              src={arrowBlockDown}
+              alt="Thumbs Down"
+              className="w-5 h-5 transition-transform duration-200 hover:scale-110"
+            />
             <span>{event.dislikes.length}</span>
           </button>
         </div>
@@ -95,7 +98,7 @@ const MyEventCard = ({
             handleNavigate();
           }}
         >
-          Registered
+          Register
         </button>
       </footer>
 
@@ -111,6 +114,7 @@ const MyEventCard = ({
       </div> */}
     </div>
   );
+  
 };
 
 export default MyEventCard;

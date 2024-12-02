@@ -1,21 +1,12 @@
 import { useState } from "react";
 import CreateEvent from "./CreateEvent";
-import CreateVolunteer from "./CreateVolunteering";
+import { Link } from "react-router-dom";
 
 const RightSidebar = ({ selectedEvent }) => {
   const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
-  const [isCreateVolunteerOpen, setIsCreateVolunteerOpen] = useState(false);
 
   const handleOpenCreateEvent = () => {
     setIsCreateEventOpen(true);
-  };
-
-  const handleOpenCreateVolunteer = () => {
-    setIsCreateVolunteerOpen(true);
-  };
-
-  const handleCloseCreateVolunteer = () => {
-    setIsCreateVolunteerOpen(false);
   };
 
   const handleCloseCreateEvent = () => {
@@ -26,19 +17,14 @@ const RightSidebar = ({ selectedEvent }) => {
     <div className="relative w-[30%] mt-2 mb-auto bg-white px-2 rounded-lg p-11">
       {/* Create Event Button Positioned Top Right */}
       <div className="absolute top-2 right-8 mx-auto">
-        {/* Conditionally render the Create Volunteer Position button */}
-        {selectedEvent && (
-          <button
-            onClick={handleOpenCreateVolunteer}
-            className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white mr-2"
-          >
-            Create Volunteer Position
-          </button>
-        )}
-        {isCreateVolunteerOpen && (
-          <CreateVolunteer onClose={handleCloseCreateVolunteer} />
-        )}
+        {/* Reunion Button */}
+        <Link to="/dashboard/reunion" className="py-1">
+        <button className="px-4 py-2 mr-4 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
+          Reunion
+        </button>
+        </Link>
 
+        {/* Create Event Button */}
         <button
           onClick={handleOpenCreateEvent}
           className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"

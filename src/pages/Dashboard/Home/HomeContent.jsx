@@ -12,7 +12,7 @@ const HomeContent = () => {
 
   const tabs = [
     "All",
-    "Origination Post",
+    "Organization Post",
     "Alumni Post",
     "Student Post",
     "Faculty Post",
@@ -126,7 +126,7 @@ const HomeContent = () => {
       if (!user) return false;
 
       if (activeTab === "All") return true;
-      if (activeTab === "Origination Post") return user.role === "organization";
+      if (activeTab === "Organization Post") return user.role === "organization";
       if (activeTab === "Alumni Post") return user.role === "alumni";
       if (activeTab === "Student Post") return user.role === "student";
       if (activeTab === "Facility Post") return user.role === "faculty";

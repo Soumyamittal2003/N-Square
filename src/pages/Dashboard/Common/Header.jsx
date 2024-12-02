@@ -105,8 +105,6 @@ const Header = () => {
     { name: "Event", path: "/dashboard/event" },
     { name: "Project", path: "/dashboard/project" },
     { name: "Story", path: "/dashboard/inspiring-story" },
-    
-    { name: "Reunion", path: "/dashboard/reunion" },
   ];
 
   const settingsOptions = [
@@ -232,7 +230,7 @@ const Header = () => {
             <img
               src={search}
               alt="Search Icon"
-              className="h-12 w-12 hover:opacity-80"
+              className="h-10 w-10 hover:opacity-80"
             />
           </button>
           {showSearchMenu && <SearchModal />}
@@ -250,10 +248,10 @@ const Header = () => {
             <img
               src={notification}
               alt="Notifications Icon"
-              className="h-12 w-12 hover:opacity-80"
+              className="h-10 w-10 hover:opacity-80"
             />
           </button>
-  
+
           {/* Settings Icon with Modal */}
           <button
             ref={settingsRef}
@@ -267,12 +265,12 @@ const Header = () => {
             <img
               src={setting}
               alt="Settings Icon"
-              className="h-12 w-12 hover:opacity-80"
+              className="h-10 w-10 hover:opacity-80"
             />
           </button>
         </div>
       </header>
-  
+
       {/* Background Overlay */}
       {(showSearchMenu || showNotificationsMenu || showSettingsMenu) && (
         <div

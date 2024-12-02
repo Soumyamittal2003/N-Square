@@ -19,12 +19,10 @@ export default function Contacts({ contacts, changeChat }) {
       }
     };
 
-    fetchUserData(); // Call the async function
+    fetchUserData();
   }, []);
 
   const changeCurrentChat = (index, contact) => {
-    const user = JSON.parse(localStorage.getItem("chat-app-current-user"));
-    console.log(contact.createdBy, user._id);
     setCurrentSelected(index);
     changeChat(contact);
   };
@@ -32,41 +30,55 @@ export default function Contacts({ contacts, changeChat }) {
   return (
     <>
       {currentUserName && currentUserImage && (
-        <div className="p-4 ">
+        <div className="p-4 bg-gray-100 rounded-lg shadow-md w-full h-full flex flex-col">
           {/* Logo and App Name */}
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-6">
             <img src={Logo} alt="logo" className="w-12 h-12" />
-            <h3 className="text-2xl font-semibold ml-2">N-square</h3>
+            <h3 className="text-2xl font-bold text-gray-800 ml-3">N-square</h3>
           </div>
 
           {/* Contacts List */}
-          <div className="space-y-2 overflow-y-auto h-[calc(100vh-200px)] hide-scrollbar">
-            {contacts.map((contact, index) => {
-              return (
-                <div
-                  key={contact._id}
-                  onClick={() => changeCurrentChat(index, contact)}
-                  className="flex items-center gap-4 p-2 hover:bg-gray-700 cursor-pointer rounded-lg"
-                >
-                  <img
-                    src={`${contact.groupProfileImage}`}
-                    alt=""
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <h3 className="text-lg text-black">{contact.name}</h3>
+          <div className="flex-1 overflow-y-auto space-y-3 hide-scrollbar">
+            {contacts.map((contact, index) => (
+              <div
+                key={contact._id}
+                onClick={() => changeCurrentChat(index, contact)}
+                className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition duration-200 ${
+                  currentSelected === index
+                    ? "bg-blue-500 text-white"
+                    : "bg-white hover:bg-gray-200"
+                }`}
+              >
+                <img
+                  src={
+                    contact.groupProfileImage ||
+                    "https://via.placeholder.com/40"
+                  }
+                  alt="Group"
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                <div>
+                  <h3 className="text-lg font-semibold">
+                    {contact.name || "Unnamed Group"}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {contact.members?.length || 0} members
+                  </p>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
           {/* Current User Info */}
-          <div className="flex items-center gap-4 mt-4 p-2 bg-gray-700 rounded-lg">
+          <div className="mt-6 p-3 bg-gray-200 rounded-lg flex items-center gap-4 shadow-sm">
             <img
-              src={`${currentUserImage}`}
+              src={currentUserImage || "https://via.placeholder.com/40"}
               alt="avatar"
-              className="w-10 h-10 rounded-full"
+              className="w-12 h-12 rounded-full object-cover"
             />
-            <h2 className="text-xl text-white">{currentUserName}</h2>
+            <h2 className="text-lg font-bold text-gray-800">
+              {currentUserName}
+            </h2>
           </div>
         </div>
       )}

@@ -1,6 +1,3 @@
-// import badgeWorking from "../../../assets/icons/working.svg";
-// import contributorsIcon from "../../../assets/icons/contribution.svg";
-
 const PopularProjectCard = () => {
   const popularProjects = [
     {
@@ -10,43 +7,50 @@ const PopularProjectCard = () => {
         "https://cdn.builder.io/api/v1/image/assets/TEMP/6e81c517f54a0c55c41aa688a1daba197f0cba53ce78048976c28add4509f955?placeholderIfAbsent=true&apiKey=2b6398d7743249e49e60a2c281a1ae3e",
     },
     {
-      title: "E-Krishak",
-      contributors: 4,
+      title: "Smart Farming System",
+      contributors: 6,
       image:
         "https://cdn.builder.io/api/v1/image/assets/TEMP/6e81c517f54a0c55c41aa688a1daba197f0cba53ce78048976c28add4509f955?placeholderIfAbsent=true&apiKey=2b6398d7743249e49e60a2c281a1ae3e",
     },
   ];
 
   return (
-    <div className="w-3/4 flex flex-col text-black ">
-      <h2 className="self-start mt-9 text-lg font-bold tracking-wide leading-none mb-0 p-4 ">
-        Popular Project
+    <div className="w-full max-w-2xl mx-auto flex flex-col text-gray-800">
+      <h2 className="self-start mt-6 text-2xl font-bold text-gray-800 mb-4">
+        Popular Projects
       </h2>
       {popularProjects.map((project, index) => (
         <div
           key={index}
-          className="flex overflow-hidden shadow-lg flex-col py-2 pr-2.5 pl-0.5 mt-4 w-full bg-white rounded-xl border border-solid border-stone-300"
+          className="flex flex-col md:flex-row items-center md:items-start bg-white shadow-lg hover:shadow-xl transition-shadow rounded-xl border border-gray-200 p-4 mb-6"
         >
-          <div className="flex gap-5 self-start text-xl font-semibold tracking-wide leading-none whitespace-nowrap">
+          {/* Project Image */}
+          <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-md overflow-hidden">
             <img
-              loading="lazy"
               src={project.image}
               alt={project.title}
-              className="object-contain shrink-2 rounded-none aspect-[0.9] w-[91px] p-3"
+              className="object-cover w-full h-full"
             />
-            <h3 className="my-auto">{project.title}</h3>
           </div>
-          <div className="flex gap-10 mt-3.5 item-start">
-            <div className="flex gap-1.5 flex-1 item-start text-xs tracking-normal leading-none text-center mt-2 w-full">
+
+          {/* Project Details */}
+          <div className="flex flex-col ml-0 md:ml-6 mt-4 md:mt-0 flex-grow">
+            <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
+            <div className="flex items-center mt-2">
               <img
-                loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/360478af2e11a65ef64ea0a1f4449e2fc431d304538dfb727a8958a10ee3b561?placeholderIfAbsent=true&apiKey=2b6398d7743249e49e60a2c281a1ae3e"
                 alt="Contributors"
-                className="object-contain self-center rounded-none aspect-[2.5] w-[30px]"
+                className="w-6 h-6"
               />
-              <p>+{project.contributors} Contributor</p>
+              <p className="text-sm text-gray-600 ml-2">
+                +{project.contributors} Contributor{project.contributors > 1 ? "s" : ""}
+              </p>
             </div>
-            <button className="text-xs font-bold tracking-normal leading-loose">
+          </div>
+
+          {/* View Project Button */}
+          <div className="mt-4 md:mt-0">
+            <button className="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition">
               View Project
             </button>
           </div>

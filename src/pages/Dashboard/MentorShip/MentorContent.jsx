@@ -30,13 +30,12 @@ const MentorContent = () => {
         ...prev,
         groupProfileImage: file,
       }));
-      setPreview(URL.createObjectURL(file)); // Create a preview URL for the image
+      setPreview(URL.createObjectURL(file));
     }
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
 
     try {
       const response = await axiosInstance.post(
@@ -48,13 +47,12 @@ const MentorContent = () => {
           },
         }
       );
-      console.log(response.data);
 
       if (response.data.success === true) {
         toast.success("Group created successfully!");
         setShowModal(false);
         setFormData({ name: "", groupProfileImage: null });
-        setPreview(null); // Reset the preview
+        setPreview(null);
       } else {
         toast.error("Failed to create group");
       }
@@ -65,21 +63,18 @@ const MentorContent = () => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-8 items-center w-3/4">
+    <div className="bg-white min-h-screen p-8">
       {/* Top buttons */}
-      <div className="flex gap-4 py-2 items-center justify-end">
+      <div className="flex justify-end gap-4 mb-6">
         <button
-          className="text-white bg-zinc-800 rounded-md px-4 py-1"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate("groups");
-          }}
+          className="text-white bg-gray-800 hover:bg-gray-900 rounded-lg px-6 py-2 transition-colors"
+          onClick={() => navigate("groups")}
         >
           View your Groups
         </button>
         {(role === "alumni" || role === "faculty") && (
           <button
-            className="text-white bg-zinc-800 rounded-md px-4 py-1"
+            className="text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-6 py-2 transition-colors"
             onClick={() => setShowModal(true)}
           >
             Create Group
@@ -89,9 +84,11 @@ const MentorContent = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Create Group</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Create Group
+            </h2>
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
                 <label htmlFor="name" className="block text-gray-700 mb-2">
@@ -103,7 +100,7 @@ const MentorContent = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="border rounded w-full px-3 py-2"
+                  className="border rounded w-full px-3 py-2 focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -129,7 +126,7 @@ const MentorContent = () => {
                     <img
                       src={preview}
                       alt="Preview"
-                      className="w-full h-48 object-cover rounded"
+                      className="w-full h-48 object-cover rounded-lg"
                     />
                     <button
                       type="button"
@@ -150,17 +147,17 @@ const MentorContent = () => {
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
-                  className="bg-gray-500 text-white px-4 py-2 rounded"
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                   onClick={() => {
                     setShowModal(false);
-                    setPreview(null); // Reset preview on modal close
+                    setPreview(null);
                   }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                 >
                   Create
                 </button>
@@ -171,28 +168,25 @@ const MentorContent = () => {
       )}
 
       {/* Main content */}
-      <div className="flex mt-6">
-        <div className="w-6/9">
-          <h2 className="text-2xl font-bold mb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8">
+        <div>
+          <h2 className="text-4xl font-bold text-gray-800 mb-6">
             DIGITAL ENGAGEMENT PROGRAMS
           </h2>
-          <p className="text-gray-700 text-lg mb-2">Run impactful</p>
-          <p className="text-gray-700 text-lg mb-2">mentorship programs</p>
-          <p className="text-gray-700 text-lg mb-20">without hassle</p>
+          <p className="text-gray-700 text-lg mb-4">
+            Run impactful mentorship programs without hassle.
+          </p>
           <button
-            className="bg-black text-white px-6 py-2 rounded-md"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate("find-group");
-            }}
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() => navigate("find-group")}
           >
-            Find a Mentors Group
+            Find a Mentor Group
           </button>
         </div>
 
-        {/* Right Content (Illustration) */}
-        <div className="w-1200 h-1200 justify-center">
-          <img src={pic} alt="Illustration" className="w-1200" />
+        {/* Illustration */}
+        <div className="flex justify-center">
+          <img src={pic} alt="Illustration" className="max-w-full h-auto" />
         </div>
       </div>
     </div>

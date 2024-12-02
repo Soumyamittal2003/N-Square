@@ -9,7 +9,7 @@ const VolunteerCard = ({ position, onApply }) => {
     rolesResponsibility,
     eligibility,
     eventDetails,
-    applied, // Flag to check if already applied
+    applied,
   } = position;
 
   const {
@@ -51,7 +51,7 @@ const VolunteerCard = ({ position, onApply }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col justify-between">
+    <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 p-6 rounded-xl shadow-lg border border-gray-300 hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between">
       {/* Main Content */}
       <div>
         <p className="font-bold text-lg mb-2">
@@ -97,7 +97,7 @@ const VolunteerCard = ({ position, onApply }) => {
       </div>
 
       {/* Footer with Apply Button */}
-      <div className="flex justify-center items-center mt-2">
+      <div className="flex justify-center items-center mt-4">
         <button
           onClick={handleApply}
           className={`px-12 py-2 rounded-lg ${
