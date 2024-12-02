@@ -70,11 +70,11 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
   };
 
   return (
-    <div className="max-w-[300px] border border-gray-200 rounded-2xl shadow-lg bg-gradient-to-r from-white via-gray-50 to-white p-5 cursor-pointer flex flex-col justify-between hover:shadow-xl transition-shadow duration-300">
+    <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
       {/* Event Image */}
-      <div className="relative rounded-xl overflow-hidden shadow-md">
+      <div className="relative rounded-lg overflow-hidden">
         <img
-          src={event.eventphoto}
+          src={event.eventphoto || "https://via.placeholder.com/150"}
           alt={event.title}
           className="w-full h-[180px] object-cover"
         />
@@ -82,73 +82,70 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
 
       {/* Event Details */}
       <div className="mt-4">
-        <div className="flex justify-between items-center">
-          <p className="text-xs text-gray-400 font-medium">
-            {new Date(event.date).toLocaleDateString()} • {event.time}
-          </p>
-        </div>
-        <h4 className="text-lg font-bold mt-2 text-gray-800">{event.title}</h4>
-        <p className="text-sm text-gray-600 mt-1 flex items-center">
+        <p className="text-xs text-gray-400">
+          {new Date(event.date).toLocaleDateString()} • {event.time}
+        </p>
+        <h4 className="text-lg font-bold text-gray-800 mt-2">{event.title}</h4>
+        <p className="text-sm text-gray-600 mt-1">
           <strong>Speaker:</strong> {event.speaker}
         </p>
-        <div className="flex flex-wrap gap-2 mt-3">
-          {event.tagsTopic.map((tag, index) => (
-            <span
-              key={index}
-              className="text-xs bg-blue-100 text-blue-600 py-1 px-3 rounded-full shadow-sm"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        <p className="text-sm text-gray-700 mt-3">
+          {event.description?.length > 120
+            ? `${event.description.slice(0, 120)}...`
+            : event.description || "No description available."}
+          <a
+            href="#"
+            className="text-blue-600 font-medium hover:underline ml-1"
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigate();
+            }}
+          >
+            Read More
+          </a>
+        </p>
+        <p className="text-xs text-gray-500 mt-3">
+          Topics:{" "}
+          <span className="text-gray-700 font-medium">
+            {event.tagsTopic.join(", ")}
+          </span>
+        </p>
       </div>
 
-      {/* Footer */}
-      <footer className="flex justify-between items-center mt-6">
-        <div className="flex items-center gap-4">
+      {/* Bottom Section */}
+      <div className="mt-6 flex justify-between items-center">
+        {/* Left Icons */}
+        <div className="flex gap-4">
+          {/* Like Button */}
           <button
-            className="flex items-center gap-1 text-gray-600 hover:text-blue-600 transition duration-300"
             onClick={handleLike}
+            className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition"
           >
-            <img src={arrowBlockUp} alt="Thumbs Up" />
-            <span>{event.likes.length}</span>
+            <img src={arrowBlockUp} alt="like" className="w-6 h-6" />
+            <span className="font-semibold">{event.likes.length}</span>
           </button>
+
+          {/* Dislike Button */}
           <button
-            className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition duration-300"
             onClick={handleDislike}
+            className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition"
           >
-            <img src={arrowBlockDown} alt="Thumbs Down" />
-            <span>{event.dislikes.length}</span>
+            <img src={arrowBlockDown} alt="dislike" className="w-6 h-6" />
+            <span className="font-semibold">{event.dislikes.length}</span>
           </button>
         </div>
 
+        {/* Register Button */}
         <button
-          className={`px-5 py-2 text-white text-sm font-medium rounded-lg shadow-md transition-transform duration-300 ${
-            isRegistered
-              ? "bg-green-600 hover:bg-green-500"
-              : "bg-blue-600 hover:bg-blue-500"
-          } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           onClick={handleRegister}
+          className={`px-5 py-2 text-white rounded-xl ${
+            isRegistered ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          } transition`}
           disabled={isRegistered || loading}
         >
-          {loading
-            ? "Registering..."
-            : isRegistered
-              ? "Registered"
-              : "Register"}
+          {loading ? "Registering..." : isRegistered ? "Registered" : "Register"}
         </button>
-      </footer>
-
-      {/* Details Button */}
-      <button
-        className="mt-3 text-blue-600 text-sm font-medium underline hover:text-blue-800"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleNavigate();
-        }}
-      >
-        Click here for more details
-      </button>
+      </div>
     </div>
   );
 };
