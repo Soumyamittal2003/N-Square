@@ -7,7 +7,7 @@ const PopularProjectCard = () => {
         "https://cdn.builder.io/api/v1/image/assets/TEMP/6e81c517f54a0c55c41aa688a1daba197f0cba53ce78048976c28add4509f955?placeholderIfAbsent=true&apiKey=2b6398d7743249e49e60a2c281a1ae3e",
     },
     {
-      title: "Smart Farming System",
+      title: "Smart System",
       contributors: 6,
       image:
         "https://cdn.builder.io/api/v1/image/assets/TEMP/6e81c517f54a0c55c41aa688a1daba197f0cba53ce78048976c28add4509f955?placeholderIfAbsent=true&apiKey=2b6398d7743249e49e60a2c281a1ae3e",
@@ -25,7 +25,7 @@ const PopularProjectCard = () => {
           className="flex flex-col md:flex-row items-center md:items-start bg-white shadow-lg hover:shadow-xl transition-shadow rounded-xl border border-gray-200 p-4 mb-6"
         >
           {/* Project Image */}
-          <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-md overflow-hidden">
+          <div className="flex-shrink-0 w-20 h-20 md:w-32 md:h-32 rounded-md overflow-hidden">
             <img
               src={project.image}
               alt={project.title}
@@ -34,13 +34,13 @@ const PopularProjectCard = () => {
           </div>
 
           {/* Project Details */}
-          <div className="flex flex-col ml-0 md:ml-6 mt-4 md:mt-0 flex-grow">
+          <div className="flex flex-col ml-0 md:ml-4 mt-4 md:mt-0 flex-grow">
             <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
             <div className="flex items-center mt-2">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/360478af2e11a65ef64ea0a1f4449e2fc431d304538dfb727a8958a10ee3b561?placeholderIfAbsent=true&apiKey=2b6398d7743249e49e60a2c281a1ae3e"
                 alt="Contributors"
-                className="w-6 h-6"
+                className="w-9 h-5"
               />
               <p className="text-sm text-gray-600 ml-2">
                 +{project.contributors} Contributor{project.contributors > 1 ? "s" : ""}
@@ -50,8 +50,8 @@ const PopularProjectCard = () => {
 
           {/* View Project Button */}
           <div className="mt-4 md:mt-0">
-            <button className="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition">
-              View Project
+            <button className="px-8 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition">
+            View Project
             </button>
           </div>
         </div>

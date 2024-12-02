@@ -28,14 +28,14 @@ const Project = () => {
       <div className="flex justify-between items-center">
         <TabBar />
         <Link to={"create-project"}>
-          <div className="px-4 py-2 mx-5 self-end cursor-pointer text-lg font-semibold tracking-normal leading-none text-black rounded-2xl border-2 border-black max-md:mr-2 hover:text-white hover:bg-black">
+          <div className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white flex-between">
             Create Project
           </div>
         </Link>
       </div>
       <div className="flex justify-center">
         {/* Main Content */}
-        <div className="p-3 w-[65%]">
+        <div className="ml-8 p-3 w-[65%]">
           <ProjectList selectedTab={selectedTab} />
         </div>
 

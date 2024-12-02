@@ -6,9 +6,11 @@ import axiosInstance from "../../../utils/axiosinstance"; // Ensure axios instan
 import Cookies from "js-cookie"; // For user ID
 import { toast } from "react-toastify";
 
+
 const CreateStory = ({ onClose }) => {
   const userId = Cookies.get("id"); // Assuming user ID is stored in cookies
   const [userData, setUserData] = useState("");
+  const role = Cookies.get("role");
   const [formData, setFormData] = useState({
     title: "",
     storyType: "Story", // Default story type
@@ -112,6 +114,7 @@ const CreateStory = ({ onClose }) => {
       setError(""); // Clear any previous errors
       onClose(); // Close the modal after successful submission
     } catch (error) {
+      toast.error("Failed to create Story");
       console.error("Error creating story:", error);
       setError("Failed to create story. Please try again.");
     }
@@ -167,12 +170,14 @@ const CreateStory = ({ onClose }) => {
                   >
                     Story
                   </div>
+                  {(role === "alumni" || role === "faculty") && (
                   <div
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     onClick={() => handleStoryTypeChange("Impact Story")}
                   >
                     Impact Story
                   </div>
+                )}
                   <div
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     onClick={() => handleStoryTypeChange("Funding Story")}
