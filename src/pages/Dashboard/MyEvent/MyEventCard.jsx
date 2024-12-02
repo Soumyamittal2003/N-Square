@@ -98,7 +98,7 @@ const MyEventCard = ({
             handleNavigate();
           }}
         >
-          Register
+          Registered
         </button>
       </footer>
 
