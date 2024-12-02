@@ -123,7 +123,7 @@ const ProjectList = ({ activeTab }) => {
 
   return (
     <div>
-      <div className="flex max-md:flex-col p-2">
+      <div className="flex max-md:flex-col p-6">
         {/* Tabs and filter buttons */}
         <div className="flex flex-col w-[95%] max-md:ml-0 max-md:w-full">
           {/* Filter options (just below the tabs) */}
@@ -213,7 +213,7 @@ const ProjectList = ({ activeTab }) => {
             Projects
           </h2>
 
-          <div className="flex flex-col self-stretch h-[calc(100vh-225px)] overflow-y-auto hide-scrollbar mt-3.5 w-full max-md:max-w-full">
+          <div className=" flex flex-col self-stretch h-[calc(100vh-225px)] overflow-y-auto hide-scrollbar mt-3.5 w-full max-md:max-w-full">
             {projects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))}

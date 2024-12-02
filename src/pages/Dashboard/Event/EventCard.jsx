@@ -22,7 +22,7 @@ const EventCard = ({ event, onLikeEvent, onDislikeEvent }) => {
   };
 
   return (
-    <div className="w-full max-w-[340px] rounded-2xl shadow-lg bg-white p-5 cursor-pointer hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+    <div className="max-w-[300px] border border-gray-200 rounded-2xl shadow-lg bg-gradient-to-r from-white via-gray-50 to-white p-5 cursor-pointer flex flex-col justify-between hover:shadow-xl transition-shadow duration-300">
       {/* Event Image */}
       <div className="relative rounded-xl overflow-hidden">
         <img
