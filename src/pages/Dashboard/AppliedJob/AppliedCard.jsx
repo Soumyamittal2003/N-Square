@@ -1,5 +1,3 @@
-//import { useState, useEffect } from "react";
-//import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 
@@ -20,43 +18,48 @@ const AppliedCard = ({ job, currentUserId, creatorName }) => {
   } = job;
 
   return (
-    <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar ">
+    <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
       {/* Job Image */}
-      <div className="relative">
+      <div className="relative rounded-lg overflow-hidden">
         <img
           src={jobphoto || "https://via.placeholder.com/150"}
           alt={title}
-          className="w-full h-[180px] rounded-t-lg object-cover"
+          className="w-full h-[180px] object-cover"
         />
       </div>
 
       {/* Job Details */}
-      <div className="mt-4 flex-1">
-        <h4 className="text-md font-semibold">{title}</h4>
-        <p className="text-sm text-gray-500">
-          {company}{" "}
-          <span className="text-blue-600 font-semibold">{location}</span>
+      <div className="mt-4">
+        <h4 className="text-lg font-bold text-gray-800">{title}</h4>
+        <p className="text-sm text-gray-600 mt-1">
+          {company} • <span className="text-blue-500">{location}</span>
         </p>
-        <p className="text-sm text-gray-950 mt-2">{description}</p>
-        <p className="text-xs text-gray-500 mt-2">
-          Skills Required:{" "}
-          <span className="text-gray-950 font-medium">
-            {skills.length > 0 ? skills.join(", ") : "None specified"}
+        <p className="text-sm text-gray-700 mt-3">
+          {description.length > 120
+            ? `${description.slice(0, 120)}...`
+            : description}
+          <a href="#" className="text-blue-600 font-medium hover:underline ml-1">
+            Read More
+          </a>
+        </p>
+        <p className="text-xs text-gray-500 mt-3">
+          Skills:{" "}
+          <span className="text-gray-700 font-medium">
+            {skills.length > 0 ? skills.join(", ") : "Not specified"}
           </span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
-          Type: <span className="text-red-600 font-medium">{type}</span>
+        <p className="text-xs text-gray-500 mt-1">
+          Type: <span className="text-red-500">{type}</span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-gray-500 mt-1">
           Salary/Stipend:{" "}
-          <span className="text-green-700 font-medium">{stipendOrSalary}</span>
+          <span className="text-green-600 font-medium">{stipendOrSalary}</span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
-          Created By:{" "}
-          <span className="text-gray-800 font-medium">{creatorName}</span>
+        <p className="text-xs text-gray-500 mt-1">
+          Posted By: <span className="text-gray-800 font-semibold">{creatorName}</span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
-          Created Date:{" "}
+        <p className="text-xs text-gray-500 mt-1">
+          Posted On:{" "}
           <span className="text-gray-800 font-medium">
             {postedDate ? new Date(postedDate).toLocaleDateString() : "Unknown"}
           </span>
@@ -76,31 +79,31 @@ const AppliedCard = ({ job, currentUserId, creatorName }) => {
       </div>
 
       {/* Bottom Section */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="mt-6 flex justify-between items-center">
         {/* Left Icons */}
         <div className="flex gap-4">
-          {/* Like Button (Not needed for applied job view) */}
+          {/* Like Button */}
           <button
             disabled
-            className="flex items-center gap-1 font-semibold text-gray-600"
+            className="flex items-center gap-2 text-gray-400"
           >
             <img src={arrowBlockUp} alt="Upvote" className="w-6 h-6" />
-            <span className="font-semibold text-xl">{likes.length}</span>
+            <span>{likes.length}</span>
           </button>
 
-          {/* Dislike Button (Not needed for applied job view) */}
+          {/* Dislike Button */}
           <button
             disabled
-            className="flex items-center gap-1 font-semibold text-gray-600"
+            className="flex items-center gap-2 text-gray-400"
           >
             <img src={arrowBlockdown} alt="Downvote" className="w-6 h-6" />
-            <span className="font-semibold text-xl">{dislikes.length}</span>
+            <span>{dislikes.length}</span>
           </button>
         </div>
 
         {/* Applied Button */}
         <button
-          className="px-4 py-2 text-sm font-bold text-white rounded-2xl bg-gray-400 cursor-not-allowed"
+          className="px-5 py-2 bg-gray-400 text-white rounded-xl cursor-not-allowed"
           disabled
         >
           Applied

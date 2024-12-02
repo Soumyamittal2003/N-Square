@@ -27,19 +27,17 @@ const JobCard = ({
     applyLink,
     createdBy = {},
     postedDate,
-    likes = [], // Default to empty array if undefined
-    dislikes = [], // Default to empty array if undefined
-    isApplied = false, // Check if job is applied by current user
+    likes = [],
+    dislikes = [],
+    isApplied = false,
   } = job;
 
   const [creatorName, setCreatorName] = useState("Loading...");
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  // Check if the current user has liked or disliked the job
   const isLiked = likes.includes(currentUserId);
   const isDisliked = dislikes.includes(currentUserId);
 
-  // Fetch creator's name dynamically
   useEffect(() => {
     if (createdBy?.firstName && createdBy?.lastName) {
       setCreatorName(`${createdBy.firstName} ${createdBy.lastName}`);
@@ -58,75 +56,67 @@ const JobCard = ({
     }
   }, [createdBy]);
 
-  // Check if the job is bookmarked
   useEffect(() => {
     setIsBookmarked(bookmarks.includes(_id));
   }, [bookmarks, _id]);
 
   return (
-    <div className="w-full max-w-[320px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col justify-between overflow-auto hide-scrollbar">
+    <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
       {/* Job Image */}
-      <div className="relative">
+      <div className="relative rounded-lg overflow-hidden">
         <img
           src={jobphoto || "https://via.placeholder.com/150"}
           alt={title}
-          className="w-full h-[180px] rounded-t-lg object-cover"
+          className="w-full h-[180px] object-cover"
         />
       </div>
 
       {/* Job Details */}
-      <div className="mt-4 flex-1">
-        <h4 className="text-md font-semibold">{title}</h4>
-        <p className="text-sm text-gray-500">
-          {company}{" "}
-          <span className="text-blue-600 font-semibold">{location}</span>
+      <div className="mt-4">
+        <h4 className="text-lg font-bold text-gray-800">{title}</h4>
+        <p className="text-sm text-gray-600 mt-1">
+          {company} • <span className="text-blue-500">{location}</span>
         </p>
-        <p className="text-sm text-gray-950 mt-2">{description}</p>
-        <p className="text-xs text-gray-500 mt-2">
-          Skills Required:{" "}
-          <span className="text-gray-950 font-medium">
-            {skills.length > 0 ? skills.join(", ") : "None specified"}
+        <p className="text-sm text-gray-700 mt-3">
+          {description.length > 120
+            ? `${description.slice(0, 120)}...`
+            : description}
+          <a href="#" className="text-blue-600 font-medium hover:underline ml-1">
+            Read More
+          </a>
+        </p>
+        <p className="text-xs text-gray-500 mt-3">
+          Skills:{" "}
+          <span className="text-gray-700 font-medium">
+            {skills.length > 0 ? skills.join(", ") : "Not specified"}
           </span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
-          Type: <span className="text-red-600 font-medium">{type}</span>
+        <p className="text-xs text-gray-500 mt-1">
+          Type: <span className="text-red-500">{type}</span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-gray-500 mt-1">
           Salary/Stipend:{" "}
-          <span className="text-green-700 font-medium">{stipendOrSalary}</span>
+          <span className="text-green-600 font-medium">{stipendOrSalary}</span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
-          Created By:{" "}
-          <span className="text-gray-800 font-medium">{creatorName}</span>
+        <p className="text-xs text-gray-500 mt-1">
+          Posted By: <span className="text-gray-800 font-semibold">{creatorName}</span>
         </p>
-        <p className="text-xs text-gray-500 mt-2">
-          Created Date:{" "}
+        <p className="text-xs text-gray-500 mt-1">
+          Posted On:{" "}
           <span className="text-gray-800 font-medium">
             {postedDate ? new Date(postedDate).toLocaleDateString() : "Unknown"}
           </span>
         </p>
-
-        {/* Apply Link */}
-        <p className="text-xs text-gray-500 mt-2">
-          <a
-            href={applyLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-700 font-medium hover:underline"
-          >
-            Apply Through Link
-          </a>
-        </p>
       </div>
 
       {/* Bottom Section */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="mt-6 flex justify-between items-center">
         {/* Left Icons */}
         <div className="flex gap-4">
           {/* Bookmark Button */}
           <button
-            className="px-4 py-2 rounded-xl gap-1 flex items-center"
             onClick={() => onBookmarkJob(_id)}
+            className="p-2 rounded-full bg-gray-100 hover:bg-blue-200 transition"
           >
             <img
               src={isBookmarked ? bookmarked : bookmark}
@@ -138,30 +128,32 @@ const JobCard = ({
           {/* Like Button */}
           <button
             onClick={() => onLikePost(_id)}
-            className={`flex items-center gap-1 font-semibold ${
+            className={`flex items-center gap-2 ${
               isLiked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-500 transition`}
+            } hover:text-blue-600 transition`}
           >
-            <img src={arrowBlockUp} alt="Upvote" className="w-6 h-6" />
-            <span className="font-semibold text-xl">{likes.length}</span>
+            <img src={arrowBlockUp} alt="like" className="w-6 h-6" />
+            <span className="font-semibold">{likes.length}</span>
           </button>
 
           {/* Dislike Button */}
           <button
             onClick={() => onDislikePost(_id)}
-            className={`flex items-center gap-1 font-semibold ${
+            className={`flex items-center gap-2 ${
               isDisliked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-500 transition`}
+            } hover:text-blue-600 transition`}
           >
-            <img src={arrowBlockdown} alt="Downvote" className="w-6 h-6" />
-            <span className="font-semibold text-xl">{dislikes.length}</span>
+            <img src={arrowBlockdown} alt="dislike" className="w-6 h-6" />
+            <span className="font-semibold">{dislikes.length}</span>
           </button>
         </div>
 
         {/* Apply Button */}
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded-xl"
           onClick={() => onApplyJob(_id)}
+          className={`px-5 py-2 text-white rounded-xl ${
+            isApplied ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          } transition`}
           disabled={isApplied}
         >
           {isApplied ? "Applied" : "Apply"}

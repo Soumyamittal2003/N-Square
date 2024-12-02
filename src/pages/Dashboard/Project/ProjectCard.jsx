@@ -42,35 +42,35 @@ const ProjectCard = ({ project }) => {
 
   return (
     <div
-      className="relative border p-4 m-2 border-gray-300 rounded-lg shadow-md bg-white cursor-pointer hover:shadow-lg"
+      className="relative border p-5 m-3 bg-gradient-to-br from-white via-gray-50 to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2 cursor-pointer"
       onClick={handleNavigate}
     >
       {/* Request Button */}
-      <button className="absolute top-4 right-4 px-2 py-1 outline text-gray-500 font-semibold rounded-md hover:bg-black hover:text-white">
+      <button className="absolute top-4 right-4 px-3 py-1 text-sm text-gray-600 font-semibold bg-gray-100 rounded-full shadow-md hover:bg-black hover:text-white transition-colors">
         Request
       </button>
 
       {/* Image and Content */}
-      <div className="flex">
+      <div className="flex items-center">
         <div>
           <img
             src={image || "https://via.placeholder.com/150"}
-            alt={`Image for project: ${title || "E-Krishak"}`}
-            className="h-24 w-24 m-3  rounded-full"
+            alt={`Image for project: ${title || "Project"}`}
+            className="h-20 w-20 rounded-full border-2 border-blue-500 shadow-sm"
           />
-          <h2 className=" text-center  text-sm">
+          <h2 className="text-center text-xs mt-2 text-gray-600">
             +{mentorContributors.length + studentContributors.length}{" "}
             contributor
           </h2>
         </div>
-        <div className="flex flex-col ml-4">
-          <h3 className="text-lg font-semibold text-gray-900">
-            {title || "E-Krishak"}
+        <div className="flex flex-col ml-6">
+          <h3 className="text-xl font-semibold text-gray-800">
+            {title || "Project Title"}
           </h3>
-          <p className="text-sm text-black mt-2">
+          <p className="text-sm text-gray-600 mt-2">
             {description?.length > 100
               ? `${description.slice(0, 100)}...`
-              : description || "Lorem Ipsum is simply dummy text..."}
+              : description || "Description not available."}
             <a href="#" className="text-blue-500 font-medium">
               {" "}
               Read More
@@ -81,9 +81,9 @@ const ProjectCard = ({ project }) => {
 
       {/* Created By */}
       <div className="absolute bottom-4 right-4">
-        <p className="text-sm text-gray-500 font-medium underline">
+        <p className="text-sm text-gray-500">
           Created By -{" "}
-          <span className="text-gray-700 font-semibold">{creatorName}</span>
+          <span className="font-semibold text-gray-800">{creatorName}</span>
         </p>
       </div>
     </div>
