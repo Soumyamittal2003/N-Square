@@ -69,16 +69,26 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-[650px] w-full md:w-5/6">
-      <div className="w-1/3 h-[600px] bg-gray-200 text-black p-4">
-        <Contacts contacts={contacts} changeChat={handleChatChange} />
-      </div>
-      <div className="flex-1 h-[600px] bg-gray-100 text-black p-4">
-        {currentChat === undefined ? (
-          <Welcome />
-        ) : (
-          <ChatContainer currentChat={currentChat} socket={socket} />
-        )}
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-500 via-blue-500 to-green-400 relative">
+      {/* Background Blur */}
+      <div className="absolute inset-0 backdrop-blur-lg bg-gradient-to-br from-purple-500 via-blue-500 to-green-400 opacity-60"></div>
+
+      {/* Chat Container */}
+      <div className="relative z-10 h-[80vh] w-full max-w-7xl bg-white shadow-2xl rounded-3xl grid grid-cols-[30%_70%] overflow-hidden">
+        {/* Contacts Section */}
+        <div className="bg-gradient-to-b from-blue-600 to-blue-800 text-black p-6 flex flex-col">
+          <h3 className="text-2xl font-bold mb-6 text-center">Contacts</h3>
+          <Contacts contacts={contacts} changeChat={handleChatChange} />
+        </div>
+
+        {/* Chat Section */}
+        <div className="bg-white p-8 flex flex-col">
+          {currentChat === undefined ? (
+            <Welcome />
+          ) : (
+            <ChatContainer currentChat={currentChat} socket={socket} />
+          )}
+        </div>
       </div>
     </div>
   );

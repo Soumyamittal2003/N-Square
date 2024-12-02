@@ -7,24 +7,17 @@ import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie"; // Import Cookies library
 
 export default function Chat() {
-  // WebSocket reference
   const socket = useRef(null);
-
-  // State for contacts and current chat
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Fetch the current user and set it in localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const currentUserId = Cookies.get("id"); // Get user ID from cookies
+        const currentUserId = Cookies.get("id");
         const response = await axiosInstance.get(`/users/${currentUserId}`);
         const userData = response.data.data;
-        console.log(userData);
-
-        // Set user data in localStorage and state
         localStorage.setItem("chat-app-current-user", JSON.stringify(userData));
         setCurrentUser(userData);
       } catch (error) {
@@ -35,43 +28,35 @@ export default function Chat() {
     fetchCurrentUser();
   }, []);
 
-  // Establish WebSocket connection
   useEffect(() => {
     if (currentUser && !socket.current) {
       socket.current = io("https://network-next-backend.onrender.com", {
-        transports: ["websocket"], // Use WebSocket transport only
-        reconnectionAttempts: 5, // Limit reconnections
-        reconnectionDelay: 5000, // Delay between reconnections
+        transports: ["websocket"],
+        reconnectionAttempts: 5,
+        reconnectionDelay: 5000,
       });
 
-      // Emit user ID after connecting
       socket.current.once("connect", () => {
-        console.log("WebSocket connected.");
         socket.current.emit("add-user", currentUser._id);
       });
 
-      // Handle WebSocket connection errors
       socket.current.on("connect_error", (err) => {
         console.error("WebSocket connection error:", err.message);
       });
 
-      // Handle WebSocket disconnection
       socket.current.on("disconnect", (reason) => {
         console.warn("WebSocket disconnected:", reason);
       });
     }
 
     return () => {
-      console.log("Cleaning up WebSocket...");
       if (socket.current) {
-        console.log("Disconnecting WebSocket...");
         socket.current.disconnect();
         socket.current = null;
       }
     };
   }, [currentUser]);
 
-  // Fetch all contacts from the server
   useEffect(() => {
     const fetchContacts = async () => {
       if (currentUser) {
@@ -86,26 +71,37 @@ export default function Chat() {
     fetchContacts();
   }, [currentUser]);
 
-  // Handle switching between chats
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
 
   return (
-    <div className="h-[650px] w-11/12 bg-white shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-[30%_70%] gap-4 p-4">
-      {/* Contacts Section */}
-      <Contacts
-        contacts={contacts}
-        changeChat={handleChatChange}
-        currentUser={currentUser}
-      />
-
-      {/* Chat Container or Welcome Message */}
-      {currentChat === undefined ? (
-        <Welcome />
-      ) : (
-        <ChatContainer currentChat={currentChat} socket={socket} />
-      )}
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-500 via-blue-500 to-green-400 relative">
+      {/* Background Blur Effect */}
+      <div className="absolute inset-0 backdrop-blur-lg bg-gradient-to-br from-purple-500 via-blue-500 to-green-400 opacity-60"></div>
+  
+      {/* Chat Container */}
+      <div className="relative z-10 h-[80vh] w-full max-w-7xl bg-white shadow-2xl rounded-3xl grid grid-cols-1 md:grid-cols-[30%_70%] overflow-hidden">
+        {/* Contacts Section */}
+        <div className="bg-gradient-to-b from-blue-600 to-blue-800 text-white p-6 flex flex-col">
+          <h3 className="text-2xl font-bold mb-6 text-center">Contacts</h3>
+          <Contacts
+            contacts={contacts}
+            changeChat={handleChatChange}
+            currentUser={currentUser}
+          />
+        </div>
+  
+        {/* Chat Section */}
+        <div className="bg-gray-50 p-8 flex flex-col">
+          {currentChat === undefined ? (
+            <Welcome />
+          ) : (
+            <ChatContainer currentChat={currentChat} socket={socket} />
+          )}
+        </div>
+      </div>
     </div>
   );
+  
 }
