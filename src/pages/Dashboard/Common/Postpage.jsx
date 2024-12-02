@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { Link } from "react-router-dom";
 import CreateStory from "../InspiringStory/CreateStory";
 import CreateJob from "../Job/CreateJob";
 import CreateEvent from "../Event/CreateEvent";
@@ -8,6 +7,7 @@ import CreateResources from "../AlmaResource/CreateResource";
 import CreateVolunteer from "../Volunteer/CreateVolunteer";
 import CreatePost from "./CreatePost";
 import CreateReunion from "../Reunion/CreateReunion";
+import Cookies from "js-cookie";
 
 const PostPopup = ({ setPopupOpen }) => {
   const [showCreateStory, setShowCreateStory] = useState(false);
@@ -19,6 +19,7 @@ const PostPopup = ({ setPopupOpen }) => {
   const [showCreateReunion, setShowCreateReunion] = useState(false);
 
   const navigate = useNavigate();
+  const role = Cookies.get("role");
 
   const handleStoryClick = () => setShowCreateStory(true);
   const handleJobClick = () => setShowCreateJob(true);
@@ -56,8 +57,7 @@ const PostPopup = ({ setPopupOpen }) => {
               </button>
             </div>
             <div className="p-6 space-y-4">
-              {[
-                {
+              {[{
                   label: "Post",
                   visibility: "Anyone can view",
                   onClick: handlePostClick,
@@ -77,11 +77,14 @@ const PostPopup = ({ setPopupOpen }) => {
                   visibility: "Anyone can view",
                   onClick: handleStoryClick,
                 },
-                {
-                  label: "Job",
-                  visibility: "Anyone can view",
-                  onClick: handleJobClick,
-                },
+                // Conditionally render "Job" based on role
+                ...(role === "alumni" || role === "faculty"
+                  ? [{
+                      label: "Job",
+                      visibility: "Anyone can view",
+                      onClick: handleJobClick,
+                    }]
+                  : []),
                 {
                   label: "Volunteering",
                   visibility: "Anyone can view",

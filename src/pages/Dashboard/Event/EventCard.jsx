@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 
@@ -11,8 +11,8 @@ const EventCard = ({
   onSelectEvent,
   isSelected,
 }) => {
-  const navigate = useNavigate();
   const [isRegistered, setIsRegistered] = useState(false); // State to track registration
+  const [loading, setLoading] = useState(false); // Loading state for registration
 
   // Load registration status from localStorage
   useEffect(() => {
@@ -41,18 +41,36 @@ const EventCard = ({
     onDislikeEvent(event._id);
   };
 
-  const handleRegister = (e) => {
+  // Handle Registration Action
+  const handleRegister = async (e) => {
     e.stopPropagation(); // Prevent navigation
-    setIsRegistered(true);
-    // Save registration status to localStorage
-    const registeredEvents =
-      JSON.parse(localStorage.getItem("registeredEvents")) || [];
-    if (!registeredEvents.includes(event._id)) {
-      registeredEvents.push(event._id);
-      localStorage.setItem(
-        "registeredEvents",
-        JSON.stringify(registeredEvents)
+    setLoading(true); // Start loading
+
+    try {
+      // Send API request to register the user
+      const response = await axiosInstance.post(
+        `/event/register-event/${event._id}`,
+        { userId: currentUserId } // Sending the user ID to register the user
       );
+
+      if (response.data.message === "Event Registration successful") {
+        setIsRegistered(true);
+
+        // Update localStorage to reflect the registration status
+        const registeredEvents =
+          JSON.parse(localStorage.getItem("registeredEvents")) || [];
+        if (!registeredEvents.includes(event._id)) {
+          registeredEvents.push(event._id);
+          localStorage.setItem(
+            "registeredEvents",
+            JSON.stringify(registeredEvents)
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error registering for event:", error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -110,14 +128,16 @@ const EventCard = ({
             <span>{event.dislikes.length}</span>
           </button>
         </div>
+
+        {/* Register Button */}
         <button
           className={`px-7 py-1.5 text-white rounded-xl ${
             isRegistered ? "bg-green-600" : "bg-blue-600"
           }`}
           onClick={handleRegister}
-          disabled={isRegistered} // Disable button if already registered
+          disabled={isRegistered || loading} // Disable if already registered or loading
         >
-          {isRegistered ? "Registered" : "Register"}
+          {loading ? "Registering..." : isRegistered ? "Registered" : "Register"}
         </button>
       </footer>
 

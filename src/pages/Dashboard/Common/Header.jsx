@@ -97,6 +97,7 @@ const Header = () => {
   const settingsRef = useRef(null);
   const searchRef = useRef(null);
   const notificationsRef = useRef(null);
+  const role = Cookies.get("role");
 
   const navLinks = [
     { name: "Home", path: "/dashboard/home" },
@@ -104,6 +105,7 @@ const Header = () => {
     { name: "Event", path: "/dashboard/event" },
     { name: "Project", path: "/dashboard/project" },
     { name: "Story", path: "/dashboard/inspiring-story" },
+    
     { name: "Reunion", path: "/dashboard/reunion" },
   ];
 
@@ -187,6 +189,7 @@ const Header = () => {
         {/* Icon Section */}
         <div className="flex items-center justify-end w-1/4 space-x-2">
           {/* Volunteer Icon */}
+          {(role === "student" ) && (
           <button
             aria-label="Volunteer"
             title="Volunteer"
@@ -200,7 +203,7 @@ const Header = () => {
               className="h-10 w-10 hover:opacity-80"
             />
           </button>
-
+          )}
           {/* Alumni Resources Icon */}
           <button
             aria-label="Alumni Resources"

@@ -30,9 +30,9 @@ const MyEventCard = ({
     onDislikeEvent(event._id);
   };
 
-  const handleSelectChange = (e) => {
-    onSelectEvent(event._id, e.target.checked);
-  };
+  // const handleSelectChange = (e) => {
+  //   onSelectEvent(event._id, e.target.checked);
+  // };
 
   return (
     <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
@@ -89,7 +89,7 @@ const MyEventCard = ({
           </button>
         </div>
         <button
-          className="px-7 py-1.5 text-white bg-slate-500 rounded-xl"
+          className="px-7 py-1.5 text-white bg-green-600 rounded-lg"
           onClick={(e) => {
             e.stopPropagation(); // Prevent navigation from like/dislike click
             handleNavigate();
@@ -100,7 +100,7 @@ const MyEventCard = ({
       </footer>
 
       {/* Checkbox for selecting the event */}
-      <div className="mt-2 flex justify-start items-center">
+      {/* <div className="mt-2 flex justify-start items-center">
         <input
           type="checkbox"
           checked={isSelected}
@@ -108,7 +108,7 @@ const MyEventCard = ({
           className="mr-2"
         />
         <label>Select this event</label>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -100,7 +100,7 @@ const AppliedCard = ({ job, currentUserId, creatorName }) => {
 
         {/* Applied Button */}
         <button
-          className="px-4 py-2 text-sm font-bold text-white rounded-2xl bg-gray-400 cursor-not-allowed"
+          className="px-6 py-2 text-sm font-bold text-white rounded-lg bg-green-600 cursor-not-allowed"
           disabled
         >
           Applied

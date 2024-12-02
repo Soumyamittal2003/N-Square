@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 const VolunteerCard = ({ position, onApply }) => {
   const {
     _id: positionId,
@@ -20,17 +22,45 @@ const VolunteerCard = ({ position, onApply }) => {
     coordinatorphone,
   } = eventDetails || {};
 
+  // Local state to track if the user has applied
+  const [isApplied, setIsApplied] = useState(applied);
+
+  // Check if the user has previously applied for this position
+  useEffect(() => {
+    const appliedPositions = JSON.parse(localStorage.getItem("appliedPositions")) || [];
+    if (appliedPositions.includes(positionId)) {
+      setIsApplied(true); // If position is in applied list, mark as applied
+    }
+  }, [positionId]);
+
+  const handleApply = () => {
+    // Update the applied state in localStorage
+    const appliedPositions = JSON.parse(localStorage.getItem("appliedPositions")) || [];
+    if (!appliedPositions.includes(positionId)) {
+      appliedPositions.push(positionId);
+      localStorage.setItem("appliedPositions", JSON.stringify(appliedPositions));
+    }
+
+    // Set the local state to "applied"
+    setIsApplied(true);
+
+    // Call the passed onApply function (API call logic)
+    if (onApply) {
+      onApply(positionId); // Assuming onApply is an API call function
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col justify-between">
       {/* Main Content */}
       <div>
         <p className="font-bold text-lg mb-2">
           <strong>Event : </strong> {eventTitle}
-          <h3 className="font-bold text-lg mb-2">
-            <strong>Position : </strong>
-            {positionTitle}
-          </h3>
         </p>
+        <h3 className="font-bold text-lg mb-2">
+          <strong>Position : </strong>
+          {positionTitle}
+        </h3>
         <p className="text-sm text-gray-500 mb-1">
           <strong>Venue:</strong> {venue || "Online"}
         </p>
@@ -69,15 +99,15 @@ const VolunteerCard = ({ position, onApply }) => {
       {/* Footer with Apply Button */}
       <div className="flex justify-center items-center mt-2">
         <button
-          onClick={() => onApply(positionId)}
+          onClick={handleApply}
           className={`px-12 py-2 rounded-lg ${
-            applied
-              ? "bg-gray-500 text-white cursor-not-allowed"
+            isApplied
+              ? "bg-green-600 text-white cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
           }`}
-          disabled={applied}
+          disabled={isApplied}
         >
-          {applied ? "Applied" : "Apply"}
+          {isApplied ? "Applied" : "Apply"}
         </button>
       </div>
     </div>
