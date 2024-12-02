@@ -130,7 +130,7 @@ const EventContent = () => {
         </div>
 
         <div className="p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto hide-scrollbar" style={{ maxHeight: 'calc(100vh - 160px)'}} >
             {filteredEvents.map((event) => (
               <EventCard
                 key={event._id}
