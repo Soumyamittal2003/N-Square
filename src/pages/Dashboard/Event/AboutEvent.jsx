@@ -65,67 +65,73 @@ const AboutEvent = () => {
 
   // Check if the event details are missing
   if (!title) {
-    return <div className="text-center mt-10">Event details not found!</div>;
+    return <div className="text-center mt-10 text-lg font-semibold text-gray-500">Event details not found!</div>;
   }
 
   return (
-    <div className="flex justify-center p-8 overflow-auto hide-scrollbar">
-      <div className="bg-white shadow-lg rounded-lg max-w-6xl w-full p-6 overflow-auto hide-scrollbar">
+    <div className="flex justify-center p-8 overflow-auto bg-white">
+      <div className="bg-white shadow-lg rounded-xl max-w-6xl w-full p-6">
+        {/* Event Image */}
         <img
           src={eventphoto}
-          className="w-full h-[300px] object-cover rounded-lg"
+          className="w-full h-[300px] object-cover rounded-xl shadow-sm"
           alt={title}
         />
 
-        <p className="mt-2 text-gray-500">
-          {new Date(date).toLocaleDateString()} {time}
+        {/* Event Details */}
+        <p className="mt-4 text-gray-600 text-sm">
+          {new Date(date).toLocaleDateString()} | {time}
         </p>
 
-        <h1 className="mt-4 text-2xl font-bold">{title}</h1>
+        <h1 className="mt-2 text-3xl font-bold text-gray-800">{title}</h1>
 
-        <p className="text-blue-600 text-sm font-medium">{speaker}</p>
+        <p className="text-blue-600 text-md font-medium mt-2">{speaker}</p>
 
-        <p className="mt-4 text-gray-800">
+        <p className="mt-6 text-gray-700 leading-relaxed">
           Join us for an engaging session on <b>{title}</b> with {speaker}.
         </p>
 
-        <div className="flex flex-wrap gap-4 mt-4">
+        {/* Tags Section */}
+        <div className="flex flex-wrap gap-3 mt-6">
           {tagsTopic?.map((tag, index) => (
             <span
               key={index}
-              className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full"
+              className="text-sm bg-gray-200 text-gray-700 py-1 px-3 rounded-full shadow-sm"
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>
 
-        <div className="mt-6 flex flex-col sm:flex-row gap-3">
+        {/* Action Buttons */}
+        <div className="mt-8 flex flex-col sm:flex-row gap-4">
           <button
             onClick={() => window.open(link, "_blank")}
-            className="px-6 py-2 bg-blue-600 text-white rounded-xl w-full sm:w-auto"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition w-full sm:w-auto"
           >
-            Register for the event
+            Register for the Event
           </button>
 
           {isEventCreator && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-xl w-full sm:w-auto"
+              className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition w-full sm:w-auto"
             >
               Create Volunteer Position
             </button>
           )}
         </div>
 
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold">Attendees</h3>
-          <p className="text-sm text-gray-600">
+        {/* Attendees Section */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold text-gray-800">Attendees</h3>
+          <p className="text-gray-600 text-sm mt-1">
             Total Attending: {attending?.length || 0}
           </p>
         </div>
       </div>
 
+      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <CreateVolunteering
