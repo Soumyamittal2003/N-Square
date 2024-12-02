@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance"; // Assuming axiosInstance is set up
 import VolunteerCard from "./VolunteerCard";
+import { toast } from "react-toastify";
 
 const VolunteerContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,6 +86,7 @@ const VolunteerContent = () => {
       );
 
       if (response.data.success) {
+        toast.success("Successfully applied for the volunteer position!");
         alert("Successfully applied for the volunteer position!");
         // Update the state to mark the position as applied
         setVolunteerPositions((prevPositions) =>
@@ -95,7 +97,7 @@ const VolunteerContent = () => {
           )
         );
       } else {
-        alert(response.data.message || "Failed to apply.");
+        toast.error("Failed to apply for the volunteer position!");
       }
     } catch (error) {
       console.error("Error applying for volunteer position:", error);

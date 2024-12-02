@@ -1,8 +1,10 @@
 import { useState } from "react";
 import CreateEvent from "./CreateEvent";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const RightSidebar = ({ selectedEvent }) => {
+  const role = Cookies.get("role");
   const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
 
   const handleOpenCreateEvent = () => {
@@ -18,12 +20,13 @@ const RightSidebar = ({ selectedEvent }) => {
       {/* Create Event Button Positioned Top Right */}
       <div className="absolute top-2 right-8 mx-auto">
         {/* Reunion Button */}
+        {(role === "alumni" || role === "faculty") && (
         <Link to="/dashboard/reunion" className="py-1">
         <button className="px-4 py-2 mr-4 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
           Reunion
         </button>
         </Link>
-
+        )}
         {/* Create Event Button */}
         <button
           onClick={handleOpenCreateEvent}

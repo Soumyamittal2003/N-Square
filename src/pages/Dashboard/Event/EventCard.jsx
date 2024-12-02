@@ -3,6 +3,7 @@ import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EventCard = ({
   event,
@@ -49,11 +50,12 @@ const EventCard = ({
     try {
       // Send API request to register the user
       const response = await axiosInstance.post(
-        `/api/network-next/v1/event/register-event/${event._id}`,
+        `/event/register-event/${event._id}`,
         { userId: currentUserId } // Sending the user ID to register the user
       );
 
-      if (response.data.message === "Event Registration successful") {
+      if (response.data.message === true) {
+        toast.success("Registered successfully!");
         setIsRegistered(true);
 
         // Update localStorage to reflect the registration status
@@ -66,6 +68,8 @@ const EventCard = ({
             JSON.stringify(registeredEvents)
           );
         }
+      } else {
+        toast.error("Failed to Registered");
       }
     } catch (error) {
       console.error("Error registering for event:", error);

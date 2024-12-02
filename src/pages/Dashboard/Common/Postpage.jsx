@@ -55,12 +55,16 @@ const PostPopup = ({ setPopupOpen }) => {
       visibility: "Anyone can view",
       onClick: handleVolunteerClick,
     },
-    {
+    ...(role === "alumni" || role === "faculty"
+      ? [{
       label: "Alma Resources",
       visibility: "Anyone can view",
       onClick: handleResourceClick,
-    },
-    { label: "Reunion", visibility: "Anyone can view", onClick: handleReunionClick },
+    }]
+    : []),
+    ...(role === "alumni" || role === "faculty"
+      ? [{ label: "Reunion", visibility: "Anyone can view", onClick: handleReunionClick }]
+      : []),
   ];
 
   return (
