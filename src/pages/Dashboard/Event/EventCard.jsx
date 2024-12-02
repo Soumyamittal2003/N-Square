@@ -2,18 +2,19 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
+import { useNavigate } from "react-router-dom";
 
 const EventCard = ({
   event,
   currentUserId,
   onLikeEvent,
   onDislikeEvent,
-  onSelectEvent,
-  isSelected,
+  
 }) => {
   const [isRegistered, setIsRegistered] = useState(false); // State to track registration
   const [loading, setLoading] = useState(false); // Loading state for registration
-
+  const navigate = useNavigate();
+  // Load registration status from localStorage
   useEffect(() => {
     const registeredEvents =
       JSON.parse(localStorage.getItem("registeredEvents")) || [];
@@ -31,12 +32,12 @@ const EventCard = ({
   };
 
   const handleLike = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent navigation
     onLikeEvent(event._id);
   };
 
   const handleDislike = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent navigation
     onDislikeEvent(event._id);
   };
 
@@ -48,7 +49,7 @@ const EventCard = ({
     try {
       // Send API request to register the user
       const response = await axiosInstance.post(
-        `/event/register-event/${event._id}`,
+        `/api/network-next/v1/event/register-event/${event._id}`,
         { userId: currentUserId } // Sending the user ID to register the user
       );
 
@@ -74,31 +75,34 @@ const EventCard = ({
   };
 
   return (
-    <div className="w-[300px] border border-gray-200 rounded-xl shadow-xl bg-white hover:shadow-2xl transition-shadow duration-300 p-5 flex flex-col justify-between">
+    <div className="w-[290px] border border-gray-300 rounded-lg shadow-lg bg-white p-4 cursor-pointer flex flex-col justify-between">
       {/* Event Image */}
       <div className="relative">
         <img
           src={event.eventphoto}
           alt={event.title}
-          className="w-full h-[180px] rounded-lg object-cover"
+          className="w-full h-[150px] rounded-lg object-cover"
+          style={{ aspectRatio: "16/9" }}
         />
-        <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs py-1 px-2 rounded-lg">
-          {new Date(event.date).toLocaleDateString()}
-        </div>
       </div>
 
-      {/* Event Details */}
-      <div className="mt-4">
-        <h4 className="text-lg font-semibold text-gray-800">{event.title}</h4>
-        <p className="text-sm text-gray-600 mt-1">
-          <strong>Speaker: </strong>
-          {event.speaker}
+      <div>
+        <div className="flex gap-3 justify-between items-start self-center mt-2 w-full">
+          <p className="text-sm text-gray-500">
+            {new Date(event.date).toLocaleDateString()} • {event.time}
+          </p>
+        </div>
+        <h4 className="text-md font-semibold mt-1">{event.title}</h4>
+        <p className="text-sm text-gray-500 flex items-center">
+          <strong>Speaker:-</strong> {event.speaker}
         </p>
-        <div className="flex flex-wrap gap-2 mt-3">
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-5 mt-2">
           {event.tagsTopic.map((tag, index) => (
             <span
               key={index}
-              className="text-xs bg-blue-100 text-blue-600 py-1 px-3 rounded-full"
+              className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded-full"
             >
               {tag}
             </span>
@@ -106,31 +110,29 @@ const EventCard = ({
         </div>
       </div>
 
-      {/* Footer with Buttons */}
-      <footer className="flex justify-between items-center mt-5">
-        <div className="flex gap-2 items-center">
+      {/* Footer with Register Button and Like/Dislike Buttons */}
+      <footer className="flex justify-between items-center mt-4 w-full">
+        <div className="flex gap-3 items-center">
           <button
-            className="flex items-center gap-1 text-gray-600 hover:text-blue-600 transition-colors"
+            className="flex gap-1 items-center font-semibold justify-center"
             onClick={handleLike}
           >
-            <img src={arrowBlockUp} alt="Thumbs Up" className="w-4 h-4" />
-            <span className="text-sm">{event.likes.length}</span>
+            <img src={arrowBlockUp} alt="Thumbs Up" />
+            <span>{event.likes.length}</span>
           </button>
           <button
-            className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition-colors"
+            className="flex gap-1 items-center font-semibold justify-center"
             onClick={handleDislike}
           >
-            <img src={arrowBlockDown} alt="Thumbs Down" className="w-4 h-4" />
-            <span className="text-sm">{event.dislikes.length}</span>
+            <img src={arrowBlockDown} alt="Thumbs Down" />
+            <span>{event.dislikes.length}</span>
           </button>
         </div>
 
         {/* Register Button */}
         <button
-          className={`px-6 py-2 text-sm font-medium text-white rounded-lg transition ${
-            isRegistered
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-blue-500 hover:bg-blue-600"
+          className={`px-7 py-1.5 text-white rounded-xl ${
+            isRegistered ? "bg-green-600" : "bg-blue-600"
           }`}
           onClick={handleRegister}
           disabled={isRegistered || loading} // Disable if already registered or loading
@@ -139,16 +141,16 @@ const EventCard = ({
         </button>
       </footer>
 
-      {/* Details Link */}
-      <div className="mt-4">
+      {/* Details Button */}
+      <div className="mt-2">
         <button
-          className="text-sm text-blue-500 hover:underline"
+          className="text-sm text-blue-600 underline mt-2 self-start"
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // Prevent navigation from like/dislike click
             handleNavigate();
           }}
         >
-          Read More
+          Click here for more details
         </button>
       </div>
     </div>
