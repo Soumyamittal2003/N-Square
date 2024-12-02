@@ -6,8 +6,19 @@ const ProjectList = ({ activeTab }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rolesFetched, setRolesFetched] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState("All"); // State for additional filter selection
-  // const [userTechnologies, setUserTechnologies] = useState([]); // To store user's familiar technologies
+  const [selectedFilter, setSelectedFilter] = useState("All");
+
+  // Define filter buttons dynamically
+  const filters = [
+    { name: "For You", value: "All" },
+    { name: "Tech1", value: "Tech1" },
+    { name: "Tech2", value: "Tech2" },
+    { name: "Tech3", value: "Tech3" },
+    { name: "Tech4", value: "Tech4" },
+    { name: "Tech5", value: "Tech5" },
+    { name: "Tech6", value: "Tech6" },
+    { name: "Tech7", value: "Tech7" },
+  ];
 
   // Fetch all projects
   useEffect(() => {
@@ -27,32 +38,12 @@ const ProjectList = ({ activeTab }) => {
     fetchProjects();
   }, []);
 
-  // Fetch the user's familiar technologies
-  // useEffect(() => {
-  //   const fetchUserTechnologies = async () => {
-  //     try {
-  //       // Example response for now
-  //       const response = {
-  //         data: { success: true, data: ["React", "Node.js", "MongoDB"] },
-  //       };
-  //       if (response.data.success) {
-  //         setUserTechnologies(response.data.data); // Assume this is an array of 7 technologies
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user technologies:", error);
-  //     }
-  //   };
-
-  //   fetchUserTechnologies();
-  // }, []);
-
-  // Fetch roles dynamically for each project's creator (existing functionality)
+  // Fetch roles dynamically for each project's creator
   useEffect(() => {
     const fetchRolesForProjects = async () => {
       const updatedProjects = await Promise.all(
         projects.map(async (project) => {
           if (project.createdBy && !project.createdBy.role) {
-            // Only fetch role if not already present
             try {
               const response = await axiosInstance.get(
                 `/users/${project.createdBy._id}`
@@ -84,30 +75,11 @@ const ProjectList = ({ activeTab }) => {
     }
   }, [projects, rolesFetched]);
 
-  // Filtering logic based on technologies
-  // const filteredProjects = projects.filter((project) => {
-  //   if (activeTab === "All" && selectedFilter === "All") return true;
-  //   if (activeTab === "Student" && project.createdBy?.role === "student")
-  //     return true;
-  //   if (activeTab === "Faculty" && project.createdBy?.role === "faculty")
-  //     return true;
-  //   if (activeTab === "Alumni" && project.createdBy?.role === "alumni")
-  //     return true;
-
-  // Filter based on selected technologies
-  //   if (selectedFilter.startsWith("Tech") && userTechnologies.length) {
-  //     const projectTechnologies = project.technologies || [];
-
-  //     // If the filter is for a specific technology (like "Tech1"), compare the project's technologies
-  //     const isTechMatch = projectTechnologies.some((tech) =>
-  //       userTechnologies.includes(tech)
-  //     );
-
-  //     return isTechMatch;
-  //   }
-
-  //   return false;
-  // });
+  // Filter projects based on the selected filter
+  const filteredProjects = projects.filter((project) => {
+    if (selectedFilter === "All") return true; // Show all projects
+    return project.technologies?.includes(selectedFilter); // Filter by technology
+  });
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
@@ -117,104 +89,37 @@ const ProjectList = ({ activeTab }) => {
     return <div>Loading projects...</div>;
   }
 
-  // if (!filteredProjects.length) {
-  //   return <div>No projects found for this filter.</div>;
-  // }
+  if (!filteredProjects.length) {
+    return <div>No projects found for this filter.</div>;
+  }
 
   return (
     <div>
-      <div className="flex max-md:flex-col p-6">
-        {/* Tabs and filter buttons */}
+      <div className="flex w-full items-center justify-center p-4">
         <div className="flex flex-col w-[95%] max-md:ml-0 max-md:w-full">
-          {/* Filter options (just below the tabs) */}
+          {/* Render filter buttons dynamically */}
           <div className="flex gap-3">
-            <button
-              className={`${
-                selectedFilter === "All"
-                  ? "bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("All")}
-            >
-              For You
-            </button>
-            <button
-              className={`${
-                selectedFilter === "Tech1"
-                  ? "bg-bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("Tech1")}
-            >
-              Tech1
-            </button>
-            <button
-              className={`${
-                selectedFilter === "Tech2"
-                  ? "bg-bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("Tech2")}
-            >
-              Tech2
-            </button>
-            <button
-              className={`${
-                selectedFilter === "Tech3"
-                  ? "bg-bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("Tech2")}
-            >
-              Tech3
-            </button>
-            <button
-              className={`${
-                selectedFilter === "Tech4"
-                  ? "bg-bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("Tech2")}
-            >
-              Tech4
-            </button>
-            <button
-              className={`${
-                selectedFilter === "Tech5"
-                  ? "bg-bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("Tech2")}
-            >
-              Tech5
-            </button>
-            <button
-              className={`${
-                selectedFilter === "Tech6"
-                  ? "bg-bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("Tech2")}
-            >
-              Tech6
-            </button>
-            <button
-              className={`${
-                selectedFilter === "Tech7"
-                  ? "bg-bg-[#252525] text-white" // Active state
-                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
-              } px-4 py-1 rounded-lg transition-colors duration-300`}
-              onClick={() => handleFilterChange("Tech2")}
-            >
-              Tech7
-            </button>
+            {filters.map((filter) => (
+              <button
+                key={filter.value}
+                className={`${
+                  selectedFilter === filter.value
+                    ? "bg-[#252525] text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
+                } px-4 py-1 rounded-lg transition-colors duration-300`}
+                onClick={() => handleFilterChange(filter.value)}
+              >
+                {filter.name}
+              </button>
+            ))}
           </div>
-          <h2 className="mt-0 text-2xl font-bold tracking-wide leading-none p-2">
+
+          <h2 className="mt-4 text-2xl font-bold tracking-wide leading-none p-2">
             Projects
           </h2>
 
-          <div className=" flex flex-col self-stretch h-[calc(100vh-225px)] overflow-y-auto hide-scrollbar mt-3.5 w-full max-md:max-w-full">
-            {projects.map((project) => (
+          <div className="flex flex-col self-stretch h-[calc(100vh-225px)] overflow-y-auto hide-scrollbar mt-3.5 w-full">
+            {filteredProjects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))}
           </div>

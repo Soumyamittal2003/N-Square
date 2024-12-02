@@ -8,7 +8,7 @@ const Project = () => {
   const tabs = ["All", "Faculty", "Alumni", "Student"];
 
   const TabBar = () => (
-    <div className="flex border border-gray-300 justify-between w-7/12 bg-white rounded-2xl shadow-lg px-4 py-1 mt-4">
+    <div className="flex border border-gray-300 justify-between w-7/12 bg-white rounded-2xl shadow-lg px-4 mx-16 py-1 mt-4">
       {tabs.map((tab) => (
         <button
           key={tab}
