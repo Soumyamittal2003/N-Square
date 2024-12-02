@@ -133,7 +133,7 @@ const CreateJob = ({ onClose }) => {
 
         <form
           className="space-y-3 overflow-y-auto hide-scrollbar"
-          style={{ maxHeight: "calc(80vh - 160px)" }}
+          style={{ maxHeight: "calc(80vh - 170px)" }}
           onSubmit={handleSubmit}
         >
           {/* Profile Photo */}
