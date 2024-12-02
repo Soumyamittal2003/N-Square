@@ -200,7 +200,7 @@ const CreateProject = () => {
                   {profileImagePreview ? (
                     <img
                       src={profileImagePreview}
-                      alt="Profile Preview"
+                      alt="Project Preview"
                       className="rounded-full w-full h-full object-cover"
                     />
                   ) : (
@@ -216,7 +216,7 @@ const CreateProject = () => {
                   className="hidden"
                 />
                 <span className="text-sm text-gray-600 mt-2">
-                  Upload Project Profile Photo
+                  Upload Project Photo
                 </span>
               </div>
 
