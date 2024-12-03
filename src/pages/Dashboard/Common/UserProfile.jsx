@@ -23,6 +23,15 @@ const UserProfile = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [userProjects, setUserProjects] = useState([]);
   const [education, setEducation] = useState([]);
+  const [newEducation, setNewEducation] = useState({
+    institution: "",
+    degree: "",
+    fieldOfStudy: "",
+    startDate: "",
+    endDate: "",
+    grade: "",
+  });
+  const [isEditingEducation, setIsEditingEducation] = useState(false);
   const [experience, setExperience] = useState([]);
   const [certificationsAndLicenses, setCertificationsAndLicenses] = useState(
     []
@@ -35,7 +44,6 @@ const UserProfile = () => {
   const [isEditingAbout, setIsEditingAbout] = useState(false);
   const [isEditingTagLine, setIsEditingTagLine] = useState(false);
   const [isEditingOrganization, setIsEditingOrganization] = useState(false);
-  const [isEditingEducation, setIsEditingEducation] = useState(false);
   const [isEditingExperience, setIsEditingExperience] = useState(false);
   const [
     isEditingCertificationsAndLicenses,
@@ -71,6 +79,7 @@ const UserProfile = () => {
         setAbout(data.about);
         setSkills(data.skills);
         setTagLine(data.tagLine);
+        setEducation(data.education);
         setRole(data.role);
         setEmail(data.email);
         setOrganization(data.organization);
@@ -136,6 +145,18 @@ const UserProfile = () => {
       toast.error("Failed to update skills.");
     }
   };
+  const updateEducation = async () => {
+    try {
+      await axiosInstance.put(`/users/update/${userId}`, {
+        education,
+      });
+      toast.success("Education updated successfully!");
+      setIsEditingEducation(false);
+    } catch (error) {
+      console.error("Error updating education:", error);
+      toast.error("Failed to update education.");
+    }
+  };
 
   // Handle Input Change for About Section
   const handleInputChange = (e) => {
@@ -149,6 +170,12 @@ const UserProfile = () => {
     } else if (name === "skills") {
       setNewSkill(value);
     }
+  };
+  const handleEducationInputChange = (field, value) => {
+    setNewEducation((prev) => ({
+      ...prev,
+      [field]: value, // Update the specific field within newEducation
+    }));
   };
   const handleAddSkills = () => {
     const enteredSkills = newSkill
@@ -176,8 +203,32 @@ const UserProfile = () => {
       prevSkills.filter((skill) => skill.skillName !== skillToRemove)
     );
   };
-  // Handle Image Upload (Profile or Banner)
-  // Handle Image Upload
+  const handleAddEducation = () => {
+    // Validate required fields
+    if (
+      !newEducation.institution ||
+      !newEducation.degree ||
+      !newEducation.fieldOfStudy ||
+      !newEducation.startDate
+    ) {
+      toast.error("Please fill all required fields!");
+      return;
+    }
+
+    setEducation((prev) => [...prev, { ...newEducation }]); // Add new entry
+    setNewEducation({
+      institution: "",
+      degree: "",
+      fieldOfStudy: "",
+      startDate: "",
+      endDate: "",
+      grade: "",
+    }); // Reset input fields
+    toast.success("Education added successfully!");
+  };
+  const removeEducation = (index) => {
+    setEducation((prev) => prev.filter((_, i) => i !== index));
+  };
   const handleProfileImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
@@ -229,7 +280,6 @@ const UserProfile = () => {
       toast.error("An error occurred while saving the profile image.");
     }
   };
-
   const handleBannerImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
@@ -281,7 +331,6 @@ const UserProfile = () => {
       toast.error("An error occurred while saving the banner image.");
     }
   };
-
   const getBorderColor = () => {
     switch (role) {
       case "student":
@@ -300,7 +349,7 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="flex w-full min-h-screen">
+    <div className="flex w-full ">
       {/* Left Section */}
       <div className="w-[60%] p-4 ">
         <div className="flex flex-col items-center">
@@ -484,11 +533,11 @@ const UserProfile = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-[30%] mx-auto p-4 h-full mt-4 bg-white border rounded-lg shadow overflow-y-auto ">
-        <div>
+      <div className="w-[30%] mx-auto p-4 mt-4 bg-white  ">
+        <div className="overflow-y-auto h-[calc(100vh-150px)] hide-scrollbar">
           {/* this is about section */}
 
-          <div className="PersonalInformation">
+          <div className="PersonalInformation p-2 mt-2 border rounded-lg shadow">
             <h1 className="text-lg font-semibold">Personal Information</h1>
             <div className="about relative flex items-center justify-start">
               <h2 className="  mr-2">About-</h2>
@@ -575,7 +624,7 @@ const UserProfile = () => {
               </button>
             </div>
           </div>
-          <div className="Skills">
+          <div className="Skills border p-2 mt-2 rounded-lg shadow">
             <div className="SkillsSection relative mt-6">
               <h1 className="text-lg font-semibold">Skills</h1>
               <div className="skills  flex items-center justify-start">
@@ -632,6 +681,133 @@ const UserProfile = () => {
                     </button>
                   )}
                 </span>
+              ))}
+            </div>
+          </div>
+          <div className="Education p-2 mt-2 border rounded-lg shadow">
+            <div className="EducationSection relative mt-6">
+              <h1 className="text-lg font-semibold">Education</h1>
+              <div className="education flex items-center justify-start">
+                {isEditingEducation ? (
+                  <div className="flex flex-col space-y-2">
+                    <input
+                      type="text"
+                      name="institution"
+                      value={newEducation.institution}
+                      onChange={(e) => {
+                        handleEducationInputChange(
+                          "institution",
+                          e.target.value
+                        );
+                      }}
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Institution"
+                    />
+                    <input
+                      type="text"
+                      name="degree"
+                      value={newEducation.degree}
+                      onChange={(e) =>
+                        handleEducationInputChange("degree", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Degree"
+                    />
+                    <input
+                      type="text"
+                      name="fieldOfStudy"
+                      value={newEducation.fieldOfStudy}
+                      onChange={(e) =>
+                        handleEducationInputChange(
+                          "fieldOfStudy",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Field of Study"
+                    />
+                    <input
+                      type="date"
+                      name="startDate"
+                      value={newEducation.startDate}
+                      onChange={(e) =>
+                        handleEducationInputChange("startDate", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                    />
+                    <input
+                      type="date"
+                      name="endDate"
+                      value={newEducation.endDate}
+                      onChange={(e) =>
+                        handleEducationInputChange("endDate", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="End Date (optional)"
+                    />
+                    <input
+                      type="text"
+                      name="grade"
+                      value={newEducation.grade}
+                      onChange={(e) =>
+                        handleEducationInputChange("grade", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Grade (optional)"
+                    />
+                    <button
+                      onClick={handleAddEducation}
+                      className="mt-2 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                    >
+                      Add
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-gray-700">
+                    {education.length === 0 ? "No education added" : ""}
+                  </p>
+                )}
+                <button
+                  onClick={
+                    isEditingEducation
+                      ? updateEducation
+                      : () => setIsEditingEducation(true)
+                  }
+                  className="absolute top-0 right-0 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                >
+                  {isEditingEducation ? (
+                    <span>Save</span>
+                  ) : (
+                    <FiEdit className="text-black" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="mt-4">
+              {education.map((edu, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-200 text-sm py-2 px-4 rounded mb-2 flex justify-between items-center"
+                >
+                  <div>
+                    <p className="font-semibold">{edu.institution}</p>
+                    <p>
+                      {edu.degree} in {edu.fieldOfStudy}
+                    </p>
+                    <p>
+                      {edu.startDate} - {edu.endDate || "Present"}
+                    </p>
+                    {edu.grade && <p>Grade: {edu.grade}</p>}
+                  </div>
+                  {isEditingEducation && (
+                    <button
+                      onClick={() => removeEducation(index)}
+                      className="ml-2 text-red-500"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
           </div>
