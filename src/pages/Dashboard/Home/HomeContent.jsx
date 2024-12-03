@@ -126,7 +126,8 @@ const HomeContent = () => {
       if (!user) return false;
 
       if (activeTab === "All") return true;
-      if (activeTab === "Organization Post") return user.role === "organization";
+      if (activeTab === "Organization Post")
+        return user.role === "organization";
       if (activeTab === "Alumni Post") return user.role === "alumni";
       if (activeTab === "Student Post") return user.role === "student";
       if (activeTab === "Facility Post") return user.role === "faculty";
@@ -153,7 +154,7 @@ const HomeContent = () => {
       </div>
 
       {/* Posts Section */}
-      <div className="w-full bg-[#ffffff] p-1 h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
+      <div className="w-11/12 bg-[#ffffff] mx-auto h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => {
             const user = users[post.createdBy];

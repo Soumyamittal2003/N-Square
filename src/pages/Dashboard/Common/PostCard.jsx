@@ -49,7 +49,7 @@ const PostCard = ({
       : post.description;
 
   return (
-    <div className="bg-white m-6 p-4 w-5/6 mx-auto rounded-lg shadow mb-4 border border-gray-200">
+    <div className="bg-white mb-6 p-4 w-11/12 mx-auto rounded-lg shadow  border border-gray-200">
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
@@ -73,7 +73,7 @@ const PostCard = ({
               )}
             </div>
             <p className="text-sm text-gray-500">
-              {user?.tagline || "Tagline not present"}
+              {user?.tagLine || "Tagline not present"}
             </p>
           </div>
         </div>

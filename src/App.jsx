@@ -13,10 +13,13 @@ import {
   ResetPassword,
   Error404,
 } from "./pages/index";
+import { Navigate } from "react-router-dom";
 
 import PrivateRoute from "./utils/PrivateRoute";
+import Cookies from "js-cookie";
 
 function App() {
+  const token = Cookies.get("token");
   return (
     <div className="font-sans max-h-screen">
       <ToastContainer
@@ -32,7 +35,11 @@ function App() {
       />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={token ? <Navigate to="/dashboard" /> : <HomePage />}
+        />
+        s
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/signup" element={<Signup />} />
@@ -43,7 +50,6 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/user-detail" element={<UserDetail />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-
         {/* Private Routes */}
         <Route
           path="/dashboard/*"
@@ -53,7 +59,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         {/* Fallback Route */}
         <Route path="*" element={<Error404 />} />
       </Routes>

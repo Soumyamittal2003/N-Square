@@ -15,13 +15,13 @@ const Sidebar = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const id = Cookies.get("id");
 
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const id = Cookies.get("id");
         const response = await axiosInstance.get(`/users/${id}`);
         setUserData(response?.data?.data);
       } catch (error) {
@@ -32,7 +32,7 @@ const Sidebar = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [id]);
 
   if (loading) {
     return (
@@ -42,30 +42,29 @@ const Sidebar = () => {
 
   return (
     <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
-      {/* Profile Section */}
-      <Link to="/dashboard/profile">
-        <ProfileSection userData={userData} />
-      </Link>
-
-      {/* Followers and Following Section */}
-      <div className="flex items-center justify-around p-1 border border-gray-300 rounded-2xl shadow-sm mx-4 py-1">
-        <Link to="/dashboard/followers" className="text-center">
-          <div>
-            <span className="block text-lg font-semibold text-gray-800">
-              {userData.followers.length}
-            </span>
-            <span className="text-sm text-gray-500">Followers</span>
-          </div>
+      <div className="relative mb-10 ">
+        <Link to={`/dashboard/profile/${id}`}>
+          <ProfileSection userData={userData} />
         </Link>
-        <div className="border-l border-gray-300 h-8"></div>
-        <Link to="/dashboard/following" className="text-center">
-          <div>
-            <span className="block text-lg font-semibold text-gray-800">
-              {userData.following.length}
-            </span>
-            <span className="text-sm text-gray-500">Following</span>
-          </div>
-        </Link>
+        <div className="absolute w-[214px] top-[180px] flex items-center shadow-lg justify-around p-1 border bg-white border-gray-300 rounded-2xl  mx-4 py-1">
+          <Link to="/dashboard/followers" className="text-center">
+            <div>
+              <span className="block text-lg font-semibold text-gray-800">
+                {userData.followers.length}
+              </span>
+              <span className="text-sm text-gray-500">Followers</span>
+            </div>
+          </Link>
+          <div className="border-l border-gray-300 h-8"></div>
+          <Link to="/dashboard/following" className="text-center">
+            <div>
+              <span className="block text-lg font-semibold text-gray-800">
+                {userData.following.length}
+              </span>
+              <span className="text-sm text-gray-500">Following</span>
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Navigation Links */}
@@ -98,7 +97,7 @@ const Sidebar = () => {
             <SidebarItem icon={helpCircle} label="Help" />
           </Link>
         </nav>
-        
+
         {/* Virtual Interview Button */}
         <Link
           to="https://n-sqare-virtual-interview.vercel.app/"

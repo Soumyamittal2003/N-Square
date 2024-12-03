@@ -57,7 +57,7 @@ const Dashboard = () => {
           <Routes>
             <Route path="/" element={<Navigate to="home" />} />
             <Route path="home" element={<Home />} />
-            <Route path="profile" element={<UserProfile />} />
+            <Route path="profile/:userId" element={<UserProfile />} />
             <Route path="job" element={<Job />} />
             <Route path="help" element={<Help />} />
             <Route path="event" element={<Event />} />
