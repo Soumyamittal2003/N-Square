@@ -1,96 +1,151 @@
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const EventCard = ({ event, onLikeEvent, onDislikeEvent }) => {
+const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
+  const [isRegistered, setIsRegistered] = useState(false); // State to track registration
+  const [loading, setLoading] = useState(false); // Loading state for registration
   const navigate = useNavigate();
+
+  // Load registration status from localStorage
+  useEffect(() => {
+    const registeredEvents =
+      JSON.parse(localStorage.getItem("registeredEvents")) || [];
+    if (registeredEvents.includes(event._id)) {
+      setIsRegistered(true);
+    }
+  }, [event._id]);
 
   const handleNavigate = () => {
     navigate(`/dashboard/event/about-event`, {
-      state: { ...event },
+      state: {
+        ...event,
+      },
     });
   };
 
   const handleLike = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent navigation
     onLikeEvent(event._id);
   };
 
   const handleDislike = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent navigation
     onDislikeEvent(event._id);
   };
 
+  const handleRegister = async (e) => {
+    e.stopPropagation(); // Prevent navigation
+    setLoading(true); // Start loading
+
+    try {
+      const response = await axiosInstance.post(
+        `/event/register-event/${event._id}`,
+        { userId: currentUserId } // Sending the user ID to register the user
+      );
+
+      if (response.data.message === true) {
+        toast.success("Registered successfully!");
+        setIsRegistered(true);
+        const registeredEvents =
+          JSON.parse(localStorage.getItem("registeredEvents")) || [];
+        if (!registeredEvents.includes(event._id)) {
+          registeredEvents.push(event._id);
+          localStorage.setItem(
+            "registeredEvents",
+            JSON.stringify(registeredEvents)
+          );
+        }
+      } else {
+        toast.error("Failed to Registered");
+      }
+    } catch (error) {
+      console.error("Error registering for event:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
   return (
-    <div className="max-w-[300px] border border-gray-200 rounded-2xl shadow-lg bg-gradient-to-r from-white via-gray-50 to-white p-5 cursor-pointer flex flex-col justify-between hover:shadow-xl transition-shadow duration-300">
+    <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
       {/* Event Image */}
-      <div className="relative rounded-xl overflow-hidden">
+      <div className="relative rounded-lg overflow-hidden">
         <img
-          src={event.eventphoto}
+          src={event.eventphoto || "https://via.placeholder.com/150"}
           alt={event.title}
-          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+          className="w-full h-[180px] object-cover"
         />
       </div>
 
       {/* Event Details */}
       <div className="mt-4">
-        <p className="text-sm text-gray-500">
-          📅 {new Date(event.date).toLocaleDateString()} • ⏰ {event.time}
+        <p className="text-xs text-gray-400">
+          {new Date(event.date).toLocaleDateString()} • {event.time}
         </p>
         <h4 className="text-lg font-bold text-gray-800 mt-2">{event.title}</h4>
         <p className="text-sm text-gray-600 mt-1">
-          <strong>🎤 Speaker:</strong> {event.speaker}
+          <strong>Speaker:</strong> {event.speaker}
         </p>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-3">
-          {event.tagsTopic.map((tag, index) => (
-            <span
-              key={index}
-              className="text-xs bg-gray-100 text-blue-600 py-1 px-3 rounded-full shadow-sm"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
+        <p className="text-sm text-gray-700 mt-3">
+          {event.description?.length > 120
+            ? `${event.description.slice(0, 120)}...`
+            : event.description || "No description available."}
+          <a
+            href="#"
+            className="text-blue-600 font-medium hover:underline ml-1"
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigate();
+            }}
+          >
+            Read More
+          </a>
+        </p>
+        <p className="text-xs text-gray-500 mt-3">
+          Topics:{" "}
+          <span className="text-gray-700 font-medium">
+            {event.tagsTopic.join(", ")}
+          </span>
+        </p>
       </div>
 
-      {/* Footer */}
-      <footer className="mt-6 flex justify-between items-center">
-        <div className="flex gap-3">
+      {/* Bottom Section */}
+      <div className="mt-6 flex justify-between items-center">
+        {/* Left Icons */}
+        <div className="flex gap-4">
+          {/* Like Button */}
           <button
-            className="flex items-center gap-1 text-gray-600 hover:text-green-600"
             onClick={handleLike}
+            className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition"
           >
-            <img
-              src={arrowBlockUp}
-              alt="Like"
-              className="w-5 h-5 transition-transform duration-300 hover:scale-110"
-            />
-            <span>{event.likes.length}</span>
+            <img src={arrowBlockUp} alt="like" className="w-6 h-6" />
+            <span className="font-semibold">{event.likes.length}</span>
           </button>
+
+          {/* Dislike Button */}
           <button
-            className="flex items-center gap-1 text-gray-600 hover:text-red-600"
             onClick={handleDislike}
+            className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition"
           >
-            <img
-              src={arrowBlockDown}
-              alt="Dislike"
-              className="w-5 h-5 transition-transform duration-300 hover:scale-110"
-            />
-            <span>{event.dislikes.length}</span>
+            <img src={arrowBlockDown} alt="dislike" className="w-6 h-6" />
+            <span className="font-semibold">{event.dislikes.length}</span>
           </button>
         </div>
+
+        {/* Register Button */}
         <button
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md hover:bg-blue-500 transition-transform duration-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleNavigate();
-          }}
+          onClick={handleRegister}
+          className={`px-5 py-2 text-white rounded-xl ${
+            isRegistered ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          } transition`}
+          disabled={isRegistered || loading}
         >
-          View Details
+          {loading ? "Registering..." : isRegistered ? "Registered" : "Register"}
         </button>
-      </footer>
+      </div>
     </div>
   );
 };
