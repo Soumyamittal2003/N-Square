@@ -89,6 +89,9 @@ const Sidebar = () => {
           <Link to="/dashboard/my-events" className="py-1">
             <SidebarItem label="My Events" />
           </Link>
+          <Link to="/dashboard/community" className="py-1">
+            <SidebarItem label="Community" />
+          </Link>
           <Link to="/dashboard/mentorship" className="py-1">
             <SidebarItem label="Mentorship" />
           </Link>
