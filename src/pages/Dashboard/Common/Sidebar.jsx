@@ -97,7 +97,6 @@ const Sidebar = () => {
             <SidebarItem icon={helpCircle} label="Help" />
           </Link>
         </nav>
-
         {/* Virtual Interview Button */}
         <Link
           to="https://n-sqare-virtual-interview.vercel.app/"
@@ -106,6 +105,13 @@ const Sidebar = () => {
           <button className="w-full py-1 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
             Virtual Interview
           </button>
+        </Link>
+        <Link
+        to= "/dashboard/donation">
+        <button className="mx-8 mt-5 w-[75%] py-1 px-3 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 text-white font-semibold text-center hover:from-teal-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg shadow-teal-400/50 hover:shadow-indigo-400/20">
+          Donation Funds
+        </button>
+        
         </Link>
 
         {/* Footer */}
