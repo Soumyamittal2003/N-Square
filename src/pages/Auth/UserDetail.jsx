@@ -428,6 +428,16 @@ const UserDetail = () => {
                   />
                   <span className="ml-2">Faculty</span>
                 </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="organization"
+                    checked={formData.role === "organization"}
+                    onChange={handleChange}
+                  />
+                  <span className="ml-2">organization</span>
+                </label>
               </div>
               <div className="w-auto flex items-center h-4 text-neutral-400 text-xs font-normal">
                 <LuInfo className="mx-1" />
