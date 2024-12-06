@@ -8,7 +8,7 @@ import Job from "./Job/Job";
 import Help from "./Help/Help";
 import Project from "./Project/Project";
 import Mentor from "./MentorShip/Mentor";
-import Community from "./MentorShip/Mentor"
+import Community from "./Community/Mentor"
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import MyEvent from "./MyEvent/MyEvent";
@@ -27,9 +27,9 @@ import Reunion from "./Reunion/Reunion";
 import AppliedJobs from "./AppliedJob/AppliedJob";
 import Donation from "./Project/Donation";
 import Chat from "./Chat/Chat";
-import CommunityContent from "./MentorShip/MentorContent";
+import CommunityContent from "./Community/MentorContent";
 import MentorContent from "./MentorShip/MentorContent";
-import CommunityFindGroup from "./MentorShip/FindGroup";
+import CommunityFindGroup from "./Community/FindGroup";
 import FindGroup from "./MentorShip/FindGroup";
 
 const Dashboard = () => {
