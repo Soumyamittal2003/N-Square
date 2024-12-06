@@ -4,6 +4,7 @@ import { IoChevronBackOutline } from "react-icons/io5";
 import Cookies from "js-cookie";
 import { BsStars } from "react-icons/bs";
 import { TbCoinRupee } from "react-icons/tb";
+import edit from "../../../assets/icons/edit.svg"; // Import edit icon
 import axiosInstance from "../../../utils/axiosinstance";
 import { toast } from "react-toastify";
 
@@ -24,7 +25,6 @@ const ProjectDetail = () => {
   const [isContributor, setIsContributor] = useState(false);
 
   useEffect(() => {
-    //api call to fetch projectdata
     const fetchProjectDetails = async () => {
       try {
         const response = await axiosInstance.get(`/project/${projectId}`);
@@ -66,21 +66,18 @@ const ProjectDetail = () => {
     try {
       if (projectData.createdBy === userId) {
         toast.error("You cannot contribute to your own project.");
-        return; // Stop further execution
+        return;
       }
       if (isContributor) {
-        // Remove contributor
         await axiosInstance.delete(`/project/contribute/${projectId}`, {
           data: { userId },
         });
       } else {
-        // Add contributor
         await axiosInstance.post(`/project/contribute/${projectId}`, {
           userId,
         });
       }
 
-      // Re-fetch project details to update state
       const response = await axiosInstance.get(`/project/${projectId}`);
       const isMentor = response.data.mentorContributors.includes(userId);
       const isStudent = response.data.studentContributors.includes(userId);
@@ -231,12 +228,11 @@ const ProjectDetail = () => {
               {isContributor
                 ? "Remove as Contributor"
                 : role === "student"
-                  ? "Contribute as Student"
-                  : role === "faculty" || role === "alumni"
-                    ? "Contribute as Mentor"
-                    : "Contribute"}
+                ? "Contribute as Student"
+                : role === "faculty" || role === "alumni"
+                ? "Contribute as Mentor"
+                : "Contribute"}
             </button>
-
             <div className="flex items-center">
               <Link to={`/dashboard/project/donate/${projectId}`}>
                 <button>
@@ -244,6 +240,13 @@ const ProjectDetail = () => {
                 </button>
               </Link>
             </div>
+            {projectData.createdBy === userId && (
+              <Link to={`/dashboard/project/edit/${projectId}`}>
+                <button>
+                  <img src={edit} className="h-10 w-10 bg-gray-500 rounded-full text-white p-1 hover:bg-blue-500 transition" />
+                </button>
+              </Link>
+            )}
           </div>
         </div>
 
