@@ -109,6 +109,20 @@ const JobCard = ({
         </p>
       </div>
 
+      {/* Apply Through Link */}
+      <div className="mt-4">
+        {applyLink && (
+          <a
+            href={applyLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 text-sm font-medium hover:underline"
+          >
+            Apply Through Link
+          </a>
+        )}
+      </div>
+
       {/* Bottom Section */}
       <div className="mt-6 flex justify-between items-center">
         {/* Left Icons */}

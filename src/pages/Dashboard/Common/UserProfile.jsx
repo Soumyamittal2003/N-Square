@@ -32,11 +32,46 @@ const UserProfile = () => {
     grade: "",
   });
   const [isEditingEducation, setIsEditingEducation] = useState(false);
+
   const [experience, setExperience] = useState([]);
+  const [newExperience, setNewExperience] = useState({
+    title: "",
+    company: "",
+    location: "",
+    description: "",
+  });
+  const [isEditingExperience, setIsEditingExperience] = useState(false);
+
   const [certificationsAndLicenses, setCertificationsAndLicenses] = useState(
     []
   );
+  const [newCertificationsAndLicenses, setNewCertificationsAndLicenses] =
+    useState({
+      name: "",
+      issuingOrganization: "",
+      issueDate: "",
+      expiryDate: "",
+      credentialId: "",
+      credentialUrl: "",
+    });
+  const [
+    isEditingCertificationsAndLicenses,
+    setIsEditingCertificationsAndLicenses,
+  ] = useState(false);
+
   const [publicationsAndResearch, setPublicationsAndResearch] = useState([]);
+  const [newPublicationsAndResearch, setNewPublicationsAndResearch] = useState({
+    title: "",
+    publicationDate: "",
+    publisher: "",
+    description: "",
+    link: "",
+  });
+  const [
+    isEditingPublicationsAndResearch,
+    setIsEditingPublicationsAndResearch,
+  ] = useState(false);
+
   const [skills, setSkills] = useState([]);
   const [isEditingSkills, setIsEditingSkills] = useState(false);
   const [newSkill, setNewSkill] = useState("");
@@ -44,15 +79,7 @@ const UserProfile = () => {
   const [isEditingAbout, setIsEditingAbout] = useState(false);
   const [isEditingTagLine, setIsEditingTagLine] = useState(false);
   const [isEditingOrganization, setIsEditingOrganization] = useState(false);
-  const [isEditingExperience, setIsEditingExperience] = useState(false);
-  const [
-    isEditingCertificationsAndLicenses,
-    setIsEditingCertificationsAndLicenses,
-  ] = useState(false);
-  const [
-    isEditingPublicationsAndResearch,
-    setIsEditingPublicationsAndResearch,
-  ] = useState(false);
+
   const [isEditingProfileImage, setIsEditingProfileImage] = useState(false);
   const [isEditingBannerImage, setIsEditingBannerImage] = useState(false);
 
@@ -80,9 +107,12 @@ const UserProfile = () => {
         setSkills(data.skills);
         setTagLine(data.tagLine);
         setEducation(data.education);
+        setExperience(data.experience);
+        setCertificationsAndLicenses(data.certificationsAndLicenses);
         setRole(data.role);
         setEmail(data.email);
         setOrganization(data.organization);
+        setPublicationsAndResearch(data.publicationsAndResearch);
         setFollowers(data.followers);
         setFollowing(data.following);
         setprofileimageUrl(userData.profileimageUrl || "");
@@ -108,6 +138,7 @@ const UserProfile = () => {
       setIsEditingAbout(false);
     } catch (error) {
       console.error("Error updating profile:", error);
+      toast.error("An error occurred while updating the profile.");
     }
   };
   const updateTagLine = async () => {
@@ -155,6 +186,30 @@ const UserProfile = () => {
     } catch (error) {
       console.error("Error updating education:", error);
       toast.error("Failed to update education.");
+    }
+  };
+  const updateExperience = async () => {
+    try {
+      await axiosInstance.put(`/users/update/${userId}`, {
+        experience,
+      });
+      toast.success("Experience updated successfully!");
+      setIsEditingExperience(false);
+    } catch (error) {
+      console.error("Error updating experience:", error);
+      toast.error("Failed to update experience.");
+    }
+  };
+  const updateCertifications = async () => {
+    try {
+      await axiosInstance.put(`/users/update/${userId}`, {
+        certificationsAndLicenses,
+      }); // Replace with your backend route
+      toast.success("Certifications updated successfully!");
+      setIsEditingCertificationsAndLicenses(false); // Exit edit mode
+    } catch (error) {
+      console.error("Error updating certifications:", error);
+      toast.error("Failed to update certifications.");
     }
   };
 
@@ -229,6 +284,116 @@ const UserProfile = () => {
   const removeEducation = (index) => {
     setEducation((prev) => prev.filter((_, i) => i !== index));
   };
+  const handleExperienceInputChange = (field, value) => {
+    setNewExperience((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+  const handleCertificationsInputChange = (field, value) => {
+    setNewCertificationsAndLicenses((prev) => ({
+      ...prev,
+      [field]: value, // Dynamically update fields
+    }));
+  };
+
+  const handleAddExperience = () => {
+    if (!newExperience.title || !newExperience.company) {
+      toast.error("Please fill all required fields!");
+      return;
+    }
+
+    setExperience((prev) => [...prev, { ...newExperience }]); // Add new entry
+    setNewExperience({
+      title: "",
+      company: "",
+      location: "",
+      description: "",
+    }); // Reset input fields
+    toast.success("Experience added successfully!");
+  };
+  const removeExperience = (index) => {
+    setExperience((prev) => prev.filter((_, i) => i !== index));
+    toast.info("Experience removed!");
+  };
+  const handlePublicationsInputChange = (field, value) => {
+    setNewPublicationsAndResearch((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+  const handleAddPublication = () => {
+    if (
+      !newPublicationsAndResearch.title ||
+      !newPublicationsAndResearch.publicationDate
+    ) {
+      toast.error("Please fill all required fields!");
+      return;
+    }
+
+    setPublicationsAndResearch((prev) => [
+      ...prev,
+      { ...newPublicationsAndResearch },
+    ]); // Add new entry
+
+    setNewPublicationsAndResearch({
+      title: "",
+      publicationDate: "",
+      publisher: "",
+      description: "",
+      link: "",
+    }); // Reset input fields
+
+    toast.success("Publication added successfully!");
+  };
+
+  const removePublication = (index) => {
+    setPublicationsAndResearch((prev) => prev.filter((_, i) => i !== index)); // Remove by index
+    toast.info("Publication removed.");
+  };
+  const updatePublications = async () => {
+    try {
+      await axiosInstance.put(`/users/update/${userId}`, {
+        publicationsAndResearch,
+      }); // Replace with your backend route
+      toast.success("Publications updated successfully!");
+      setIsEditingPublicationsAndResearch(false); // Exit edit mode
+    } catch (error) {
+      console.error("Error updating publications:", error);
+      toast.error("Failed to update publications.");
+    }
+  };
+
+  const handleAddCertification = () => {
+    if (
+      !newCertificationsAndLicenses.name ||
+      !newCertificationsAndLicenses.issuingOrganization
+    ) {
+      toast.error("Please fill all required fields!");
+      return;
+    }
+
+    setCertificationsAndLicenses((prev) => [
+      ...prev,
+      { ...newCertificationsAndLicenses },
+    ]); // Add new entry
+
+    setNewCertificationsAndLicenses({
+      name: "",
+      issuingOrganization: "",
+      issueDate: "",
+      expiryDate: "",
+      credentialId: "",
+      credentialUrl: "",
+    }); // Reset input fields
+
+    toast.success("Certification added successfully!");
+  };
+  const removeCertification = (index) => {
+    setCertificationsAndLicenses((prev) => prev.filter((_, i) => i !== index)); // Remove by index
+    toast.info("Certification removed.");
+  };
+
   const handleProfileImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
@@ -237,7 +402,7 @@ const UserProfile = () => {
     }
 
     const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
-    const maxSizeMB = 2; // 2MB
+    const maxSizeMB = 2;
 
     if (!validFileTypes.includes(file.type)) {
       toast.error("Invalid file type. Please upload a JPG or PNG image.");
@@ -251,7 +416,6 @@ const UserProfile = () => {
       return;
     }
 
-    // Create FormData for the API call
     const formData = new FormData();
     formData.append("displayPicture", file);
 
@@ -267,8 +431,8 @@ const UserProfile = () => {
       );
 
       if (response.status === 200 && response.data.success) {
-        const updatedImageUrl = URL.createObjectURL(file); // Temporary preview URL
-        setprofileimageUrl(updatedImageUrl); // Update the actual image URL state
+        const updatedImageUrl = URL.createObjectURL(file);
+        setprofileimageUrl(updatedImageUrl);
         toast.success("Profile image updated successfully!");
       } else {
         throw new Error(
@@ -288,7 +452,7 @@ const UserProfile = () => {
     }
 
     const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
-    const maxSizeMB = 2; // 2MB
+    const maxSizeMB = 2;
 
     if (!validFileTypes.includes(file.type)) {
       toast.error("Invalid file type. Please upload a JPG or PNG image.");
@@ -302,7 +466,6 @@ const UserProfile = () => {
       return;
     }
 
-    // Create FormData for the API call
     const formData = new FormData();
     formData.append("displayPicture", file);
 
@@ -318,8 +481,8 @@ const UserProfile = () => {
       );
 
       if (response.status === 200 && response.data.success) {
-        const updatedBannerUrl = URL.createObjectURL(file); // Temporary preview URL
-        setbackgroundimageUrl(updatedBannerUrl); // Update the actual banner image URL state
+        const updatedBannerUrl = URL.createObjectURL(file);
+        setbackgroundimageUrl(updatedBannerUrl);
         toast.success("Banner image updated successfully!");
       } else {
         throw new Error(
@@ -477,9 +640,9 @@ const UserProfile = () => {
             ))}
           </div>
           {/* Tab Content */}
-          <div className="bg-white ">
+          <div className="bg-white h-[calc(66vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-50 ">
             {activeTab === "Posts" && (
-              <div className="h-[calc(66vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-50">
+              <div>
                 {userPosts.length > 0 ? (
                   userPosts.map((post) => (
                     <PostCard
@@ -504,7 +667,7 @@ const UserProfile = () => {
               </div>
             )}
             {activeTab === "Projects" && (
-              <div className="h-[calc(66-200px)] overflow-y-auto hide-scrollbar">
+              <div>
                 {userProjects.length > 0 ? (
                   userProjects.map((project) => (
                     <ProjectCard key={project._id} project={project} />
@@ -517,13 +680,13 @@ const UserProfile = () => {
               </div>
             )}
             {activeTab === "Events" && (
-              <div className="h-[calc(66-200px)] overflow-y-auto hide-scrollbar">
+              <div>
                 {/* Placeholder for events */}
                 <p className="text-center text-gray-500">No events to show.</p>
               </div>
             )}
             {activeTab === "Job" && (
-              <div className="h-[calc(66vh-200px)] overflow-y-auto hide-scrollbar">
+              <div>
                 {/* Placeholder for jobs */}
                 <p className="text-center text-gray-500">No jobs to show.</p>
               </div>
@@ -533,11 +696,11 @@ const UserProfile = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-[30%] mx-auto p-4 mt-4 bg-white  ">
-        <div className="overflow-y-auto h-[calc(100vh-150px)] hide-scrollbar">
+      <div className="w-[40%] mx-auto p-4  bg-white  ">
+        <div className="overflow-y-auto h-[calc(100vh-100px)] scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-50 border p-4">
           {/* this is about section */}
 
-          <div className="PersonalInformation p-2 mt-2 border rounded-lg shadow">
+          <div className="PersonalInformation p-2 mt-3 border rounded-lg shadow">
             <h1 className="text-lg font-semibold">Personal Information</h1>
             <div className="about relative flex items-center justify-start">
               <h2 className="  mr-2">About-</h2>
@@ -624,7 +787,7 @@ const UserProfile = () => {
               </button>
             </div>
           </div>
-          <div className="Skills border p-2 mt-2 rounded-lg shadow">
+          <div className="Skills border p-2 mt-4 rounded-lg shadow">
             <div className="SkillsSection relative mt-6">
               <h1 className="text-lg font-semibold">Skills</h1>
               <div className="skills  flex items-center justify-start">
@@ -684,7 +847,7 @@ const UserProfile = () => {
               ))}
             </div>
           </div>
-          <div className="Education p-2 mt-2 border rounded-lg shadow">
+          <div className="Education p-2 mt-4 border rounded-lg shadow">
             <div className="EducationSection relative mt-6">
               <h1 className="text-lg font-semibold">Education</h1>
               <div className="education flex items-center justify-start">
@@ -802,6 +965,385 @@ const UserProfile = () => {
                   {isEditingEducation && (
                     <button
                       onClick={() => removeEducation(index)}
+                      className="ml-2 text-red-500"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="Experience p-2 mt-4 border rounded-lg shadow">
+            <div className="ExperienceSection relative mt-6">
+              <h1 className="text-lg font-semibold">Experience</h1>
+              <div className="experience flex items-center justify-start">
+                {isEditingExperience ? (
+                  <div className="flex flex-col space-y-2">
+                    <input
+                      type="text"
+                      name="title"
+                      value={newExperience.title}
+                      onChange={(e) =>
+                        handleExperienceInputChange("title", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Job Title"
+                    />
+                    <input
+                      type="text"
+                      name="company"
+                      value={newExperience.company}
+                      onChange={(e) =>
+                        handleExperienceInputChange("company", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Company"
+                    />
+                    <input
+                      type="text"
+                      name="location"
+                      value={newExperience.location}
+                      onChange={(e) =>
+                        handleExperienceInputChange("location", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Location (optional)"
+                    />
+                    <textarea
+                      name="description"
+                      value={newExperience.description}
+                      onChange={(e) =>
+                        handleExperienceInputChange(
+                          "description",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Description (optional)"
+                    ></textarea>
+                    <button
+                      onClick={handleAddExperience}
+                      className="mt-2 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                    >
+                      Add
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-gray-700">
+                    {experience.length === 0 ? "No experience added" : ""}
+                  </p>
+                )}
+                <button
+                  onClick={
+                    isEditingExperience
+                      ? updateExperience
+                      : () => setIsEditingExperience(true)
+                  }
+                  className="absolute top-0 right-0 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                >
+                  {isEditingExperience ? (
+                    <span>Save</span>
+                  ) : (
+                    <FiEdit className="text-black" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="mt-4">
+              {experience.map((exp, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-200 text-sm py-2 px-4 rounded mb-2 flex justify-between items-center"
+                >
+                  <div>
+                    <p className="font-semibold">{exp.title}</p>
+                    <p>{exp.company}</p>
+                    <p>{exp.location || "Location not specified"}</p>
+                    {exp.description && <p>{exp.description}</p>}
+                  </div>
+                  {isEditingExperience && (
+                    <button
+                      onClick={() => removeExperience(index)}
+                      className="ml-2 text-red-500"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="CertificationsAndLicenses p-2 mt-4 border rounded-lg shadow">
+            <div className="CertificationsSection relative mt-6">
+              <h1 className="text-lg font-semibold">
+                Certifications & Licenses
+              </h1>
+              <div className="certifications flex items-center justify-start">
+                {isEditingCertificationsAndLicenses ? (
+                  <div className="flex flex-col space-y-2">
+                    <input
+                      type="text"
+                      name="name"
+                      value={newCertificationsAndLicenses.name}
+                      onChange={(e) =>
+                        handleCertificationsInputChange("name", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Certification Name"
+                    />
+                    <input
+                      type="text"
+                      name="issuingOrganization"
+                      value={newCertificationsAndLicenses.issuingOrganization}
+                      onChange={(e) =>
+                        handleCertificationsInputChange(
+                          "issuingOrganization",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Issuing Organization"
+                    />
+                    <input
+                      type="date"
+                      name="issueDate"
+                      value={newCertificationsAndLicenses.issueDate}
+                      onChange={(e) =>
+                        handleCertificationsInputChange(
+                          "issueDate",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                    />
+                    <input
+                      type="date"
+                      name="expiryDate"
+                      value={newCertificationsAndLicenses.expiryDate}
+                      onChange={(e) =>
+                        handleCertificationsInputChange(
+                          "expiryDate",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Expiry Date (optional)"
+                    />
+                    <input
+                      type="text"
+                      name="credentialId"
+                      value={newCertificationsAndLicenses.credentialId}
+                      onChange={(e) =>
+                        handleCertificationsInputChange(
+                          "credentialId",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Credential ID (optional)"
+                    />
+                    <input
+                      type="text"
+                      name="credentialUrl"
+                      value={newCertificationsAndLicenses.credentialUrl}
+                      onChange={(e) =>
+                        handleCertificationsInputChange(
+                          "credentialUrl",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Credential URL (optional)"
+                    />
+                    <button
+                      onClick={handleAddCertification}
+                      className="mt-2 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                    >
+                      Add
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-gray-700">
+                    {certificationsAndLicenses.length === 0
+                      ? "No certifications added"
+                      : ""}
+                  </p>
+                )}
+                <button
+                  onClick={
+                    isEditingCertificationsAndLicenses
+                      ? updateCertifications
+                      : () => setIsEditingCertificationsAndLicenses(true)
+                  }
+                  className="absolute top-0 right-0 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                >
+                  {isEditingCertificationsAndLicenses ? (
+                    <span>Save</span>
+                  ) : (
+                    <FiEdit className="text-black" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="mt-4">
+              {certificationsAndLicenses.map((cert, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-200 text-sm py-2 px-4 rounded mb-2 flex justify-between items-center"
+                >
+                  <div>
+                    <p className="font-semibold">{cert.name}</p>
+                    <p>{cert.issuingOrganization}</p>
+                    <p>
+                      {cert.issueDate} - {cert.expiryDate || "No Expiry"}
+                    </p>
+                    {cert.credentialId && <p>ID: {cert.credentialId}</p>}
+                    {cert.credentialUrl && (
+                      <a
+                        href={cert.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline"
+                      >
+                        View Credential
+                      </a>
+                    )}
+                  </div>
+                  {isEditingCertificationsAndLicenses && (
+                    <button
+                      onClick={() => removeCertification(index)}
+                      className="ml-2 text-red-500"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="PublicationsAndResearch p-2 mt-4 border rounded-lg shadow">
+            <div className="PublicationsSection relative mt-6">
+              <h1 className="text-lg font-semibold">Publications & Research</h1>
+              <div className="publications flex items-center justify-start">
+                {isEditingPublicationsAndResearch ? (
+                  <div className="flex flex-col space-y-2">
+                    <input
+                      type="text"
+                      name="title"
+                      value={newPublicationsAndResearch.title}
+                      onChange={(e) =>
+                        handlePublicationsInputChange("title", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Title"
+                    />
+                    <input
+                      type="date"
+                      name="publicationDate"
+                      value={newPublicationsAndResearch.publicationDate}
+                      onChange={(e) =>
+                        handlePublicationsInputChange(
+                          "publicationDate",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                    />
+                    <input
+                      type="text"
+                      name="publisher"
+                      value={newPublicationsAndResearch.publisher}
+                      onChange={(e) =>
+                        handlePublicationsInputChange(
+                          "publisher",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Publisher (optional)"
+                    />
+                    <textarea
+                      name="description"
+                      value={newPublicationsAndResearch.description}
+                      onChange={(e) =>
+                        handlePublicationsInputChange(
+                          "description",
+                          e.target.value
+                        )
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Description (optional)"
+                    />
+                    <input
+                      type="text"
+                      name="link"
+                      value={newPublicationsAndResearch.link}
+                      onChange={(e) =>
+                        handlePublicationsInputChange("link", e.target.value)
+                      }
+                      className="w-full border py-1 px-2 rounded"
+                      placeholder="Link (optional)"
+                    />
+                    <button
+                      onClick={handleAddPublication}
+                      className="mt-2 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                    >
+                      Add
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-gray-700">
+                    {publicationsAndResearch.length === 0
+                      ? "No publications added"
+                      : ""}
+                  </p>
+                )}
+                <button
+                  onClick={
+                    isEditingPublicationsAndResearch
+                      ? updatePublications
+                      : () => setIsEditingPublicationsAndResearch(true)
+                  }
+                  className="absolute top-0 right-0 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+                >
+                  {isEditingPublicationsAndResearch ? (
+                    <span>Save</span>
+                  ) : (
+                    <FiEdit className="text-black" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="mt-4">
+              {publicationsAndResearch.map((publication, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-200 text-sm py-2 px-4 rounded mb-2 flex justify-between items-center"
+                >
+                  <div>
+                    <p className="font-semibold">{publication.title}</p>
+                    <p>Published on: {publication.publicationDate}</p>
+                    {publication.publisher && (
+                      <p>Publisher: {publication.publisher}</p>
+                    )}
+                    {publication.description && (
+                      <p>{publication.description}</p>
+                    )}
+                    {publication.link && (
+                      <a
+                        href={publication.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline"
+                      >
+                        View Publication
+                      </a>
+                    )}
+                  </div>
+                  {isEditingPublicationsAndResearch && (
+                    <button
+                      onClick={() => removePublication(index)}
                       className="ml-2 text-red-500"
                     >
                       &times;
