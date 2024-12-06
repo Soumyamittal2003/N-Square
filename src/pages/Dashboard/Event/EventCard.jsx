@@ -10,14 +10,12 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
   const [loading, setLoading] = useState(false); // Loading state for registration
   const navigate = useNavigate();
 
-  // Load registration status from localStorage
+  // Check if the current user is registered for the event
   useEffect(() => {
-    const registeredEvents =
-      JSON.parse(localStorage.getItem("registeredEvents")) || [];
-    if (registeredEvents.includes(event._id)) {
+    if (event?.registeredUsers?.includes(currentUserId)) {
       setIsRegistered(true);
     }
-  }, [event._id]);
+  }, [event?.registeredUsers, currentUserId]);
 
   const handleNavigate = () => {
     navigate(`/dashboard/event/about-event`, {
@@ -42,28 +40,28 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
     setLoading(true); // Start loading
 
     try {
+      // Debugging: Log data being sent
+      console.log("Registering user:", currentUserId, "for event:", event._id);
+
       const response = await axiosInstance.post(
         `/event/register-event/${event._id}`,
         { userId: currentUserId } // Sending the user ID to register the user
       );
 
+      // Debugging: Log response
+      console.log("Register response:", response);
+
       if (response.data.message === true) {
-        toast.success("Registered successfully!");
         setIsRegistered(true);
-        const registeredEvents =
-          JSON.parse(localStorage.getItem("registeredEvents")) || [];
-        if (!registeredEvents.includes(event._id)) {
-          registeredEvents.push(event._id);
-          localStorage.setItem(
-            "registeredEvents",
-            JSON.stringify(registeredEvents)
-          );
-        }
+        toast.success("Registered successfully!");
       } else {
-        toast.error("Failed to Registered");
+        toast.error(response.data?.error || "Failed to register!");
       }
     } catch (error) {
       console.error("Error registering for event:", error);
+      toast.error(
+        error.response?.data?.message || "An error occurred during registration."
+      );
     } finally {
       setLoading(false); // Stop loading
     }
@@ -90,9 +88,9 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
           <strong>Speaker:</strong> {event.speaker}
         </p>
         <p className="text-sm text-gray-700 mt-3">
-          {event.description?.length > 120
-            ? `${event.description.slice(0, 120)}...`
-            : event.description || "No description available."}
+          {event.eventDescription?.length > 120
+            ? `${event.eventDescription.slice(0, 120)}...`
+            : event.eventDescription || "No description available."}
           <a
             href="#"
             className="text-blue-600 font-medium hover:underline ml-1"
