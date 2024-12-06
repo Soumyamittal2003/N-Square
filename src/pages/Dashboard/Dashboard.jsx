@@ -31,7 +31,8 @@ import CommunityContent from "./Community/MentorContent";
 import MentorContent from "./MentorShip/MentorContent";
 import CommunityFindGroup from "./Community/FindGroup";
 import FindGroup from "./MentorShip/FindGroup";
-import VideoCall from "./VideoCall/videoCall";
+import VideoCall from "./VideoCall/VideoCall";
+
 
 const Dashboard = () => {
   useEffect(() => {
