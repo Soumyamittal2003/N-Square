@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CreateStory from "../InspiringStory/CreateStory";
 import CreateJob from "../Job/CreateJob";
 import CreateEvent from "../Event/CreateEvent";
-import CreateResources from "../AlmaResource/CreateResource";
+// import CreateResources from "../AlmaResource/CreateResource";
 import CreateVolunteer from "../Volunteer/CreateVolunteer";
 import CreatePost from "./CreatePost";
 import CreateReunion from "../Reunion/CreateReunion";
@@ -13,7 +13,7 @@ const PostPopup = ({ setPopupOpen }) => {
   const [showCreateStory, setShowCreateStory] = useState(false);
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [showCreateEvent, setShowCreateEvent] = useState(false);
-  const [showCreateResource, setShowCreateResource] = useState(false);
+  //const [showCreateResource, setShowCreateResource] = useState(false);
   const [showCreateVolunteer, setShowCreateVolunteer] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showCreateReunion, setShowCreateReunion] = useState(false);
@@ -24,7 +24,7 @@ const PostPopup = ({ setPopupOpen }) => {
   const handleStoryClick = () => setShowCreateStory(true);
   const handleJobClick = () => setShowCreateJob(true);
   const handleEventClick = () => setShowCreateEvent(true);
-  const handleResourceClick = () => setShowCreateResource(true);
+  
   const handleVolunteerClick = () => setShowCreateVolunteer(true);
   const handlePostClick = () => setShowCreatePost(true);
   const handleReunionClick = () => setShowCreateReunion(true);
@@ -33,6 +33,11 @@ const PostPopup = ({ setPopupOpen }) => {
     setPopupOpen(false);
     navigate("/dashboard/project/create-project");
   };
+  const handleResourceClick = () => {
+    setPopupOpen(false);
+    navigate("/dashboard/alumni-resources");
+  };
+  
 
   const postOptions = [
     { label: "Post", visibility: "Anyone can view", onClick: handlePostClick },
@@ -72,7 +77,7 @@ const PostPopup = ({ setPopupOpen }) => {
       {!showCreateStory &&
       !showCreateJob &&
       !showCreateEvent &&
-      !showCreateResource &&
+      // !showCreateResource &&
       !showCreateVolunteer &&
       !showCreatePost &&
       !showCreateReunion ? (
@@ -120,8 +125,8 @@ const PostPopup = ({ setPopupOpen }) => {
         <CreateJob onClose={() => setShowCreateJob(false)} />
       ) : showCreateEvent ? (
         <CreateEvent onClose={() => setShowCreateEvent(false)} />
-      ) : showCreateResource ? (
-        <CreateResources onClose={() => setShowCreateResource(false)} />
+      // ) : showCreateResource ? (
+      //   <CreateResources onClose={() => setShowCreateResource(false)} />
       ) : showCreateVolunteer ? (
         <CreateVolunteer onClose={() => setShowCreateVolunteer(false)} />
       ) : showCreatePost ? (

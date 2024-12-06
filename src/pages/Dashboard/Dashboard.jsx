@@ -8,6 +8,7 @@ import Job from "./Job/Job";
 import Help from "./Help/Help";
 import Project from "./Project/Project";
 import Mentor from "./MentorShip/Mentor";
+import Community from "./Community/Mentor"
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import MyEvent from "./MyEvent/MyEvent";
@@ -16,7 +17,6 @@ import Error404 from "../Error404";
 import Followers from "./Connection/Followers";
 import Following from "./Connection/Following";
 import CreateJob from "./Job/RightSideBar";
-//import PostPopup from "./Connection/Postpage";
 import CreateProject from "./Project/CreateProject";
 import Memories from "./Reunion/Memories";
 import AlmaResource from "./AlmaResource/AlmaResource";
@@ -26,9 +26,10 @@ import AboutProject from "./Project/AboutProject";
 import Reunion from "./Reunion/Reunion";
 import AppliedJobs from "./AppliedJob/AppliedJob";
 import Donation from "./Project/Donation";
-
 import Chat from "./Chat/Chat";
+import CommunityContent from "./Community/MentorContent";
 import MentorContent from "./MentorShip/MentorContent";
+import CommunityFindGroup from "./Community/FindGroup";
 import FindGroup from "./MentorShip/FindGroup";
 
 const Dashboard = () => {
@@ -70,6 +71,9 @@ const Dashboard = () => {
             <Route path="mentorship/groups" element={<Mentor />} />
             <Route path="mentorship/find-group" element={<FindGroup />} />
             <Route path="project/:projectId" element={<AboutProject />} />
+            <Route path="community" element={<CommunityContent />} />
+            <Route path="community/find-group" element={<CommunityFindGroup />} />
+            <Route path= "community/groups" element={<Community />} />
             {/* <Route path="project/:projectId/donation" element={<Donation />} /> */}
             <Route path="project/donate/:projectId" element={<Donation />} />
             <Route path="project/create-project" element={<CreateProject />} />

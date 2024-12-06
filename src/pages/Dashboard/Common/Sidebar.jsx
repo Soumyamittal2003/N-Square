@@ -16,7 +16,9 @@ const Sidebar = () => {
   const [loading, setLoading] = useState(true);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const id = Cookies.get("id");
+  const [activeLink, setActiveLink] = useState("");
 
+  
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
   useEffect(() => {
@@ -40,6 +42,10 @@ const Sidebar = () => {
     );
   }
 
+  const handleClick = (link) => {
+    setActiveLink(link);
+  };
+
   return (
     <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       <div className="relative mb-10 ">
@@ -47,7 +53,10 @@ const Sidebar = () => {
           <ProfileSection userData={userData} />
         </Link>
         <div className="absolute w-[214px] top-[180px] flex items-center shadow-lg justify-around p-1 border bg-white border-gray-300 rounded-2xl  mx-4 py-1">
-          <Link to="/dashboard/followers" className="text-center">
+          <Link to="/dashboard/followers" className={`text-center ${
+              activeLink === "followers" ? "text-black font-semibold" : "text-gray-600"
+            } hover:text-black`}
+            onClick={() => handleClick("followers")}>
             <div>
               <span className="block text-lg font-semibold text-gray-800">
                 {userData.followers.length}
@@ -56,7 +65,10 @@ const Sidebar = () => {
             </div>
           </Link>
           <div className="border-l border-gray-300 h-8"></div>
-          <Link to="/dashboard/following" className="text-center">
+          <Link to="/dashboard/following" className={`text-center ${
+              activeLink === "following" ? "text-black font-semibold" : "text-gray-600"
+            } hover:text-black`}
+            onClick={() => handleClick("following")}>
             <div>
               <span className="block text-lg font-semibold text-gray-800">
                 {userData.following.length}
@@ -89,6 +101,9 @@ const Sidebar = () => {
           <Link to="/dashboard/my-events" className="py-1">
             <SidebarItem label="My Events" />
           </Link>
+          <Link to="/dashboard/community" className="py-1">
+            <SidebarItem label="Community" />
+          </Link>
           <Link to="/dashboard/mentorship" className="py-1">
             <SidebarItem label="Mentorship" />
           </Link>
@@ -97,7 +112,6 @@ const Sidebar = () => {
             <SidebarItem icon={helpCircle} label="Help" />
           </Link>
         </nav>
-
         {/* Virtual Interview Button */}
         <Link
           to="https://n-sqare-virtual-interview.vercel.app/"
@@ -106,6 +120,13 @@ const Sidebar = () => {
           <button className="w-full py-1 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
             Virtual Interview
           </button>
+        </Link>
+        <Link
+        to= "/dashboard/donation">
+        <button className="mx-8 mt-5 w-[75%] py-1 px-3 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 text-white font-semibold text-center hover:from-teal-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg shadow-teal-400/50 hover:shadow-indigo-400/20">
+          Donation Funds
+        </button>
+        
         </Link>
 
         {/* Footer */}

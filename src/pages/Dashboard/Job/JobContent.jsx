@@ -9,7 +9,7 @@ const JobContent = () => {
   const [rolesFetched, setRolesFetched] = useState(false);
   const [userBookmarks, setUserBookmarks] = useState([]); // Track bookmarked jobs
   const [currentUserId, setCurrentUserId] = useState(null);
-  const tabs = ["All", "Alumni", "Faculty"];
+  const tabs = ["All","Organization", "Alumni", "Faculty"];
 
   // Fetch current user from localStorage
   useEffect(() => {
@@ -185,17 +185,14 @@ const JobContent = () => {
     if (activeTab === "All") return true;
     if (activeTab === "Alumni") return job.createdBy?.role === "alumni";
     if (activeTab === "Faculty") return job.createdBy?.role === "faculty";
+    if (activeTab === "Organization") return job.createdBy?.role === "organization";
     return false;
   });
-
+  
   if (loading) {
     return <p>Loading jobs...</p>;
   }
-
-  if (!filteredJobs.length) {
-    return <p>No jobs found for {activeTab}.</p>;
-  }
-
+  
   return (
     <div className="w-full">
       {/* Tabs Section */}
@@ -210,6 +207,11 @@ const JobContent = () => {
           </button>
         ))}
       </div>
+      
+      {/* Message for No Jobs Found */}
+      {!filteredJobs.length && !loading && (
+        <p>No jobs found for {activeTab}.</p>
+      )}
 
       {/* Job Cards Section */}
       <div className="p-4 overflow-y-auto hide-scrollbar" style={{ maxHeight: 'calc(100vh - 160px)' }}>
