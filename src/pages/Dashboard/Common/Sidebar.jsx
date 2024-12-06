@@ -18,7 +18,6 @@ const Sidebar = () => {
   const id = Cookies.get("id");
   const [activeLink, setActiveLink] = useState("");
 
-  
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
   useEffect(() => {
@@ -36,15 +35,15 @@ const Sidebar = () => {
     fetchUserData();
   }, [id]);
 
+  const handleClick = (link) => {
+    setActiveLink(link);
+  };
+
   if (loading) {
     return (
       <div className="text-center py-6 text-gray-500">Loading profile...</div>
     );
   }
-
-  const handleClick = (link) => {
-    setActiveLink(link);
-  };
 
   return (
     <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
@@ -53,10 +52,13 @@ const Sidebar = () => {
           <ProfileSection userData={userData} />
         </Link>
         <div className="absolute w-[214px] top-[180px] flex items-center shadow-lg justify-around p-1 border bg-white border-gray-300 rounded-2xl  mx-4 py-1">
-          <Link to="/dashboard/followers" className={`text-center ${
+          <Link
+            to="/dashboard/followers"
+            className={`text-center ${
               activeLink === "followers" ? "text-black font-semibold" : "text-gray-600"
             } hover:text-black`}
-            onClick={() => handleClick("followers")}>
+            onClick={() => handleClick("followers")}
+          >
             <div>
               <span className="block text-lg font-semibold text-gray-800">
                 {userData.followers.length}
@@ -65,10 +67,13 @@ const Sidebar = () => {
             </div>
           </Link>
           <div className="border-l border-gray-300 h-8"></div>
-          <Link to="/dashboard/following" className={`text-center ${
+          <Link
+            to="/dashboard/following"
+            className={`text-center ${
               activeLink === "following" ? "text-black font-semibold" : "text-gray-600"
             } hover:text-black`}
-            onClick={() => handleClick("following")}>
+            onClick={() => handleClick("following")}
+          >
             <div>
               <span className="block text-lg font-semibold text-gray-800">
                 {userData.following.length}
@@ -82,36 +87,80 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <div className="flex-grow flex flex-col overflow-auto hide-scrollbar">
         <nav className="px-4 py-4">
-          <Link to="/dashboard/connection" className="mt-3">
-            <SidebarItem icon={Connections} label="Connections" />
-          </Link>
+          <SidebarLink
+            to="/dashboard/connection"
+            icon={Connections}
+            label="Connections"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="connection"
+          />
           <div onClick={togglePopup} className="py-1">
-            <SidebarItem icon={newPostLogo} label="Post" />
+            <SidebarLink
+              icon={newPostLogo}
+              label="Post"
+              activeLink={activeLink}
+              handleClick={handleClick}
+              linkKey="post"
+            />
           </div>
-          <Link to="/dashboard/chat" className="py-1">
-            <SidebarItem icon={messageChat} label="Chat" />
-          </Link>
-          <Link to="/dashboard/video-call" className="py-1">
-            <SidebarItem icon={videoChatIcon} label="Video Call" />
-          </Link>
-          <Link to="/dashboard/applied-jobs" className="py-4">
-            <SidebarItem icon={briefcase} label="Job/Internship Applied" />
-          </Link>
+          <SidebarLink
+            to="/dashboard/chat"
+            icon={messageChat}
+            label="Chat"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="chat"
+          />
+          <SidebarLink
+            to="/dashboard/video-call"
+            icon={videoChatIcon}
+            label="Video Call"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="video-call"
+          />
+          <SidebarLink
+            to="/dashboard/applied-jobs"
+            icon={briefcase}
+            label="Job/Internship Applied"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="applied-jobs"
+          />
           <hr className="border-gray-300 py-1 mt-2" />
-          <Link to="/dashboard/my-events" className="py-1">
-            <SidebarItem label="My Events" />
-          </Link>
-          <Link to="/dashboard/community" className="py-1">
-            <SidebarItem label="Community" />
-          </Link>
-          <Link to="/dashboard/mentorship" className="py-1">
-            <SidebarItem label="Mentorship" />
-          </Link>
+          <SidebarLink
+            to="/dashboard/my-events"
+            label="My Events"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="my-events"
+          />
+          <SidebarLink
+            to="/dashboard/community"
+            label="Community"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="community"
+          />
+          <SidebarLink
+            to="/dashboard/mentorship"
+            label="Mentorship"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="mentorship"
+          />
           <hr className="border-gray-300 py-1 mt-2" />
-          <Link to="/dashboard/help">
-            <SidebarItem icon={helpCircle} label="Help" />
-          </Link>
+          <SidebarLink
+            to="/dashboard/help"
+            icon={helpCircle}
+            label="Help"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="help"
+          />
         </nav>
+
         {/* Virtual Interview Button */}
         <Link
           to="https://n-sqare-virtual-interview.vercel.app/"
@@ -121,12 +170,10 @@ const Sidebar = () => {
             Virtual Interview
           </button>
         </Link>
-        <Link
-        to= "/dashboard/donation">
-        <button className="mx-8 mt-5 w-[75%] py-1 px-3 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 text-white font-semibold text-center hover:from-teal-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg shadow-teal-400/50 hover:shadow-indigo-400/20">
-          Donation Funds
-        </button>
-        
+        <Link to="/dashboard/donation">
+          <button className="mx-8 mt-5 w-[75%] py-1 px-3 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 text-white font-semibold text-center hover:from-teal-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg shadow-teal-400/50 hover:shadow-indigo-400/20">
+            Donation Funds
+          </button>
         </Link>
 
         {/* Footer */}
@@ -139,15 +186,21 @@ const Sidebar = () => {
   );
 };
 
-// Sidebar Item Component
-const SidebarItem = ({ icon, label }) => (
-  <div className="flex items-center p-1 text-gray-800 hover:bg-gray-100 rounded-lg cursor-pointer">
+const SidebarLink = ({ to, icon, label, activeLink, handleClick, linkKey }) => (
+  <Link
+    to={to}
+    onClick={() => handleClick(linkKey)}
+    className={`flex items-center p-1 rounded-lg cursor-pointer ${
+      activeLink === linkKey
+        ? "bg-red-100 text-black font-semibold"
+        : "text-gray-800 hover:bg-gray-100"
+    }`}
+  >
     {icon && <img src={icon} alt={`${label} icon`} className="w-5 h-5 mr-3" />}
     <span className="flex-grow text-sm font-medium">{label}</span>
-  </div>
+  </Link>
 );
 
-// Footer Component
 const Footer = () => (
   <div className="text-center text-xs text-gray-500 mt-auto p-3">
     <p>Terms and Conditions</p>

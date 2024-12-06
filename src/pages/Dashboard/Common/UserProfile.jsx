@@ -138,6 +138,7 @@ const UserProfile = () => {
       setIsEditingAbout(false);
     } catch (error) {
       console.error("Error updating profile:", error);
+      toast.error("An error occurred while updating the profile.");
     }
   };
   const updateTagLine = async () => {
@@ -401,7 +402,7 @@ const UserProfile = () => {
     }
 
     const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
-    const maxSizeMB = 2; // 2MB
+    const maxSizeMB = 2;
 
     if (!validFileTypes.includes(file.type)) {
       toast.error("Invalid file type. Please upload a JPG or PNG image.");
@@ -415,7 +416,6 @@ const UserProfile = () => {
       return;
     }
 
-    // Create FormData for the API call
     const formData = new FormData();
     formData.append("displayPicture", file);
 
@@ -431,8 +431,8 @@ const UserProfile = () => {
       );
 
       if (response.status === 200 && response.data.success) {
-        const updatedImageUrl = URL.createObjectURL(file); // Temporary preview URL
-        setprofileimageUrl(updatedImageUrl); // Update the actual image URL state
+        const updatedImageUrl = URL.createObjectURL(file);
+        setprofileimageUrl(updatedImageUrl);
         toast.success("Profile image updated successfully!");
       } else {
         throw new Error(
@@ -452,7 +452,7 @@ const UserProfile = () => {
     }
 
     const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
-    const maxSizeMB = 2; // 2MB
+    const maxSizeMB = 2;
 
     if (!validFileTypes.includes(file.type)) {
       toast.error("Invalid file type. Please upload a JPG or PNG image.");
@@ -466,7 +466,6 @@ const UserProfile = () => {
       return;
     }
 
-    // Create FormData for the API call
     const formData = new FormData();
     formData.append("displayPicture", file);
 
@@ -482,8 +481,8 @@ const UserProfile = () => {
       );
 
       if (response.status === 200 && response.data.success) {
-        const updatedBannerUrl = URL.createObjectURL(file); // Temporary preview URL
-        setbackgroundimageUrl(updatedBannerUrl); // Update the actual banner image URL state
+        const updatedBannerUrl = URL.createObjectURL(file);
+        setbackgroundimageUrl(updatedBannerUrl);
         toast.success("Banner image updated successfully!");
       } else {
         throw new Error(
