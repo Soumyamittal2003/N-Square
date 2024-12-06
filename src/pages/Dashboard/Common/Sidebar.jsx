@@ -192,7 +192,7 @@ const SidebarLink = ({ to, icon, label, activeLink, handleClick, linkKey }) => (
     onClick={() => handleClick(linkKey)}
     className={`flex items-center p-1 rounded-lg cursor-pointer ${
       activeLink === linkKey
-        ? "bg-red-100 text-black font-semibold"
+        ? "bg-blue-100 text-black font-semibold"
         : "text-gray-800 hover:bg-gray-100"
     }`}
   >
