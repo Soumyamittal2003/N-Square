@@ -125,7 +125,7 @@ const Header = () => {
     },
     { name: "Language", path: "/language", icon: setting11 },
     { name: "About", path: "/about", icon: setting12 },
-   { name: "Feedback & Survey", path: "/feedback", icon: setting12 },
+    { name: "Feedback & Survey", path: "/feedback", icon: setting12 },
   ];
 
   const notifications = [
@@ -189,20 +189,20 @@ const Header = () => {
         {/* Icon Section */}
         <div className="flex items-center justify-end w-1/4 space-x-2">
           {/* Volunteer Icon */}
-          {(role === "student" ) && (
-          <button
-            aria-label="Volunteer"
-            title="Volunteer"
-            onClick={() => {
-              navigate("/dashboard/volunteer");
-            }}
-          >
-            <img
-              src={volunteer}
-              alt="volunteer"
-              className="h-10 w-10 hover:opacity-80"
-            />
-          </button>
+          {role === "student" && (
+            <button
+              aria-label="Volunteer"
+              title="Volunteer"
+              onClick={() => {
+                navigate("/dashboard/volunteer");
+              }}
+            >
+              <img
+                src={volunteer}
+                alt="volunteer"
+                className="h-10 w-10 hover:opacity-80"
+              />
+            </button>
           )}
           {/* Alumni Resources Icon */}
           <button
