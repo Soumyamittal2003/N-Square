@@ -39,7 +39,7 @@ const BulkContent = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 border border-gray-300 rounded-lg bg-gray-50">
+    <div className="w-full mx-auto p-6 border border-gray-300 rounded-lg bg-gray-50">
       <ToastContainer position="top-right" autoClose={4000} hideProgressBar />
 
       <div className="max-h-[500px] overflow-y-auto hide-scrollbar">
