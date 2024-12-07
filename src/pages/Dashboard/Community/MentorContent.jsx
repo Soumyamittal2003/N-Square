@@ -174,7 +174,7 @@ const MentorContent = () => {
             DIGITAL ENGAGEMENT PROGRAMS
           </h2>
           <p className="text-gray-700 text-lg mb-4">
-            Run impactful mentorship programs without hassle.
+            Run impactful Community without hassle.
           </p>
           <button
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"

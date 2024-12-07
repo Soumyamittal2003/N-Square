@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import EventCard from "./EventCard";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import RightSidebar from "./RightSidebar";
 
 const EventContent = () => {
@@ -10,8 +10,8 @@ const EventContent = () => {
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
-  const tabs = ["All", "Student", "Faculty", "Alma"];
-  const navigate = useNavigate();
+  const tabs = ["All", "Alumni", "Faculty", "Student"];
+  //const navigate = useNavigate();
 
   // Fetch current user from localStorage
   useEffect(() => {
@@ -99,9 +99,9 @@ const EventContent = () => {
   // Filtering logic
   const filteredEvents = events.filter((event) => {
     if (activeTab === "All") return true;
-    if (activeTab === "Student") return event.createdBy?.role === "student";
+    if (activeTab === "Alumni") return event.createdBy?.role === "alumni";
     if (activeTab === "Faculty") return event.createdBy?.role === "faculty";
-    if (activeTab === "Alma") return event.createdBy?.role === "alumni";
+    if (activeTab === "Student") return event.createdBy?.role === "student";
     return false;
   });
 
@@ -109,9 +109,7 @@ const EventContent = () => {
     return <p>Loading events...</p>;
   }
 
-  if (!filteredEvents.length) {
-    return <p>No events found for {activeTab}.</p>;
-  }
+  
 
   return (
     <div className="w-[100%] flex">
@@ -128,6 +126,10 @@ const EventContent = () => {
             </button>
           ))}
         </div>
+          
+        {!filteredEvents.length && !loading && (
+          <p>No events found for {activeTab}.</p>
+        )}
 
         <div className="p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto hide-scrollbar" style={{ maxHeight: 'calc(100vh - 160px)'}} >

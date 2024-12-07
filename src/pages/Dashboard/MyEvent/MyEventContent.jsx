@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import EventCard from "./MyEventCard";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const MyEventContent = () => {
   const [events, setEvents] = useState([]);
@@ -9,18 +9,18 @@ const MyEventContent = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
 
-  const navigate = useNavigate();
-
   // Fetch current user from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(
-        localStorage.getItem("chat-app-current-user")
-      );
-      if (storedUser && storedUser._id) {
-        setCurrentUserId(storedUser._id);
-      } else {
-        console.error("No current user found in localStorage");
+      try {
+        const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+        if (storedUser && storedUser._id) {
+          setCurrentUserId(storedUser._id);
+        } else {
+          console.error("No current user found in localStorage");
+        }
+      } catch (error) {
+        console.error("Error parsing user from localStorage:", error);
       }
     };
 
@@ -31,18 +31,36 @@ const MyEventContent = () => {
   useEffect(() => {
     const fetchUserAndEvents = async () => {
       try {
-        const userResponse = await axiosInstance.get(`/users/${currentUserId}`);
+        if (!currentUserId) {
+          console.error("currentUserId is null or undefined");
+          return;
+        }
+
+        console.log(`Fetching user data for user ID: ${currentUserId}`);
+
+        // Step 1: Get user by ID
+        const userResponse = await axiosInstance.get(
+          `/users/${currentUserId}`
+        );
+
         const registeredEventIds = userResponse.data.data.registeredEvent;
 
-        // Fetch event data for each registered event
+        if (!Array.isArray(registeredEventIds) || registeredEventIds.length === 0) {
+          console.error("No registered events found for this user");
+          setLoading(false);
+          return;
+        }
+
+        console.log("Registered Event IDs:", registeredEventIds);
+
+        // Step 2: Fetch event details for each registered event ID
         const eventPromises = registeredEventIds.map((eventId) =>
           axiosInstance.get(`/event/${eventId}`)
         );
+
         const eventResponses = await Promise.all(eventPromises);
 
-        const fetchedEvents = eventResponses.map(
-          (response) => response.data.event
-        );
+        const fetchedEvents = eventResponses.map((response) => response.data.event);
         setEvents(fetchedEvents);
       } catch (error) {
         console.error("Error fetching user or events:", error);
@@ -63,11 +81,7 @@ const MyEventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? {
-                ...event,
-                likes: response.data.likes,
-                dislikes: response.data.dislikes,
-              }
+            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
             : event
         )
       );
@@ -83,11 +97,7 @@ const MyEventContent = () => {
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId
-            ? {
-                ...event,
-                likes: response.data.likes,
-                dislikes: response.data.dislikes,
-              }
+            ? { ...event, likes: response.data.likes, dislikes: response.data.dislikes }
             : event
         )
       );
@@ -118,7 +128,7 @@ const MyEventContent = () => {
       {/* Event Cards */}
       <div className="w-full">
         <div className="p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => (
               <EventCard
                 key={event._id}
