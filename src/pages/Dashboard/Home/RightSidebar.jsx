@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const RightSidebar = () => {
   // State to store upcoming events
@@ -136,3 +136,5 @@ const RightSidebar = () => {
 };
 
 export default RightSidebar;
+
+
