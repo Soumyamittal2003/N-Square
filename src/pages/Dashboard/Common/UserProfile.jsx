@@ -87,7 +87,7 @@ const UserProfile = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const tabs = ["Posts", "Projects", "Events", "Job"];
+  const tabs = ["Posts", "Projects", "Contact"];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -679,28 +679,16 @@ const UserProfile = () => {
                 )}
               </div>
             )}
-            {activeTab === "Events" && (
-              <div>
-                {/* Placeholder for events */}
-                <p className="text-center text-gray-500">No events to show.</p>
-              </div>
-            )}
-            {activeTab === "Job" && (
-              <div>
-                {/* Placeholder for jobs */}
-                <p className="text-center text-gray-500">No jobs to show.</p>
-              </div>
-            )}
           </div>
         </div>
       </div>
 
       {/* Right Section */}
       <div className="w-[40%] mx-auto p-4  bg-white  ">
-        <div className="overflow-y-auto h-[calc(100vh-100px)] scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-50 border p-4">
+        <div className="overflow-y-auto h-[calc(100vh-100px)]  scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-50 border p-4 rounded-lg shadow-md drop-shadow-md">
           {/* this is about section */}
 
-          <div className="PersonalInformation p-2 mt-3 border rounded-lg shadow">
+          <div className="PersonalInformation p-2 mt-3  ">
             <h1 className="text-lg font-semibold">Personal Information</h1>
             <div className="about relative flex items-center justify-start">
               <h2 className="  mr-2">About-</h2>
@@ -787,7 +775,7 @@ const UserProfile = () => {
               </button>
             </div>
           </div>
-          <div className="Skills border p-2 mt-4 rounded-lg shadow">
+          <div className="Skills  p-2 mt-4 ">
             <div className="SkillsSection relative mt-6">
               <h1 className="text-lg font-semibold">Skills</h1>
               <div className="skills  flex items-center justify-start">
@@ -847,7 +835,7 @@ const UserProfile = () => {
               ))}
             </div>
           </div>
-          <div className="Education p-2 mt-4 border rounded-lg shadow">
+          <div className="Education p-2 mt-4  ">
             <div className="EducationSection relative mt-6">
               <h1 className="text-lg font-semibold">Education</h1>
               <div className="education flex items-center justify-start">
@@ -974,7 +962,7 @@ const UserProfile = () => {
               ))}
             </div>
           </div>
-          <div className="Experience p-2 mt-4 border rounded-lg shadow">
+          <div className="Experience p-2 mt-4  ">
             <div className="ExperienceSection relative mt-6">
               <h1 className="text-lg font-semibold">Experience</h1>
               <div className="experience flex items-center justify-start">
@@ -1074,7 +1062,7 @@ const UserProfile = () => {
               ))}
             </div>
           </div>
-          <div className="CertificationsAndLicenses p-2 mt-4 border rounded-lg shadow">
+          <div className="CertificationsAndLicenses p-2 mt-4  ">
             <div className="CertificationsSection relative mt-6">
               <h1 className="text-lg font-semibold">
                 Certifications & Licenses
@@ -1222,7 +1210,7 @@ const UserProfile = () => {
               ))}
             </div>
           </div>
-          <div className="PublicationsAndResearch p-2 mt-4 border rounded-lg shadow">
+          <div className="PublicationsAndResearch p-2 mt-4  ">
             <div className="PublicationsSection relative mt-6">
               <h1 className="text-lg font-semibold">Publications & Research</h1>
               <div className="publications flex items-center justify-start">
