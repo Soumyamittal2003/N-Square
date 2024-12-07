@@ -429,21 +429,11 @@ const UserDetail = () => {
                   />
                   <span className="ml-2">Faculty</span>
                 </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="organization"
-                    checked={formData.role === "organization"}
-                    onChange={handleChange}
-                  />
-                  <span className="ml-2">organization</span>
-                </label>
               </div>
               <input
                 name="batch"
                 type="text"
-                placeholder="Year of Graduation"
+                placeholder="Batch"
                 value={formData.batch}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg ${error.batch ? "border-red-500" : "border-gray-300"}`}
