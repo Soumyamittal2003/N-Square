@@ -188,20 +188,18 @@ const RightSidebar = () => {
       <div className="px-2 py-2 rounded-lg mt-4">
         <div className="flex justify-between items-center">
           <h3 className="font-bold text-lg">Suggested Profiles</h3>
-          <button className="text-black font-semibold text-sm hover:underline">
-            View All
-          </button>
+          
         </div>
 
         {loadingUsers ? (
           <p className="text-gray-500 text-center mt-4">Loading...</p>
         ) : (
-          <div className="grid gap-4 mt-2">
+          <div className="grid  gap-4 mt-2">
             {suggestedUsers.length > 0 ? (
               suggestedUsers.map((profile) => (
                 <div
                   key={profile.id}
-                  className="grid grid-cols-[50px_1fr] gap-2 border shadow-sm items-center rounded-lg px-4 py-2"
+                  className="grid bg-gradient-to-br from-gray-100 via-white to-gray-200 grid-cols-[50px_1fr] gap-2 border shadow-sm items-center rounded-lg px-4 py-2"
                 >
                   <img
                     src={profile.profileImageUrl || "https://via.placeholder.com/50"}
@@ -213,8 +211,8 @@ const RightSidebar = () => {
                       <h4 className="font-bold text-md">
                         {profile.firstName} {profile.lastName}
                       </h4>
-                      <button className="text-black font-bold px-2 border border-black items-center justify-center rounded-full text-base hover:bg-black hover:text-white transition">
-                        <span className="text-lg">+</span> Follow
+                      <button className="text-white font-semibold px-3 bg-blue-600 items-center justify-center rounded-lg text-base hover:bg-blue-800 hover:text-white transition">
+                        <span className="text-lg"></span> Follow
                       </button>
                     </div>
                     <p className="text-sm text-gray-500 line-clamp-2">
