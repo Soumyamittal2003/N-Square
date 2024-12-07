@@ -1,7 +1,7 @@
 import { useState } from "react";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
-import comment from "../../../assets/icons/comment.svg";
+
 import Cookies from "js-cookie";
 const PostCard = ({
   post,
@@ -157,11 +157,7 @@ const PostCard = ({
             </span>
           </button>
 
-          {/* Comments Button */}
-          <button className="flex items-center gap-1 font-semibold text-gray-600 hover:text-blue-500 transition">
-            <img src={comment} alt="Comment" className="w-5 h-5" />
-            <span>{post.comments?.length || 0}</span>
-          </button>
+        
         </div>
       </div>
     </div>

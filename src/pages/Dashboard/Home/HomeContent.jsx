@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PostCard from "../Common/PostCard";
 import axiosInstance from "../../../utils/axiosinstance";
+import { toast } from "react-toastify";
 
 const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -109,10 +110,19 @@ const HomeContent = () => {
     if (loading) return; // Prevent multiple clicks if already loading
     setLoading(true);
     try {
-      await axiosInstance.post(`/users/follow-user/${userId}`, {
+      const response = await axiosInstance.post(`/users/follow-user/${userId}`, {
         currentUserId,
       });
+  
+      if (response.data.success) {
+        toast.success("Successfully followed the user!");
+      } else {
+        toast.warn(response.data.message || "Already following this user.");
+      }
     } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Error following the user. Please try again."
+      );
       console.error("Error following user:", error);
     } finally {
       setLoading(false);
