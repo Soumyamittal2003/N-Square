@@ -4,6 +4,8 @@ import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
 import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
+import BulkEmailIcon from "../../../assets/icons/mail.svg"
+import Board from "../../../assets/icons/board.svg"
 import { Link } from "react-router-dom";
 import ProfileSection from "./ProfileSection";
 import { useState, useEffect } from "react";
@@ -55,7 +57,9 @@ const Sidebar = () => {
           <Link
             to="/dashboard/followers"
             className={`text-center ${
-              activeLink === "followers" ? "text-black font-semibold" : "text-gray-600"
+              activeLink === "followers"
+                ? "text-black font-semibold"
+                : "text-gray-600"
             } hover:text-black`}
             onClick={() => handleClick("followers")}
           >
@@ -70,7 +74,9 @@ const Sidebar = () => {
           <Link
             to="/dashboard/following"
             className={`text-center ${
-              activeLink === "following" ? "text-black font-semibold" : "text-gray-600"
+              activeLink === "following"
+                ? "text-black font-semibold"
+                : "text-gray-600"
             } hover:text-black`}
             onClick={() => handleClick("following")}
           >
@@ -89,7 +95,7 @@ const Sidebar = () => {
         <nav className="px-4 py-4">
         <SidebarLink
             to="/dashboard/dashboard"
-            icon={Connections}
+            icon={Board}
             label="Dashboard"
             activeLink={activeLink}
             handleClick={handleClick}
@@ -102,6 +108,7 @@ const Sidebar = () => {
             activeLink={activeLink}
             handleClick={handleClick}
             linkKey="bulk-email"
+            
           />
           <SidebarLink
             to="/dashboard/connection"
@@ -128,6 +135,15 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="chat"
           />
+          <SidebarLink
+            to="/dashboard/BulkEmail"
+            icon={BulkEmailIcon}
+            label="Bulk Email"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="bulk-email"
+          />
+
           <SidebarLink
             to="/dashboard/video-call"
             icon={videoChatIcon}
