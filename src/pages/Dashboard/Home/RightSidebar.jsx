@@ -5,22 +5,46 @@ const RightSidebar = () => {
   const [events, setEvents] = useState([]);
   // State to store suggested profiles
   const [profiles, setProfiles] = useState([]);
+  // State to store the user ID
+  const [userId, setUserId] = useState(null);
+
+  // Fetch the user ID from localStorage
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      console.error('No user ID found in localStorage');
+    }
+  }, []);
 
   // Fetch upcoming events
   useEffect(() => {
     fetch('/recommadation/upcoming-events')
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => setEvents(data))
       .catch((error) => console.error('Error fetching events:', error));
   }, []);
 
-  // Fetch suggested profiles
+  // Fetch suggested profiles if userId is available
   useEffect(() => {
-    fetch('/recommadation/suggested-users/673fd4bc5e09d074c95c7b30')
-      .then((response) => response.json())
-      .then((data) => setProfiles(data))
-      .catch((error) => console.error('Error fetching profiles:', error));
-  }, []);
+    if (userId) {
+      fetch(`/recommadation/suggested-users/${userId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => setProfiles(data))
+        .catch((error) => console.error('Error fetching profiles:', error));
+    }
+  }, [userId]);
 
   return (
     <div className="w-1/3 mt-4 bg-white px-4">

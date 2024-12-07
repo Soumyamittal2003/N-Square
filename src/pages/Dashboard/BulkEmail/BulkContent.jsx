@@ -1,3 +1,4 @@
+// src/BulkContent.tsx
 import React, { useState } from 'react';
 
 const BulkContent = () => {
@@ -15,120 +16,56 @@ const BulkContent = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.header}>📧 Bulk Email Sender</h2>
-
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Recipients (comma-separated emails)</label>
+    <div className="max-w-lg mx-auto p-6 border border-gray-300 rounded-lg bg-gray-50">
+      <div className="mb-5">
+        <label className="block mb-2 font-bold text-gray-700">Recipients (comma-separated emails)</label>
         <textarea
           placeholder="example1@gmail.com, example2@yahoo.com"
-          style={styles.textarea}
-          rows="2"
+          className="w-full p-3 text-base border border-gray-300 rounded-md resize-y"
+          rows={2}
           value={recipients}
           onChange={(e) => setRecipients(e.target.value)}
         />
       </div>
 
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Subject</label>
+      <div className="mb-5">
+        <label className="block mb-2 font-bold text-gray-700">Subject</label>
         <input
           type="text"
           placeholder="Enter your email subject"
-          style={styles.input}
+          className="w-full p-3 text-base border border-gray-300 rounded-md"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
         />
       </div>
 
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Message</label>
+      <div className="mb-5">
+        <label className="block mb-2 font-bold text-gray-700">Message</label>
         <textarea
           placeholder="Write your message here"
-          style={styles.textarea}
-          rows="6"
+          className="w-full p-3 text-base border border-gray-300 rounded-md resize-y"
+          rows={6}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
       </div>
 
-      <div style={styles.buttonContainer}>
-        <button style={styles.button} onClick={handleSend}>
+      <div className="text-center">
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-md text-lg"
+          onClick={handleSend}
+        >
           Send Bulk Email 📤
         </button>
       </div>
 
       {success && (
-        <div style={styles.successMessage}>
+        <div className="mt-6 p-3 bg-green-100 text-green-800 border border-green-300 rounded-md text-center">
           ✅ Bulk email sent successfully!
         </div>
       )}
     </div>
   );
-};
-
-// Inline CSS styles
-const styles = {
-  container: {
-    maxWidth: '600px',
-    margin: '50px auto',
-    padding: '20px',
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    fontFamily: 'Arial, sans-serif',
-    backgroundColor: '#f9f9f9',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '20px',
-    color: '#333',
-  },
-  formGroup: {
-    marginBottom: '20px',
-  },
-  label: {
-    display: 'block',
-    marginBottom: '8px',
-    fontWeight: 'bold',
-    color: '#555',
-  },
-  input: {
-    width: '100%',
-    padding: '10px',
-    fontSize: '16px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    boxSizing: 'border-box',
-  },
-  textarea: {
-    width: '100%',
-    padding: '10px',
-    fontSize: '16px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    boxSizing: 'border-box',
-    resize: 'vertical',
-  },
-  buttonContainer: {
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    padding: '12px 24px',
-    fontSize: '16px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  successMessage: {
-    marginTop: '20px',
-    padding: '10px',
-    backgroundColor: '#d4edda',
-    color: '#155724',
-    border: '1px solid #c3e6cb',
-    borderRadius: '4px',
-    textAlign: 'center',
-  },
 };
 
 export default BulkContent;
