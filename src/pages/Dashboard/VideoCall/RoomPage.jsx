@@ -16,9 +16,7 @@ const RoomPage = () => {
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        const response = await axios.get(
-          `https://n-square.onrender.com/api/network-next/v1/users/${userId}`
-        );
+        const response = await axios.get(`/users/${userId}`);
         const userData = response.data?.data;
         if (userData) {
           setUserName(`${userData.firstName} ${userData.lastName}`);
@@ -80,77 +78,37 @@ const RoomPage = () => {
   }, []);
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Welcome, {userName}</h2>
-      <div style={styles.inputContainer}>
-        <input
-          type="text"
-          placeholder="Enter Room ID"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
-          style={styles.input}
-        />
-        <button onClick={joinMeeting} style={styles.joinButton}>
-          Join Room
-        </button>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-500 via-blue-500 to-green-400 relative">
+      {/* Background Blur Effect */}
+      <div className="absolute inset-0 backdrop-blur-lg bg-gradient-to-br from-purple-500 via-blue-500 to-green-400 opacity-60"></div>
+
+      {/* Room Container */}
+      <div className="relative z-10 h-[80vh] w-full max-w-4xl bg-white shadow-2xl rounded-3xl flex flex-col p-8 items-center">
+        <h2 className="text-3xl font-bold mb-6 text-blue-700">Welcome, {userName}</h2>
+
+        <div className="flex flex-col md:flex-row w-full gap-4 items-center justify-center mb-6">
+          <input
+            type="text"
+            placeholder="Enter Room ID"
+            value={roomId}
+            onChange={(e) => setRoomId(e.target.value)}
+            className="w-full md:w-2/3 p-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onClick={joinMeeting}
+            className="bg-green-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
+          >
+            Join Room
+          </button>
+        </div>
+
+        <div
+          ref={meetingRef}
+          className="w-full h-[60vh] bg-gray-200 rounded-lg overflow-hidden"
+        ></div>
       </div>
-      <div ref={meetingRef} style={styles.videoContainer}></div>
     </div>
   );
-};
-
-// Styles for the application UI
-const styles = {
-  container: {
-    width: "100vw",
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1E1E2F",
-    padding: "20px",
-    boxSizing: "border-box",
-  },
-  heading: {
-    color: "#fff",
-    marginBottom: "20px",
-    fontSize: "24px",
-    textAlign: "center",
-  },
-  inputContainer: {
-    display: "flex",
-    gap: "10px",
-    marginBottom: "20px",
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-  input: {
-    padding: "10px",
-    fontSize: "16px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    width: "250px",
-  },
-  joinButton: {
-    padding: "10px 20px",
-    backgroundColor: "#28A745",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "16px",
-    transition: "background-color 0.3s",
-  },
-  videoContainer: {
-    width: "100%",
-    maxWidth: "900px",
-    height: "60vh",
-    backgroundColor: "#2B2B3D",
-    borderRadius: "10px",
-    overflow: "hidden",
-    marginTop: "20px",
-  },
 };
 
 export default RoomPage;
