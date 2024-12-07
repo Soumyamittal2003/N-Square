@@ -102,13 +102,12 @@ const Sidebar = () => {
             linkKey="dashboard"
           />
           <SidebarLink
-            to="/dashboard/bulk-email"
-            icon={Connections}
+            to="/dashboard/BulkEmail"
+            icon={BulkEmailIcon}
             label="Bulk Email"
             activeLink={activeLink}
             handleClick={handleClick}
             linkKey="bulk-email"
-            
           />
           <SidebarLink
             to="/dashboard/connection"
@@ -135,14 +134,7 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="chat"
           />
-          <SidebarLink
-            to="/dashboard/BulkEmail"
-            icon={BulkEmailIcon}
-            label="Bulk Email"
-            activeLink={activeLink}
-            handleClick={handleClick}
-            linkKey="bulk-email"
-          />
+          
 
           <SidebarLink
             to="/dashboard/video-call"
