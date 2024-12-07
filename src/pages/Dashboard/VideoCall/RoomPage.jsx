@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import axios from "axios";
@@ -56,7 +56,7 @@ const RoomPage = () => {
       scenario: {
         mode: ZegoUIKitPrebuilt.VideoConference,
       },
-      maxUsers: 2,
+      maxUsers: 10,
       turnOnCameraWhenJoining: true,
       turnOnMicrophoneWhenJoining: true,
       showUserJoinAndLeave: true,
