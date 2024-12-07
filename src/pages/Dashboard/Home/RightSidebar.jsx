@@ -135,12 +135,12 @@ const RightSidebar = () => {
         {loadingEvents ? (
           <p className="text-gray-500 text-center  mt-4">Loading...</p>
         ) : (
-          <div className="grid gap-2 bg-gradient-to-br from-blue-50 via-gray-50 to-blue-100 mt-2">
+          <div className="grid gap-2 mt-2">
             {upcomingEvents.length > 0 ? (
               upcomingEvents.map((event) => (
                 <div
                   key={event.id}
-                  className="grid grid-cols-[80px_1fr] gap-4 items-center p-1 border rounded-md shadow-sm"
+                  className="grid bg-gradient-to-br from-blue-50 via-gray-50 to-blue-100  grid-cols-[80px_1fr] gap-4 items-center p-1 border rounded-md shadow-sm"
                 >
                   <img
                     src={event.eventPhoto || "https://via.placeholder.com/80"}

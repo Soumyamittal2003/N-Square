@@ -19,6 +19,7 @@ const Sidebar = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const id = Cookies.get("id");
   const [activeLink, setActiveLink] = useState("");
+  const role = Cookies.get("role");
 
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
@@ -53,6 +54,7 @@ const Sidebar = () => {
         <Link to={`/dashboard/profile/${id}`}>
           <ProfileSection userData={userData} />
         </Link>
+        {role != "admin" && (
         <div className="absolute w-[214px] top-[180px] flex items-center shadow-lg justify-around p-1 border bg-white border-gray-300 rounded-2xl  mx-4 py-1">
           <Link
             to="/dashboard/followers"
@@ -88,11 +90,13 @@ const Sidebar = () => {
             </div>
           </Link>
         </div>
+        )}
       </div>
-
+          
       {/* Navigation Links */}
-      <div className="flex-grow flex flex-col overflow-auto hide-scrollbar">
+      <div className="flex-grow relative flex flex-col overflow-auto hide-scrollbar">
         <nav className="px-4 py-4">
+        {role === "admin" && (
         <SidebarLink
             to="/dashboard/dashboard"
             icon={Board}
@@ -101,6 +105,8 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="dashboard"
           />
+          )}
+          {role === "admin" && (
           <SidebarLink
             to="/dashboard/BulkEmail"
             icon={BulkEmailIcon}
@@ -109,7 +115,9 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="bulk-email"
           />
-          <SidebarLink
+          )}
+          {role != "admin" && (
+          <SidebarLink className="py-1"
             to="/dashboard/connection"
             icon={Connections}
             label="Connections"
@@ -117,6 +125,19 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="connection"
           />
+          )}
+
+          {role === "admin" && (
+          <SidebarLink
+            to="/dashboard/Conference-call"
+            icon={videoChatIcon}
+            label="Conference Call"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="video-call"
+          />
+          )}
+
           <div onClick={togglePopup} className="py-1">
             <SidebarLink
               icon={newPostLogo}
@@ -135,7 +156,7 @@ const Sidebar = () => {
             linkKey="chat"
           />
           
-
+          {role != "admin" && (
           <SidebarLink
             to="/dashboard/video-call"
             icon={videoChatIcon}
@@ -144,6 +165,9 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="video-call"
           />
+          )}
+          
+            {role != "admin" && (
           <SidebarLink
             to="/dashboard/applied-jobs"
             icon={briefcase}
@@ -152,7 +176,10 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="applied-jobs"
           />
+          )}
+
           <hr className="border-gray-300 py-1 mt-2" />
+          {role != "admin" && (
           <SidebarLink
             to="/dashboard/my-events"
             label="My Events"
@@ -160,6 +187,16 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="my-events"
           />
+          )}
+          {role === "admin" && (
+          <SidebarLink
+            to="/dashboard/rewards"
+            label="Rewards"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="rewards"
+          />
+          )}
           <SidebarLink
             to="/dashboard/community"
             label="Community"
@@ -186,6 +223,7 @@ const Sidebar = () => {
         </nav>
 
         {/* Virtual Interview Button */}
+        {role != "admin" && (
         <Link
           to="https://n-sqare-virtual-interview.vercel.app/"
           className="mx-3 mt-2"
@@ -194,16 +232,17 @@ const Sidebar = () => {
             Virtual Interview
           </button>
         </Link>
+        )}
         <Link to="/dashboard/donation">
           <button className="mx-8 mt-5 w-[75%] py-1 px-3 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 text-white font-semibold text-center hover:from-teal-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg shadow-teal-400/50 hover:shadow-indigo-400/20">
-            Donation Funds
+            Funds Donations
           </button>
         </Link>
 
         {/* Footer */}
         <Footer />
       </div>
-
+       
       {/* Post Popup */}
       {isPopupOpen && <PostPopup setPopupOpen={setIsPopupOpen} />}
     </div>
