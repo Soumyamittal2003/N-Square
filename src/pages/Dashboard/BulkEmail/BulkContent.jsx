@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const BulkContent = () => {
   const [recipients, setRecipients] = useState('');
@@ -17,7 +17,7 @@ const BulkContent = () => {
 
   return (
     <div className="max-w-lg mx-auto p-6 border border-gray-300 rounded-lg bg-gray-50">
-      <div className="max-h-[500px] overflow-y-auto"> {/* Added scrolling container */}
+      <div className="max-h-[500px] overflow-y-auto hide-scrollbar"> {/* Added scrolling container */}
         {/* Recipients Field */}
         <div className="mb-5">
           <label className="block mb-2 font-bold text-gray-700">Recipients (comma-separated emails)</label>
