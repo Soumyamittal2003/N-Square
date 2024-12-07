@@ -113,7 +113,28 @@ const ProjectDetail = () => {
   }
 
   const tabContent = {
-    About: <p>{projectData?.description || "No description available."}</p>,
+    About: (
+      <div>
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-bold">About</h3>
+          {projectData.createdBy === userId && (
+            <Link to={`/dashboard/project/edit/${projectId}`}>
+              <button>
+                <img
+                  src={edit}
+                  className="h-8 w-8 bg-gray-200 rounded-full p-1 hover:bg-blue-500 transition"
+                  alt="Edit"
+                />
+              </button>
+            </Link>
+          )}
+        </div>
+        <p className="mt-4">
+          {projectData?.description || "No description available."}
+        </p>
+      </div>
+    ),
+
     "Mentor/Contributor": (
       <div>
         <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
@@ -174,15 +195,42 @@ const ProjectDetail = () => {
     ),
     Eligibility: (
       <div>
-        <h3 className="text-lg font-bold">Eligibility Criteria</h3>
-        <p className="mt-2">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-bold">Eligibility Criteria</h3>
+          {projectData.createdBy === userId && (
+            <Link to={`/dashboard/project/edit/${projectId}`}>
+              <button>
+                <img
+                  src={edit}
+                  className="h-8 w-8 bg-gray-200 rounded-full p-1 hover:bg-blue-500 transition"
+                  alt="Edit"
+                />
+              </button>
+            </Link>
+          )}
+        </div>
+        <p className="mt-4">
           {projectData?.eligibility || "No eligibility criteria available."}
         </p>
       </div>
     ),
+
     "Project Source": (
       <div>
-        <h3 className="text-lg font-bold">Project Links</h3>
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-bold">Project Links</h3>
+          {projectData.createdBy === userId && (
+            <Link to={`/dashboard/project/edit/${projectId}`}>
+              <button>
+                <img
+                  src={edit}
+                  className="h-8 w-8 bg-gray-200 rounded-full p-1 hover:bg-blue-500 transition"
+                  alt="Edit"
+                />
+              </button>
+            </Link>
+          )}
+        </div>
         {projectData?.projectLinks ? (
           Object.entries(projectData.projectLinks).map(([key, value]) => (
             <div key={key} className="mt-2">
@@ -201,6 +249,7 @@ const ProjectDetail = () => {
         )}
       </div>
     ),
+
     Donation: (
       <div className="relative">
         <div className="absolute top-0 right-0">
@@ -308,10 +357,10 @@ const ProjectDetail = () => {
             {projectData.createdBy === userId && (
               <Link to={`/dashboard/project/edit/${projectId}`}>
                 <button>
-                  <img
+                  {/* <img
                     src={edit}
                     className="h-10 w-10 bg-gray-200 rounded-full text-white p-1 hover:bg-blue-500 transition"
-                  />
+                  /> */}
                 </button>
               </Link>
             )}
