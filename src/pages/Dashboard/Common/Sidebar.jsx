@@ -87,6 +87,22 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <div className="flex-grow flex flex-col overflow-auto hide-scrollbar">
         <nav className="px-4 py-4">
+        <SidebarLink
+            to="/dashboard/dashboard"
+            icon={Connections}
+            label="Dashboard"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="dashboard"
+          />
+          <SidebarLink
+            to="/dashboard/bulk-email"
+            icon={Connections}
+            label="Bulk Email"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="bulk-email"
+          />
           <SidebarLink
             to="/dashboard/connection"
             icon={Connections}
