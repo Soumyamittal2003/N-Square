@@ -201,6 +201,71 @@ const ProjectDetail = () => {
         )}
       </div>
     ),
+    Donation: (
+      <div className="relative">
+        <div className="absolute top-0 right-0">
+          <h3 className="text-lg font-bold">Total Donation: ₹1200</h3>
+        </div>
+
+        <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
+
+        <div className="mt-4">
+          <h4 className="text-md font-semibold">Mentors:</h4>
+          {contributorDetails.mentorContributors.length > 0 ? (
+            <ul>
+              {contributorDetails.mentorContributors.map((mentor) => (
+                <li
+                  key={mentor._id}
+                  className="flex justify-between items-center mt-2"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={mentor.profileimageUrl}
+                      alt={mentor.firstName}
+                      className="w-8 h-8 rounded-full mr-3"
+                    />
+                    <p>
+                      {mentor.firstName} {mentor.lastName}
+                    </p>
+                  </div>
+                  <span className="text-sm font-medium">₹300</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No mentors available.</p>
+          )}
+        </div>
+
+        <div className="mt-4">
+          <h4 className="text-md font-semibold">Students:</h4>
+          {contributorDetails.studentContributors.length > 0 ? (
+            <ul>
+              {contributorDetails.studentContributors.map((student) => (
+                <li
+                  key={student._id}
+                  className="flex justify-between items-center mt-2"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={student.profileimageUrl}
+                      alt={student.firstName}
+                      className="w-8 h-8 rounded-full mr-3"
+                    />
+                    <p>
+                      {student.firstName} {student.lastName}
+                    </p>
+                  </div>
+                  <span className="text-sm font-medium">₹250</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No students available.</p>
+          )}
+        </div>
+      </div>
+    ),
   };
 
   return (
@@ -228,10 +293,10 @@ const ProjectDetail = () => {
               {isContributor
                 ? "Remove as Contributor"
                 : role === "student"
-                ? "Contribute as Student"
-                : role === "faculty" || role === "alumni"
-                ? "Contribute as Mentor"
-                : "Contribute"}
+                  ? "Contribute as Student"
+                  : role === "faculty" || role === "alumni"
+                    ? "Contribute as Mentor"
+                    : "Contribute"}
             </button>
             <div className="flex items-center">
               <Link to={`/dashboard/project/donate/${projectId}`}>
@@ -243,7 +308,10 @@ const ProjectDetail = () => {
             {projectData.createdBy === userId && (
               <Link to={`/dashboard/project/edit/${projectId}`}>
                 <button>
-                  <img src={edit} className="h-10 w-10 bg-gray-500 rounded-full text-white p-1 hover:bg-blue-500 transition" />
+                  <img
+                    src={edit}
+                    className="h-10 w-10 bg-gray-200 rounded-full text-white p-1 hover:bg-blue-500 transition"
+                  />
                 </button>
               </Link>
             )}
