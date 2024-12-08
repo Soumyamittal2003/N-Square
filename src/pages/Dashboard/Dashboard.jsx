@@ -34,6 +34,7 @@ import MentorContent from "./MentorShip/MentorContent";
 import CommunityFindGroup from "./Community/FindGroup";
 import FindGroup from "./MentorShip/FindGroup";
 import RoomPage from "./VideoCall/RoomPage";
+import ConferenceRoom from "./VideoCall/RoomPage"
 
 
 const Dashboard = () => {
@@ -72,6 +73,7 @@ const Dashboard = () => {
             <Route path="my-events" element={<MyEvent />} />
             <Route path="chat" element={<Chat />} />
             <Route path="video-call" element={<RoomPage/>} />
+            <Route path="Conference-call" element={<ConferenceRoom />} />
             <Route path="applied-jobs" element={<AppliedJobs />} />
             <Route path="project" element={<Project />} />
             <Route path="mentorship" element={<MentorContent />} />
