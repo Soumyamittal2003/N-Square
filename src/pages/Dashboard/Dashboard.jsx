@@ -4,13 +4,13 @@ import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home/Home";
 import Event from "./Event/Event";
-import BulkEmail from"./BulkEmail/Bulk";
+import BulkEmail from "./BulkEmail/Bulk";
 import Board from "./Board/Board";
 import Job from "./Job/Job";
 import Help from "./Help/Help";
 import Project from "./Project/Project";
 import Mentor from "./MentorShip/Mentor";
-import Community from "./Community/Mentor"
+import Community from "./Community/Mentor";
 import InspiringStory from "./InspiringStory/InspiringStory";
 import Connection from "./Connection/Connection";
 import MyEvent from "./MyEvent/MyEvent";
@@ -34,8 +34,7 @@ import MentorContent from "./MentorShip/MentorContent";
 import CommunityFindGroup from "./Community/FindGroup";
 import FindGroup from "./MentorShip/FindGroup";
 import RoomPage from "./VideoCall/RoomPage";
-import ConferenceRoom from "./VideoCall/RoomPage"
-
+import ConferenceRoom from "./VideoCall/RoomPage";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -65,14 +64,14 @@ const Dashboard = () => {
             <Route path="home" element={<Home />} />
             <Route path="profile/:userId" element={<UserProfile />} />
             <Route path="job" element={<Job />} />
-            <Route path="BulkEmail" element={<BulkEmail/>}/>
+            <Route path="BulkEmail" element={<BulkEmail />} />
             <Route path="help" element={<Help />} />
             <Route path="board" element={<Board />} />
             <Route path="event" element={<Event />} />
             <Route path="event/about-event" element={<AboutEvent />} />
             <Route path="my-events" element={<MyEvent />} />
             <Route path="chat" element={<Chat />} />
-            <Route path="video-call" element={<RoomPage/>} />
+            <Route path="video-call" element={<RoomPage />} />
             <Route path="Conference-call" element={<ConferenceRoom />} />
             <Route path="applied-jobs" element={<AppliedJobs />} />
             <Route path="project" element={<Project />} />
@@ -81,8 +80,11 @@ const Dashboard = () => {
             <Route path="mentorship/find-group" element={<FindGroup />} />
             <Route path="project/:projectId" element={<AboutProject />} />
             <Route path="community" element={<CommunityContent />} />
-            <Route path="community/find-group" element={<CommunityFindGroup />} />
-            <Route path= "community/groups" element={<Community />} />
+            <Route
+              path="community/find-group"
+              element={<CommunityFindGroup />}
+            />
+            <Route path="community/groups" element={<Community />} />
             {/* <Route path="project/:projectId/donation" element={<Donation />} /> */}
             <Route path="project/donate/:projectId" element={<Donation />} />
             <Route path="project/create-project" element={<CreateProject />} />
