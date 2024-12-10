@@ -5,7 +5,6 @@ import { toast } from "react-toastify"; // Import toast
 import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
-import SocialLoginButtons from "./SocialLoginBottons";
 import CheckmarkAnimation from "../../assets/animations/checkmark.gif";
 import axiosInstance from "../../utils/axiosinstance";
 import Cookies from "js-cookie";
@@ -191,13 +190,11 @@ const LoginPage = () => {
           </button>
         </form>
 
-        <div className="flex w-full items-center my-4">
+        {/* <div className="flex w-full items-center my-4">
           <div className="w-full border-t border-gray-300"></div>
           <span className="px-4 text-sm text-gray-500">Or</span>
           <div className="w-full border-t border-gray-300"></div>
-        </div>
-
-        <SocialLoginButtons />
+        </div> */}
       </div>
       <div className="w-1/2 mx-auto px-6">
         <div className="border-t border-gray-300 my-2"></div>
