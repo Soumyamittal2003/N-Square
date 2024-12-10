@@ -33,6 +33,7 @@ const ProjectDetail = () => {
         const response = await axiosInstance.get(
           "https://n-square.onrender.com/api/network-next/v1/project/all-users-donation/6740b19434b812294a8701aa"
         );
+        console.log("Donation API Response:", response.data);
         setDonationDetails(response.data.data || []);
       } catch (error) {
         console.error("Error fetching donations:", error);
@@ -41,9 +42,12 @@ const ProjectDetail = () => {
         setDonationLoading(false);
       }
     };
+    console.log("Donation Details State:", donationDetails);
 
+  
     fetchDonations();
   }, []);
+  
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -277,15 +281,12 @@ const ProjectDetail = () => {
         <div className="absolute top-0 right-0">
           <h3 className="text-lg font-bold">
             Total Donation: ₹
-            {donationDetails.reduce(
-              (total, donation) => total + donation.amount,
-              0
-            )}
+            {donationDetails.reduce((total, donation) => total + (donation.amount || 0), 0)}
           </h3>
         </div>
-
+    
         <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
-
+    
         {/* Loading State */}
         {donationLoading ? (
           <p className="mt-4">Loading donations...</p>
@@ -297,23 +298,18 @@ const ProjectDetail = () => {
             {donationDetails.length > 0 ? (
               <ul>
                 {donationDetails.map((donation) => (
-                  <li
-                    key={donation._id}
-                    className="flex justify-between items-center mt-2"
-                  >
+                  <li key={donation._id} className="flex justify-between items-center mt-2">
                     <div className="flex items-center">
                       <img
-                        src={donation.user.profileimageUrl}
-                        alt={donation.user.firstName}
+                        src={donation.user?.profileimageUrl || "https://via.placeholder.com/40"}
+                        alt={donation.user?.firstName || "User"}
                         className="w-8 h-8 rounded-full mr-3"
                       />
                       <p>
-                        {donation.user.firstName} {donation.user.lastName}
+                        {donation.user?.firstName} {donation.user?.lastName}
                       </p>
                     </div>
-                    <span className="text-sm font-medium">
-                      ₹{donation.amount}
-                    </span>
+                    <span className="text-sm font-medium">₹{donation.amount || 0}</span>
                   </li>
                 ))}
               </ul>
@@ -324,6 +320,7 @@ const ProjectDetail = () => {
         )}
       </div>
     ),
+    
   };
 
   return (
