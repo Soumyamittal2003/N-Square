@@ -9,23 +9,38 @@ const ProjectList = ({ activeTab = "default" }) => {
   const [rolesFetched, setRolesFetched] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [skills, setSkills] = useState([]);
+  const [skillsLoading, setSkillsLoading] = useState(true);
+  
   const id = Cookies.get("id");
 
   // Fetch current user profile to get skills
   useEffect(() => {
     const fetchCurrentUserSkills = async () => {
+      if (!id) {
+        console.error("User ID not found in cookies");
+        setSkillsLoading(false);
+        return;
+      }
+
       try {
+        console.log(`Fetching skills for user ID: ${id}`);
         const response = await axiosInstance.get(`/api/auth/${id}`);
+        console.log("User skills response:", response.data);
+
         if (response.data && response.data.data && response.data.data.skills) {
           setSkills(response.data.data.skills);
+        } else {
+          console.warn("No skills found in user data");
         }
       } catch (error) {
         console.error("Error fetching current user's skills:", error);
+      } finally {
+        setSkillsLoading(false);
       }
     };
 
     fetchCurrentUserSkills();
-  }, []);
+  }, [id]);
 
   // Define filter buttons dynamically based on current user's skills
   const filters = useMemo(() => {
@@ -38,9 +53,14 @@ const ProjectList = ({ activeTab = "default" }) => {
 
     const fetchProjects = async () => {
       try {
+        console.log("Fetching projects...");
         const response = await axiosInstance.get("/project/all");
+        console.log("Projects response:", response.data);
+
         if (isMounted && response.data.success) {
           setProjects(response.data.data || []);
+        } else {
+          console.warn("No projects found");
         }
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -56,63 +76,21 @@ const ProjectList = ({ activeTab = "default" }) => {
     };
   }, []);
 
-  // Fetch roles dynamically for each project's creator
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchRolesForProjects = async () => {
-      const updatedProjects = await Promise.all(
-        projects.map(async (project) => {
-          if (project.createdBy && !project.createdBy.role) {
-            try {
-              const response = await axiosInstance.get(
-                `/users/${project.createdBy._id}`
-              );
-              return {
-                ...project,
-                createdBy: {
-                  ...project.createdBy,
-                  role: response.data.data.role,
-                },
-              };
-            } catch (error) {
-              console.error(
-                `Failed to fetch role for project ${project._id}:`,
-                error
-              );
-              return project;
-            }
-          }
-          return project;
-        })
-      );
-
-      if (isMounted) {
-        setProjects(updatedProjects);
-        setRolesFetched(true);
-      }
-    };
-
-    if (projects.length && !rolesFetched) {
-      fetchRolesForProjects();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [projects, rolesFetched]);
-
   // Filter projects based on the selected filter
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
-      if (selectedFilter === "All") return true; // Show all projects
-      return project.technologies?.includes(selectedFilter); // Filter by technology
+      if (selectedFilter === "All") return true;
+      return project.technologies?.includes(selectedFilter);
     });
   }, [projects, selectedFilter]);
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
   };
+
+  if (skillsLoading) {
+    return <div aria-live="polite">Loading user skills...</div>;
+  }
 
   if (loading) {
     return <div aria-live="polite">Loading projects...</div>;
