@@ -1,5 +1,3 @@
-// src/components/DonationContent.jsx
-
 import React from "react";
 import FundsCard from "./FundsCard";
 
@@ -7,7 +5,6 @@ const fundData = [
   {
     _id: "1",
     title: "Scholarship Fund",
-    organizer: "Alumni Association",
     description: "Supporting students in need through scholarships.",
     goalAmount: 5000,
     fundImage: "https://via.placeholder.com/150",
@@ -15,7 +12,6 @@ const fundData = [
   {
     _id: "2",
     title: "Library Upgrade",
-    organizer: "University Library",
     description: "Help us upgrade our library facilities.",
     goalAmount: 10000,
     fundImage: "https://via.placeholder.com/150",
@@ -23,7 +19,6 @@ const fundData = [
   {
     _id: "3",
     title: "Sports Equipment Fund",
-    organizer: "Sports Department",
     description: "Providing new equipment for student athletes.",
     goalAmount: 3000,
     fundImage: "https://via.placeholder.com/150",
