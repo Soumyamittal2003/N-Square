@@ -1,10 +1,10 @@
 import { useState } from "react";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
-import editIcon from "../../../assets/icons/edit.svg"; // Import the edit icon
 import deleteIcon from "../../../assets/icons/delete.svg"; // Import the delete icon
-
+import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 const PostCard = ({
   post,
@@ -20,7 +20,6 @@ const PostCard = ({
   const [currentImage, setCurrentImage] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   const openImageModal = (image) => {
     setCurrentImage(image);
@@ -57,20 +56,12 @@ const PostCard = ({
   const handleDeletePost = async () => {
     setIsDeleting(true);
     try {
-      const response = await fetch(
-        `/post/${post._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        alert("Post deleted successfully.");
+      const response = await axiosInstance.delete(`/post/${post._id}`);
+      console.log(response);
+      if (response.status === 200) {
+        toast.success("Post deleted successfully.");
       } else {
-        console.error("Failed to delete the post");
+        toast.error("Failed to delete the post");
       }
     } catch (error) {
       console.error("Error deleting the post:", error);
@@ -79,49 +70,16 @@ const PostCard = ({
     }
   };
 
-  // Handle edit post
-  const handleEditPost = async () => {
-    setIsEditing(true);
-    try {
-      const updatedDescription = prompt(
-        "Edit your post description:",
-        post.description
-      );
-
-      if (updatedDescription !== null) {
-        const response = await fetch(
-          `/post/${post._id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ description: updatedDescription }),
-          }
-        );
-
-        if (response.ok) {
-          alert("Post updated successfully.");
-        } else {
-          console.error("Failed to edit the post");
-        }
-      }
-    } catch (error) {
-      console.error("Error editing the post:", error);
-    } finally {
-      setIsEditing(false);
-    }
-  };
-
   return (
     <div className="bg-white mb-6 p-4 w-11/12 mx-auto rounded-lg shadow border border-gray-200 relative">
       {/* Edit and Delete Icons */}
       {currentUserId === user?._id && (
         <div className="absolute top-2 right-2 flex gap-2 z-10">
-          <button onClick={handleEditPost} className="hover:opacity-80" disabled={isEditing}>
-            <img src={editIcon} alt="Edit" className="w-6 h-6" />
-          </button>
-          <button onClick={handleDeletePost} className="hover:opacity-80" disabled={isDeleting}>
+          <button
+            onClick={handleDeletePost}
+            className="hover:opacity-80"
+            disabled={isDeleting}
+          >
             <img src={deleteIcon} alt="Delete" className="w-6 h-6" />
           </button>
         </div>
