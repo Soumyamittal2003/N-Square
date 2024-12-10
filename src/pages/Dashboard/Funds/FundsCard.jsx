@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import fundImagePlaceholder from "../../../assets/images/fund-placeholder.jpg";
 import editIcon from "../../../assets/icons/edit.svg";
 import { toast } from "react-toastify";
 
@@ -56,9 +55,6 @@ const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
       {/* Fund Details */}
       <div className="mt-4">
         <h4 className="text-lg font-bold text-gray-800">{fund.title}</h4>
-        <p className="text-sm text-gray-600 mt-2">
-          <strong>Organizer:</strong> {fund.organizer}
-        </p>
         <p className="text-sm text-gray-700 mt-3">
           {fund.description?.length > 120
             ? `${fund.description.slice(0, 120)}...`
@@ -75,16 +71,16 @@ const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
           </a>
         </p>
         <p className="text-xs text-gray-500 mt-3">
-          Goal:{" "}
+          Fund Received:{" "}
           <span className="text-gray-700 font-medium">${fund.goalAmount}</span>
         </p>
       </div>
 
       {/* Bottom Section */}
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-center">
         <button
           onClick={handleDonate}
-          className="px-5 py-2 text-white bg-green-600 hover:bg-green-700 rounded-xl transition"
+          className="w-3/4 px-5 py-3 text-white bg-green-600 hover:bg-green-700 rounded-xl transition"
           disabled={loading}
         >
           {loading ? "Donating..." : "Donate"}
