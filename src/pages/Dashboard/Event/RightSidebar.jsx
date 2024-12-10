@@ -4,7 +4,7 @@ import axiosInstance from "../../../utils/axiosinstance";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const RightSidebar = ({ selectedEvent }) => {
+const RightSidebar = () => {
   const role = Cookies.get("role");
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
