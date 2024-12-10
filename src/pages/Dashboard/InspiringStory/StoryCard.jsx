@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
+import VideoStory from "./VideoStory";
 
 const StoryCard = ({ story, currentUserId, onLike, onDislike }) => {
   const {
     _id,
     title = "Untitled Story",
     storyImage,
+    storyVideo, // Added storyVideo
     createdBy,
     createdAt,
     likes = [],
@@ -44,13 +46,17 @@ const StoryCard = ({ story, currentUserId, onLike, onDislike }) => {
 
   return (
     <div className="bg-gradient-to-br from-gray-50 to-blue-50 shadow-md hover:shadow-lg transition-shadow rounded-lg p-6 flex flex-col items-center text-center w-full max-w-sm">
-      {/* Story Image */}
+      {/* Story Image or Video */}
       <div className="relative w-full h-48 rounded-lg overflow-hidden mb-4">
-        <img
-          src={storyImage || "https://via.placeholder.com/150"}
-          alt={title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform"
-        />
+        {storyVideo ? (
+          <VideoStory videoSrc={storyVideo} />
+        ) : (
+          <img
+            src={storyImage || "https://via.placeholder.com/150"}
+            alt={title}
+            className="w-full h-full object-cover hover:scale-105 transition-transform"
+          />
+        )}
       </div>
 
       {/* Story Details */}

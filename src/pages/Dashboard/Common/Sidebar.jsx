@@ -120,7 +120,7 @@ const Sidebar = () => {
           <SidebarLink className="py-1"
             to="/dashboard/connection"
             icon={Connections}
-            label="Connections"
+            label="Explore Connections"
             activeLink={activeLink}
             handleClick={handleClick}
             linkKey="connection"
@@ -233,7 +233,7 @@ const Sidebar = () => {
           </button>
         </Link>
         )}
-        <Link to="/dashboard/donation">
+        <Link to="/dashboard/Funds">
           <button className="mx-8 mt-5 w-[75%] py-1 px-3 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 text-white font-semibold text-center hover:from-teal-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg shadow-teal-400/50 hover:shadow-indigo-400/20">
             Funds Donations
           </button>
