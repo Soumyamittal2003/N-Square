@@ -1,6 +1,19 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import CreateFunds from "./CreateFunds";
+import Cookies from "js-cookie";
 
 const RightSidebar = () => {
+  const role = Cookies.get("role");
+  const [isCreateFundsOpen, setIsCreateFundsOpen] = useState(false);
+
+  const handleOpenCreateFunds = () => {
+    setIsCreateFundsOpen(true);
+  };
+
+  const handleCloseCreateFunds = () => {
+    setIsCreateFundsOpen(false);
+  };
+
   const upcomingEvents = [
     {
       id: 1,
@@ -38,9 +51,21 @@ const RightSidebar = () => {
   ];
 
   return (
-    <div className="w-1/3 mt-4 bg-white px-4">
+    <div className="w-1/3 mt-4 bg-white px-4 md-auto ">
+      <div className="absolute top-20 right-10 mx-auto">
+        {/* Reunion Button */}
+        {(role === "admin") && (
+          <button
+          onClick={handleOpenCreateFunds}
+          className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
+        >
+          Create Funds
+        </button>
+        )}
+      </div>
+      {isCreateFundsOpen && <CreateFunds onClose={handleCloseCreateFunds} />}
       {/* Upcoming Events Section */}
-      <div className="border p-4 rounded-xl shadow-lg mb-6">
+      <div className="border p-4 rounded-xl shadow-lg mt-14">
         <div className="flex justify-between items-center">
           <h3 className="font-bold text-lg">Top Donators</h3>
           
