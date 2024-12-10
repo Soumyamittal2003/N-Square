@@ -109,7 +109,8 @@ const Donation = () => {
                   razorpay_signature,
                   donationFrom,
                   amount,
-                  projectId,
+                  projectID: projectId,
+                  userID: userId,
                 }
               );
               console.log(response);
