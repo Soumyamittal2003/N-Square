@@ -1,35 +1,36 @@
 import { useState, useEffect, useMemo } from "react";
 import ProjectCard from "./ProjectCard";
 import axiosInstance from "../../../utils/axiosinstance";
+import Cookies from "js-cookie";
 
 const ProjectList = ({ activeTab = "default" }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rolesFetched, setRolesFetched] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("All");
-  const [userSkills, setUserSkills] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const id = Cookies.get("id");
 
-  // Fetch user profile to get skills
+  // Fetch current user profile to get skills
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchCurrentUserSkills = async () => {
       try {
-        const response = await axiosInstance.get("/user/profile");
-        if (response.data.success) {
-          const skills = response.data.data.skills || [];
-          setUserSkills(skills);
+        const response = await axiosInstance.get(`/api/auth/${id}`);
+        if (response.data && response.data.data && response.data.data.skills) {
+          setSkills(response.data.data.skills);
         }
       } catch (error) {
-        console.error("Error fetching user profile:", error);
+        console.error("Error fetching current user's skills:", error);
       }
     };
 
-    fetchUserProfile();
+    fetchCurrentUserSkills();
   }, []);
 
-  // Define filter buttons dynamically based on user skills
+  // Define filter buttons dynamically based on current user's skills
   const filters = useMemo(() => {
-    return [{ name: "For You", value: "All" }, ...userSkills.map((skill) => ({ name: skill, value: skill }))];
-  }, [userSkills]);
+    return [{ name: "For You", value: "All" }, ...skills.map((skill) => ({ name: skill, value: skill }))];
+  }, [skills]);
 
   // Fetch all projects
   useEffect(() => {
