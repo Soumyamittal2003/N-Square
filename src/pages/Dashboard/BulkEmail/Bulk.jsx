@@ -1,5 +1,5 @@
 import BulkContent from "./BulkContent";
-import backgroundImage from "../../../assets/images/email.jpg";
+import backgroundImage from "../../../assets/icons/mail.svg";
 
 const Bulk = () => {
   return (
