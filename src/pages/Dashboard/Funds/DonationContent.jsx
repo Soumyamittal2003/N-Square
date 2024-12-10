@@ -1,4 +1,4 @@
-import React from "react";
+
 import FundsCard from "./FundsCard";
 
 const fundData = [
@@ -40,7 +40,7 @@ const DonationContent = () => {
   };
 
   return (
-    <div className="flex flex-wrap gap-6">
+    <div className="flex flex-wrap gap-8 h-[calc(115vh-225px)]  overflow-y-auto hide-scrollbar">
       {fundData.map((fund) => (
         <FundsCard
           key={fund._id}
