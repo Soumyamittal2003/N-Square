@@ -38,7 +38,7 @@ const ProjectCard = ({ project }) => {
     }
   }, [createdBy]);
 
-  const handleNavigate = () => navigate(`/dashboard/project/${_id}`);
+  const handleNavigate = () => navigate(`${_id}`);
 
   return (
     <div>

@@ -86,8 +86,7 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("Posts");
 
   const [loading, setLoading] = useState(true);
-
-  const tabs = ["Posts", "Projects", "Contact"];
+  const tabs = ["Posts", "Projects", "Events", "Job"];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -682,6 +681,18 @@ const UserProfile = () => {
                     No projects to show.
                   </p>
                 )}
+              </div>
+            )}
+            {activeTab === "Events" && (
+              <div>
+                {/* Placeholder for events */}
+                <p className="text-center text-gray-500">No events to show.</p>
+              </div>
+            )}
+            {activeTab === "Job" && (
+              <div>
+                {/* Placeholder for jobs */}
+                <p className="text-center text-gray-500">No jobs to show.</p>
               </div>
             )}
           </div>
