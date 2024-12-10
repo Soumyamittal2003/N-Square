@@ -70,13 +70,11 @@ const CreateEvent = ({ onClose }) => {
     if (tagInput && tags.length < 7) {
       setTags([...tags, tagInput]);
       setTagInput("");
-      console.log("Updated tags: ", tags); // Log updated tags
     }
   };
 
   const handleRemoveTag = (tagToRemove) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
-    console.log("Updated tags after removal: ", tags); // Log updated tags
   };
 
   const validateForm = () => {
@@ -98,8 +96,6 @@ const CreateEvent = ({ onClose }) => {
   };
 
   const handleSubmit = async () => {
-    console.log("Form Data Submitted:", formData);
-
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setError(validationErrors);
