@@ -4,6 +4,7 @@ import uploadMedia from "../../../assets/images/upload.png";
 import emoji from "../../../assets/images/emoji.png";
 import Cookies from "js-cookie";
 import axiosInstance from "../../../utils/axiosinstance"; // Ensure axios instance is properly set up.
+import { toast } from "react-toastify";
 
 const CreatePost = ({ onClose }) => {
   const userId = Cookies.get("id");
@@ -30,7 +31,7 @@ const CreatePost = ({ onClose }) => {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   // Handle input change (content)
   const handleInputChange = (e) => {
@@ -71,16 +72,11 @@ const CreatePost = ({ onClose }) => {
   // Handle post submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Form submission started");
-
     if (!formData.content.trim()) {
       setError("Post content cannot be empty.");
-      console.log("Error: Post content cannot be empty.");
+      toast.error("Error: Post content cannot be empty.");
       return;
     }
-
-    console.log("Form data to be sent:", formData);
 
     try {
       // Prepare the data to send to the server
@@ -89,17 +85,10 @@ const CreatePost = ({ onClose }) => {
 
       // If there's an attached file, append it
       if (formData.attachedFile) {
-        postData.append("postPhoto", formData.attachedFile); // Append the file as a File object
-        console.log("Attached file:", formData.attachedFile);
+        postData.append("postPhoto", formData.attachedFile);
       }
-
-      console.log("Data to be posted:");
-      postData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-      });
-
       // Make the API request to submit the post
-      const response = await axiosInstance.post(
+      await axiosInstance.post(
         "/post/create", // Corrected URL
         postData,
         {
@@ -109,7 +98,7 @@ const CreatePost = ({ onClose }) => {
         }
       );
 
-      console.log("Post submitted successfully:", response.data);
+      toast.success("Post created successfully");
 
       // If submission is successful, clear the form and close the modal
       setFormData({

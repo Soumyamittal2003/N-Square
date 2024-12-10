@@ -21,15 +21,11 @@ const RightSidebar = () => {
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
       try {
-        console.log("Fetching upcoming events...");
-
         const { data: upcomingEventIds } = await axiosInstance.get(
           `/recommadation/upcoming-events`
         );
 
         if (upcomingEventIds && upcomingEventIds.length > 0) {
-          console.log("Upcoming event IDs fetched successfully:", upcomingEventIds);
-
           const eventPromises = upcomingEventIds.map((eventId) =>
             axiosInstance.get(`/event/${eventId}`)
           );
@@ -58,18 +54,17 @@ const RightSidebar = () => {
     fetchUpcomingEvents();
   }, []);
 
-
   return (
     <div className="relative w-[30%] mt-2 mb-auto bg-white px-2 rounded-lg p-11">
       {/* Create Event Button Positioned Top Right */}
       <div className="absolute top-2 right-8 mx-auto">
         {/* Reunion Button */}
         {(role === "alumni" || role === "faculty") && (
-        <Link to="/dashboard/reunion" className="py-1">
-        <button className="px-4 py-2 mr-4 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
-          Reunion
-        </button>
-        </Link>
+          <Link to="/dashboard/reunion" className="py-1">
+            <button className="px-4 py-2 mr-4 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold text-center hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 shadow-lg shadow-blue-400/50 hover:shadow-purple-400/20">
+              Reunion
+            </button>
+          </Link>
         )}
         {/* Create Event Button */}
         <button
@@ -89,64 +84,66 @@ const RightSidebar = () => {
         {/* Adjust spacing below the button */}
         {/* Upcoming Events Section */}
         <div className="border p-4 rounded-xl shadow-lg">
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold text-lg">Upcoming Events</h3>
-          <button className="text-black font-semibold text-sm hover:underline">
-            Explore All
-          </button>
-        </div>
+          <div className="flex justify-between items-center">
+            <h3 className="font-bold text-lg">Upcoming Events</h3>
+            <button className="text-black font-semibold text-sm hover:underline">
+              Explore All
+            </button>
+          </div>
 
-        {loadingEvents ? (
-          <p className="text-gray-500 text-center  mt-4">Loading...</p>
-        ) : (
-          <div className="grid gap-2 mt-2">
-            {upcomingEvents.length > 0 ? (
-              upcomingEvents.map((event) => (
-                <div
-                  key={event.id}
-                  className="grid bg-gradient-to-br from-blue-50 via-gray-50 to-blue-100  grid-cols-[80px_1fr] gap-4 items-center p-1 border rounded-md shadow-sm"
-                >
-                  <img
-                    src={event.eventPhoto || "https://via.placeholder.com/80"}
-                    alt={event.title}
-                    className="rounded-md w-20 h-20 object-cover"
-                  />
-                  <div>
-                    <p className="text-sm font-bold line-clamp-2">
-                      {event.title}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-1">
-                      {event.description}
-                    </p>
-                    <p className="text-xs text-blue-600 font-semibold mt-0 line-clamp-2 underline">
-                      Read More
-                    </p>
-                    <div className="flex justify-between mt-1">
-                    <div className="flex flex-wrap gap-1 mt-1">
-                        {event.tags.map((tag, index) => (
-                          <span
-                            key={index}
-                            className="text-xs bg-blue-200 text-blue-700 py-1 px-2 rounded-full font-medium shadow-sm"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+          {loadingEvents ? (
+            <p className="text-gray-500 text-center  mt-4">Loading...</p>
+          ) : (
+            <div className="grid gap-2 mt-2">
+              {upcomingEvents.length > 0 ? (
+                upcomingEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className="grid bg-gradient-to-br from-blue-50 via-gray-50 to-blue-100  grid-cols-[80px_1fr] gap-4 items-center p-1 border rounded-md shadow-sm"
+                  >
+                    <img
+                      src={event.eventPhoto || "https://via.placeholder.com/80"}
+                      alt={event.title}
+                      className="rounded-md w-20 h-20 object-cover"
+                    />
+                    <div>
+                      <p className="text-sm font-bold line-clamp-2">
+                        {event.title}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-1">
+                        {event.description}
+                      </p>
+                      <p className="text-xs text-blue-600 font-semibold mt-0 line-clamp-2 underline">
+                        Read More
+                      </p>
+                      <div className="flex justify-between mt-1">
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {event.tags.map((tag, index) => (
+                            <span
+                              key={index}
+                              className="text-xs bg-blue-200 text-blue-700 py-1 px-2 rounded-full font-medium shadow-sm"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <Link to="/dashboard/event/about-event">
+                          <button className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">
+                            Register
+                          </button>
+                        </Link>
                       </div>
-                    <Link to="/dashboard/event/about-event">
-                      <button className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">
-                        Register
-                      </button>
-                      </Link>
                     </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500 text-center">No upcoming events found.</p>
-            )}
-          </div>
-        )}
-      </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center">
+                  No upcoming events found.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

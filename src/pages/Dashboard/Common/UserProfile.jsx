@@ -164,7 +164,6 @@ const UserProfile = () => {
   };
   const updateSkills = async () => {
     try {
-      console.log(skills);
       await axiosInstance.put(`/users/update/${userId}`, {
         skills,
       });
@@ -609,19 +608,18 @@ const UserProfile = () => {
               {firstName} {lastName}
             </h1>
 
-            
             <div className="flex space-x-6 gap-2 p-1 mt-1 px-4 border rounded-3xl justify-center">
-            {role != "admin"  && (
-              <>
-              <div className="text-center">
-                <p className="font-bold text-lg">{followers.length}</p>
-                <p className="text-gray-500">Followers</p>
-              </div>
-              <div className="text-center">
-                <p className="font-bold text-lg">{following.length}</p>
-                <p className="text-gray-500">Following</p>
-              </div>
-              </>
+              {role != "admin" && (
+                <>
+                  <div className="text-center">
+                    <p className="font-bold text-lg">{followers.length}</p>
+                    <p className="text-gray-500">Followers</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-lg">{following.length}</p>
+                    <p className="text-gray-500">Following</p>
+                  </div>
+                </>
               )}
               <div className="text-center">
                 <p className="font-bold text-lg">{userPosts.length}</p>

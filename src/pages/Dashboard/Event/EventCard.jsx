@@ -48,16 +48,10 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
     setLoading(true);
 
     try {
-      // Debugging: Log data being sent
-      console.log("Registering user:", currentUserId, "for event:", event._id);
-
       const response = await axiosInstance.post(
         `/event/register-event/${event._id}`,
         { userId: currentUserId }
       );
-
-      // Debugging: Log response
-      console.log("Register response:", response);
 
       if (response.data.message === true) {
         setIsRegistered(true);
@@ -68,7 +62,8 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
     } catch (error) {
       console.error("Error registering for event:", error);
       toast.error(
-        error.response?.data?.message || "An error occurred during registration."
+        error.response?.data?.message ||
+          "An error occurred during registration."
       );
     } finally {
       setLoading(false);
@@ -154,7 +149,11 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
           } transition`}
           disabled={isRegistered || loading}
         >
-          {loading ? "Registering..." : isRegistered ? "Registered" : "Register"}
+          {loading
+            ? "Registering..."
+            : isRegistered
+              ? "Registered"
+              : "Register"}
         </button>
       </div>
     </div>

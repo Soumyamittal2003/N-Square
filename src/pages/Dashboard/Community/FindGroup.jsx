@@ -10,10 +10,6 @@ const FindGroup = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
-  setTimeout(() => {
-    console.log(groups);
-  }, 5000);
-
   useEffect(() => {
     const fetchGroups = async () => {
       try {
