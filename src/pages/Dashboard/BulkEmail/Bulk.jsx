@@ -1,5 +1,5 @@
 import BulkContent from "./BulkContent";
-import backgroundImage from "../../../assets/icons/mail.svg";
+import backgroundImage from "../../../assets/images/email.jpg";
 
 const Bulk = () => {
   return (
@@ -13,7 +13,7 @@ const Bulk = () => {
         <div className="relative text-black flex flex-col justify-center items-center h-full">
           {/* Background Image with Full Size and Blur */}
           <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center blur-md"
+            className="absolute inset-0 w-full h-full bg-cover bg-center blur-lg"
             style={{ backgroundImage: `url(${backgroundImage})` }}
           ></div>
 

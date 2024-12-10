@@ -194,7 +194,7 @@ const UserDetail = () => {
         <button onClick={() => navigate("/")} className="p-2 flex items-center">
           <img src={NetworkNextLogo} alt="NetworkNext" className="h-6" />
         </button>
-        <button onClick={() => navigate("/")} className="p-2">
+        <button onClick={() => navigate("/login")} className="p-2">
           <span className="text-2xl font-semibold">✕</span>
         </button>
       </div>
@@ -433,7 +433,7 @@ const UserDetail = () => {
               <input
                 name="batch"
                 type="text"
-                placeholder="Batch"
+                placeholder="Year of graduation"
                 value={formData.batch}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg ${error.batch ? "border-red-500" : "border-gray-300"}`}

@@ -87,6 +87,45 @@ const UserProfile = () => {
 
   const [loading, setLoading] = useState(true);
   const tabs = ["Posts", "Projects", "Events", "Job"];
+  const skillOptions = [
+    { value: "Customer Service", label: "Customer Service" },
+    { value: "Communication Skills", label: "Communication Skills" },
+    { value: "Multitasking", label: "Multitasking" },
+    { value: "Cultural Awareness", label: "Cultural Awareness" },
+    { value: "Problem-Solving", label: "Problem-Solving" },
+    { value: "Attention to Detail", label: "Attention to Detail" },
+    { value: "Adaptability", label: "Adaptability" },
+    { value: "Legal Research", label: "Legal Research" },
+    { value: "Analytical Thinking", label: "Analytical Thinking" },
+    { value: "Critical Reasoning", label: "Critical Reasoning" },
+    { value: "Public Speaking", label: "Public Speaking" },
+    { value: "Ethical Judgment", label: "Ethical Judgment" },
+    { value: "Negotiation Skills", label: "Negotiation Skills" },
+    { value: "Writing and Editing", label: "Writing and Editing" },
+    { value: "Research Skills", label: "Research Skills" },
+    { value: "Interviewing Skills", label: "Interviewing Skills" },
+    { value: "Digital Literacy", label: "Digital Literacy" },
+    { value: "Storytelling", label: "Storytelling" },
+    { value: "Fact-Checking", label: "Fact-Checking" },
+    { value: "Time Management", label: "Time Management" },
+    { value: "Creativity", label: "Creativity" },
+    {
+      value: "Design Software Proficiency",
+      label: "Design Software Proficiency",
+    },
+    { value: "Collaboration", label: "Collaboration" },
+    { value: "Visual Communication", label: "Visual Communication" },
+    { value: "Patience", label: "Patience" },
+    { value: "Cloud Computing", label: "Cloud Computing" },
+    { value: "Automation Skills", label: "Automation Skills" },
+    { value: "Containerization", label: "Containerization" },
+    { value: "Java/Kotlin Proficiency", label: "Java/Kotlin Proficiency" },
+    { value: "Android SDK Knowledge", label: "Android SDK Knowledge" },
+    { value: "UI/UX Design", label: "UI/UX Design" },
+    { value: "APIs and RESTful Services", label: "APIs and RESTful Services" },
+    { value: "Version Control", label: "Version Control" },
+    { value: "Testing and Debugging", label: "Testing and Debugging" },
+  ];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -125,7 +164,12 @@ const UserProfile = () => {
     };
 
     fetchUserData();
-  }, [userData.backgroundimageUrl, userData.profileimageUrl, userId]);
+  }, [
+    userData.backgroundimageUrl,
+    userData.profileimageUrl,
+    userId,
+    userPosts,
+  ]);
 
   // Update About Section
   const updateAbout = async () => {
@@ -609,19 +653,18 @@ const UserProfile = () => {
               {firstName} {lastName}
             </h1>
 
-            
             <div className="flex space-x-6 gap-2 p-1 mt-1 px-4 border rounded-3xl justify-center">
-            {role != "admin"  && (
-              <>
-              <div className="text-center">
-                <p className="font-bold text-lg">{followers.length}</p>
-                <p className="text-gray-500">Followers</p>
-              </div>
-              <div className="text-center">
-                <p className="font-bold text-lg">{following.length}</p>
-                <p className="text-gray-500">Following</p>
-              </div>
-              </>
+              {role != "admin" && (
+                <>
+                  <div className="text-center">
+                    <p className="font-bold text-lg">{followers.length}</p>
+                    <p className="text-gray-500">Followers</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-lg">{following.length}</p>
+                    <p className="text-gray-500">Following</p>
+                  </div>
+                </>
               )}
               <div className="text-center">
                 <p className="font-bold text-lg">{userPosts.length}</p>

@@ -24,7 +24,7 @@ const PostPopup = ({ setPopupOpen }) => {
   const handleStoryClick = () => setShowCreateStory(true);
   const handleJobClick = () => setShowCreateJob(true);
   const handleEventClick = () => setShowCreateEvent(true);
-  
+
   const handleVolunteerClick = () => setShowCreateVolunteer(true);
   const handlePostClick = () => setShowCreatePost(true);
   const handleReunionClick = () => setShowCreateReunion(true);
@@ -37,7 +37,6 @@ const PostPopup = ({ setPopupOpen }) => {
     setPopupOpen(false);
     navigate("/dashboard/alumni-resources");
   };
-  
 
   const postOptions = [
     { label: "Post", visibility: "Anyone can view", onClick: handlePostClick },
@@ -46,14 +45,24 @@ const PostPopup = ({ setPopupOpen }) => {
       visibility: "Followed People can view",
       onClick: handleProjectClick,
     },
-    { label: "Event", visibility: "Anyone can view", onClick: handleEventClick },
-    { label: "Story", visibility: "Anyone can view", onClick: handleStoryClick },
+    {
+      label: "Event",
+      visibility: "Anyone can view",
+      onClick: handleEventClick,
+    },
+    {
+      label: "Story",
+      visibility: "Anyone can view",
+      onClick: handleStoryClick,
+    },
     ...(role === "alumni" || role === "faculty"
-      ? [{
-          label: "Job",
-          visibility: "Anyone can view",
-          onClick: handleJobClick,
-        }]
+      ? [
+          {
+            label: "Job",
+            visibility: "Anyone can view",
+            onClick: handleJobClick,
+          },
+        ]
       : []),
     {
       label: "Volunteering",
@@ -61,14 +70,22 @@ const PostPopup = ({ setPopupOpen }) => {
       onClick: handleVolunteerClick,
     },
     ...(role === "alumni" || role === "faculty"
-      ? [{
-      label: "Alma Resources",
-      visibility: "Anyone can view",
-      onClick: handleResourceClick,
-    }]
-    : []),
+      ? [
+          {
+            label: "Alma Resources",
+            visibility: "Anyone can view",
+            onClick: handleResourceClick,
+          },
+        ]
+      : []),
     ...(role === "alumni" || role === "faculty"
-      ? [{ label: "Reunion", visibility: "Anyone can view", onClick: handleReunionClick }]
+      ? [
+          {
+            label: "Reunion",
+            visibility: "Anyone can view",
+            onClick: handleReunionClick,
+          },
+        ]
       : []),
   ];
 
@@ -125,9 +142,9 @@ const PostPopup = ({ setPopupOpen }) => {
         <CreateJob onClose={() => setShowCreateJob(false)} />
       ) : showCreateEvent ? (
         <CreateEvent onClose={() => setShowCreateEvent(false)} />
-      // ) : showCreateResource ? (
+      ) : // ) : showCreateResource ? (
       //   <CreateResources onClose={() => setShowCreateResource(false)} />
-      ) : showCreateVolunteer ? (
+      showCreateVolunteer ? (
         <CreateVolunteer onClose={() => setShowCreateVolunteer(false)} />
       ) : showCreatePost ? (
         <CreatePost onClose={() => setShowCreatePost(false)} />

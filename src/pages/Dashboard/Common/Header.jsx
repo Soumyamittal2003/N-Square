@@ -99,6 +99,7 @@ const Header = () => {
   const searchRef = useRef(null);
   const notificationsRef = useRef(null);
   const role = Cookies.get("role");
+  const id = Cookies.get("id");
 
   const navLinks = [
     { name: "Home", path: "/dashboard/home" },
@@ -109,7 +110,7 @@ const Header = () => {
   ];
 
   const settingsOptions = [
-    { name: "Profile", path: "/profile", icon: setting1 },
+    { name: "Profile", path: `/dashboard/profile/${id}`, icon: setting1 },
     { name: "Account Preference", path: "/account-preference", icon: setting2 },
     { name: "Account Activity", path: "/account-activity", icon: setting3 },
     { name: "Post Saved", path: "/post-saved", icon: setting4 },

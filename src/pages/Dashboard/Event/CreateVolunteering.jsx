@@ -20,16 +20,12 @@ const CreateVolunteer = ({ onClose, eventId }) => {
         skills,
         volunteerCount,
       };
-      const response = await axiosInstance.post(
-        "/volunteer/create",
-        payload
-      );
+      const response = await axiosInstance.post("/volunteer/create", payload);
       if (response.data.success === true) {
         toast.success("Volunteer Position created successfully!");
       } else {
         toast.error("Failed to create Volunteer Position");
       }
-      console.log("Volunteer Position Created:", response.data);
       onClose(); // Close the popup after successful creation
     } catch (error) {
       console.error(

@@ -16,6 +16,9 @@ const ProjectDetail = () => {
   const [activeTab, setActiveTab] = useState("About");
   const role = Cookies.get("role"); // Get user role from cookies
   const userId = Cookies.get("id"); // Get user ID from cookies
+  const [donationDetails, setDonationDetails] = useState([]);
+  const [donationLoading, setDonationLoading] = useState(true);
+  const [donationError, setDonationError] = useState(null);
 
   const [contributorDetails, setContributorDetails] = useState({
     mentorContributors: [],
@@ -23,6 +26,28 @@ const ProjectDetail = () => {
   });
 
   const [isContributor, setIsContributor] = useState(false);
+
+  useEffect(() => {
+    const fetchDonations = async () => {
+      try {
+        const response = await axiosInstance.get(
+          "https://n-square.onrender.com/api/network-next/v1/project/all-users-donation/6740b19434b812294a8701aa"
+        );
+        console.log("Donation API Response:", response.data);
+        setDonationDetails(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching donations:", error);
+        setDonationError("Failed to fetch donations.");
+      } finally {
+        setDonationLoading(false);
+      }
+    };
+    console.log("Donation Details State:", donationDetails);
+
+  
+    fetchDonations();
+  }, []);
+  
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -137,7 +162,7 @@ const ProjectDetail = () => {
 
     "Mentor/Contributor": (
       <div>
-        <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
+        <h3 className="text-lg font-bold">Fund Donation</h3>
         <div className="mt-4">
           <h4 className="text-md font-semibold">Mentors:</h4>
           {contributorDetails.mentorContributors.length > 0 ? (
@@ -252,69 +277,50 @@ const ProjectDetail = () => {
 
     Donation: (
       <div className="relative">
+        {/* Total Donation */}
         <div className="absolute top-0 right-0">
-          <h3 className="text-lg font-bold">Total Donation: ₹1200</h3>
+          <h3 className="text-lg font-bold">
+            Total Donation: ₹
+            {donationDetails.reduce((total, donation) => total + (donation.amount || 0), 0)}
+          </h3>
         </div>
-
+    
         <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
-
-        <div className="mt-4">
-          <h4 className="text-md font-semibold">Mentors:</h4>
-          {contributorDetails.mentorContributors.length > 0 ? (
-            <ul>
-              {contributorDetails.mentorContributors.map((mentor) => (
-                <li
-                  key={mentor._id}
-                  className="flex justify-between items-center mt-2"
-                >
-                  <div className="flex items-center">
-                    <img
-                      src={mentor.profileimageUrl}
-                      alt={mentor.firstName}
-                      className="w-8 h-8 rounded-full mr-3"
-                    />
-                    <p>
-                      {mentor.firstName} {mentor.lastName}
-                    </p>
-                  </div>
-                  <span className="text-sm font-medium">₹300</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No mentors available.</p>
-          )}
-        </div>
-
-        <div className="mt-4">
-          <h4 className="text-md font-semibold">Students:</h4>
-          {contributorDetails.studentContributors.length > 0 ? (
-            <ul>
-              {contributorDetails.studentContributors.map((student) => (
-                <li
-                  key={student._id}
-                  className="flex justify-between items-center mt-2"
-                >
-                  <div className="flex items-center">
-                    <img
-                      src={student.profileimageUrl}
-                      alt={student.firstName}
-                      className="w-8 h-8 rounded-full mr-3"
-                    />
-                    <p>
-                      {student.firstName} {student.lastName}
-                    </p>
-                  </div>
-                  <span className="text-sm font-medium">₹250</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No students available.</p>
-          )}
-        </div>
+    
+        {/* Loading State */}
+        {donationLoading ? (
+          <p className="mt-4">Loading donations...</p>
+        ) : donationError ? (
+          <p className="mt-4 text-red-500">{donationError}</p>
+        ) : (
+          <div className="mt-4">
+            <h4 className="text-md font-semibold">Donations:</h4>
+            {donationDetails.length > 0 ? (
+              <ul>
+                {donationDetails.map((donation) => (
+                  <li key={donation._id} className="flex justify-between items-center mt-2">
+                    <div className="flex items-center">
+                      <img
+                        src={donation.user?.profileimageUrl || "https://via.placeholder.com/40"}
+                        alt={donation.user?.firstName || "User"}
+                        className="w-8 h-8 rounded-full mr-3"
+                      />
+                      <p>
+                        {donation.user?.firstName} {donation.user?.lastName}
+                      </p>
+                    </div>
+                    <span className="text-sm font-medium">₹{donation.amount || 0}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No donations available.</p>
+            )}
+          </div>
+        )}
       </div>
     ),
+    
   };
 
   return (

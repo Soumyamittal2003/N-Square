@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import axiosInstance from "../../utils/axiosinstance";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
-import SocialLoginButtons from "./SocialLoginBottons";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -81,14 +80,6 @@ const Signup = () => {
             {isLoading ? "Sending OTP..." : "Next"}
           </button>
         </form>
-
-        <div className="flex w-full items-center my-4">
-          <div className="w-full border-t border-gray-300"></div>
-          <span className="px-4 text-sm text-gray-500">Or</span>
-          <div className="w-full border-t border-gray-300"></div>
-        </div>
-
-        <SocialLoginButtons />
       </div>
 
       {/* Footer Links */}
