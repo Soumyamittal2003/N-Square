@@ -1,99 +1,124 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import ProjectCard from "./ProjectCard";
 import axiosInstance from "../../../utils/axiosinstance";
-import Cookies from "js-cookie";
 
-const ProjectList = ({ activeTab = "default" }) => {
+const ProjectList = ({ activeTab }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rolesFetched, setRolesFetched] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("All");
-  const [skills, setSkills] = useState([]);
-  const [skillsLoading, setSkillsLoading] = useState(true);
-  
-  const id = Cookies.get("id");
+  const [userSkills, setUserSkills] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
-  // Fetch current user profile to get skills
+  // Fetch the current user ID from localStorage
   useEffect(() => {
-    const fetchCurrentUserSkills = async () => {
-      if (!id) {
-        console.error("User ID not found in cookies");
-        setSkillsLoading(false);
-        return;
-      }
-
-      try {
-        console.log(`Fetching skills for user ID: ${id}`);
-        const response = await axiosInstance.get(`/api/auth/${id}`);
-        console.log("User skills response:", response.data);
-
-        if (response.data && response.data.data && response.data.data.skills) {
-          setSkills(response.data.data.skills);
-        } else {
-          console.warn("No skills found in user data");
-        }
-      } catch (error) {
-        console.error("Error fetching current user's skills:", error);
-      } finally {
-        setSkillsLoading(false);
+    const fetchCurrentUser = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      if (storedUser && storedUser._id) {
+        setCurrentUserId(storedUser._id);
+      } else {
+        console.error("No current user found in localStorage");
       }
     };
 
-    fetchCurrentUserSkills();
-  }, [id]);
+    fetchCurrentUser();
+  }, []);
 
-  // Define filter buttons dynamically based on current user's skills
-  const filters = useMemo(() => {
-    return [{ name: "For You", value: "All" }, ...skills.map((skill) => ({ name: skill, value: skill }))];
-  }, [skills]);
+  // Fetch the current user's skills when currentUserId is set
+  useEffect(() => {
+    const fetchUserSkills = async () => {
+      if (!currentUserId) return;
+
+      try {
+        const response = await axiosInstance.get(
+          `https://n-square.onrender.com/api/network-next/v1/users/${currentUserId}`
+        );
+
+        if (response.data.success) {
+          const skills = response.data.data.skills.map((skill) => skill.skillName);
+          setUserSkills(skills);
+        }
+      } catch (error) {
+        console.error("Error fetching user skills:", error);
+      }
+    };
+
+    fetchUserSkills();
+  }, [currentUserId]);
 
   // Fetch all projects
   useEffect(() => {
-    let isMounted = true;
-
     const fetchProjects = async () => {
       try {
-        console.log("Fetching projects...");
         const response = await axiosInstance.get("/project/all");
-        console.log("Projects response:", response.data);
-
-        if (isMounted && response.data.success) {
+        if (response.data.success) {
           setProjects(response.data.data || []);
-        } else {
-          console.warn("No projects found");
         }
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchProjects();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
-  // Filter projects based on the selected filter
-  const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
-      if (selectedFilter === "All") return true;
-      return project.technologies?.includes(selectedFilter);
-    });
-  }, [projects, selectedFilter]);
+  // Fetch roles dynamically for each project's creator (existing functionality)
+  useEffect(() => {
+    const fetchRolesForProjects = async () => {
+      const updatedProjects = await Promise.all(
+        projects.map(async (project) => {
+          if (project.createdBy && !project.createdBy.role) {
+            try {
+              const response = await axiosInstance.get(
+                `/users/${project.createdBy._id}`
+              );
+              return {
+                ...project,
+                createdBy: {
+                  ...project.createdBy,
+                  role: response.data.data.role,
+                },
+              };
+            } catch (error) {
+              console.error(
+                `Failed to fetch role for project ${project._id}:`,
+                error
+              );
+              return project;
+            }
+          }
+          return project;
+        })
+      );
+      setProjects(updatedProjects);
+      setRolesFetched(true);
+    };
+
+    if (projects.length && !rolesFetched) {
+      fetchRolesForProjects();
+    }
+  }, [projects, rolesFetched]);
+
+  // Filtering logic based on activeTab and selectedFilter
+  const filteredProjects = projects.filter((project) => {
+    if (selectedFilter === "All") return true;
+
+    if (selectedFilter.startsWith("Tech")) {
+      const projectTechnologies = project.technologies || [];
+      return projectTechnologies.some((tech) => userSkills.includes(tech));
+    }
+
+    return false;
+  });
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
   };
 
-  if (skillsLoading) {
-    return <div aria-live="polite">Loading user skills...</div>;
-  }
-
   if (loading) {
-    return <div aria-live="polite">Loading projects...</div>;
+    return <div>Loading projects...</div>;
   }
 
   if (!filteredProjects.length) {
@@ -101,38 +126,50 @@ const ProjectList = ({ activeTab = "default" }) => {
   }
 
   return (
-    <section>
-      <div className="flex w-full items-center justify-center p-4">
-        <div className="flex flex-col w-[95%] max-md:ml-0 max-md:w-full">
-          {/* Render filter buttons dynamically */}
+    <div>
+      <div className="flex max-md:flex-col p-2">
+        {/* Tabs and filter buttons */}
+        <div className="ml-8 flex flex-col w-[95%] max-md:ml-0 max-md:w-full">
+          {/* Filter options */}
           <div className="flex gap-3">
-            {filters.map((filter) => (
+            <button
+              className={`${
+                selectedFilter === "All"
+                  ? "bg-[#252525] text-white"
+                  : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
+              } px-4 py-1 rounded-lg transition-colors duration-300`}
+              onClick={() => handleFilterChange("All")}
+            >
+              For You
+            </button>
+
+            {userSkills.map((skill, index) => (
               <button
-                key={filter.value}
+                key={index}
                 className={`${
-                  selectedFilter === filter.value
+                  selectedFilter === `Tech${index + 1}`
                     ? "bg-[#252525] text-white"
                     : "bg-gray-200 text-gray-800 hover:bg-[#252525] hover:text-white"
                 } px-4 py-1 rounded-lg transition-colors duration-300`}
-                onClick={() => handleFilterChange(filter.value)}
+                onClick={() => handleFilterChange(`Tech${index + 1}`)}
               >
-                {filter.name}
+                {skill}
               </button>
             ))}
           </div>
 
-          <h2 className="mt-4 text-2xl font-bold tracking-wide leading-none p-2">
+          <h2 className="mt-0 text-2xl font-bold tracking-wide leading-none p-2">
             Projects
           </h2>
 
-          <div className="flex flex-col self-stretch h-[calc(100vh-225px)] overflow-y-auto hide-scrollbar mt-3.5 w-full">
+          <div className="flex flex-col self-stretch h-[calc(100vh-225px)] overflow-y-auto hide-scrollbar mt-3.5 w-full max-md:max-w-full">
             {filteredProjects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))}
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
