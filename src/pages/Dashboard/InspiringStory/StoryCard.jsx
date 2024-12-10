@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
-import VideoStory from "./VideoStory";
+import VideoStory from "./VideoStory"; // Assuming VideoStory handles video rendering
 
 const StoryCard = ({ story, currentUserId, onLike, onDislike }) => {
   const {
     _id,
     title = "Untitled Story",
-    storyImage,
-    storyVideo, // Added storyVideo
+    storyImage, // Can be video URL or image URL
     createdBy,
     createdAt,
     likes = [],
@@ -44,12 +43,19 @@ const StoryCard = ({ story, currentUserId, onLike, onDislike }) => {
     fetchCreatorDetails();
   }, [createdBy]);
 
+  // Check if storyImage is a video URL
+  const isVideo = storyImage?.endsWith(".mp4") || storyImage?.endsWith(".webm");
+  const thumbnailUrl =
+    storyImage?.endsWith(".mp4") || storyImage?.endsWith(".webm")
+      ? storyImage.replace(/\.(mp4|webm)$/, ".jpg")
+      : null; // Try to generate a thumbnail URL if it's a video
+
   return (
     <div className="bg-gradient-to-br from-gray-50 to-blue-50 shadow-md hover:shadow-lg transition-shadow rounded-lg p-6 flex flex-col items-center text-center w-full max-w-sm">
       {/* Story Image or Video */}
       <div className="relative w-full h-48 rounded-lg overflow-hidden mb-4">
-        {storyVideo ? (
-          <VideoStory videoSrc={storyVideo} />
+        {isVideo ? (
+          <VideoStory videoSrc={storyImage} thumbnail={thumbnailUrl} />
         ) : (
           <img
             src={storyImage || "https://via.placeholder.com/150"}
@@ -70,22 +76,14 @@ const StoryCard = ({ story, currentUserId, onLike, onDislike }) => {
       <div className="flex justify-between mt-6 p-2 text-sm w-full">
         <button
           onClick={() => onLike(_id)}
-          className={`flex items-center gap-2 font-medium px-4 py-2 rounded-lg ${
-            isLiked
-              ? "bg-blue-500 text-white hover:bg-blue-600"
-              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-          } transition`}
+          className={`flex items-center gap-2 font-medium px-4 py-2 rounded-lg ${isLiked ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-200 text-gray-600 hover:bg-gray-300"} transition`}
         >
           <img src={arrowBlockUp} alt="Like" className="w-5 h-5" />
           <span>{likes.length}</span>
         </button>
         <button
           onClick={() => onDislike(_id)}
-          className={`flex items-center gap-2 font-medium px-4 py-2 rounded-lg ${
-            isDisliked
-              ? "bg-blue-500 text-white hover:bg-blue-600"
-              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-          } transition`}
+          className={`flex items-center gap-2 font-medium px-4 py-2 rounded-lg ${isDisliked ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-200 text-gray-600 hover:bg-gray-300"} transition`}
         >
           <img src={arrowBlockdown} alt="Dislike" className="w-5 h-5" />
           <span>{dislikes.length}</span>
