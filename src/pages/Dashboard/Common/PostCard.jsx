@@ -1,8 +1,11 @@
 import { useState } from "react";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
-import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
+import arrowBlockDown from "../../../assets/icons/arrow-block-down.svg";
+import editIcon from "../../../assets/icons/edit.svg"; // Import the edit icon
+import deleteIcon from "../../../assets/icons/delete.svg"; // Import the delete icon
 
 import Cookies from "js-cookie";
+
 const PostCard = ({
   post,
   user,
@@ -16,6 +19,8 @@ const PostCard = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const openImageModal = (image) => {
     setCurrentImage(image);
@@ -48,10 +53,82 @@ const PostCard = ({
       ? post.description.slice(0, 150) + "..."
       : post.description;
 
+  // Handle delete post
+  const handleDeletePost = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch(
+        `/post/${post._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("Post deleted successfully.");
+      } else {
+        console.error("Failed to delete the post");
+      }
+    } catch (error) {
+      console.error("Error deleting the post:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Handle edit post
+  const handleEditPost = async () => {
+    setIsEditing(true);
+    try {
+      const updatedDescription = prompt(
+        "Edit your post description:",
+        post.description
+      );
+
+      if (updatedDescription !== null) {
+        const response = await fetch(
+          `/post/${post._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ description: updatedDescription }),
+          }
+        );
+
+        if (response.ok) {
+          alert("Post updated successfully.");
+        } else {
+          console.error("Failed to edit the post");
+        }
+      }
+    } catch (error) {
+      console.error("Error editing the post:", error);
+    } finally {
+      setIsEditing(false);
+    }
+  };
+
   return (
-    <div className="bg-white mb-6 p-4 w-11/12 mx-auto rounded-lg shadow  border border-gray-200">
+    <div className="bg-white mb-6 p-4 w-11/12 mx-auto rounded-lg shadow border border-gray-200 relative">
+      {/* Edit and Delete Icons */}
+      {currentUserId === user?._id && (
+        <div className="absolute top-2 right-2 flex gap-2 z-10">
+          <button onClick={handleEditPost} className="hover:opacity-80" disabled={isEditing}>
+            <img src={editIcon} alt="Edit" className="w-6 h-6" />
+          </button>
+          <button onClick={handleDeletePost} className="hover:opacity-80" disabled={isDeleting}>
+            <img src={deleteIcon} alt="Delete" className="w-6 h-6" />
+          </button>
+        </div>
+      )}
+
       {/* Header Section */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between pt-2">
         <div className="flex items-center">
           <img
             src={user?.profileimageUrl || "https://via.placeholder.com/40"}
@@ -77,7 +154,7 @@ const PostCard = ({
             </p>
           </div>
         </div>
-        <div className="flex self-start text-gray-500">
+        <div className="text-gray-500 ml-2 whitespace-nowrap mt-4">
           <p className="text-sm">{new Date(post.createdAt).toLocaleString()}</p>
         </div>
       </div>
@@ -104,7 +181,7 @@ const PostCard = ({
           src={post.postPhoto}
           alt="Post"
           onClick={() => openImageModal(post.postPhoto)}
-          className="mt-4 rounded-lg w-full   object-scale-down cursor-pointer"
+          className="mt-4 rounded-lg w-full object-scale-down cursor-pointer"
         />
       )}
       {isModalOpen && (
@@ -151,13 +228,11 @@ const PostCard = ({
               isDisliked ? "text-blue-500" : "text-gray-600"
             } hover:text-blue-500 transition`}
           >
-            <img src={arrowBlockdown} alt="Downvote" className="w-6 h-6 " />
+            <img src={arrowBlockDown} alt="Downvote" className="w-6 h-6" />
             <span className="font-semibold text-xl">
               {post.dislikes.length}
             </span>
           </button>
-
-        
         </div>
       </div>
     </div>
