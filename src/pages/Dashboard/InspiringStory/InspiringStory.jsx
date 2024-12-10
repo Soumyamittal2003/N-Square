@@ -106,12 +106,6 @@ const InspiringStory = () => {
 
         {/* Stories Section */}
         <section className="my-8">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-bold">Stories</h2>
-            <a href="#view-all" className="text-black font-semibold">
-              View All
-            </a>
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             {filteredStories.map((story) => (
               <StoryCard
