@@ -177,7 +177,15 @@ const Sidebar = () => {
             linkKey="applied-jobs"
           />
           )}
-
+          {role === "admin" && (
+            <SidebarLink
+            to="/dashboard/my-events"
+            label="My Events"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="my-events"
+          />
+          )}
           <hr className="border-gray-300 py-1 mt-2" />
           {role != "admin" && (
           <SidebarLink
