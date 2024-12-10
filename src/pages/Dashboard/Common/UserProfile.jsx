@@ -125,7 +125,12 @@ const UserProfile = () => {
     };
 
     fetchUserData();
-  }, [userData.backgroundimageUrl, userData.profileimageUrl, userId]);
+  }, [
+    userData.backgroundimageUrl,
+    userData.profileimageUrl,
+    userId,
+    userPosts,
+  ]);
 
   // Update About Section
   const updateAbout = async () => {
