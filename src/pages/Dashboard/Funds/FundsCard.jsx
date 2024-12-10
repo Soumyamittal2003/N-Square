@@ -1,78 +1,97 @@
-// src/components/DonationContent.jsx
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+// import fundImagePlaceholder from "../../../assets/images/fund-placeholder.jpg";
+import editIcon from "../../../assets/icons/edit.svg";
+import { toast } from "react-toastify";
 
-import React from "react";
-import FundsCard from "./FundsCard";
+const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-const fundData = [
-  {
-    _id: "1",
-    title: "Scholarship Fund",
-    organizer: "Alumni Association",
-    description: "Supporting students in need through scholarships.",
-    goalAmount: 5000,
-    fundImage: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "2",
-    title: "Library Upgrade",
-    organizer: "University Library",
-    description: "Help us upgrade our library facilities.",
-    goalAmount: 10000,
-    fundImage: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "3",
-    title: "Sports Equipment Fund",
-    organizer: "Sports Department",
-    description: "Providing new equipment for student athletes.",
-    goalAmount: 3000,
-    fundImage: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "4",
-    title: "Health Services Fund",
-    organizer: "Medical Center",
-    description: "Improving student health services on campus.",
-    goalAmount: 8000,
-    fundImage: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "5",
-    title: "Technology Upgrade Fund",
-    organizer: "IT Department",
-    description: "Upgrading campus technology infrastructure.",
-    goalAmount: 15000,
-    fundImage: "https://via.placeholder.com/150",
-  },
-];
-
-const DonationContent = () => {
-  const handleDonate = (fundId) => {
-    console.log(`Donating to fund with ID: ${fundId}`);
-    // Implement your donation logic here
+  const handleNavigate = () => {
+    navigate(`/dashboard/fund/about-fund`, {
+      state: { ...fund },
+    });
   };
 
-  const handleEditFund = (fundId) => {
-    console.log(`Editing fund with ID: ${fundId}`);
-    // Implement your edit fund logic here
+  const handleEditFund = (e) => {
+    e.stopPropagation();
+    onEditFund(fund._id);
+  };
+
+  const handleDonate = async (e) => {
+    e.stopPropagation();
+    setLoading(true);
+
+    try {
+      await onDonate(fund._id);
+      toast.success("Donation successful!");
+    } catch (error) {
+      console.error("Error during donation:", error);
+      toast.error("An error occurred during donation.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="h-screen p-6 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Available Funds</h1>
-      <div className="h-[80vh] overflow-y-auto flex flex-wrap gap-6 p-2 border rounded-lg bg-white shadow-md">
-        {fundData.map((fund) => (
-          <FundsCard
-            key={fund._id}
-            fund={fund}
-            currentUserId={"12345"}
-            onDonate={handleDonate}
-            onEditFund={handleEditFund}
-          />
-        ))}
+    <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-green-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2 relative">
+      {/* Fund Image with Edit Button */}
+      <div className="relative rounded-lg overflow-hidden">
+        <img
+          src={fund.fundImage || fundImagePlaceholder}
+          alt={fund.title}
+          className="w-full h-[180px] object-cover"
+        />
+        {/* Edit Button */}
+        <button
+          onClick={handleEditFund}
+          className="absolute top-3 right-3 bg-gray-300 text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md hover:bg-green-700 transition"
+          title="Edit Fund"
+        >
+          <img src={editIcon} alt="Edit" className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Fund Details */}
+      <div className="mt-4">
+        <h4 className="text-lg font-bold text-gray-800">{fund.title}</h4>
+        <p className="text-sm text-gray-600 mt-2">
+          <strong>Organizer:</strong> {fund.organizer}
+        </p>
+        <p className="text-sm text-gray-700 mt-3">
+          {fund.description?.length > 120
+            ? `${fund.description.slice(0, 120)}...`
+            : fund.description || "No description available."}
+          <a
+            href="#"
+            className="text-green-600 font-medium hover:underline ml-1"
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigate();
+            }}
+          >
+            Read More
+          </a>
+        </p>
+        <p className="text-xs text-gray-500 mt-3">
+          Goal:{" "}
+          <span className="text-gray-700 font-medium">${fund.goalAmount}</span>
+        </p>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="mt-6 flex justify-end">
+        <button
+          onClick={handleDonate}
+          className="px-5 py-2 text-white bg-green-600 hover:bg-green-700 rounded-xl transition"
+          disabled={loading}
+        >
+          {loading ? "Donating..." : "Donate"}
+        </button>
       </div>
     </div>
   );
 };
 
-export default DonationContent;
+export default FundsCard;
