@@ -67,12 +67,14 @@ const RightSidebar = () => {
           </Link>
         )}
         {/* Create Event Button */}
-        <button
-          onClick={handleOpenCreateEvent}
-          className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
-        >
-          Create Event
-        </button>
+        {role !== "student" && (
+          <button
+            onClick={handleOpenCreateEvent}
+            className="px-4 py-2 text-black border border-black rounded-full hover:bg-black hover:text-white"
+          >
+            Create Event
+          </button>
+        )}
       </div>
 
       {/* Create Event Popup */}

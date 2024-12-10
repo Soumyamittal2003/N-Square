@@ -96,6 +96,7 @@ const CreateEvent = ({ onClose }) => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setError(validationErrors);
@@ -631,9 +632,9 @@ const CreateEvent = ({ onClose }) => {
               <button
                 onClick={handleSubmit} // This now submits the form if Step 4
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                disabled={!formData.reminder} // Disable if no reminder is selected
+                disabled={isLoading} // Disable if no reminder is selected
               >
-                Submit
+                {isLoading === false ? "Submit" : "Creating Event"}
               </button>
             </div>
           </div>
