@@ -1,45 +1,65 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ProjectCard from "./ProjectCard";
 import axiosInstance from "../../../utils/axiosinstance";
+import Cookies from "js-cookie";
 
-const ProjectList = ({ activeTab }) => {
+const ProjectList = ({ activeTab = "default" }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rolesFetched, setRolesFetched] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("All");
+  const [skills, setSkills] = useState([]);
+  const id = Cookies.get("id");
 
-  // Define filter buttons dynamically
-  const filters = [
-    { name: "For You", value: "All" },
-    { name: "Tech1", value: "Tech1" },
-    { name: "Tech2", value: "Tech2" },
-    { name: "Tech3", value: "Tech3" },
-    { name: "Tech4", value: "Tech4" },
-    { name: "Tech5", value: "Tech5" },
-    { name: "Tech6", value: "Tech6" },
-    { name: "Tech7", value: "Tech7" },
-  ];
+  // Fetch current user profile to get skills
+  useEffect(() => {
+    const fetchCurrentUserSkills = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/auth/${id}`);
+        if (response.data && response.data.data && response.data.data.skills) {
+          setSkills(response.data.data.skills);
+        }
+      } catch (error) {
+        console.error("Error fetching current user's skills:", error);
+      }
+    };
+
+    fetchCurrentUserSkills();
+  }, []);
+
+  // Define filter buttons dynamically based on current user's skills
+  const filters = useMemo(() => {
+    return [{ name: "For You", value: "All" }, ...skills.map((skill) => ({ name: skill, value: skill }))];
+  }, [skills]);
 
   // Fetch all projects
   useEffect(() => {
+    let isMounted = true;
+
     const fetchProjects = async () => {
       try {
         const response = await axiosInstance.get("/project/all");
-        if (response.data.success) {
+        if (isMounted && response.data.success) {
           setProjects(response.data.data || []);
         }
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchProjects();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Fetch roles dynamically for each project's creator
   useEffect(() => {
+    let isMounted = true;
+
     const fetchRolesForProjects = async () => {
       const updatedProjects = await Promise.all(
         projects.map(async (project) => {
@@ -66,27 +86,36 @@ const ProjectList = ({ activeTab }) => {
           return project;
         })
       );
-      setProjects(updatedProjects);
-      setRolesFetched(true);
+
+      if (isMounted) {
+        setProjects(updatedProjects);
+        setRolesFetched(true);
+      }
     };
 
     if (projects.length && !rolesFetched) {
       fetchRolesForProjects();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [projects, rolesFetched]);
 
   // Filter projects based on the selected filter
-  const filteredProjects = projects.filter((project) => {
-    if (selectedFilter === "All") return true; // Show all projects
-    return project.technologies?.includes(selectedFilter); // Filter by technology
-  });
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      if (selectedFilter === "All") return true; // Show all projects
+      return project.technologies?.includes(selectedFilter); // Filter by technology
+    });
+  }, [projects, selectedFilter]);
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
   };
 
   if (loading) {
-    return <div>Loading projects...</div>;
+    return <div aria-live="polite">Loading projects...</div>;
   }
 
   if (!filteredProjects.length) {
@@ -94,7 +123,7 @@ const ProjectList = ({ activeTab }) => {
   }
 
   return (
-    <div>
+    <section>
       <div className="flex w-full items-center justify-center p-4">
         <div className="flex flex-col w-[95%] max-md:ml-0 max-md:w-full">
           {/* Render filter buttons dynamically */}
@@ -125,7 +154,7 @@ const ProjectList = ({ activeTab }) => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

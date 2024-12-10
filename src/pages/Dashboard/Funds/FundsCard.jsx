@@ -67,7 +67,7 @@ const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
               handleNavigate();
             }}
           >
-            Read More
+           
           </a>
         </p>
         <p className="text-xs text-gray-500 mt-3">
