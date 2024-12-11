@@ -31,7 +31,7 @@ const ProjectList = ({ activeTab }) => {
 
       try {
         const response = await axiosInstance.get(
-          `https://n-square.onrender.com/api/network-next/v1/users/${currentUserId}`
+          `/users/${currentUserId}`
         );
 
         if (response.data.success) {
