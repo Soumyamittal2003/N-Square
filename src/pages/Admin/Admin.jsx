@@ -7,6 +7,7 @@ import Project from "./Project/Project";
 import AboutProject from "./Project/AboutProject";
 import Board from "./Board/Board";
 import Home from "./Home/Home";
+import BulkUpload from "./BulkUpload/BulkUpload";
 // import Eventcontent from "./EventContent";
 // import AboutEvent from "./Event/AboutEvent";
 // import Home from "./Home/Home";
@@ -83,6 +84,7 @@ const Admin = () => {
               element={<CommunityFindGroup />}
             />
             <Route path="community/groups" element={<Community />} />
+            <Route path="bulk-upload" element={<BulkUpload />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
