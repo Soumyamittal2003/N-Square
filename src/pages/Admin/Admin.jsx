@@ -19,7 +19,7 @@ import Job from "./Job/job";
 // import Help from "./Help/Help";
 // import Project from "./Project/Project";
 // import Mentor from "./MentorShip/Mentor";
-// import Community from "./Community/Mentor";
+import Community from "./Community/Mentor";
 import InspiringStory from "./InspiringStory/InspiringStory";
 // import Connection from "./Connection/Connection";
 // import MyEvent from "./MyEvent/MyEvent";
@@ -37,9 +37,9 @@ import InspiringStory from "./InspiringStory/InspiringStory";
 // import AppliedJobs from "./AppliedJob/AppliedJob";
 // import Donation from "./Project/Donation";
 // import Chat from "./Chat/Chat";
-// import CommunityContent from "./Community/MentorContent";
-// import MentorContent from "./MentorShip/MentorContent";
-// import CommunityFindGroup from "./Community/FindGroup";
+import CommunityContent from "./Community/MentorContent";
+//import MentorContent from "./MentorShip/MentorContent";
+import CommunityFindGroup from "./Community/FindGroup";
 // import FindGroup from "./MentorShip/FindGroup";
 // import RoomPage from "./VideoCall/RoomPage";
 // import ConferenceRoom from "./VideoCall/RoomPage";
@@ -79,6 +79,12 @@ const Admin = () => {
             <Route path="/Project/AboutProject" element={<AboutProject />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
             <Route path="/Board" element={<Board />} />
+            <Route path="community" element={<CommunityContent />} />
+            <Route
+              path="community/find-group"
+              element={<CommunityFindGroup />}
+            />
+            <Route path="community/groups" element={<Community />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
