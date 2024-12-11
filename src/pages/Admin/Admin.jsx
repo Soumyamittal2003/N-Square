@@ -71,7 +71,7 @@ const Admin = () => {
           <Routes>
             {/* <Route path="/" element={<Home />} /> */}
             <Route
-              path="Home"
+              path="/"
               element={<Home />} />
             <Route path="job" element={<Job />} />
             <Route path="/Event" element={<Event />} />
