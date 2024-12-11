@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import EventCard from "./EventCard";
-//import { useNavigate } from "react-router-dom"; 
+// import { useNavigate } from "react-router-dom"; 
 import RightSidebar from "./RightSidebar.jsx";
 
 //Tasting brach
