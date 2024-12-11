@@ -8,7 +8,7 @@ import BulkEmailIcon from "../../../assets/icons/mail.svg";
 import Board from "../../../assets/icons/board.svg";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import PostPopup from "./Postpage.jsx";
+import PostPopup from "./Postpage.jsx";
 import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie";
 
@@ -133,7 +133,7 @@ return (
 
         {role === "admin" && (
           <SidebarLink
-            to="/dashboard/Conference-call"
+            to="/admin-dashboard/Conference-call"
             icon={videoChatIcon}
             label="Conference Call"
             activeLink={activeLink}
@@ -202,14 +202,14 @@ return (
           />
         )}
         <SidebarLink
-          to="/dashboard/community"
+          to="/admin-dashboard/community"
           label="Community"
           activeLink={activeLink}
           handleClick={handleClick}
           linkKey="community"
         />
         <SidebarLink
-          to="/dashboard/mentorship"
+          to="/admin-dashboard/mentorship"
           label="Mentorship"
           activeLink={activeLink}
           handleClick={handleClick}
@@ -243,6 +243,7 @@ return (
       {/* Footer */}
       <Footer />
     </div>
+    {isPopupOpen && <PostPopup setPopupOpen={setIsPopupOpen} />}
   </div>
 )};
 

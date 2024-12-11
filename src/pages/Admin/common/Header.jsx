@@ -20,7 +20,6 @@ import setting9 from "../../../assets/icons/settings/setting9.svg";
 import setting10 from "../../../assets/icons/settings/setting10.svg";
 import setting11 from "../../../assets/icons/settings/setting11.svg";
 import setting12 from "../../../assets/icons/settings/setting12.svg";
-
 import logouticon from "../../../assets/icons/settings/logout.svg";
 
 // Modal Component for Search
@@ -113,25 +112,25 @@ const Header = () => {
   const settingsOptions = [
     {
       name: "Profile",
-      path: `/dashboard/common/Userprofile/${id}`,
+      path: `/admin-dashboard/common/Userprofile/${id}`,
       icon: setting1,
     },
-    { name: "Account Preference", path: "/account-preference", icon: setting2 },
-    { name: "Account Activity", path: "/account-activity", icon: setting3 },
-    { name: "Post Saved", path: "/post-saved", icon: setting4 },
-    { name: "Download", path: "/download", icon: setting5 },
-    { name: "My Jobs", path: "/my-jobs", icon: setting6 },
-    { name: "Data Privacy", path: "/data-privacy", icon: setting7 },
-    { name: "Privacy & Security", path: "/privacy-security", icon: setting8 },
-    { name: "Device Permission", path: "/device-permission", icon: setting9 },
+    { name: "Account Preference", path: "/admin-dashboard/account-preference", icon: setting2 },
+    { name: "Account Activity", path: "/admin-dashboard/account-activity", icon: setting3 },
+    { name: "Post Saved", path: "/admin-dashboard/post-saved", icon: setting4 },
+    { name: "Download", path: "/admin-dashboard/download", icon: setting5 },
+    { name: "My Jobs", path: "/admin-dashboard/my-jobs", icon: setting6 },
+    { name: "Data Privacy", path: "/admin-dashboard/data-privacy", icon: setting7 },
+    { name: "Privacy & Security", path: "/admin-dashboard/privacy-security", icon: setting8 },
+    { name: "Device Permission", path: "/admin-dashboard/device-permission", icon: setting9 },
     {
       name: "Data Usage & Media Quality",
-      path: "/data-usage-media-quality",
+      path: "/admin-dashboard/data-usage-media-quality",
       icon: setting10,
     },
-    { name: "Language", path: "/language", icon: setting11 },
-    { name: "About", path: "/about", icon: setting12 },
-    { name: "Feedback & Survey", path: "/dashboard/feed", icon: setting12 },
+    { name: "Language", path: "/admin-dashboard/language", icon: setting11 },
+    { name: "About", path: "/admin-dashboard/about", icon: setting12 },
+    { name: "Feedback & Survey", path: "/admin-dashboard/feed", icon: setting12 },
   ];
   const notifications = [
     { text: "You have a new follower!", time: "2 mins ago" },
@@ -199,7 +198,7 @@ const Header = () => {
               aria-label="Volunteer"
               title="Volunteer"
               onClick={() => {
-                navigate("/dashboard/volunteer");
+                navigate("/admin-dashboard/volunteer");
               }}
             >
               <img
@@ -214,7 +213,7 @@ const Header = () => {
             aria-label="Alumni Resources"
             title="Alumni Resources"
             onClick={() => {
-              navigate("/dashboard/alumni-resources");
+              navigate("/admin-dashboard/alumni-resources");
             }}
           >
             <img
