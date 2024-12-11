@@ -47,7 +47,6 @@ const RegisterOrganization = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match.");
       setIsLoading(false);
