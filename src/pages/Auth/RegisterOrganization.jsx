@@ -156,7 +156,7 @@ const RegisterOrganization = () => {
 
           {/* Confirm Password Field */}
           <div>
-            <label className="block text-sm font-semibold mb-2">Confirm Password</label>
+            {/* <label className="block text-sm font-semibold mb-2">Confirm Password</label> */}
             <input
               type="password"
               name="confirmPassword"
