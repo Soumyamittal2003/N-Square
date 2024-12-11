@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PostCard from "../Common/PostCard";
+import PostCard from "../common/PostCard";
 import axiosInstance from "../../../utils/axiosinstance";
 import { toast } from "react-toastify";
 
