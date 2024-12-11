@@ -106,7 +106,7 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <div className="flex-grow relative flex flex-col overflow-auto hide-scrollbar">
         <nav className="px-4 py-4 space-y-4 text-lg">
-        {role === "admin" && (
+          {role === "admin" && (
             <SidebarLink
               className="py-1 text-xl"
               to="/admin-dashboard/"
@@ -116,8 +116,7 @@ const Sidebar = () => {
               handleClick={handleClick}
               linkKey="Home"
             />
-          )} 
-
+          )}
 
           {role === "admin" && (
             <SidebarLink
@@ -214,34 +213,7 @@ const Sidebar = () => {
               linkKey="applied-jobs"
             />
           )}
-          {role === "admin" && (
-            <SidebarLink
-              to="/dashboard/my-events"
-              label="My Events"
-              activeLink={activeLink}
-              handleClick={handleClick}
-              linkKey="my-events"
-            />
-          )}
-          <hr className="border-gray-300 py-1 mt-2" />
-          {role !== "admin" && (
-            <SidebarLink
-              to="/dashboard/my-events"
-              label="My Events"
-              activeLink={activeLink}
-              handleClick={handleClick}
-              linkKey="my-events"
-            />
-          )}
-          {role === "admin" && (
-            <SidebarLink
-              to="/admin-dashboard/rewards"
-              label="Rewards"
-              activeLink={activeLink}
-              handleClick={handleClick}
-              linkKey="rewards"
-            />
-          )}
+
           <SidebarLink
             to="/admin-dashboard/community"
             label="Community"
