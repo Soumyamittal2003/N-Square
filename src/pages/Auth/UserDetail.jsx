@@ -448,6 +448,7 @@ const UserDetail = () => {
                 </label>
               </div>
               <input
+                required
                 name="batch"
                 type="text"
                 placeholder="Year of graduation"
