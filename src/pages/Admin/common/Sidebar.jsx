@@ -156,7 +156,7 @@ const Sidebar = () => {
               label="Bulk Upload"
               activeLink={activeLink}
               handleClick={handleClick}
-              linkKey="bulk-Upload"
+              linkKey="BulkUpload"
             />
           )}
           {role !== "admin" && (

@@ -87,7 +87,7 @@ const BulkUploadContent = () => {
           {/* Download Sample Button */}
           <button
             className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-md text-lg"
-            onClick={downloadSample}
+            //onClick={downloadSample}
           >
             Download Sample 📥
           </button>
