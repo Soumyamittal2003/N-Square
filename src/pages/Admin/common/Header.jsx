@@ -105,8 +105,8 @@ const Header = () => {
     { name: "Home", path: "/" },
     { name: "Job", path: "job" },
     { name: "Event", path: "event" },
-    { name: "Project", path: "/dashboard/project" },
-    { name: "Story", path: "/dashboard/inspiring-story" },
+    { name: "Project", path: "project" },
+    { name: "Story", path: "inspiring-story" },
   ];
 
   const settingsOptions = [
