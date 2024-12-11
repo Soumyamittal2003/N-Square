@@ -24,8 +24,9 @@ const ProjectDetail = () => {
     mentorContributors: [],
     studentContributors: [],
   });
-
   const [isContributor, setIsContributor] = useState(false);
+
+  console.log(projectData);
 
   useEffect(() => {
     const fetchDonations = async () => {
@@ -387,7 +388,7 @@ const ProjectDetail = () => {
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
               <img
                 src={
-                  projectData?.profilePhoto || "https://via.placeholder.com/100"
+                  projectData?.projectPhoto || "https://via.placeholder.com/100"
                 }
                 alt="Project Icon"
                 className="w-full h-full rounded-full object-cover"
