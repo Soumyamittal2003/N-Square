@@ -10,7 +10,6 @@ import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
   { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
-  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
   { value: "Business Administration", label: "Business Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Civil Engineering", label: "Civil Engineering" },
@@ -31,6 +30,7 @@ const RegisterOrganization = () => {
     name: "",
     email: "",
     collegeAddress: "",
+    collegeRegistrationId: "",
     courses: [],
     password: "",
     confirmPassword: "",
@@ -59,9 +59,10 @@ const RegisterOrganization = () => {
       const payload = {
         name: formData.name,
         email: formData.email,
-        password: formData.password,
         college_address: formData.collegeAddress,
+        college_registration_id: formData.collegeRegistrationId,
         courses: formData.courses.map((course) => course.value),
+        password: formData.password,
       };
 
       await axiosInstance.post("/organizations/signup", payload);
@@ -69,7 +70,6 @@ const RegisterOrganization = () => {
       toast.success("Organization registered successfully!");
       navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to register organization.");
       toast.error(error.response?.data?.message || "Failed to register organization.");
     } finally {
       setIsLoading(false);
@@ -103,7 +103,7 @@ const RegisterOrganization = () => {
             value={formData.name}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
-            placeholder="Name of the Orginization"
+            placeholder="Name of the Organization"
             required
           />
 
@@ -114,23 +114,31 @@ const RegisterOrganization = () => {
             value={formData.email}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
-            placeholder="Enter Orgination Email"
+            placeholder="Enter Organization Email"
             required
           />
 
           {/* College Address Field */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">College Address</label>
-            <input
-              type="text"
-              name="collegeAddress"
-              value={formData.collegeAddress}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
-              placeholder="Enter your college address"
-              required
-            />
-          </div>
+          <input
+            type="text"
+            name="collegeAddress"
+            value={formData.collegeAddress}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Enter your college address"
+            required
+          />
+
+          {/* College Registration ID Field */}
+          <input
+            type="text"
+            name="collegeRegistrationId"
+            value={formData.collegeRegistrationId}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Enter College Registration ID"
+            required
+          />
 
           {/* Courses Multi-Select */}
           <Select
@@ -155,18 +163,15 @@ const RegisterOrganization = () => {
           />
 
           {/* Confirm Password Field */}
-          <div>
-            {/* <label className="block text-sm font-semibold mb-2">Confirm Password</label> */}
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Confirm your password"
+            required
+          />
 
           {/* Submit Button */}
           <button
