@@ -8,7 +8,7 @@ const ProjectCard = ({ project }) => {
     createdBy,
     projectTopic: title,
     description,
-    profilePhoto: image,
+    projectPhoto: image,
     _id,
     mentorContributors,
     studentContributors,
