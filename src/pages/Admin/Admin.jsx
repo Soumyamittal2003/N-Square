@@ -18,7 +18,7 @@ import Job from "./Job/job";
 // import Project from "./Project/Project";
 // import Mentor from "./MentorShip/Mentor";
 // import Community from "./Community/Mentor";
-// import InspiringStory from "./InspiringStory/InspiringStory";
+import InspiringStory from "./InspiringStory/InspiringStory";
 // import Connection from "./Connection/Connection";
 // import MyEvent from "./MyEvent/MyEvent";
 // import UserProfile from "./Common/UserProfile";
@@ -78,6 +78,7 @@ const Admin = () => {
             <Route path="/Event" element={<Event />} />
             <Route path="/Project" element={<Project />} />
             <Route path="/Project/AboutProject" element={<AboutProject />} />
+            <Route path="inspiring-story" element={<InspiringStory />} />
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
