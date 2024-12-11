@@ -22,14 +22,14 @@ const BulkUploadContent = () => {
   const parseExcel = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
-      const binaryStr = reader.result;
-      const workBook = XLSX.read(binaryStr, { type: "binary" });
+      const arrayBuffer = reader.result;
+      const workBook = XLSX.read(arrayBuffer, { type: "array" }); // Changed to 'array' for ArrayBuffer
       const sheetName = workBook.SheetNames[0]; // Assuming the first sheet
       const sheet = workBook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(sheet);
       setData(jsonData);
     };
-    reader.readAsBinaryString(file);
+    reader.readAsArrayBuffer(file); // Using readAsArrayBuffer instead of readAsBinaryString
   };
 
   const handleFetch = async () => {
@@ -82,8 +82,17 @@ const BulkUploadContent = () => {
           </div>
         )}
 
-        {/* Fetch Button */}
-        <div className="text-center">
+        {/* Button Section */}
+        <div className="flex justify-center space-x-4">
+          {/* Download Sample Button */}
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-md text-lg"
+            onClick={downloadSample}
+          >
+            Download Sample 📥
+          </button>
+
+          {/* Fetch Button */}
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-md text-lg"
             onClick={handleFetch}
