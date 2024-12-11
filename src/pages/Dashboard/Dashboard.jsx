@@ -70,7 +70,6 @@ const Dashboard = () => {
             <Route path="help" element={<Help />} />
             <Route path="feed" element={<Feed />} />
             <Route path="funds" element={<Funds />} />
-            <Route path="board" element={<Board />} />
             <Route path="event" element={<Event />} />
             <Route path="event/about-event" element={<AboutEvent />} />
             <Route path="my-events" element={<MyEvent />} />
