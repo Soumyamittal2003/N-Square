@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import axiosInstance from '../../../utils/axiosinstance';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
+import Cookies from 'js-cookie';
 
 const BulkContent = () => {
   const [recipientType, setRecipientType] = useState('');
@@ -10,6 +12,17 @@ const BulkContent = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [universityId, setUniversityId] = useState('');
+
+  // Fetch university_id from cookies on component mount
+  useEffect(() => {
+    const id = Cookies.get('id');
+    if (id) {
+      setUniversityId(id);
+    } else {
+      toast.error('University ID not found in cookies.');
+    }
+  }, []);
 
   // Options for the recipient selection dropdown
   const recipientOptions = [
@@ -21,35 +34,37 @@ const BulkContent = () => {
   // Handle the form submission
   const handleSend = async () => {
     if (!recipientType || !subject || !message) {
-      toast.error("Please fill in all fields and select a recipient.");
+      toast.error('Please fill in all fields and select a recipient.');
       return;
     }
 
     if ((recipientType === 'student' || recipientType === 'alumni') && !batch) {
-      toast.error("Please provide a batch name.");
+      toast.error('Please provide a batch name.');
       return;
     }
 
     setLoading(true);
 
     try {
-      // Construct query parameters from form fields
-      const queryParams = new URLSearchParams({
-        recipient: recipientType,
-        batch: batch || '', // If no batch, send empty string
-        subject: subject,
-        message: message,
-      }).toString();
+      // Prepare the payload
+      const payload = {
+        batch: batch || '',
+        subject,
+        message,
+        university_id: universityId,
+        role: recipientType
+      };
 
-      // Send GET request with query parameters
-      const response = await axiosInstance.get(
-        `/organization/send-bulk-email?${queryParams}`
+      // Send POST request to the backend API
+      const response = await axiosInstance.post(
+        '/organization/send-bulk-email',
+        payload
       );
 
-      toast.success(response.data.message || "Bulk email sent successfully!");
+      toast.success(response.data.message || 'Bulk email sent successfully!');
     } catch (error) {
-      console.error("Error sending bulk email:", error);
-      toast.error(error.response?.data?.message || "Failed to send bulk email.");
+      console.error('Error sending bulk email:', error);
+      toast.error(error.response?.data?.message || 'Failed to send bulk email.');
     } finally {
       setLoading(false);
     }
