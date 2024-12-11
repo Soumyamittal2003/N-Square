@@ -149,7 +149,7 @@ const Donation = () => {
     <div className="min-h-screen flex justify-center items-center p-4">
       <div className="bg-white shadow-md rounded-lg p-8 w-full sm:w-96 max-w-lg">
         <h2 className="text-3xl text-center font-bold text-gray-900 mb-8">
-          Thank you for Donation! 🙏🏻
+          Enter the amount to donate
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Amount Field */}

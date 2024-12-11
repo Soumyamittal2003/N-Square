@@ -20,43 +20,64 @@ import { Upload } from "lucide-react";
 
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [organizationName, setOrganizationName] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const id = Cookies.get("id");
   const [activeLink, setActiveLink] = useState("");
+  const id = Cookies.get("id");
   const role = Cookies.get("role");
   const navigate = useNavigate();
 
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await axiosInstance.get(/users/${id});
-  //       setUserData(response?.data?.data);
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axiosInstance.get(`/users/${id}`);
+        setUserData(response?.data?.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchUserData();
-  // }, [id]);
+    if (id) fetchUserData();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchOrganizationName = async () => {
+      if (userData?.organization) {
+        try {
+          const response = await axiosInstance.get(
+            `/organizations/${userData.organization}`
+          );
+          setOrganizationName(response.data.organization.name);
+        } catch (err) {
+          toast.error("Error fetching organization name");
+        }
+      }
+    };
+
+    fetchOrganizationName();
+  }, [userData?.organization]);
 
   const handleClick = (link) => {
     setActiveLink(link);
   };
 
-  if (loading) {
-    return (
-      <div className="text-center py-6 text-gray-500">Loading profile...</div>
-    );
-  }
-
   return (
     <div className="mx-4 mt-4 h-[calc(100vh-50px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       {/* Admin Control Section */}
+      
+      {organizationName && (
+        <div className="absolute top-2 inset-x-0 flex justify-center">
+          <span className="bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
+            {organizationName}
+          </span>
+        </div>
+      )}
+      
       {role === "admin" && (
         <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
           <span className="mr-2">🛠</span> Admin Control Panel

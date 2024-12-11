@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ProjectCard from "./ProjectCard";
 import axiosInstance from "../../../utils/axiosinstance";
+import Cookies from "js-cookie";
 
 const ProjectList = ({ activeTab }) => {
   const [projects, setProjects] = useState([]);
@@ -8,21 +9,7 @@ const ProjectList = ({ activeTab }) => {
   const [rolesFetched, setRolesFetched] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [userSkills, setUserSkills] = useState([]);
-  const [currentUserId, setCurrentUserId] = useState(null);
-
-  // Fetch the current user ID from localStorage
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
-      if (storedUser && storedUser._id) {
-        setCurrentUserId(storedUser._id);
-      } else {
-        console.error("No current user found in localStorage");
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
+  const currentUserId = Cookies.get("id");
 
   // Fetch the current user's skills when currentUserId is set
   useEffect(() => {
@@ -30,12 +17,12 @@ const ProjectList = ({ activeTab }) => {
       if (!currentUserId) return;
 
       try {
-        const response = await axiosInstance.get(
-          `https://n-square.onrender.com/api/network-next/v1/users/${currentUserId}`
-        );
+        const response = await axiosInstance.get(`/users/${currentUserId}`);
 
         if (response.data.success) {
-          const skills = response.data.data.skills.map((skill) => skill.skillName);
+          const skills = response.data.data.skills.map(
+            (skill) => skill.skillName
+          );
           setUserSkills(skills);
         }
       } catch (error) {
@@ -74,6 +61,7 @@ const ProjectList = ({ activeTab }) => {
               const response = await axiosInstance.get(
                 `/users/${project.createdBy._id}`
               );
+              console.log(response);
               return {
                 ...project,
                 createdBy: {
