@@ -47,15 +47,14 @@ const Sidebar = () => {
     );
   }
 
-return (
-  <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
-    {/* Admin Control Section */}
-    {role === "admin" && (
-      <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
-      <span className="mr-2">🛠️</span> Admin Control Panel
-    </div>
-    
-    )}
+  return (
+    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
+      {/* Admin Control Section */}
+      {role === "admin" && (
+        <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
+          <span className="mr-2">🛠</span> Admin Control Panel
+        </div>
+      )}
 
       <div className="relative mb-15">
         {role !== "admin" && (
@@ -142,50 +141,6 @@ return (
               linkKey="connection"
             />
           )}
-    {/* Navigation Links */}
-    <div className="flex-grow relative flex flex-col overflow-auto hide-scrollbar">
-    <nav className="px-4 py-4 space-y-4 text-lg">
-        {role === "admin" && (
-          <SidebarLink className="py-1 text-xl"
-            to="/admin-dashboard/Board"
-            icon={Board}
-            label="Dashboard"
-            activeLink={activeLink}
-            handleClick={handleClick}
-            linkKey="dashboard"
-          />
-        )}
-        {role === "admin" && (
-          <SidebarLink className="py-1 text-xl"
-            to="/admin-dashboard/pending-requests"
-            icon={Board}
-            label="Pending Requests"
-            activeLink={activeLink}
-            handleClick={handleClick}
-            linkKey="pending-requests"
-          />
-        )}
-        {role === "admin" && (
-          <SidebarLink
-            to="/dashboard/BulkEmail"
-            icon={BulkEmailIcon}
-            label="Bulk Email"
-            activeLink={activeLink}
-            handleClick={handleClick}
-            linkKey="bulk-email"
-          />
-        )}
-        {role !== "admin" && (
-          <SidebarLink
-            className="py-1"
-            to="/dashboard/connection"
-            icon={Connections}
-            label="Explore Connections"
-            activeLink={activeLink}
-            handleClick={handleClick}
-            linkKey="connection"
-          />
-        )}
 
           {role === "admin" && (
             <SidebarLink
