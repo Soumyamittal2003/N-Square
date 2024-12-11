@@ -97,7 +97,7 @@ const RegisterOrganization = () => {
             value={formData.name}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
-            placeholder="Name"
+            placeholder="Name of the Orginization"
             required
           />
 
@@ -108,7 +108,7 @@ const RegisterOrganization = () => {
             value={formData.email}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
-            placeholder="Email"
+            placeholder="Enter Orgination Email"
             required
           />
 
