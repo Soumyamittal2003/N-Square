@@ -1,11 +1,27 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import Select from "react-select";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../../utils/axiosinstance";
 import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
+
+const courseOptions = [
+  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
+  { value: "Business Administration", label: "Business Administration" },
+  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+  { value: "Civil Engineering", label: "Civil Engineering" },
+  { value: "Electrical Engineering", label: "Electrical Engineering" },
+  { value: "Psychology", label: "Psychology" },
+  { value: "Nursing and Healthcare", label: "Nursing and Healthcare" },
+  { value: "Law and Legal Studies", label: "Law and Legal Studies" },
+  { value: "Media and Communication", label: "Media and Communication" },
+  { value: "Biotechnology", label: "Biotechnology" },
+  { value: "Economics", label: "Economics" },
+  { value: "Fine Arts and Design", label: "Fine Arts and Design" },
+];
 
 const RegisterOrganization = () => {
   const navigate = useNavigate();
@@ -14,7 +30,7 @@ const RegisterOrganization = () => {
     name: "",
     email: "",
     collegeAddress: "",
-    course: "",
+    courses: [],
     password: "",
     confirmPassword: "",
   });
@@ -22,6 +38,10 @@ const RegisterOrganization = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleCourseChange = (selectedOptions) => {
+    setFormData({ ...formData, courses: selectedOptions });
   };
 
   const handleFormSubmit = async (e) => {
@@ -35,7 +55,11 @@ const RegisterOrganization = () => {
     }
 
     try {
-      await axiosInstance.post("/organization/register", formData);
+      const payload = {
+        ...formData,
+        courses: formData.courses.map((course) => course.value),
+      };
+      await axiosInstance.post("/organization/register", payload);
       toast.success("Organization registered successfully!");
       navigate("/login");
     } catch (error) {
@@ -67,7 +91,7 @@ const RegisterOrganization = () => {
         <form onSubmit={handleFormSubmit} className="w-full space-y-6">
           {/* Name Field */}
           <div>
-            <label className="block text-sm font-semibold mb-2">College Name</label>
+            <label className="block text-sm font-semibold mb-2">Name</label>
             <input
               type="text"
               name="name"
@@ -107,30 +131,17 @@ const RegisterOrganization = () => {
             />
           </div>
 
-          {/* Courses Dropdown */}
+          {/* Courses Multi-Select */}
           <div>
             <label className="block text-sm font-semibold mb-2">Courses</label>
-            <select
-              name="course"
-              value={formData.course}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black focus:ring-1 focus:ring-gray-600 focus:outline-none"
-              required
-            >
-              <option value="" disabled>Select a course</option>
-              <option>Computer Science and Engineering</option>
-              <option>Business Administration</option>
-              <option>Mechanical Engineering</option>
-              <option>Civil Engineering</option>
-              <option>Electrical Engineering</option>
-              <option>Psychology</option>
-              <option>Nursing and Healthcare</option>
-              <option>Law and Legal Studies</option>
-              <option>Media and Communication</option>
-              <option>Biotechnology</option>
-              <option>Economics</option>
-              <option>Fine Arts and Design</option>
-            </select>
+            <Select
+              options={courseOptions}
+              isMulti
+              value={formData.courses}
+              onChange={handleCourseChange}
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
           </div>
 
           {/* Password Field */}
@@ -172,19 +183,6 @@ const RegisterOrganization = () => {
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
-      </div>
-
-      {/* Footer Links */}
-      <div className="w-1/2 mx-auto px-6">
-        <div className="border-t border-gray-300 my-2"></div>
-        <div className="text-center text-gray-600 text-sm mb-6">
-          <div>
-            Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 font-medium hover:underline">
-              Log In
-            </Link>
-          </div>
-        </div>
       </div>
     </div>
   );
