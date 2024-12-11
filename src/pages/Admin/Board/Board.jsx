@@ -1,5 +1,4 @@
-import React from 'react';
-import BoardContent from './BoardContent';
+import BoardContent from "./BoardContent";
 
 const Board = () => {
   return (
