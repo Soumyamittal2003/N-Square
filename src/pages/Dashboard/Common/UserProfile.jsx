@@ -87,7 +87,7 @@ const UserProfile = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const tabs = ["Posts", "Projects", "Events", "Job"];
+  const tabs = ["Posts", "Projects", "Events", "Job", "Donations"];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -691,6 +691,14 @@ const UserProfile = () => {
                 <p className="text-center text-gray-500">No jobs to show.</p>
               </div>
             )}
+            {activeTab === "Donations" && (
+              <div>
+                {/* Placeholder for jobs */}
+                <p className="text-center text-gray-500">
+                  No Donations to show.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -701,34 +709,36 @@ const UserProfile = () => {
           {/* this is about section */}
 
           <div className="PersonalInformation p-2 mt-3  ">
-            <h1 className="text-lg font-semibold">Personal Information</h1>
-            <div className="about relative flex items-center justify-start">
-              <h2 className="  mr-2">About-</h2>
-              {isEditingAbout ? (
-                <textarea
-                  name="about"
-                  value={about}
-                  onChange={handleInputChange}
-                  className="w-fit border py-0 h-8 px-2 rounded"
-                />
-              ) : (
-                <p className="text-gray-700">{about}</p>
-              )}
-              <button
-                onClick={
-                  isEditingAbout ? updateAbout : () => setIsEditingAbout(true)
-                }
-                className="absolute top-0 right-0 bg-gray-50 px-2 text-sm py-1 text-black  rounded-md"
-              >
+            <h1 className="text-xl font-bold mb-4">Personal Information</h1>
+            <div className="about relative  items-center justify-start mb-2">
+              <h2 className="  mr-2  font-semibold">About- </h2>
+              <div>
                 {isEditingAbout ? (
-                  <span>Save</span>
+                  <textarea
+                    name="about"
+                    value={about}
+                    onChange={handleInputChange}
+                    className="w-fit border py-0 h-8 px-2 rounded"
+                  />
                 ) : (
-                  <FiEdit className="text-black" />
+                  <p className="text-gray-700 text-base">{about}</p>
                 )}
-              </button>
+                <button
+                  onClick={
+                    isEditingAbout ? updateAbout : () => setIsEditingAbout(true)
+                  }
+                  className="absolute top-0 right-0 bg-gray-50 px-2 text-sm py-1 text-black  rounded-md"
+                >
+                  {isEditingAbout ? (
+                    <span>Save</span>
+                  ) : (
+                    <FiEdit className="text-black" />
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="tagline relative flex items-center justify-start">
-              <h2 className="mr-2">Tagline-</h2>
+            <div className="tagline relative flex items-center justify-start mb-2">
+              <h2 className="mr-2 font-semibold">Tagline-</h2>
               {isEditingTagLine ? (
                 <textarea
                   name="tagLine"
@@ -737,7 +747,7 @@ const UserProfile = () => {
                   className="w-fit border py-0 h-8 px-2 rounded"
                 />
               ) : (
-                <p className="text-gray-700">{tagLine}</p>
+                <p className="text-gray-700 text-base">{tagLine}</p>
               )}
               <button
                 onClick={
@@ -754,13 +764,13 @@ const UserProfile = () => {
                 )}
               </button>
             </div>
-            <div className="email relative flex items-center justify-start">
-              <h2 className="mr-2">Email-</h2>
-              <p className="text-gray-700">{email}</p>
+            <div className="email relative flex items-center justify-start mb-2">
+              <h2 className="mr-2 font-semibold">Email-</h2>
+              <p className="text-gray-700 text-base">{email}</p>
             </div>
 
             <div className="organization relative flex items-center justify-start">
-              <h2 className="  mr-2">Organization-</h2>
+              <h2 className="  mr-2 font-semibold">Organization-</h2>
               {isEditingOrganization ? (
                 <textarea
                   name="organizatoin"
@@ -787,7 +797,7 @@ const UserProfile = () => {
               </button>
             </div>
           </div>
-          <div className="Skills  p-2 mt-4 ">
+          <div className="Skills  p-2  ">
             <div className="SkillsSection relative mt-6">
               <h1 className="text-lg font-semibold">Skills</h1>
               <div className="skills  flex items-center justify-start">
