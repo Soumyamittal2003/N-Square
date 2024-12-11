@@ -112,6 +112,16 @@ const Sidebar = () => {
           )}
           {role === "admin" && (
             <SidebarLink
+              to="/admin-dashboard/pending-requests"
+              icon={BulkEmailIcon}
+              label="Pending Requests"
+              activeLink={activeLink}
+              handleClick={handleClick}
+              linkKey="pending-requests"
+            />
+          )}
+          {role === "admin" && (
+            <SidebarLink
               to="/admin-dashboard/BulkEmail"
               icon={BulkEmailIcon}
               label="Send Circular"
