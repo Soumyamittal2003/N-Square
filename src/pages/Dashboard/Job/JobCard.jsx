@@ -4,6 +4,7 @@ import bookmark from "../../../assets/icons/bookmark.svg";
 import bookmarked from "../../../assets/icons/bookmarked.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
+import { useNavigate } from "react-router-dom";
 
 const JobCard = ({
   job,
@@ -31,6 +32,14 @@ const JobCard = ({
     dislikes = [],
     isApplied = false,
   } = job;
+  const [applied, setApplied] = useState(isApplied);
+  const navigate = useNavigate();
+
+  const handleApply = () => {
+    onApplyJob(_id);
+    setApplied(true);
+    navigate(`/applied-jobs/${_id}`);
+  };
 
   const [creatorName, setCreatorName] = useState("Loading...");
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -81,7 +90,10 @@ const JobCard = ({
           {description.length > 120
             ? `${description.slice(0, 120)}...`
             : description}
-          <a href="#" className="text-blue-600 font-medium hover:underline ml-1">
+          <a
+            href="#"
+            className="text-blue-600 font-medium hover:underline ml-1"
+          >
             Read More
           </a>
         </p>
@@ -99,7 +111,8 @@ const JobCard = ({
           <span className="text-green-600 font-medium">{stipendOrSalary}</span>
         </p>
         <p className="text-xs text-gray-500 mt-1">
-          Posted By: <span className="text-gray-800 font-semibold">{creatorName}</span>
+          Posted By:{" "}
+          <span className="text-gray-800 font-semibold">{creatorName}</span>
         </p>
         <p className="text-xs text-gray-500 mt-1">
           Posted On:{" "}
@@ -164,13 +177,13 @@ const JobCard = ({
 
         {/* Apply Button */}
         <button
-          onClick={() => onApplyJob(_id)}
+          onClick={handleApply}
           className={`px-5 py-2 text-white rounded-xl ${
-            isApplied ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+            applied ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
           } transition`}
-          disabled={isApplied}
+          disabled={applied}
         >
-          {isApplied ? "Applied" : "Apply"}
+          {applied ? "Applied" : "Apply"}
         </button>
       </div>
     </div>

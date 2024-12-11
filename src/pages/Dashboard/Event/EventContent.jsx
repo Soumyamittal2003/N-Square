@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import EventCard from "./EventCard";
-//import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom"; 
 import RightSidebar from "./RightSidebar";
 
+//Tasting brach
 const EventContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [events, setEvents] = useState([]);
@@ -114,7 +115,7 @@ const EventContent = () => {
   return (
     <div className="w-[100%] flex">
       {/* Event Cards */}
-      <div className="w-[80%]">
+      <div className="w-[75%]">
         <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-2 py-1 m-4">
           {tabs.map((tab) => (
             <button

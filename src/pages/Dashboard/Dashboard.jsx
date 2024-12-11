@@ -7,6 +7,7 @@ import Event from "./Event/Event";
 import BulkEmail from"./BulkEmail/Bulk";
 import Board from "./Board/Board";
 import Job from "./Job/Job";
+import Feed from "./Feedback/Feed";
 import Funds from "./Funds/Funds";
 import Help from "./Help/Help";
 import Project from "./Project/Project";
@@ -68,6 +69,7 @@ const Dashboard = () => {
             <Route path="job" element={<Job />} />
             <Route path="BulkEmail" element={<BulkEmail/>}/>
             <Route path="help" element={<Help />} />
+            <Route path="feed" element={<Feed />} />
             <Route path="funds" element={<Funds />} />
             <Route path="board" element={<Board />} />
             <Route path="event" element={<Event />} />
