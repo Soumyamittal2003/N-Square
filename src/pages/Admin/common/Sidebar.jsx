@@ -215,7 +215,7 @@ const Sidebar = () => {
           )}
           {role === "admin" && (
             <SidebarLink
-              to="/dashboard/rewards"
+              to="/admin-dashboard/rewards"
               label="Rewards"
               activeLink={activeLink}
               handleClick={handleClick}
