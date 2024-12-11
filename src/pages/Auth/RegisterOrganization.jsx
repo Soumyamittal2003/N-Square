@@ -9,10 +9,7 @@ import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
-  {
-    value: "Computer Science and Engineering",
-    label: "Computer Science and Engineering",
-  },
+  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
   { value: "Business Administration", label: "Business Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Civil Engineering", label: "Civil Engineering" },
@@ -50,6 +47,7 @@ const RegisterOrganization = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match.");
       setIsLoading(false);
@@ -58,17 +56,19 @@ const RegisterOrganization = () => {
 
     try {
       const payload = {
-        ...formData,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        college_address: formData.collegeAddress,
         courses: formData.courses.map((course) => course.value),
       };
-      console.log(payload);
-      // await axiosInstance.post("/organization/register", payload);
+
+      await axiosInstance.post("/organizations/signup", payload);
+
       toast.success("Organization registered successfully!");
       navigate("/login");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to register organization."
-      );
+      toast.error(error.response?.data?.message || "Failed to register organization.");
     } finally {
       setIsLoading(false);
     }
@@ -124,9 +124,7 @@ const RegisterOrganization = () => {
 
           {/* College Address Field */}
           <div>
-            <label className="block text-sm font-semibold mb-2">
-              College Address
-            </label>
+            <label className="block text-sm font-semibold mb-2">College Address</label>
             <input
               type="text"
               name="collegeAddress"
@@ -167,9 +165,7 @@ const RegisterOrganization = () => {
 
           {/* Confirm Password Field */}
           <div>
-            <label className="block text-sm font-semibold mb-2">
-              Confirm Password
-            </label>
+            <label className="block text-sm font-semibold mb-2">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
