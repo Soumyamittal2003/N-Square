@@ -10,6 +10,7 @@ import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
   { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
+  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
   { value: "Business Administration", label: "Business Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Civil Engineering", label: "Civil Engineering" },
@@ -56,14 +57,19 @@ const RegisterOrganization = () => {
 
     try {
       const payload = {
-        ...formData,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        college_address: formData.collegeAddress,
         courses: formData.courses.map((course) => course.value),
       };
-      console.log(payload);
-      // await axiosInstance.post("/organization/register", payload);
+
+      await axiosInstance.post("/organizations/signup", payload);
+
       toast.success("Organization registered successfully!");
       navigate("/login");
     } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to register organization.");
       toast.error(error.response?.data?.message || "Failed to register organization.");
     } finally {
       setIsLoading(false);
@@ -113,15 +119,18 @@ const RegisterOrganization = () => {
           />
 
           {/* College Address Field */}
-          <input
-            type="text"
-            name="collegeAddress"
-            value={formData.collegeAddress}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
-            placeholder="College Address"
-            required
-          />
+          <div>
+            <label className="block text-sm font-semibold mb-2">College Address</label>
+            <input
+              type="text"
+              name="collegeAddress"
+              value={formData.collegeAddress}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
+              placeholder="Enter your college address"
+              required
+            />
+          </div>
 
           {/* Courses Multi-Select */}
           <Select
@@ -146,15 +155,18 @@ const RegisterOrganization = () => {
           />
 
           {/* Confirm Password Field */}
-          <input
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
-            placeholder="Confirm Password"
-            required
-          />
+          <div>
+            <label className="block text-sm font-semibold mb-2">Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
+              placeholder="Confirm your password"
+              required
+            />
+          </div>
 
           {/* Submit Button */}
           <button
