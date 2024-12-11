@@ -1,11 +1,10 @@
-import BoardContent from "./BoardContent";
-// import RightSidebar from "./RightSidebar";
+import React from 'react';
+import BoardContent from './BoardContent';
 
 const Board = () => {
   return (
     <div className="flex w-full bg-white">
-      {/* Main Content Here */}
-      <div className="w-[80%] p-2">
+      <div className="w-[100%] p-2">
         <BoardContent />
       </div>
     </div>

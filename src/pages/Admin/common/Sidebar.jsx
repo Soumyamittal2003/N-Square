@@ -1,17 +1,16 @@
 import briefcase from "../../../assets/icons/briefcase-01.svg";
+import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
 import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
 import BulkEmailIcon from "../../../assets/icons/mail.svg";
 import Board from "../../../assets/icons/board.svg";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import PostPopup from "./Postpage.jsx";
-// import axiosInstance from "../../../utils/axiosinstance";
+import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import logouticon from "../../../assets/icons/settings/logout.svg";
 
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
@@ -20,13 +19,13 @@ const Sidebar = () => {
   const id = Cookies.get("id");
   const [activeLink, setActiveLink] = useState("");
   const role = Cookies.get("role");
-  const navigate = useNavigate();
+
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
   // useEffect(() => {
   //   const fetchUserData = async () => {
   //     try {
-  //       const response = await axiosInstance.get(`/users/${id}`);
+  //       const response = await axiosInstance.get(/users/${id});
   //       setUserData(response?.data?.data);
   //     } catch (error) {
   //       console.error("Error fetching user data:", error);
@@ -49,11 +48,11 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="mx-4 mt-4 h-[calc(100vh-75px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
+    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       {/* Admin Control Section */}
       {role === "admin" && (
         <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
-          <span className="mr-2">🛠️</span> Admin Control Panel
+          <span className="mr-2">🛠</span> Admin Control Panel
         </div>
       )}
 
@@ -103,7 +102,7 @@ const Sidebar = () => {
           {role === "admin" && (
             <SidebarLink
               className="py-1 text-xl"
-              to="/dashboard/dashboard"
+              to="/admin-dashboard/Board"
               icon={Board}
               label="Dashboard"
               activeLink={activeLink}
@@ -227,19 +226,6 @@ const Sidebar = () => {
             linkKey="help"
           />
         </nav>
-        <button
-          onClick={() => {
-            Cookies.remove("token", { path: "/" });
-            Cookies.remove("id", { path: "/" });
-            Cookies.remove("role", { path: "/" });
-            toast.success("Logged out successfully!");
-            navigate("/login"); // Redirect after logout
-          }}
-          className="flex w-[90%] mx-auto items-center p-1  text-md text-black hover:text-gray-600"
-        >
-          <img src={logouticon} alt="logout-button" className=" mr-2" />
-          Logout
-        </button>
 
         {/* Virtual Interview Button */}
         {role !== "admin" && (
@@ -276,7 +262,7 @@ const SidebarLink = ({ to, icon, label, activeLink, handleClick, linkKey }) => (
         : "text-gray-800 hover:bg-gray-100"
     }`}
   >
-    {icon && <img src={icon} alt={`${label} icon`} className="w-5 h-5 mr-3" />}
+    {icon && <img src={icon} alt={"label icon"} className="w-5 h-5 mr-3" />}
     <span className="flex-grow text-sm font-medium">{label}</span>
   </Link>
 );
