@@ -2,6 +2,7 @@ import Sidebar from "./common/Sidebar";
 import Header from "./common/Header";
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import Event from "./Event/Event";
 // import Home from "./Home/Home";
 // import Event from "./Event/Event";
 // import BulkEmail from "./BulkEmail/Bulk";
@@ -70,6 +71,7 @@ const Admin = () => {
                 <div>this is the home content of the admin dashboard</div>
               }
             />
+            <Route path="/Event" element={<Event />} />
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
             {/* <Route path="home" element={<Home />} /> */}
             {/* <Route path="profile/:userId" element={<UserProfile />} />
