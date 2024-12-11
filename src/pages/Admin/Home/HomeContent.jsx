@@ -26,7 +26,6 @@ const HomeContent = () => {
         const response = await axiosInstance.get("/post");
         const postsData = response.data;
         setPosts(postsData);
-
         const userIds = [...new Set(postsData.map((post) => post.createdBy))];
         const userResponses = await Promise.all(
           userIds.map((id) =>
@@ -110,10 +109,13 @@ const HomeContent = () => {
     if (loading) return; // Prevent multiple clicks if already loading
     setLoading(true);
     try {
-      const response = await axiosInstance.post(`/users/follow-user/${userId}`, {
-        currentUserId,
-      });
-  
+      const response = await axiosInstance.post(
+        `/users/follow-user/${userId}`,
+        {
+          currentUserId,
+        }
+      );
+
       if (response.data.success) {
         toast.success("Successfully followed the user!");
       } else {
@@ -121,7 +123,8 @@ const HomeContent = () => {
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Error following the user. Please try again."
+        error.response?.data?.message ||
+          "Error following the user. Please try again."
       );
       console.error("Error following user:", error);
     } finally {
