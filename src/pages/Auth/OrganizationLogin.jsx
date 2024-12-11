@@ -93,7 +93,7 @@ const OrganizationLogin = () => {
   // Handle popup close and navigate to dashboard
   const handleClosePopup = () => {
     setShowPopup(false);
-    navigate("/admin-dashboard"); // Navigate to dashboard after closing popup
+    navigate("/admin-dashboard/Board"); // Navigate to dashboard after closing popup
   };
 
   return (

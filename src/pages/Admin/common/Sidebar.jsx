@@ -102,6 +102,19 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <div className="flex-grow relative flex flex-col overflow-auto hide-scrollbar">
         <nav className="px-4 py-4 space-y-4 text-lg">
+        {role === "admin" && (
+            <SidebarLink
+              className="py-1 text-xl"
+              to="/admin-dashboard/"
+              icon={Board}
+              label="Home"
+              activeLink={activeLink}
+              handleClick={handleClick}
+              linkKey="Home"
+            />
+          )} 
+
+
           {role === "admin" && (
             <SidebarLink
               className="py-1 text-xl"
