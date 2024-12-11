@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import React from "react";
 import axiosInstance from "../../../utils/axiosinstance";
+import React from "react";
 import { FaUsers, FaGraduationCap, FaChalkboardTeacher, FaCalendarAlt, FaCalendarCheck } from "react-icons/fa"; // Importing icons for tabs
 
 // Define API URL
@@ -47,6 +47,9 @@ const DashboardPage = () => {
     }));
   };
 
+  // Function to safely join array values
+  const safeJoin = (arr) => (arr && Array.isArray(arr) ? arr.join(', ') : 'N/A');
+
   // Function to render the list based on selected tab
   const renderList = () => {
     switch (selectedTab) {
@@ -89,10 +92,10 @@ const DashboardPage = () => {
                       <tr className="bg-gray-50">
                         <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
                           <div>
-                            <p><strong>Address:</strong> {student.address}</p>
-                            <p><strong>Courses:</strong> {student.courses.join(', ')}</p>
-                            <p><strong>Skills:</strong> {student.skills.join(', ')}</p>
-                            <p><strong>Joined:</strong> {student.joinedDate}</p>
+                            <p><strong>Address:</strong> {student.address || 'N/A'}</p>
+                            <p><strong>Courses:</strong> {safeJoin(student.courses)}</p>
+                            <p><strong>Skills:</strong> {safeJoin(student.skills)}</p>
+                            <p><strong>Joined:</strong> {student.joinedDate || 'N/A'}</p>
                           </div>
                         </td>
                       </tr>
@@ -142,10 +145,10 @@ const DashboardPage = () => {
                       <tr className="bg-gray-50">
                         <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
                           <div>
-                            <p><strong>Graduation Year:</strong> {alumni.graduationYear}</p>
-                            <p><strong>Job Title:</strong> {alumni.jobTitle}</p>
-                            <p><strong>Company:</strong> {alumni.company}</p>
-                            <p><strong>Skills:</strong> {alumni.skills.join(', ')}</p>
+                            <p><strong>Graduation Year:</strong> {alumni.graduationYear || 'N/A'}</p>
+                            <p><strong>Job Title:</strong> {alumni.jobTitle || 'N/A'}</p>
+                            <p><strong>Company:</strong> {alumni.company || 'N/A'}</p>
+                            <p><strong>Skills:</strong> {safeJoin(alumni.skills)}</p>
                           </div>
                         </td>
                       </tr>
@@ -196,9 +199,9 @@ const DashboardPage = () => {
                         <tr className="bg-gray-50">
                           <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
                             <div>
-                              <p><strong>Department:</strong> {faculty.department}</p>
-                              <p><strong>Courses:</strong> {faculty.courses.join(', ')}</p>
-                              <p><strong>Office Location:</strong> {faculty.officeLocation}</p>
+                              <p><strong>Department:</strong> {faculty.department || 'N/A'}</p>
+                              <p><strong>Courses:</strong> {safeJoin(faculty.courses)}</p>
+                              <p><strong>Office Location:</strong> {faculty.officeLocation || 'N/A'}</p>
                             </div>
                           </td>
                         </tr>
