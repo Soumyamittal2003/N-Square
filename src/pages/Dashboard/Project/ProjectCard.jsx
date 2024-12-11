@@ -57,7 +57,7 @@ const ProjectCard = ({ project }) => {
             <img
               src={image || "https://via.placeholder.com/150"}
               alt={`Image for project: ${title || "Project"}`}
-              className="h-20 w-20 rounded-full border-2 border-blue-500 shadow-sm"
+              className="h-20 w-32 object-contain rounded-3xl border-2 border-blue-500 shadow-sm"
             />
             <h2 className="text-center text-xs mt-2 text-gray-600">
               +{mentorContributors.length + studentContributors.length}{" "}
