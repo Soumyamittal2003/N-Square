@@ -19,9 +19,9 @@ const EventContent = () => {
     const fetchEvents = async () => {
       try {
         const response = await axiosInstance.get("/event/all");
-        console.log(response);
-        if (response.data && Array.isArray(response.data)) {
-          setEvents(response.data);
+        console.log(response.data.events);
+        if (response.data.success === true) {
+          setEvents(response.data.events);
         }
       } catch (error) {
         console.error("Error fetching events:", error);
