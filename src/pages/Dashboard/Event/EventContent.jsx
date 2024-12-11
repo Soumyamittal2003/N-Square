@@ -1,40 +1,25 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import EventCard from "./EventCard";
-//import { useNavigate } from "react-router-dom"; 
+//import { useNavigate } from "react-router-dom";
 import RightSidebar from "./RightSidebar";
-
+import Cookies from "js-cookie";
 //Tasting brach
 const EventContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentUserId, setCurrentUserId] = useState(null);
+  const currentUserId = Cookies.get("id");
   const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event
   const tabs = ["All", "Alumni", "Faculty", "Student"];
   //const navigate = useNavigate();
-
-  // Fetch current user from localStorage
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(
-        localStorage.getItem("chat-app-current-user")
-      );
-      if (storedUser && storedUser._id) {
-        setCurrentUserId(storedUser._id);
-      } else {
-        console.error("No current user found in localStorage");
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   // Fetch all events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await axiosInstance.get("/event/all");
+        console.log(response);
         if (response.data && Array.isArray(response.data)) {
           setEvents(response.data);
         }
@@ -110,8 +95,6 @@ const EventContent = () => {
     return <p>Loading events...</p>;
   }
 
-  
-
   return (
     <div className="w-[100%] flex">
       {/* Event Cards */}
@@ -127,13 +110,16 @@ const EventContent = () => {
             </button>
           ))}
         </div>
-          
+
         {!filteredEvents.length && !loading && (
           <p>No events found for {activeTab}.</p>
         )}
 
         <div className="p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto hide-scrollbar" style={{ maxHeight: 'calc(100vh - 160px)'}} >
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto hide-scrollbar"
+            style={{ maxHeight: "calc(100vh - 160px)" }}
+          >
             {filteredEvents.map((event) => (
               <EventCard
                 key={event._id}

@@ -5,6 +5,8 @@ import { Routes, Route } from "react-router-dom";
 import Event from "./Event/Event";
 import Project from "./Project/Project";
 import AboutProject from "./Project/AboutProject";
+import Board from "./Board/Board";
+import Home from "./Home/Home";
 // import Eventcontent from "./EventContent";
 // import AboutEvent from "./Event/AboutEvent";
 // import Home from "./Home/Home";
@@ -69,16 +71,15 @@ const Admin = () => {
           <Routes>
             {/* <Route path="/" element={<Home />} /> */}
             <Route
-              path="/"
-              element={
-                <div>this is the home content of the admin dashboard</div>
-              }
-            />
+              path="Home"
+              element={<Home />} />
             <Route path="job" element={<Job />} />
             <Route path="/Event" element={<Event />} />
             <Route path="/Project" element={<Project />} />
             <Route path="/Project/AboutProject" element={<AboutProject />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
+            <Route path="/Board" element={<Board />} />
+            {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
