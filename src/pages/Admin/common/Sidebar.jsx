@@ -6,11 +6,13 @@ import Connections from "../../../assets/icons/user-logo.svg";
 import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
 import BulkEmailIcon from "../../../assets/icons/mail.svg";
 import Board from "../../../assets/icons/board.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import PostPopup from "./Postpage.jsx";
 import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import logouticon from "../../../assets/icons/settings/logout.svg";
 
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
@@ -19,6 +21,7 @@ const Sidebar = () => {
   const id = Cookies.get("id");
   const [activeLink, setActiveLink] = useState("");
   const role = Cookies.get("role");
+  const navigate = useNavigate();
 
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
@@ -48,7 +51,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
+    <div className="mx-4 mt-4 h-[calc(100vh-50px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       {/* Admin Control Section */}
       {role === "admin" && (
         <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
@@ -246,6 +249,19 @@ const Sidebar = () => {
             linkKey="help"
           />
         </nav>
+        <button
+          onClick={() => {
+            Cookies.remove("token", { path: "/" });
+            Cookies.remove("id", { path: "/" });
+            Cookies.remove("role", { path: "/" });
+            toast.success("Logged out successfully!");
+            navigate("/login"); // Redirect after logout
+          }}
+          className="flex  items-center px-2 py-1 font-semibold text-md text-black hover:text-gray-600"
+        >
+          <img src={logouticon} alt="logout-button" className=" mx-2" />
+          Logout
+        </button>
 
         {/* Virtual Interview Button */}
         {role !== "admin" && (
