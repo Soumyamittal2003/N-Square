@@ -9,7 +9,9 @@ import {
   FaCalendarAlt,
   FaCalendarCheck,
   FaSearch,
+  FaDownload,
 } from "react-icons/fa"; // Importing icons for tabs
+import * as XLSX from "xlsx"; // Importing XLSX for Excel export
 
 // Define API URL
 const organizationId = Cookies.get("id");
@@ -47,7 +49,8 @@ const DashboardPage = () => {
   }, []);
 
   // Function to safely join array values
-  const safeJoin = (arr) => (arr && Array.isArray(arr) ? arr.join(", ") : "N/A");
+  const safeJoin = (arr) =>
+    arr && Array.isArray(arr) ? arr.join(", ") : "N/A";
 
   // Function to format the date
   const formatDate = (dateString) => {
@@ -64,13 +67,21 @@ const DashboardPage = () => {
   // Delete function
   const handleDelete = async (id, type) => {
     try {
-      const confirmation = window.confirm("Are you sure you want to delete this item?");
+      const confirmation = window.confirm(
+        "Are you sure you want to delete this item?"
+      );
       if (confirmation) {
-        const response = await axiosInstance.delete(`/organizations/${type}/${id}`);
+        const response = await axiosInstance.delete(
+          `/organizations/${type}/${id}`
+        );
         if (response.status === 200) {
-          alert(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully.`);
+          alert(
+            `${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully.`
+          );
           if (type === "student") {
-            setStudentsData(studentsData.filter((student) => student._id !== id));
+            setStudentsData(
+              studentsData.filter((student) => student._id !== id)
+            );
           } else if (type === "alumni") {
             setAlumniData(alumniData.filter((alumni) => alumni._id !== id));
           } else if (type === "faculty") {
@@ -103,13 +114,27 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Batch</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Location</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Name
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Email
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Status
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Phone Number
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Batch
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Location
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -119,15 +144,25 @@ const DashboardPage = () => {
                     className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
                   >
                     <td className="py-3 px-4 text-sm text-gray-800">{`${student.firstName} ${student.lastName}`}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{student.email}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {student.email}
+                    </td>
                     <td className="py-3 px-4 text-sm text-gray-500">
-                      <span className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                      <span
+                        className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}
+                      >
                         Active
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{student.phone}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{student.batch || 'N/A'}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{student.city || 'N/A'}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {student.phone}
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {student.batch || "N/A"}
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {student.city || "N/A"}
+                    </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
                       <button
                         className="text-red-500"
@@ -148,13 +183,27 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Batch</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Location</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Name
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Email
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Status
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Phone Number
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Batch
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Location
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -164,15 +213,25 @@ const DashboardPage = () => {
                     className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
                   >
                     <td className="py-3 px-4 text-sm text-gray-800">{`${alumni.firstName} ${alumni.lastName}`}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.email}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {alumni.email}
+                    </td>
                     <td className="py-3 px-4 text-sm text-gray-500">
-                      <span className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                      <span
+                        className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}
+                      >
                         Active
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.phone}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.batch || 'N/A'}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.city || 'N/A'}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {alumni.phone}
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {alumni.batch || "N/A"}
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-600">
+                      {alumni.city || "N/A"}
+                    </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
                       <button
                         className="text-red-500"
@@ -194,13 +253,27 @@ const DashboardPage = () => {
               <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Batch</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Location</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Name
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Email
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Status
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Phone Number
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Batch
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Location
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -210,15 +283,25 @@ const DashboardPage = () => {
                       className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
                     >
                       <td className="py-3 px-4 text-sm text-gray-800">{`${faculty.firstName} ${faculty.lastName}`}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.email}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {faculty.email}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-500">
-                        <span className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                        <span
+                          className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}
+                        >
                           Active
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.phone}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.batch || 'N/A'}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.city || 'N/A'}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {faculty.phone}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {faculty.batch || "N/A"}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {faculty.city || "N/A"}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         <button
                           className="text-red-500"
@@ -242,9 +325,15 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Event Title
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Date
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Speaker
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -254,11 +343,15 @@ const DashboardPage = () => {
                       key={event._id}
                       className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
                     >
-                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
+                      <td className="py-3 px-4 text-sm text-gray-800">
+                        {event.title}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         {formatDate(event.date)} at {event.time}
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {event.speaker}
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -278,9 +371,15 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Event Title
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Date
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Speaker
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -290,11 +389,15 @@ const DashboardPage = () => {
                       key={event._id}
                       className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
                     >
-                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
+                      <td className="py-3 px-4 text-sm text-gray-800">
+                        {event.title}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         {formatDate(event.date)} at {event.time}
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {event.speaker}
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -313,20 +416,54 @@ const DashboardPage = () => {
     }
   };
 
+  // Function to handle Excel download
+  const handleDownload = () => {
+    const dataToDownload = {
+      Students: studentsData.map((student) => ({
+        Name: `${student.firstName} ${student.lastName}`,
+        Email: student.email,
+        Phone: student.phone,
+        Batch: student.batch || "N/A",
+        Location: student.city || "N/A",
+      })),
+      Alumni: alumniData.map((alumni) => ({
+        Name: `${alumni.firstName} ${alumni.lastName}`,
+        Email: alumni.email,
+        Phone: alumni.phone,
+        Batch: alumni.batch || "N/A",
+        Location: alumni.city || "N/A",
+      })),
+      Faculty: facultyData.map((faculty) => ({
+        Name: `${faculty.firstName} ${faculty.lastName}`,
+        Email: faculty.email,
+        Phone: faculty.phone,
+        Batch: faculty.batch || "N/A",
+        Location: faculty.city || "N/A",
+      })),
+      UpcomingEvents: upcomingEvents.map((event) => ({
+        Title: event.title,
+        Date: formatDate(event.date),
+        Speaker: event.speaker,
+      })),
+      PastEvents: pastEvents.map((event) => ({
+        Title: event.title,
+        Date: formatDate(event.date),
+        Speaker: event.speaker,
+      })),
+    };
+
+    const wb = XLSX.utils.book_new();
+    for (const [sheetName, sheetData] of Object.entries(dataToDownload)) {
+      const ws = XLSX.utils.json_to_sheet(sheetData);
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    }
+
+    XLSX.writeFile(wb, "organization_data.xlsx");
+  };
+
   return (
     <div className="p-8 space-y-6 bg-gray-50">
       <div className="flex justify-between items-center space-x-4 w-full">
-        {/* Global Search */}
-        <div className="flex items-center space-x-2 w-1/4">
-          <FaSearch className="text-gray-600 text-lg" />
-          <input
-            type="text"
-            className="py-2 px-4 w-full rounded-lg border border-gray-300"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
         {/* Tab selection */}
         <div
           onClick={() => setSelectedTab("students")}
@@ -390,6 +527,18 @@ const DashboardPage = () => {
         </div>
       </div>
 
+      {/* Search Bar */}
+      <div className="relative w-1/4 mt-4">
+        <input
+          type="text"
+          className="py-2 px-4 pl-10 w-full rounded-lg border border-gray-300"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-lg" />
+      </div>
+
       {/* Loading State */}
       {loading ? (
         <div className="flex justify-center items-center py-10">
@@ -398,6 +547,14 @@ const DashboardPage = () => {
       ) : (
         <div className="mt-6">{renderList()}</div>
       )}
+
+      {/* Download Button */}
+      <div
+        onClick={handleDownload}
+        className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full cursor-pointer shadow-xl hover:bg-blue-600 transition-all duration-300"
+      >
+        <FaDownload className="text-2xl" />
+      </div>
     </div>
   );
 };
