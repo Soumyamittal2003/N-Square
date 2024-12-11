@@ -141,7 +141,7 @@ const DashboardPage = () => {
                         Active
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.phoneNumber}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.phone}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">
                       <button
                         className="text-red-500"
