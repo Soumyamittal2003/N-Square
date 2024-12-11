@@ -9,7 +9,10 @@ import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
-  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
+  {
+    value: "Computer Science and Engineering",
+    label: "Computer Science and Engineering",
+  },
   { value: "Business Administration", label: "Business Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Civil Engineering", label: "Civil Engineering" },
@@ -59,11 +62,14 @@ const RegisterOrganization = () => {
         ...formData,
         courses: formData.courses.map((course) => course.value),
       };
-      await axiosInstance.post("/organization/register", payload);
+      console.log(payload);
+      // await axiosInstance.post("/organization/register", payload);
       toast.success("Organization registered successfully!");
       navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to register organization.");
+      toast.error(
+        error.response?.data?.message || "Failed to register organization."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -119,7 +125,9 @@ const RegisterOrganization = () => {
 
           {/* College Address Field */}
           <div>
-            <label className="block text-sm font-semibold mb-2">College Address</label>
+            <label className="block text-sm font-semibold mb-2">
+              College Address
+            </label>
             <input
               type="text"
               name="collegeAddress"
@@ -160,7 +168,9 @@ const RegisterOrganization = () => {
 
           {/* Confirm Password Field */}
           <div>
-            <label className="block text-sm font-semibold mb-2">Confirm Password</label>
+            <label className="block text-sm font-semibold mb-2">
+              Confirm Password
+            </label>
             <input
               type="password"
               name="confirmPassword"
