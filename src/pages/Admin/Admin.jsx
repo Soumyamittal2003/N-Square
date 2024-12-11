@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom";
 // import Event from "./Event/Event";
 // import BulkEmail from "./BulkEmail/Bulk";
 // import Board from "./Board/Board";
-// import Job from "./Job/Job";
+import Job from "./Job/job";
 // import Feed from "./Feedback/Feed";
 // import Funds from "./Funds/Funds";
 // import Help from "./Help/Help";
@@ -70,6 +70,7 @@ const Admin = () => {
                 <div>this is the home content of the admin dashboard</div>
               }
             />
+            <Route path="job" element={<Job />} />
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
             {/* <Route path="home" element={<Home />} /> */}
             {/* <Route path="profile/:userId" element={<UserProfile />} />
