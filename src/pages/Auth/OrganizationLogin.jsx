@@ -75,8 +75,9 @@ const OrganizationLogin = () => {
         }
       )
       .then((response) => {
+        console.log(response);
         Cookies.set("token", response?.data?.token, { expires: 7 }); // expires in 7 days
-        Cookies.set("id", response?.data?._id, { expires: 7 });
+        Cookies.set("id", response?.data?.id, { expires: 7 });
         Cookies.set("role", response?.data?.role, { expires: 7 });
 
         setShowPopup(true); // Show popup on successful login
