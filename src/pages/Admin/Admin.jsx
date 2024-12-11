@@ -1,12 +1,19 @@
 import Sidebar from "./common/Sidebar";
 import Header from "./common/Header";
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Event from "./Event/Event";
+import Project from "./Project/Project";
+import AboutProject from "./Project/AboutProject";
+import Board from "./Board/Board";
+import Home from "./Home/Home";
+// import Eventcontent from "./EventContent";
+// import AboutEvent from "./Event/AboutEvent";
 // import Home from "./Home/Home";
 // import Event from "./Event/Event";
 // import BulkEmail from "./BulkEmail/Bulk";
 // import Board from "./Board/Board";
-// import Job from "./Job/Job";
+import Job from "./Job/job";
 // import Feed from "./Feedback/Feed";
 // import Funds from "./Funds/Funds";
 // import Help from "./Help/Help";
@@ -25,7 +32,6 @@ import { Routes, Route } from "react-router-dom";
 // import Memories from "./Reunion/Memories";
 // import AlmaResource from "./AlmaResource/AlmaResource";
 // import Volunteer from "./Volunteer/Volunteer";
-// import AboutEvent from "./Event/AboutEvent";
 // import AboutProject from "./Project/AboutProject";
 // import Reunion from "./Reunion/Reunion";
 // import AppliedJobs from "./AppliedJob/AppliedJob";
@@ -65,11 +71,19 @@ const Admin = () => {
           <Routes>
             {/* <Route path="/" element={<Home />} /> */}
             <Route
-              path="/"
+              path="Home"
               element={
                 <div>this is the home content of the admin dashboard</div>
               }
             />
+            <Route path="job" element={<Job />} />
+            <Route path="/Event" element={<Event />} />
+            <Route path="/Project" element={<Project />} />
+            <Route path="/Project/AboutProject" element={<AboutProject />} />
+            <Route path="/Board" element={<Board />} />
+            {/* <Route path="/" element={<Home />} /> */}
+            {/* <Route path="/Event/about" element={<AboutEvent />} />
+            <Route path="Event/EventContent" element={<Eventcontent />} /> */}
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
             {/* <Route path="home" element={<Home />} /> */}
             {/* <Route path="profile/:userId" element={<UserProfile />} />
@@ -80,7 +94,7 @@ const Admin = () => {
             <Route path="funds" element={<Funds />} />
             <Route path="board" element={<Board />} />
             <Route path="event" element={<Event />} />
-            <Route path="event/about-event" element={<AboutEvent />} />
+            
             <Route path="my-events" element={<MyEvent />} />
             <Route path="chat" element={<Chat />} />
             <Route path="video-call" element={<RoomPage />} />
