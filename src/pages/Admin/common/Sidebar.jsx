@@ -48,15 +48,16 @@ const Sidebar = () => {
   }
 
 return (
-  <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-xl shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
+  <div className="mx-4 mt-4 h-[calc(100vh-100px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
     {/* Admin Control Section */}
     {role === "admin" && (
-      <div className="p-4 bg-gray-200 text-gray-700 font-bold text-lg uppercase tracking-wider">
-        Admin Control
-      </div>
+      <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
+      <span className="mr-2">🛠️</span> Admin Control Panel
+    </div>
+    
     )}
 
-    <div className="relative mb-10">
+    <div className="relative mb-15">
       {role !== "admin" && (
         <div className="absolute w-[214px] top-[180px] flex items-center shadow-lg justify-around p-1 border bg-white border-gray-300 rounded-2xl mx-4 py-1">
           <Link
@@ -98,9 +99,9 @@ return (
 
     {/* Navigation Links */}
     <div className="flex-grow relative flex flex-col overflow-auto hide-scrollbar">
-      <nav className="px-4 py-4 space-y-6">
+    <nav className="px-4 py-4 space-y-4 text-lg">
         {role === "admin" && (
-          <SidebarLink
+          <SidebarLink className="py-1 text-xl"
             to="/dashboard/dashboard"
             icon={Board}
             label="Dashboard"
