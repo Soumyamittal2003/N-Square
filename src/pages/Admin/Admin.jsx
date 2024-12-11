@@ -7,6 +7,7 @@ import Project from "./Project/Project";
 import AboutProject from "./Project/AboutProject";
 import Board from "./Board/Board";
 import Home from "./Home/Home";
+import BulkUpload from "./BulkUpload/BulkUpload";
 // import Eventcontent from "./EventContent";
 // import AboutEvent from "./Event/AboutEvent";
 // import Home from "./Home/Home";
@@ -43,6 +44,7 @@ import CommunityFindGroup from "./Community/FindGroup";
 // import FindGroup from "./MentorShip/FindGroup";
 // import RoomPage from "./VideoCall/RoomPage";
 // import ConferenceRoom from "./VideoCall/RoomPage";
+import Pending from "./Pending/pending";
 
 const Admin = () => {
   useEffect(() => {
@@ -83,6 +85,7 @@ const Admin = () => {
               element={<CommunityFindGroup />}
             />
             <Route path="community/groups" element={<Community />} />
+            <Route path="pending-requests" element={<Pending />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
