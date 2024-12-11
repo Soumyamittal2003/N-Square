@@ -59,7 +59,7 @@ const Admin = () => {
   return (
     <div className="h-screen grid grid-rows-[auto_1fr]">
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
 
       {/* Content Area */}
       <div className="grid grid-cols-[280px_1fr] h-screen">
@@ -71,9 +71,7 @@ const Admin = () => {
         <main className="overflow-hidden">
           <Routes>
             {/* <Route path="/" element={<Home />} /> */}
-            <Route
-              path="/"
-              element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="job" element={<Job />} />
             <Route path="/Event" element={<Event />} />
             <Route path="/Project" element={<Project />} />

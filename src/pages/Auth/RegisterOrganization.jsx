@@ -9,7 +9,10 @@ import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
-  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
+  {
+    value: "Computer Science and Engineering",
+    label: "Computer Science and Engineering",
+  },
   { value: "Business Administration", label: "Business Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Civil Engineering", label: "Civil Engineering" },
@@ -30,7 +33,7 @@ const RegisterOrganization = () => {
     name: "",
     email: "",
     collegeAddress: "",
-    collegeRegistrationId: "",
+    university_id: "",
     courses: [],
     password: "",
     confirmPassword: "",
@@ -60,7 +63,7 @@ const RegisterOrganization = () => {
         name: formData.name,
         email: formData.email,
         college_address: formData.collegeAddress,
-        college_registration_id: formData.collegeRegistrationId,
+        university_id: formData.university_id,
         courses: formData.courses.map((course) => course.value),
         password: formData.password,
       };
@@ -68,9 +71,11 @@ const RegisterOrganization = () => {
       await axiosInstance.post("/organizations/signup", payload);
 
       toast.success("Organization registered successfully!");
-      navigate("/login");
+      navigate("/organization-login");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to register organization.");
+      toast.error(
+        error.response?.data?.message || "Failed to register organization."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -132,8 +137,8 @@ const RegisterOrganization = () => {
           {/* College Registration ID Field */}
           <input
             type="text"
-            name="collegeRegistrationId"
-            value={formData.collegeRegistrationId}
+            name="university_id"
+            value={formData.university_id}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
             placeholder="Enter College Registration ID"
@@ -188,7 +193,10 @@ const RegisterOrganization = () => {
 
       {/* Footer Links */}
       <div className="text-center text-gray-600 text-sm mb-2">
-        <Link to="/organization-login" className="text-blue-600 font-medium hover:underline">
+        <Link
+          to="/organization-login"
+          className="text-blue-600 font-medium hover:underline"
+        >
           Login as organization
         </Link>
       </div>
