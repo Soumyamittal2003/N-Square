@@ -1,12 +1,10 @@
 import HomeContent from "./HomeContent";
-import RightSidebar from "./RightSidebar.jsx";
 
 const Home = () => {
   return (
     <>
       <div className="flex w-full">
-        <HomeContent className="w-2/3" />
-        <RightSidebar className="w-1/3" />
+        <HomeContent />
       </div>
     </>
   );
