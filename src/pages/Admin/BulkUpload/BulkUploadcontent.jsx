@@ -2,7 +2,8 @@ import { useState } from 'react';
 import axiosInstance from '../../../utils/axiosinstance';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import * as XLSX from 'xlsx'; // You'll need to install xlsx package for this
+import * as XLSX from 'xlsx'; // Make sure you've installed the xlsx package
+import { saveAs } from 'file-saver'; // You need to install file-saver for this
 
 const BulkUploadContent = () => {
   const [file, setFile] = useState(null);
@@ -22,14 +23,14 @@ const BulkUploadContent = () => {
   const parseExcel = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
-      const binaryStr = reader.result;
-      const workBook = XLSX.read(binaryStr, { type: 'binary' });
+      const arrayBuffer = reader.result;
+      const workBook = XLSX.read(arrayBuffer, { type: 'array' }); // Changed to 'array' for ArrayBuffer
       const sheetName = workBook.SheetNames[0]; // Assuming the first sheet
       const sheet = workBook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(sheet);
       setData(jsonData);
     };
-    reader.readAsBinaryString(file);
+    reader.readAsArrayBuffer(file); // Using readAsArrayBuffer instead of readAsBinaryString
   };
 
   const handleFetch = async () => {
@@ -49,6 +50,23 @@ const BulkUploadContent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Generate Sample Excel File
+  const downloadSample = () => {
+    const sampleData = [
+      { Batch: 'Batch 1', Email: 'email1@example.com', Name: 'John Doe' },
+      { Batch: 'Batch 2', Email: 'email2@example.com', Name: 'Jane Smith' },
+    ];
+
+    const ws = XLSX.utils.json_to_sheet(sampleData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sample Data');
+    const excelFile = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+
+    // Use FileSaver to trigger the download
+    const blob = new Blob([excelFile], { type: 'application/octet-stream' });
+    saveAs(blob, 'sample_bulk_upload.xlsx');
   };
 
   return (
@@ -75,8 +93,17 @@ const BulkUploadContent = () => {
           </div>
         )}
 
-        {/* Fetch Button */}
-        <div className="text-center">
+        {/* Button Section */}
+        <div className="flex justify-center space-x-4">
+          {/* Download Sample Button */}
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-md text-lg"
+            onClick={downloadSample}
+          >
+            Download Sample 📥
+          </button>
+
+          {/* Fetch Button */}
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-md text-lg"
             onClick={handleFetch}

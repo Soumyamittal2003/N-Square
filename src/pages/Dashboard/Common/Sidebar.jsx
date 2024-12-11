@@ -116,6 +116,16 @@ const Sidebar = () => {
               linkKey="bulk-email"
             />
           )}
+          {role === "admin" && (
+            <SidebarLink
+              to="/dashboard/BulkUpload"
+              icon={BulkEmailIcon}
+              label="Bulk Upload"
+              activeLink={activeLink}
+              handleClick={handleClick}
+              linkKey="bulk-email"
+            />
+          )}
           {role !== "admin" && (
             <SidebarLink
               className="py-1"
