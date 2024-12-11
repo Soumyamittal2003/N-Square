@@ -10,6 +10,7 @@ import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
   { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
+  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
   { value: "Business Administration", label: "Business Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Civil Engineering", label: "Civil Engineering" },
@@ -69,58 +70,53 @@ const RegisterOrganization = () => {
       navigate("/login");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to register organization.");
+      toast.error(error.response?.data?.message || "Failed to register organization.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
+    <div className="h-screen flex flex-col items-center bg-white text-black font-sans overflow-auto">
       {/* Top Navigation Bar */}
-      <div className="flex items-center justify-between w-full px-6 py-4 mx-auto">
+      <div className="flex items-center justify-between w-full px-4 py-2">
         <Link to="/">
           <img src={NetworkNext} alt="Network Next" className="h-5" />
         </Link>
-        <button className="p-2 -mr-2">
+        <button className="p-2">
           <X className="w-6 h-6 text-gray-800" />
         </button>
       </div>
 
       {/* Register Form */}
-      <div className="w-full max-w-lg flex flex-col items-center flex-grow px-6 pt-4 pb-8">
-        <div className="text-center mb-8">
-          <img src={Nsquare} alt="Logo" className="w-20 h-20 mx-auto mb-4" />
-          <h1 className="text-xl font-semibold">Register Your Organization</h1>
+      <div className="w-full max-w-md flex flex-col items-center px-4 pt-2 pb-4">
+        <div className="text-center mb-4">
+          <img src={Nsquare} alt="Logo" className="w-16 h-16 mx-auto mb-2" />
+          <h1 className="text-lg font-semibold">Register Your Organization</h1>
         </div>
 
-        <form onSubmit={handleFormSubmit} className="w-full space-y-6">
+        <form onSubmit={handleFormSubmit} className="w-full space-y-4">
           {/* Name Field */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
-              placeholder="Enter your name"
-              required
-            />
-          </div>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Name"
+            required
+          />
 
           {/* Email Field */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Email"
+            required
+          />
 
           {/* College Address Field */}
           <div>
@@ -137,31 +133,26 @@ const RegisterOrganization = () => {
           </div>
 
           {/* Courses Multi-Select */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Courses</label>
-            <Select
-              options={courseOptions}
-              isMulti
-              value={formData.courses}
-              onChange={handleCourseChange}
-              className="basic-multi-select"
-              classNamePrefix="select"
-            />
-          </div>
+          <Select
+            options={courseOptions}
+            isMulti
+            value={formData.courses}
+            onChange={handleCourseChange}
+            className="w-full"
+            classNamePrefix="select"
+            placeholder="Select Courses"
+          />
 
           {/* Password Field */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:ring-1 focus:ring-gray-600 focus:outline-none"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
+            placeholder="Password"
+            required
+          />
 
           {/* Confirm Password Field */}
           <div>
@@ -181,13 +172,20 @@ const RegisterOrganization = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition ${
+            className={`w-full bg-black text-white py-2 rounded-lg font-medium hover:bg-gray-800 transition ${
               isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
+      </div>
+
+      {/* Footer Links */}
+      <div className="text-center text-gray-600 text-sm mb-2">
+        <Link to="/organization-login" className="text-blue-600 font-medium hover:underline">
+          Login as organization
+        </Link>
       </div>
     </div>
   );
