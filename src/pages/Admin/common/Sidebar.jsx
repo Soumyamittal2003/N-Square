@@ -102,7 +102,7 @@ return (
     <nav className="px-4 py-4 space-y-4 text-lg">
         {role === "admin" && (
           <SidebarLink className="py-1 text-xl"
-            to="/admin-dashboard/dashboard"
+            to="/admin-dashboard/Board"
             icon={Board}
             label="Dashboard"
             activeLink={activeLink}
