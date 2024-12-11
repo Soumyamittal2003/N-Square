@@ -1,16 +1,10 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import {
-  FaUsers,
-  FaGraduationCap,
-  FaChalkboardTeacher,
-  FaCalendarAlt,
-  FaCalendarCheck,
-} from "react-icons/fa"; // Importing icons for tabs
-import Cookies from "js-cookie";
+import { FaUsers, FaGraduationCap, FaChalkboardTeacher, FaCalendarAlt, FaCalendarCheck } from "react-icons/fa"; // Importing icons for tabs
+
 // Define API URL
-const organizationId = Cookies.get("id");
+const organizationId = "6759c089b5a83a2e1a350761";
 
 const DashboardPage = () => {
   const [selectedTab, setSelectedTab] = useState("students");
@@ -220,56 +214,60 @@ const DashboardPage = () => {
         );
       case "pastEvents":
         return (
-          <div className="space-y-6">
-            {pastEvents.length > 0 ? (
-              pastEvents.map((event) => (
-                <div
-                  key={event._id}
-                  className="flex items-center space-x-4 p-4 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <img
-                    src={event.eventphoto}
-                    alt="event"
-                    className="w-16 h-16 rounded-md"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-lg text-gray-900">{event.title}</h3>
-                    <p className="text-sm text-gray-600">{event.eventDescription}</p>
-                    <p className="text-sm text-gray-500">{event.date} at {event.time}</p>
-                    <p className="text-sm text-gray-500">Speaker: {event.speaker}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No past events available.</p>
-            )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pastEvents.length > 0 ? (
+                  pastEvents.map((event) => (
+                    <tr key={event._id} className="border-t border-gray-200">
+                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">No past events available.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         );
       case "upcomingEvents":
         return (
-          <div className="space-y-6">
-            {upcomingEvents.length > 0 ? (
-              upcomingEvents.map((event) => (
-                <div
-                  key={event._id}
-                  className="flex items-center space-x-4 p-4 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <img
-                    src={event.eventphoto}
-                    alt="event"
-                    className="w-16 h-16 rounded-md"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-lg text-gray-900">{event.title}</h3>
-                    <p className="text-sm text-gray-600">{event.eventDescription}</p>
-                    <p className="text-sm text-gray-500">{event.date} at {event.time}</p>
-                    <p className="text-sm text-gray-500">Speaker: {event.speaker}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No upcoming events available.</p>
-            )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                </tr>
+              </thead>
+              <tbody>
+                {upcomingEvents.length > 0 ? (
+                  upcomingEvents.map((event) => (
+                    <tr key={event._id} className="border-t border-gray-200">
+                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">No upcoming events available.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         );
       default:
