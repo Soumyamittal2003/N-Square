@@ -68,28 +68,28 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 relative">
-  {/* Background Blur */}
-  <div className="absolute inset-0 backdrop-blur-lg bg-gradient-to-br from-white to-gray-200 opacity-80"></div>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 relative">
+      <div className="container mx-auto px-6 py-8">
+        <h2 className="text-4xl font-bold mb-8 text-center text-gray-800">
+          Get Trained For The Future, <span className="text-blue-600">Today</span>
+        </h2>
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-[30%_70%]">
+          {/* Contacts Section */}
+          <div className="bg-blue-600 text-white p-6">
+            <h3 className="text-2xl font-semibold mb-4 text-center">Contacts</h3>
+            <Contacts contacts={contacts} changeChat={handleChatChange} />
+          </div>
 
-  {/* Chat Container */}
-  <div className="relative z-10 h-[80vh] w-full max-w-7xl bg-white shadow-2xl rounded-3xl grid grid-cols-[30%_70%] overflow-hidden">
-    {/* Contacts Section */}
-    <div className="bg-gradient-to-b from-gray-700 to-gray-900 text-white p-6 flex flex-col">
-      <h3 className="text-2xl font-bold mb-6 text-center">Contacts</h3>
-      <Contacts contacts={contacts} changeChat={handleChatChange} />
+          {/* Chat Section */}
+          <div className="p-8">
+            {currentChat === undefined ? (
+              <Welcome />
+            ) : (
+              <ChatContainer currentChat={currentChat} socket={socket} />
+            )}
+          </div>
+        </div>
+      </div>
     </div>
-
-    {/* Chat Section */}
-    <div className="bg-white p-8 flex flex-col">
-      {currentChat === undefined ? (
-        <Welcome />
-      ) : (
-        <ChatContainer currentChat={currentChat} socket={socket} />
-      )}
-    </div>
-  </div>
-</div>
-
   );
 }

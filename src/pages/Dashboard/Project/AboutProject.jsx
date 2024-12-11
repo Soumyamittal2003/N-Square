@@ -24,8 +24,9 @@ const ProjectDetail = () => {
     mentorContributors: [],
     studentContributors: [],
   });
-
   const [isContributor, setIsContributor] = useState(false);
+
+  console.log(projectData);
 
   useEffect(() => {
     const fetchDonations = async () => {
@@ -44,10 +45,8 @@ const ProjectDetail = () => {
     };
     console.log("Donation Details State:", donationDetails);
 
-  
     fetchDonations();
-  }, []);
-  
+  }, [donationDetails]);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -281,12 +280,15 @@ const ProjectDetail = () => {
         <div className="absolute top-0 right-0">
           <h3 className="text-lg font-bold">
             Total Donation: ₹
-            {donationDetails.reduce((total, donation) => total + (donation.amount || 0), 0)}
+            {donationDetails.reduce(
+              (total, donation) => total + (donation.amount || 0),
+              0
+            )}
           </h3>
         </div>
-    
+
         <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
-    
+
         {/* Loading State */}
         {donationLoading ? (
           <p className="mt-4">Loading donations...</p>
@@ -298,10 +300,16 @@ const ProjectDetail = () => {
             {donationDetails.length > 0 ? (
               <ul>
                 {donationDetails.map((donation) => (
-                  <li key={donation._id} className="flex justify-between items-center mt-2">
+                  <li
+                    key={donation._id}
+                    className="flex justify-between items-center mt-2"
+                  >
                     <div className="flex items-center">
                       <img
-                        src={donation.user?.profileimageUrl || "https://via.placeholder.com/40"}
+                        src={
+                          donation.user?.profileimageUrl ||
+                          "https://via.placeholder.com/40"
+                        }
                         alt={donation.user?.firstName || "User"}
                         className="w-8 h-8 rounded-full mr-3"
                       />
@@ -309,7 +317,9 @@ const ProjectDetail = () => {
                         {donation.user?.firstName} {donation.user?.lastName}
                       </p>
                     </div>
-                    <span className="text-sm font-medium">₹{donation.amount || 0}</span>
+                    <span className="text-sm font-medium">
+                      ₹{donation.amount || 0}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -320,7 +330,6 @@ const ProjectDetail = () => {
         )}
       </div>
     ),
-    
   };
 
   return (
@@ -379,7 +388,7 @@ const ProjectDetail = () => {
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
               <img
                 src={
-                  projectData?.profilePhoto || "https://via.placeholder.com/100"
+                  projectData?.projectPhoto || "https://via.placeholder.com/100"
                 }
                 alt="Project Icon"
                 className="w-full h-full rounded-full object-cover"
