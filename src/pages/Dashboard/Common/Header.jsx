@@ -100,7 +100,6 @@ const Header = () => {
   const notificationsRef = useRef(null);
   const role = Cookies.get("role");
   const id = Cookies.get("id");
-  console.log(role, id);
 
   const navLinks = [
     { name: "Home", path: "/dashboard/home" },
@@ -111,7 +110,11 @@ const Header = () => {
   ];
 
   const settingsOptions = [
-    { name: "Profile", path: `/dashboard/common/Userprofile/${id}`, icon: setting1 },
+    {
+      name: "Profile",
+      path: `/dashboard/common/Userprofile/${id}`,
+      icon: setting1,
+    },
     { name: "Account Preference", path: "/account-preference", icon: setting2 },
     { name: "Account Activity", path: "/account-activity", icon: setting3 },
     { name: "Post Saved", path: "/post-saved", icon: setting4 },
@@ -129,9 +132,6 @@ const Header = () => {
     { name: "About", path: "/about", icon: setting12 },
     { name: "Feedback & Survey", path: "/dashboard/feed", icon: setting12 },
   ];
-  
-  console.log(settingsOptions);
-
   const notifications = [
     { text: "You have a new follower!", time: "2 mins ago" },
     { text: "Your post was liked by 10 people", time: "1 hour ago" },

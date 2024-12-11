@@ -19,7 +19,7 @@ const CreateVolunteer = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    try{
+    try {
       if (formData.data.success === true) {
         toast.success("Volunteer Position created successfully!");
       } else {
@@ -28,10 +28,8 @@ const CreateVolunteer = ({ onClose }) => {
     } catch (error) {
       console.error("Error creating Volunteer Position:", error);
       alert("An error occurred");
-    
     }
 
-    console.log("Form Submitted:", formData);
     // You can add API submission logic here
     onClose(); // Close the popup after submission
   };

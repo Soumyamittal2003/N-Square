@@ -113,7 +113,6 @@ const Donation = () => {
                   userID: userId,
                 }
               );
-              console.log(response);
               alert("Payment Successful!");
             } catch (error) {
               console.error("Error verifying payment:", error);
