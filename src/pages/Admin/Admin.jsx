@@ -1,7 +1,7 @@
 import Sidebar from "./common/Sidebar";
 import Header from "./common/Header";
 import { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Event from "./Event/Event";
 import Project from "./Project/Project";
 import AboutProject from "./Project/AboutProject";
@@ -20,7 +20,7 @@ import Job from "./Job/job";
 // import Project from "./Project/Project";
 // import Mentor from "./MentorShip/Mentor";
 // import Community from "./Community/Mentor";
-// import InspiringStory from "./InspiringStory/InspiringStory";
+import InspiringStory from "./InspiringStory/InspiringStory";
 // import Connection from "./Connection/Connection";
 // import MyEvent from "./MyEvent/MyEvent";
 // import UserProfile from "./Common/UserProfile";
@@ -72,14 +72,12 @@ const Admin = () => {
             {/* <Route path="/" element={<Home />} /> */}
             <Route
               path="Home"
-              element={
-                <div>this is the home content of the admin dashboard</div>
-              }
-            />
+              element={<Home />} />
             <Route path="job" element={<Job />} />
             <Route path="/Event" element={<Event />} />
             <Route path="/Project" element={<Project />} />
             <Route path="/Project/AboutProject" element={<AboutProject />} />
+            <Route path="inspiring-story" element={<InspiringStory />} />
             <Route path="/Board" element={<Board />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />

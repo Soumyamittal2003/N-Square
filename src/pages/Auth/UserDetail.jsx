@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import NetworkNextLogo from "../../assets/icons/Network Next.svg";
@@ -15,6 +15,7 @@ const UserDetail = () => {
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [profileImage, setProfileImage] = useState("");
+  const [organizations, setOrganizations] = useState([]);
   const [formData, setFormData] = useState({
     email: location.state?.email || "",
     firstName: "",
@@ -66,6 +67,23 @@ const UserDetail = () => {
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await axiosInstance.get(
+          "/organizations/get-all-organizations"
+        );
+        console.log(response.data);
+        setOrganizations(response.data); // Assuming the API response is an array
+      } catch (err) {
+        console.error("Error fetching organizations:", err);
+        setError(err.message);
+      }
+    };
+
+    fetchOrganizations();
+  }, []);
 
   // Handle Input Changes
   const formatDateForInput = (isoDate) => {
@@ -289,12 +307,11 @@ const UserDetail = () => {
                 <option value="" disabled>
                   Select Organization
                 </option>
-                <option value="Gujarat Technical University">
-                  Gujarat Technical University
-                </option>
-                <option value="OP Jindal University">
-                  OP Jindal University
-                </option>
+                {organizations.map((org) => (
+                  <option key={org._id} value={org._id}>
+                    {org.name}
+                  </option>
+                ))}
               </select>
 
               <div className="flex justify-end mt-6">
