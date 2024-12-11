@@ -9,6 +9,7 @@ import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
+  
   {
     value: "Computer Science and Engineering",
     label: "Computer Science and Engineering",
@@ -25,11 +26,12 @@ const courseOptions = [
   { value: "Economics", label: "Economics" },
   { value: "Fine Arts and Design", label: "Fine Arts and Design" },
 ];
-const [profileImagePreview, setProfileImagePreview] = useState(null);
+
 
 const RegisterOrganization = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [formData, setFormData] = useState({
     imageUrl: "",
     name: "",
@@ -42,8 +44,13 @@ const RegisterOrganization = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value ,type, files } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (type==="file") {
+      if (name === "imageUrl") {
+        setProfileImagePreview(URL.createObjectURL(files[0]));
+      }
+    }
   };
 
   const handleCourseChange = (selectedOptions) => {
