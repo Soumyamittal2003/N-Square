@@ -102,7 +102,7 @@ const Header = () => {
   const id = Cookies.get("id");
 
   const navLinks = [
-    { name: "Home", path: "/dashboard/home" },
+    { name: "Home", path: "/dashboard" },
     { name: "Job", path: "/dashboard/job" },
     { name: "Event", path: "/dashboard/event" },
     { name: "Project", path: "/dashboard/project" },
