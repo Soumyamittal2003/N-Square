@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import { FaUsers, FaGraduationCap, FaChalkboardTeacher, FaCalendarAlt, FaCalendarCheck } from "react-icons/fa"; // Importing icons for tabs
-
+import {
+  FaUsers,
+  FaGraduationCap,
+  FaChalkboardTeacher,
+  FaCalendarAlt,
+  FaCalendarCheck,
+} from "react-icons/fa"; // Importing icons for tabs
+import Cookies from "js-cookie";
 // Define API URL
-const organizationId = "6759c089b5a83a2e1a350761";
+const organizationId = Cookies.get("id");
 
 const DashboardPage = () => {
   const [selectedTab, setSelectedTab] = useState("students");
@@ -124,10 +130,18 @@ const DashboardPage = () => {
                     className="w-16 h-16 rounded-md"
                   />
                   <div>
-                    <h3 className="font-semibold text-lg text-gray-900">{event.title}</h3>
-                    <p className="text-sm text-gray-600">{event.eventDescription}</p>
-                    <p className="text-sm text-gray-500">{event.date} at {event.time}</p>
-                    <p className="text-sm text-gray-500">Speaker: {event.speaker}</p>
+                    <h3 className="font-semibold text-lg text-gray-900">
+                      {event.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {event.eventDescription}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {event.date} at {event.time}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Speaker: {event.speaker}
+                    </p>
                   </div>
                 </div>
               ))
@@ -151,10 +165,18 @@ const DashboardPage = () => {
                     className="w-16 h-16 rounded-md"
                   />
                   <div>
-                    <h3 className="font-semibold text-lg text-gray-900">{event.title}</h3>
-                    <p className="text-sm text-gray-600">{event.eventDescription}</p>
-                    <p className="text-sm text-gray-500">{event.date} at {event.time}</p>
-                    <p className="text-sm text-gray-500">Speaker: {event.speaker}</p>
+                    <h3 className="font-semibold text-lg text-gray-900">
+                      {event.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {event.eventDescription}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {event.date} at {event.time}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Speaker: {event.speaker}
+                    </p>
                   </div>
                 </div>
               ))
