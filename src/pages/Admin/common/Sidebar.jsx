@@ -5,6 +5,8 @@ import newPostLogo from "../../../assets/icons/newPostLogo.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
 import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
 import BulkEmailIcon from "../../../assets/icons/mail.svg";
+import Circular from "../../../assets/icons/circular.svg";
+import Load from "../../../assets/icons/Load.svg";
 import Board from "../../../assets/icons/board.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -13,6 +15,7 @@ import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import logouticon from "../../../assets/icons/settings/logout.svg";
+import { Upload } from "lucide-react";
 
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
@@ -126,7 +129,7 @@ const Sidebar = () => {
           {role === "admin" && (
             <SidebarLink
               to="/admin-dashboard/BulkEmail"
-              icon={BulkEmailIcon}
+              icon={Circular}
               label="Send Circular"
               activeLink={activeLink}
               handleClick={handleClick}
@@ -136,7 +139,7 @@ const Sidebar = () => {
           {role === "admin" && (
             <SidebarLink
               to="/admin-dashboard/BulkUpload"
-              icon={BulkEmailIcon}
+              icon={Load}
               label="Bulk Upload"
               activeLink={activeLink}
               handleClick={handleClick}

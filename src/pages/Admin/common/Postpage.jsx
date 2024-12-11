@@ -40,22 +40,29 @@ const PostPopup = ({ setPopupOpen }) => {
 
   const postOptions = [
     { label: "Post", visibility: "Anyone can view", onClick: handlePostClick },
+    ...(role !== "admin"
+      ? [
     {
       label: "Project",
       visibility: "Followed People can view",
       onClick: handleProjectClick,
-    },
+    },]
+    : []),
     {
       label: "Event",
       visibility: "Anyone can view",
       onClick: handleEventClick,
     },
+    ...(role !== "admin"
+      ? [
     {
       label: "Story",
       visibility: "Anyone can view",
       onClick: handleStoryClick,
     },
-    ...(role !== "student"
+        ]
+      : []),
+    ...(role !== "student" && role !== "admin"
       ? [
           {
             label: "Job",
@@ -64,12 +71,13 @@ const PostPopup = ({ setPopupOpen }) => {
           },
         ]
       : []),
+
     {
       label: "Volunteering",
       visibility: "Anyone can view",
       onClick: handleVolunteerClick,
     },
-    ...(role !== "student"
+    ...(role !== "student" && role !== "admin"
       ? [
           {
             label: "Alma Resources",
@@ -78,7 +86,7 @@ const PostPopup = ({ setPopupOpen }) => {
           },
         ]
       : []),
-    ...(role !== "student"
+    ...(role !== "student" && role !== "admin"
       ? [
           {
             label: "Reunion",
