@@ -2,9 +2,12 @@ import briefcase from "../../../assets/icons/briefcase-01.svg";
 import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
+import Home1 from "../../../assets/icons/Home1.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
 import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
 import BulkEmailIcon from "../../../assets/icons/mail.svg";
+import Circular from "../../../assets/icons/circular.svg";
+import Load from "../../../assets/icons/Load.svg";
 import Board from "../../../assets/icons/board.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -13,6 +16,7 @@ import axiosInstance from "../../../utils/axiosinstance";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import logouticon from "../../../assets/icons/settings/logout.svg";
+import { Upload } from "lucide-react";
 
 const Sidebar = () => {
   const [userData, setUserData] = useState(null);
@@ -106,7 +110,7 @@ const Sidebar = () => {
             <SidebarLink
               className="py-1 text-xl"
               to="/admin-dashboard/"
-              icon={Board}
+              icon={Home1}
               label="Home"
               activeLink={activeLink}
               handleClick={handleClick}
@@ -139,7 +143,7 @@ const Sidebar = () => {
           {role === "admin" && (
             <SidebarLink
               to="/admin-dashboard/BulkEmail"
-              icon={BulkEmailIcon}
+              icon={Circular}
               label="Send Circular"
               activeLink={activeLink}
               handleClick={handleClick}
@@ -149,11 +153,11 @@ const Sidebar = () => {
           {role === "admin" && (
             <SidebarLink
               to="/admin-dashboard/BulkUpload"
-              icon={BulkEmailIcon}
+              icon={Load}
               label="Bulk Upload"
               activeLink={activeLink}
               handleClick={handleClick}
-              linkKey="bulk-Upload"
+              linkKey="BulkUpload"
             />
           )}
           {role !== "admin" && (
