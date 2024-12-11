@@ -61,7 +61,7 @@ const BoardContent = () => {
       </div>
 
       <div className="w-full mt-8">
-        <h2 className="text-2xl font-bold mb-4 text-Start">Student List</h2>
+        <h2 className="text-2xl font-bold mb-4 text-start">Student List</h2>
         <div className="overflow-x-auto">
           <table className="w-full table-auto border-collapse border border-gray-300">
             <thead>
@@ -92,15 +92,15 @@ const BoardContent = () => {
                   </tr>
                   {openIndex === index && (
                     <tr>
-                      <td colSpan="5" className="border border-gray-300 p-4 bg-gray-50">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <td colSpan="5" className="border border-gray-300 p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded shadow-lg">
                           <div>
-                            <p><strong>Name:</strong> {alumni.name}</p>
-                            <p><strong>Email:</strong> {alumni.email}</p>
+                            <p className="font-semibold"><strong>Name:</strong> {alumni.name}</p>
+                            <p className="font-semibold"><strong>Email:</strong> {alumni.email}</p>
                           </div>
                           <div>
-                            <p><strong>Address:</strong> {alumni.address}</p>
-                            <p><strong>Phone Number:</strong> {alumni.phone}</p>
+                            <p className="font-semibold"><strong>Address:</strong> {alumni.address}</p>
+                            <p className="font-semibold"><strong>Phone Number:</strong> {alumni.phone}</p>
                           </div>
                         </div>
                       </td>
