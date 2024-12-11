@@ -44,10 +44,8 @@ const ProjectDetail = () => {
     };
     console.log("Donation Details State:", donationDetails);
 
-  
     fetchDonations();
-  }, []);
-  
+  }, [donationDetails]);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -281,12 +279,15 @@ const ProjectDetail = () => {
         <div className="absolute top-0 right-0">
           <h3 className="text-lg font-bold">
             Total Donation: ₹
-            {donationDetails.reduce((total, donation) => total + (donation.amount || 0), 0)}
+            {donationDetails.reduce(
+              (total, donation) => total + (donation.amount || 0),
+              0
+            )}
           </h3>
         </div>
-    
+
         <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
-    
+
         {/* Loading State */}
         {donationLoading ? (
           <p className="mt-4">Loading donations...</p>
@@ -298,10 +299,16 @@ const ProjectDetail = () => {
             {donationDetails.length > 0 ? (
               <ul>
                 {donationDetails.map((donation) => (
-                  <li key={donation._id} className="flex justify-between items-center mt-2">
+                  <li
+                    key={donation._id}
+                    className="flex justify-between items-center mt-2"
+                  >
                     <div className="flex items-center">
                       <img
-                        src={donation.user?.profileimageUrl || "https://via.placeholder.com/40"}
+                        src={
+                          donation.user?.profileimageUrl ||
+                          "https://via.placeholder.com/40"
+                        }
                         alt={donation.user?.firstName || "User"}
                         className="w-8 h-8 rounded-full mr-3"
                       />
@@ -309,7 +316,9 @@ const ProjectDetail = () => {
                         {donation.user?.firstName} {donation.user?.lastName}
                       </p>
                     </div>
-                    <span className="text-sm font-medium">₹{donation.amount || 0}</span>
+                    <span className="text-sm font-medium">
+                      ₹{donation.amount || 0}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -320,7 +329,6 @@ const ProjectDetail = () => {
         )}
       </div>
     ),
-    
   };
 
   return (
