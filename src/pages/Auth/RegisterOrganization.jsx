@@ -9,6 +9,7 @@ import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
+  
   {
     value: "Computer Science and Engineering",
     label: "Computer Science and Engineering",
@@ -26,10 +27,13 @@ const courseOptions = [
   { value: "Fine Arts and Design", label: "Fine Arts and Design" },
 ];
 
+
 const RegisterOrganization = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [formData, setFormData] = useState({
+    imageUrl: "",
     name: "",
     email: "",
     collegeAddress: "",
@@ -40,8 +44,13 @@ const RegisterOrganization = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value ,type, files } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (type==="file") {
+      if (name === "imageUrl") {
+        setProfileImagePreview(URL.createObjectURL(files[0]));
+      }
+    }
   };
 
   const handleCourseChange = (selectedOptions) => {
@@ -102,6 +111,31 @@ const RegisterOrganization = () => {
 
         <form onSubmit={handleFormSubmit} className="w-full space-y-4">
           {/* Name Field */}
+          <div className="flex flex-col items-center ">
+            <label
+              htmlFor="imageUrl"
+              className="w-14 h-14 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition ease-in-out duration-200"
+            >
+              {profileImagePreview ? (
+                <img
+                  src={profileImagePreview}
+                  alt="Profile Preview"
+                  className="rounded-full w-12 h-12 object-cover"
+                />
+              ) : (
+                <span className="text-2xl text-gray-500">📎</span>
+              )}
+            </label>
+            <input
+              type="file"
+              name="imageUrl"
+              id="imageUrl"
+              onChange={handleChange}
+              className="hidden"
+            />
+            <span className="text-sm text-gray-600 mt-2">Upload Organization Photo</span>
+          </div>
+
           <input
             type="text"
             name="name"

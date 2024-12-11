@@ -52,11 +52,9 @@ const DashboardPage = () => {
     try {
       const confirmation = window.confirm("Are you sure you want to delete this item?");
       if (confirmation) {
-        // You would need to implement the delete logic on your API
         const response = await axiosInstance.delete(`/organizations/${type}/${id}`);
         if (response.status === 200) {
           alert(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully.`);
-          // Remove the deleted item from the local state
           if (type === "student") {
             setStudentsData(studentsData.filter((student) => student._id !== id));
           } else if (type === "alumni") {
@@ -82,26 +80,19 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Name
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Email
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Status
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Phone Number
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Actions
-                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {studentsData.map((student) => (
-                  <tr key={student._id} className="border-t border-gray-200">
+                  <tr
+                    key={student._id}
+                    className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
+                  >
                     <td className="py-3 px-4 text-sm text-gray-800">{`${student.firstName} ${student.lastName}`}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">{student.email}</td>
                     <td className="py-3 px-4 text-sm text-gray-500">
@@ -130,26 +121,19 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Name
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Email
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Status
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Phone Number
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Actions
-                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {alumniData.map((alumni) => (
-                  <tr key={alumni._id} className="border-t border-gray-200">
+                  <tr
+                    key={alumni._id}
+                    className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
+                  >
                     <td className="py-3 px-4 text-sm text-gray-800">{`${alumni.firstName} ${alumni.lastName}`}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">{alumni.email}</td>
                     <td className="py-3 px-4 text-sm text-gray-500">
@@ -157,7 +141,7 @@ const DashboardPage = () => {
                         Active
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.phoneNumber}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.phone}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">
                       <button
                         className="text-red-500"
@@ -179,26 +163,19 @@ const DashboardPage = () => {
               <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                      Name
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                      Email
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                      Status
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                      Phone Number
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                      Actions
-                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {facultyData.map((faculty) => (
-                    <tr key={faculty._id} className="border-t border-gray-200">
+                    <tr
+                      key={faculty._id}
+                      className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
+                    >
                       <td className="py-3 px-4 text-sm text-gray-800">{`${faculty.firstName} ${faculty.lastName}`}</td>
                       <td className="py-3 px-4 text-sm text-gray-600">{faculty.email}</td>
                       <td className="py-3 px-4 text-sm text-gray-500">
@@ -230,25 +207,20 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Event Title
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Date
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Speaker
-                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
                 </tr>
               </thead>
               <tbody>
                 {pastEvents.length > 0 ? (
                   pastEvents.map((event) => (
-                    <tr key={event._id} className="border-t border-gray-200">
+                    <tr
+                      key={event._id}
+                      className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
+                    >
                       <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
-                        {event.date} at {event.time}
-                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
                       <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
                     </tr>
                   ))
@@ -269,25 +241,20 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Event Title
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Date
-                  </th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
-                    Speaker
-                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
                 </tr>
               </thead>
               <tbody>
                 {upcomingEvents.length > 0 ? (
                   upcomingEvents.map((event) => (
-                    <tr key={event._id} className="border-t border-gray-200">
+                    <tr
+                      key={event._id}
+                      className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
+                    >
                       <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
-                        {event.date} at {event.time}
-                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
                       <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
                     </tr>
                   ))
