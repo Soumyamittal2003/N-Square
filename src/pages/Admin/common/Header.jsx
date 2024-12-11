@@ -101,12 +101,9 @@ const Header = () => {
   const id = Cookies.get("id");
 
   const navLinks = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/admin-dashboard" },
     { name: "Job", path: "/admin-dashboard/job" },
     { name: "Event", path: "/admin-dashboard/event" },
-    { name: "Project", path: "/admin-dashboard/project" },
-    { name: "Story", path: "/admin-dashboard/inspiring-story" },
-    
   ];
 
   const settingsOptions = [
@@ -115,14 +112,34 @@ const Header = () => {
       path: `/admin-dashboard/common/Userprofile/${id}`,
       icon: setting1,
     },
-    { name: "Account Preference", path: "/admin-dashboard/account-preference", icon: setting2 },
-    { name: "Account Activity", path: "/admin-dashboard/account-activity", icon: setting3 },
+    {
+      name: "Account Preference",
+      path: "/admin-dashboard/account-preference",
+      icon: setting2,
+    },
+    {
+      name: "Account Activity",
+      path: "/admin-dashboard/account-activity",
+      icon: setting3,
+    },
     { name: "Post Saved", path: "/admin-dashboard/post-saved", icon: setting4 },
     { name: "Download", path: "/admin-dashboard/download", icon: setting5 },
     { name: "My Jobs", path: "/admin-dashboard/my-jobs", icon: setting6 },
-    { name: "Data Privacy", path: "/admin-dashboard/data-privacy", icon: setting7 },
-    { name: "Privacy & Security", path: "/admin-dashboard/privacy-security", icon: setting8 },
-    { name: "Device Permission", path: "/admin-dashboard/device-permission", icon: setting9 },
+    {
+      name: "Data Privacy",
+      path: "/admin-dashboard/data-privacy",
+      icon: setting7,
+    },
+    {
+      name: "Privacy & Security",
+      path: "/admin-dashboard/privacy-security",
+      icon: setting8,
+    },
+    {
+      name: "Device Permission",
+      path: "/admin-dashboard/device-permission",
+      icon: setting9,
+    },
     {
       name: "Data Usage & Media Quality",
       path: "/admin-dashboard/data-usage-media-quality",
@@ -130,7 +147,11 @@ const Header = () => {
     },
     { name: "Language", path: "/admin-dashboard/language", icon: setting11 },
     { name: "About", path: "/admin-dashboard/about", icon: setting12 },
-    { name: "Feedback & Survey", path: "/admin-dashboard/feed", icon: setting12 },
+    {
+      name: "Feedback & Survey",
+      path: "/admin-dashboard/feed",
+      icon: setting12,
+    },
   ];
   const notifications = [
     { text: "You have a new follower!", time: "2 mins ago" },
