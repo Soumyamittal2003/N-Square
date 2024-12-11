@@ -1,118 +1,93 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Grid } from "@mui/material";
+import { getOrganizationId } from "./utils/getOrganizationId"; // Import the utility function
 
-const leaveData = [
-  { type: "Students", count: 13 },
-  { type: "Alumni", count: 10 },
-  { type: "Event Conducted", count: 10 },
-  { type: "Event Scheduled", count: 10 },
-  { type: "Event Scheduled", count: 10 },
-];
-
-const alumniData = [
-  {
-    batchYear: 2020,
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "123-456-7890",
-    address: "123 Main Street, New York, NY",
-  },
-  {
-    batchYear: 2019,
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    phone: "987-654-3210",
-    address: "456 Oak Avenue, Los Angeles, CA",
-  },
-  {
-    batchYear: 2021,
-    name: "Alice Johnson",
-    email: "alice.johnson@example.com",
-    phone: "555-666-7777",
-    address: "789 Pine Road, Chicago, IL",
-  },
-  {
-    batchYear: 2018,
-    name: "Bob Brown",
-    email: "bob.brown@example.com",
-    phone: "444-555-6666",
-    address: "101 Maple Street, Houston, TX",
-  },
-];
+interface Student {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+}
 
 const BoardContent = () => {
-  const [openIndex, setOpenIndex] = useState(null);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const organizationId = getOrganizationId();
 
-  const toggleDetails = (index) => {
+  useEffect(() => {
+    const fetchStudents = async () => {
+      if (!organizationId) {
+        console.error("Organization ID not found in cookies");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `/organizations/dashboard/${organizationId}`
+        );
+        setStudents(response.data.data.student);
+      } catch (error) {
+        console.error("Error fetching student data:", error);
+      }
+    };
+
+    fetchStudents();
+  }, [organizationId]);
+
+  const toggleDetails = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <div className="w-[100%] flex flex-col items-center gap-8 p-4">
-      <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-8">
-        {leaveData.map((leave, index) => (
-          <div
-            key={index}
-            className="w-48 p-6 border border-gray-300 rounded-lg shadow-md text-center"
-          >
-            <h2 className="text-lg font-semibold mb-2 truncate">{leave.type}</h2>
-            <p className="text-4xl font-bold">{leave.count}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="w-full mt-8">
-        <h2 className="text-2xl font-bold mb-4 text-start">Student List</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full table-auto border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-4 py-2">Batch Year</th>
-                <th className="border border-gray-300 px-4 py-2">Name</th>
-                <th className="border border-gray-300 px-4 py-2">Email</th>
-                <th className="border border-gray-300 px-4 py-2">Phone Number</th>
-                <th className="border border-gray-300 px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {alumniData.map((alumni, index) => (
-                <React.Fragment key={index}>
-                  <tr className="hover:bg-gray-100">
-                    <td className="border border-gray-300 px-4 py-2 text-center">{alumni.batchYear}</td>
-                    <td className="border border-gray-300 px-4 py-2">{alumni.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{alumni.email}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{alumni.phone}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      <button
-                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                        onClick={() => toggleDetails(index)}
-                      >
-                        {openIndex === index ? "Hide" : "View"}
-                      </button>
-                    </td>
-                  </tr>
-                  {openIndex === index && (
-                    <tr>
-                      <td colSpan="5" className="border border-gray-300 p-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded shadow-lg">
-                          <div>
-                            <p className="font-semibold"><strong>Name:</strong> {alumni.name}</p>
-                            <p className="font-semibold"><strong>Email:</strong> {alumni.email}</p>
-                          </div>
-                          <div>
-                            <p className="font-semibold"><strong>Address:</strong> {alumni.address}</p>
-                            <p className="font-semibold"><strong>Phone Number:</strong> {alumni.phone}</p>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <Box sx={{ width: "100%", p: 4 }}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Student List
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Name</strong></TableCell>
+              <TableCell><strong>Email</strong></TableCell>
+              <TableCell><strong>Phone</strong></TableCell>
+              <TableCell><strong>Actions</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {students.map((student, index) => (
+              <React.Fragment key={student._id}>
+                <TableRow>
+                  <TableCell>{`${student.firstName} ${student.lastName}`}</TableCell>
+                  <TableCell>{student.email}</TableCell>
+                  <TableCell>{student.phone}</TableCell>
+                  <TableCell>
+                    <Button variant="contained" color="primary" onClick={() => toggleDetails(index)}>
+                      {openIndex === index ? "Hide" : "View"}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                {openIndex === index && (
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <Typography variant="body1"><strong>Address:</strong> {student.address}</Typography>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
