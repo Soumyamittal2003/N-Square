@@ -18,9 +18,12 @@ import { Navigate } from "react-router-dom";
 
 import PrivateRoute from "./utils/PrivateRoute";
 import Cookies from "js-cookie";
+import Admin from "./pages/Admin/Admin";
 
 function App() {
   const token = Cookies.get("token");
+  const role = Cookies.get("role"); // Retrieve the role from cookies
+
   return (
     <div className="font-sans max-h-screen">
       <ToastContainer
@@ -38,9 +41,18 @@ function App() {
         {/* Public Routes */}
         <Route
           path="/"
-          element={token ? <Navigate to="/dashboard" /> : <HomePage />}
+          element={
+            token ? (
+              role === "admin" ? (
+                <Navigate to="/admin-dashboard" />
+              ) : (
+                <Navigate to="/dashboard" />
+              )
+            ) : (
+              <HomePage />
+            )
+          }
         />
-        s
         <Route path="/login" element={<Login />} />
         <Route path="/organization-login" element={<OrganizationLogin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -52,6 +64,7 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/user-detail" element={<UserDetail />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+
         {/* Private Routes */}
         <Route
           path="/dashboard/*"
@@ -61,6 +74,15 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/admin-dashboard/*"
+          element={
+            <PrivateRoute>
+              <Admin />
+            </PrivateRoute>
+          }
+        />
+
         {/* Fallback Route */}
         <Route path="*" element={<Error404 />} />
       </Routes>

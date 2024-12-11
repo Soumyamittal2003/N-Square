@@ -75,15 +75,9 @@ const OrganizationLogin = () => {
         }
       )
       .then((response) => {
-        console.log(response);
         Cookies.set("token", response?.data?.token, { expires: 7 }); // expires in 7 days
         Cookies.set("id", response?.data?._id, { expires: 7 });
         Cookies.set("role", response?.data?.role, { expires: 7 });
-
-        localStorage.setItem(
-          "chat-app-current-user",
-          JSON.stringify(response?.data)
-        );
 
         setShowPopup(true); // Show popup on successful login
       })
@@ -98,7 +92,7 @@ const OrganizationLogin = () => {
   // Handle popup close and navigate to dashboard
   const handleClosePopup = () => {
     setShowPopup(false);
-    navigate("/dashboard"); // Navigate to dashboard after closing popup
+    navigate("/admin-dashboard"); // Navigate to dashboard after closing popup
   };
 
   return (
@@ -121,7 +115,9 @@ const OrganizationLogin = () => {
 
         <form onSubmit={handleFormSubmit} className="w-full space-y-6">
           <div>
-            <label className="block text-sm font-semibold mb-2">Email</label>
+            <label className="block text-sm font-semibold mb-2">
+              Organization Email
+            </label>
             <input
               type="email"
               name="email"

@@ -1,43 +1,44 @@
-import Sidebar from "./Common/Sidebar";
-import Header from "./Common/Header";
+import Sidebar from "./common/Sidebar";
+import Header from "./common/Header";
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "./Home/Home";
-import Event from "./Event/Event";
-import BulkEmail from "./BulkEmail/Bulk";
-import Job from "./Job/Job";
-import Feed from "./Feedback/Feed";
-import Funds from "./Funds/Funds";
-import Help from "./Help/Help";
-import Project from "./Project/Project";
-import Mentor from "./MentorShip/Mentor";
-import Community from "./Community/Mentor";
-import InspiringStory from "./InspiringStory/InspiringStory";
-import Connection from "./Connection/Connection";
-import MyEvent from "./MyEvent/MyEvent";
-import UserProfile from "./Common/UserProfile";
-import Error404 from "../Error404";
-import Followers from "./Connection/Followers";
-import Following from "./Connection/Following";
-import CreateJob from "./Job/RightSideBar";
-import CreateProject from "./Project/CreateProject";
-import Memories from "./Reunion/Memories";
-import AlmaResource from "./AlmaResource/AlmaResource";
-import Volunteer from "./Volunteer/Volunteer";
-import AboutEvent from "./Event/AboutEvent";
-import AboutProject from "./Project/AboutProject";
-import Reunion from "./Reunion/Reunion";
-import AppliedJobs from "./AppliedJob/AppliedJob";
-import Donation from "./Project/Donation";
-import Chat from "./Chat/Chat";
-import CommunityContent from "./Community/MentorContent";
-import MentorContent from "./MentorShip/MentorContent";
-import CommunityFindGroup from "./Community/FindGroup";
-import FindGroup from "./MentorShip/FindGroup";
-import RoomPage from "./VideoCall/RoomPage";
-import ConferenceRoom from "./VideoCall/RoomPage";
+// import Home from "./Home/Home";
+// import Event from "./Event/Event";
+// import BulkEmail from "./BulkEmail/Bulk";
+// import Board from "./Board/Board";
+// import Job from "./Job/Job";
+// import Feed from "./Feedback/Feed";
+// import Funds from "./Funds/Funds";
+// import Help from "./Help/Help";
+// import Project from "./Project/Project";
+// import Mentor from "./MentorShip/Mentor";
+// import Community from "./Community/Mentor";
+// import InspiringStory from "./InspiringStory/InspiringStory";
+// import Connection from "./Connection/Connection";
+// import MyEvent from "./MyEvent/MyEvent";
+// import UserProfile from "./Common/UserProfile";
+// import Error404 from "../Error404";
+// import Followers from "./Connection/Followers";
+// import Following from "./Connection/Following";
+// import CreateJob from "./Job/RightSideBar";
+// import CreateProject from "./Project/CreateProject";
+// import Memories from "./Reunion/Memories";
+// import AlmaResource from "./AlmaResource/AlmaResource";
+// import Volunteer from "./Volunteer/Volunteer";
+// import AboutEvent from "./Event/AboutEvent";
+// import AboutProject from "./Project/AboutProject";
+// import Reunion from "./Reunion/Reunion";
+// import AppliedJobs from "./AppliedJob/AppliedJob";
+// import Donation from "./Project/Donation";
+// import Chat from "./Chat/Chat";
+// import CommunityContent from "./Community/MentorContent";
+// import MentorContent from "./MentorShip/MentorContent";
+// import CommunityFindGroup from "./Community/FindGroup";
+// import FindGroup from "./MentorShip/FindGroup";
+// import RoomPage from "./VideoCall/RoomPage";
+// import ConferenceRoom from "./VideoCall/RoomPage";
 
-const Dashboard = () => {
+const Admin = () => {
   useEffect(() => {
     // Disable scrolling on the body
     document.body.style.overflow = "hidden";
@@ -57,14 +58,21 @@ const Dashboard = () => {
       <div className="grid grid-cols-[280px_1fr] h-screen">
         {/* Sidebar */}
         <Sidebar />
+        {/* <div>this is the sidebar Content</div> */}
 
         {/* Main Content */}
         <main className="overflow-hidden">
           <Routes>
-            <Route path="/" element={<Home />} />
+            {/* <Route path="/" element={<Home />} /> */}
+            <Route
+              path="/"
+              element={
+                <div>this is the home content of the admin dashboard</div>
+              }
+            />
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
             {/* <Route path="home" element={<Home />} /> */}
-            <Route path="profile/:userId" element={<UserProfile />} />
+            {/* <Route path="profile/:userId" element={<UserProfile />} />
             <Route path="job" element={<Job />} />
             <Route path="BulkEmail" element={<BulkEmail />} />
             <Route path="help" element={<Help />} />
@@ -88,9 +96,9 @@ const Dashboard = () => {
               path="community/find-group"
               element={<CommunityFindGroup />}
             />
-            <Route path="community/groups" element={<Community />} />
+            <Route path="community/groups" element={<Community />} /> */}
             {/* <Route path="project/:projectId/donation" element={<Donation />} /> */}
-            <Route path="project/donate/:projectId" element={<Donation />} />
+            {/* <Route path="project/donate/:projectId" element={<Donation />} />
             <Route path="project/create-project" element={<CreateProject />} />
             <Route path="Reunion/Memories" element={<Memories />} />
             <Route path="inspiring-story" element={<InspiringStory />} />
@@ -101,7 +109,7 @@ const Dashboard = () => {
             <Route path="followers" element={<Followers />} />
             <Route path="reunion" element={<Reunion />} />
             <Route path="following" element={<Following />} />
-            <Route path="*" element={<Error404 />} />
+            <Route path="*" element={<Error404 />} /> */}
           </Routes>
         </main>
       </div>
@@ -109,4 +117,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Admin;

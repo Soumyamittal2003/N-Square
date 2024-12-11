@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
+import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 
 const RightSidebar = () => {
@@ -7,27 +8,7 @@ const RightSidebar = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingEvents, setLoadingEvents] = useState(true);
-  const [currentUserId, setCurrentUserId] = useState(null);
-
-  // Fetch the current user from local storage
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const storedUser = JSON.parse(
-          localStorage.getItem("chat-app-current-user")
-        );
-        if (storedUser && storedUser._id) {
-          setCurrentUserId(storedUser._id);
-        } else {
-          console.error("No current user found in localStorage");
-        }
-      } catch (error) {
-        console.error("Error parsing user from localStorage:", error);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
+  const currentUserId = Cookies.get("id");
 
   // Fetch suggested users based on the current user ID
   useEffect(() => {
