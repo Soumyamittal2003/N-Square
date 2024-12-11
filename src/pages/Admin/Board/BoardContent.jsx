@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
-import React from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import { FaUsers, FaGraduationCap, FaChalkboardTeacher, FaCalendarAlt, FaCalendarCheck } from "react-icons/fa"; // Importing icons for tabs
+import React from "react";
+import Cookies from "js-cookie";
+import {
+  FaUsers,
+  FaGraduationCap,
+  FaChalkboardTeacher,
+  FaCalendarAlt,
+  FaCalendarCheck,
+} from "react-icons/fa"; // Importing icons for tabs
 
 // Define API URL
-const organizationId = "6759c089b5a83a2e1a350761";
+const organizationId = Cookies.get("id");
 
 const DashboardPage = () => {
   const [selectedTab, setSelectedTab] = useState("students");
@@ -43,9 +50,13 @@ const DashboardPage = () => {
   const toggleRowExpansion = (id) => {
     setExpandedRows((prevExpandedRows) => ({
       ...prevExpandedRows,
-      [id]: !prevExpandedRows[id]
+      [id]: !prevExpandedRows[id],
     }));
   };
+
+  // Function to safely join array values
+  const safeJoin = (arr) =>
+    arr && Array.isArray(arr) ? arr.join(", ") : "N/A";
 
   // Function to render the list based on selected tab
   const renderList = () => {
@@ -56,11 +67,21 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Name
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Email
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Status
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Phone Number
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -68,31 +89,53 @@ const DashboardPage = () => {
                   <React.Fragment key={student._id}>
                     <tr className="border-t border-gray-200">
                       <td className="py-3 px-4 text-sm text-gray-800">{`${student.firstName} ${student.lastName}`}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{student.email}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {student.email}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-500">
                         <span
-                          className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                          className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}
+                        >
                           Active
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{student.phone}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {student.phone}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         <button
                           className="text-blue-500"
                           onClick={() => toggleRowExpansion(student._id)}
                         >
-                          {expandedRows[student._id] ? "Hide Details" : "Show Details"}
+                          {expandedRows[student._id]
+                            ? "Hide Details"
+                            : "Show Details"}
                         </button>
                       </td>
                     </tr>
                     {expandedRows[student._id] && (
                       <tr className="bg-gray-50">
-                        <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
+                        <td
+                          colSpan="5"
+                          className="py-4 px-6 text-sm text-gray-700"
+                        >
                           <div>
-                            <p><strong>Address:</strong> {student.address}</p>
-                            <p><strong>Courses:</strong> {student.courses.join(', ')}</p>
-                            <p><strong>Skills:</strong> {student.skills.join(', ')}</p>
-                            <p><strong>Joined:</strong> {student.joinedDate}</p>
+                            <p>
+                              <strong>Address:</strong>{" "}
+                              {student.address || "N/A"}
+                            </p>
+                            <p>
+                              <strong>Courses:</strong>{" "}
+                              {safeJoin(student.courses)}
+                            </p>
+                            <p>
+                              <strong>Skills:</strong>{" "}
+                              {safeJoin(student.skills)}
+                            </p>
+                            <p>
+                              <strong>Joined:</strong>{" "}
+                              {student.joinedDate || "N/A"}
+                            </p>
                           </div>
                         </td>
                       </tr>
@@ -109,11 +152,21 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Name
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Email
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Status
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Phone Number
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -121,31 +174,52 @@ const DashboardPage = () => {
                   <React.Fragment key={alumni._id}>
                     <tr className="border-t border-gray-200">
                       <td className="py-3 px-4 text-sm text-gray-800">{`${alumni.firstName} ${alumni.lastName}`}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{alumni.email}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {alumni.email}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-500">
                         <span
-                          className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                          className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}
+                        >
                           Active
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{alumni.phoneNumber}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {alumni.phoneNumber}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         <button
                           className="text-blue-500"
                           onClick={() => toggleRowExpansion(alumni._id)}
                         >
-                          {expandedRows[alumni._id] ? "Hide Details" : "Show Details"}
+                          {expandedRows[alumni._id]
+                            ? "Hide Details"
+                            : "Show Details"}
                         </button>
                       </td>
                     </tr>
                     {expandedRows[alumni._id] && (
                       <tr className="bg-gray-50">
-                        <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
+                        <td
+                          colSpan="5"
+                          className="py-4 px-6 text-sm text-gray-700"
+                        >
                           <div>
-                            <p><strong>Graduation Year:</strong> {alumni.graduationYear}</p>
-                            <p><strong>Job Title:</strong> {alumni.jobTitle}</p>
-                            <p><strong>Company:</strong> {alumni.company}</p>
-                            <p><strong>Skills:</strong> {alumni.skills.join(', ')}</p>
+                            <p>
+                              <strong>Graduation Year:</strong>{" "}
+                              {alumni.graduationYear || "N/A"}
+                            </p>
+                            <p>
+                              <strong>Job Title:</strong>{" "}
+                              {alumni.jobTitle || "N/A"}
+                            </p>
+                            <p>
+                              <strong>Company:</strong>{" "}
+                              {alumni.company || "N/A"}
+                            </p>
+                            <p>
+                              <strong>Skills:</strong> {safeJoin(alumni.skills)}
+                            </p>
                           </div>
                         </td>
                       </tr>
@@ -163,11 +237,21 @@ const DashboardPage = () => {
               <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Name
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Email
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Status
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Phone Number
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -175,30 +259,49 @@ const DashboardPage = () => {
                     <React.Fragment key={faculty._id}>
                       <tr className="border-t border-gray-200">
                         <td className="py-3 px-4 text-sm text-gray-800">{`${faculty.firstName} ${faculty.lastName}`}</td>
-                        <td className="py-3 px-4 text-sm text-gray-600">{faculty.email}</td>
+                        <td className="py-3 px-4 text-sm text-gray-600">
+                          {faculty.email}
+                        </td>
                         <td className="py-3 px-4 text-sm text-gray-500">
                           <span
-                            className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                            className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}
+                          >
                             Active
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">{faculty.phoneNumber}</td>
+                        <td className="py-3 px-4 text-sm text-gray-600">
+                          {faculty.phoneNumber}
+                        </td>
                         <td className="py-3 px-4 text-sm text-gray-600">
                           <button
                             className="text-blue-500"
                             onClick={() => toggleRowExpansion(faculty._id)}
                           >
-                            {expandedRows[faculty._id] ? "Hide Details" : "Show Details"}
+                            {expandedRows[faculty._id]
+                              ? "Hide Details"
+                              : "Show Details"}
                           </button>
                         </td>
                       </tr>
                       {expandedRows[faculty._id] && (
                         <tr className="bg-gray-50">
-                          <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
+                          <td
+                            colSpan="5"
+                            className="py-4 px-6 text-sm text-gray-700"
+                          >
                             <div>
-                              <p><strong>Department:</strong> {faculty.department}</p>
-                              <p><strong>Courses:</strong> {faculty.courses.join(', ')}</p>
-                              <p><strong>Office Location:</strong> {faculty.officeLocation}</p>
+                              <p>
+                                <strong>Department:</strong>{" "}
+                                {faculty.department || "N/A"}
+                              </p>
+                              <p>
+                                <strong>Courses:</strong>{" "}
+                                {safeJoin(faculty.courses)}
+                              </p>
+                              <p>
+                                <strong>Office Location:</strong>{" "}
+                                {faculty.officeLocation || "N/A"}
+                              </p>
                             </div>
                           </td>
                         </tr>
@@ -218,23 +321,37 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Event Title
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Date
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Speaker
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {pastEvents.length > 0 ? (
                   pastEvents.map((event) => (
                     <tr key={event._id} className="border-t border-gray-200">
-                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                      <td className="py-3 px-4 text-sm text-gray-800">
+                        {event.title}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {event.date} at {event.time}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {event.speaker}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">No past events available.</td>
+                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">
+                      No past events available.
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -247,23 +364,37 @@ const DashboardPage = () => {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
-                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Event Title
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Date
+                  </th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                    Speaker
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {upcomingEvents.length > 0 ? (
                   upcomingEvents.map((event) => (
                     <tr key={event._id} className="border-t border-gray-200">
-                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                      <td className="py-3 px-4 text-sm text-gray-800">
+                        {event.title}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {event.date} at {event.time}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {event.speaker}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">No upcoming events available.</td>
+                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">
+                      No upcoming events available.
+                    </td>
                   </tr>
                 )}
               </tbody>
