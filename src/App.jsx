@@ -11,6 +11,7 @@ import {
   RegisterOrganization,
   Dashboard,
   ResetPassword,
+  OrganizationLogin,
   Error404,
 } from "./pages/index";
 import { Navigate } from "react-router-dom";
@@ -41,6 +42,7 @@ function App() {
         />
         s
         <Route path="/login" element={<Login />} />
+        <Route path="/organization-login" element={<OrganizationLogin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route

@@ -199,7 +199,13 @@ const LoginPage = () => {
       <div className="w-1/2 mx-auto px-6">
         <div className="border-t border-gray-300 my-2"></div>
         <div className="text-center text-gray-600 text-sm mb-6">
-          <>
+          <Link
+            to="/organization-login"
+            className="text-blue-600 font-medium hover:underline"
+          >
+            Login as organization
+          </Link>
+          <div>
             Don&apos;t have an account?{" "}
             <Link
               to="/signup"
@@ -207,7 +213,7 @@ const LoginPage = () => {
             >
               Sign Up
             </Link>
-          </>
+          </div>
         </div>
       </div>
 
