@@ -1,10 +1,12 @@
 import Sidebar from "./common/Sidebar";
 import Header from "./common/Header";
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Event from "./Event/Event";
 import Project from "./Project/Project";
 import AboutProject from "./Project/AboutProject";
+import Board from "./Board/Board";
+import Home from "./Home/Home";
 // import Eventcontent from "./EventContent";
 // import AboutEvent from "./Event/AboutEvent";
 // import Home from "./Home/Home";
@@ -77,6 +79,9 @@ const Admin = () => {
             <Route path="/Event" element={<Event />} />
             <Route path="/Project" element={<Project />} />
             <Route path="/Project/AboutProject" element={<AboutProject />} />
+            <Route path="/Board" element={<Board />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Navigate to="home" />} />
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
