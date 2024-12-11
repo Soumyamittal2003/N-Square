@@ -52,8 +52,7 @@ const EventCard = ({ event, currentUserId, onLikeEvent, onDislikeEvent }) => {
         `/event/register-event/${event._id}`,
         { userId: currentUserId }
       );
-
-      if (response.data.message === true) {
+      if (response.status === 200) {
         setIsRegistered(true);
         toast.success("Registered successfully!");
       } else {
