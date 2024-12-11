@@ -2,31 +2,48 @@ import { useState } from 'react';
 import axiosInstance from '../../../utils/axiosinstance';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select';
 
 const BulkContent = () => {
+  const [recipientType, setRecipientType] = useState('');
   const [batch, setBatch] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Options for the recipient selection dropdown
+  const recipientOptions = [
+    { value: 'student', label: 'Student' },
+    { value: 'alumni', label: 'Alumni' },
+    { value: 'faculty', label: 'Faculty' }
+  ];
+
+  // Handle the form submission
   const handleSend = async () => {
-    if (!batch || !subject || !message) {
-      toast.error("Please fill in all fields.");
+    if (!recipientType || !subject || !message) {
+      toast.error("Please fill in all fields and select a recipient.");
+      return;
+    }
+
+    if ((recipientType === 'student' || recipientType === 'alumni') && !batch) {
+      toast.error("Please provide a batch name.");
       return;
     }
 
     setLoading(true);
 
     try {
-      const payload = {
-        batch,
-        subject,
-        message,
-      };
+      // Construct query parameters from form fields
+      const queryParams = new URLSearchParams({
+        recipient: recipientType,
+        batch: batch || '', // If no batch, send empty string
+        subject: subject,
+        message: message,
+      }).toString();
 
-      const response = await axiosInstance.post(
-        '/organization/send-bulk-email',
-        payload
+      // Send GET request with query parameters
+      const response = await axiosInstance.get(
+        `/organization/send-bulk-email?${queryParams}`
       );
 
       toast.success(response.data.message || "Bulk email sent successfully!");
@@ -43,17 +60,32 @@ const BulkContent = () => {
       <ToastContainer position="top-right" autoClose={4000} hideProgressBar />
 
       <div className="max-h-[500px] overflow-y-auto hide-scrollbar">
-        {/* Batch Field */}
+        {/* Recipient Field */}
         <div className="mb-5">
-          <label className="block mb-2 font-bold text-gray-700">Batch</label>
-          <input
-            type="text"
-            placeholder="Enter batch name"
-            className="w-full p-3 text-base border border-gray-300 rounded-md"
-            value={batch}
-            onChange={(e) => setBatch(e.target.value)}
+          <label className="block mb-2 font-bold text-gray-700">Select Recipient</label>
+          <Select
+            options={recipientOptions}
+            value={recipientOptions.find(option => option.value === recipientType)}
+            onChange={(selected) => setRecipientType(selected.value)}
+            placeholder="Select a recipient..."
+            className="react-select-container"
+            classNamePrefix="react-select"
           />
         </div>
+
+        {/* Batch Field (conditionally rendered for Student and Alumni) */}
+        {(recipientType === 'student' || recipientType === 'alumni') && (
+          <div className="mb-5">
+            <label className="block mb-2 font-bold text-gray-700">Batch</label>
+            <input
+              type="text"
+              placeholder="Enter batch name"
+              className="w-full p-3 text-base border border-gray-300 rounded-md"
+              value={batch}
+              onChange={(e) => setBatch(e.target.value)}
+            />
+          </div>
+        )}
 
         {/* Subject Field */}
         <div className="mb-5">
