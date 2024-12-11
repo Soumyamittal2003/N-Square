@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import { FaUsers, FaGraduationCap, FaChalkboardTeacher, FaCalendarAlt, FaCalendarCheck } from "react-icons/fa"; // Importing icons for tabs
 
@@ -36,74 +37,176 @@ const DashboardPage = () => {
     fetchData();
   }, []);
 
+  // Function to handle expansion of row to show more data
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const toggleRowExpansion = (id) => {
+    setExpandedRows((prevExpandedRows) => ({
+      ...prevExpandedRows,
+      [id]: !prevExpandedRows[id]
+    }));
+  };
+
   // Function to render the list based on selected tab
   const renderList = () => {
     switch (selectedTab) {
       case "students":
         return (
-          <div className="space-y-6">
-            {studentsData.map((student) => (
-              <div
-                key={student._id}
-                className="flex items-center space-x-4 p-4 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300"
-              >
-                <img
-                  src={student.profileimageUrl}
-                  alt="profile"
-                  className="w-16 h-16 rounded-full"
-                />
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-900">{`${student.firstName} ${student.lastName}`}</h3>
-                  <p className="text-sm text-gray-600">{student.tagLine}</p>
-                  <p className="text-sm text-gray-500">{student.email}</p>
-                </div>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {studentsData.map((student) => (
+                  <React.Fragment key={student._id}>
+                    <tr className="border-t border-gray-200">
+                      <td className="py-3 px-4 text-sm text-gray-800">{`${student.firstName} ${student.lastName}`}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{student.email}</td>
+                      <td className="py-3 px-4 text-sm text-gray-500">
+                        <span
+                          className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                          Active
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{student.phone}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        <button
+                          className="text-blue-500"
+                          onClick={() => toggleRowExpansion(student._id)}
+                        >
+                          {expandedRows[student._id] ? "Hide Details" : "Show Details"}
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedRows[student._id] && (
+                      <tr className="bg-gray-50">
+                        <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
+                          <div>
+                            <p><strong>Address:</strong> {student.address}</p>
+                            <p><strong>Courses:</strong> {student.courses.join(', ')}</p>
+                            <p><strong>Skills:</strong> {student.skills.join(', ')}</p>
+                            <p><strong>Joined:</strong> {student.joinedDate}</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
           </div>
         );
       case "alumni":
         return (
-          <div className="space-y-6">
-            {alumniData.map((alumni) => (
-              <div
-                key={alumni._id}
-                className="flex items-center space-x-4 p-4 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300"
-              >
-                <img
-                  src={alumni.profileimageUrl}
-                  alt="profile"
-                  className="w-16 h-16 rounded-full"
-                />
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-900">{`${alumni.firstName} ${alumni.lastName}`}</h3>
-                  <p className="text-sm text-gray-600">{alumni.tagLine}</p>
-                  <p className="text-sm text-gray-500">{alumni.email}</p>
-                </div>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {alumniData.map((alumni) => (
+                  <React.Fragment key={alumni._id}>
+                    <tr className="border-t border-gray-200">
+                      <td className="py-3 px-4 text-sm text-gray-800">{`${alumni.firstName} ${alumni.lastName}`}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{alumni.email}</td>
+                      <td className="py-3 px-4 text-sm text-gray-500">
+                        <span
+                          className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                          Active
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{alumni.phoneNumber}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        <button
+                          className="text-blue-500"
+                          onClick={() => toggleRowExpansion(alumni._id)}
+                        >
+                          {expandedRows[alumni._id] ? "Hide Details" : "Show Details"}
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedRows[alumni._id] && (
+                      <tr className="bg-gray-50">
+                        <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
+                          <div>
+                            <p><strong>Graduation Year:</strong> {alumni.graduationYear}</p>
+                            <p><strong>Job Title:</strong> {alumni.jobTitle}</p>
+                            <p><strong>Company:</strong> {alumni.company}</p>
+                            <p><strong>Skills:</strong> {alumni.skills.join(', ')}</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
           </div>
         );
       case "faculty":
         return (
-          <div className="space-y-6">
+          <div className="overflow-x-auto">
             {facultyData.length > 0 ? (
-              facultyData.map((faculty) => (
-                <div
-                  key={faculty._id}
-                  className="flex items-center space-x-4 p-4 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <img
-                    src={faculty.profileimageUrl}
-                    alt="profile"
-                    className="w-16 h-16 rounded-full"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-lg text-gray-900">{`${faculty.firstName} ${faculty.lastName}`}</h3>
-                    <p className="text-sm text-gray-600">{faculty.tagLine}</p>
-                    <p className="text-sm text-gray-500">{faculty.email}</p>
-                  </div>
-                </div>
-              ))
+              <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Name</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {facultyData.map((faculty) => (
+                    <React.Fragment key={faculty._id}>
+                      <tr className="border-t border-gray-200">
+                        <td className="py-3 px-4 text-sm text-gray-800">{`${faculty.firstName} ${faculty.lastName}`}</td>
+                        <td className="py-3 px-4 text-sm text-gray-600">{faculty.email}</td>
+                        <td className="py-3 px-4 text-sm text-gray-500">
+                          <span
+                            className={`bg-green-100 text-green-500 p-1 rounded-full text-xs`}>
+                            Active
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-sm text-gray-600">{faculty.phoneNumber}</td>
+                        <td className="py-3 px-4 text-sm text-gray-600">
+                          <button
+                            className="text-blue-500"
+                            onClick={() => toggleRowExpansion(faculty._id)}
+                          >
+                            {expandedRows[faculty._id] ? "Hide Details" : "Show Details"}
+                          </button>
+                        </td>
+                      </tr>
+                      {expandedRows[faculty._id] && (
+                        <tr className="bg-gray-50">
+                          <td colSpan="5" className="py-4 px-6 text-sm text-gray-700">
+                            <div>
+                              <p><strong>Department:</strong> {faculty.department}</p>
+                              <p><strong>Courses:</strong> {faculty.courses.join(', ')}</p>
+                              <p><strong>Office Location:</strong> {faculty.officeLocation}</p>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
             ) : (
               <p>No faculty data available.</p>
             )}
@@ -111,56 +214,60 @@ const DashboardPage = () => {
         );
       case "pastEvents":
         return (
-          <div className="space-y-6">
-            {pastEvents.length > 0 ? (
-              pastEvents.map((event) => (
-                <div
-                  key={event._id}
-                  className="flex items-center space-x-4 p-4 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <img
-                    src={event.eventphoto}
-                    alt="event"
-                    className="w-16 h-16 rounded-md"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-lg text-gray-900">{event.title}</h3>
-                    <p className="text-sm text-gray-600">{event.eventDescription}</p>
-                    <p className="text-sm text-gray-500">{event.date} at {event.time}</p>
-                    <p className="text-sm text-gray-500">Speaker: {event.speaker}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No past events available.</p>
-            )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pastEvents.length > 0 ? (
+                  pastEvents.map((event) => (
+                    <tr key={event._id} className="border-t border-gray-200">
+                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">No past events available.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         );
       case "upcomingEvents":
         return (
-          <div className="space-y-6">
-            {upcomingEvents.length > 0 ? (
-              upcomingEvents.map((event) => (
-                <div
-                  key={event._id}
-                  className="flex items-center space-x-4 p-4 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <img
-                    src={event.eventphoto}
-                    alt="event"
-                    className="w-16 h-16 rounded-md"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-lg text-gray-900">{event.title}</h3>
-                    <p className="text-sm text-gray-600">{event.eventDescription}</p>
-                    <p className="text-sm text-gray-500">{event.date} at {event.time}</p>
-                    <p className="text-sm text-gray-500">Speaker: {event.speaker}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No upcoming events available.</p>
-            )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Event Title</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Date</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Speaker</th>
+                </tr>
+              </thead>
+              <tbody>
+                {upcomingEvents.length > 0 ? (
+                  upcomingEvents.map((event) => (
+                    <tr key={event._id} className="border-t border-gray-200">
+                      <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="py-3 px-4 text-sm text-gray-500">No upcoming events available.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         );
       default:
