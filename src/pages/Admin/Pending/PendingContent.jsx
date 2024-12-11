@@ -23,7 +23,7 @@ const PendingContent = () => {
         console.log("Fetching unverified users...");
         const response = await axiosInstance.post(
           `/organizations/unverified-students`,
-          { university_id:organizationId } // Sending organization ID in the request body
+          { university_id: organizationId } // Sending organization ID in the request body
         );
         // Assuming the response structure contains an array of students in response.data.students
         const unverifiedUsers = response.data.students.filter(
@@ -60,7 +60,9 @@ const PendingContent = () => {
 
   const handleApprove = async (id) => {
     try {
-      const response = await axiosInstance.put(`/organizations/verify-user/${id}`);
+      const response = await axiosInstance.put(
+        `/organizations/verify-user/${id}`
+      );
       setPendingUsers((prev) => prev.filter((user) => user._id !== id));
       toast.success(response.data.message);
     } catch (error) {
@@ -70,7 +72,9 @@ const PendingContent = () => {
 
   const handleReject = async (id) => {
     try {
-      const response = await axiosInstance.delete(`/organizations/reject-user/${id}`);
+      const response = await axiosInstance.delete(
+        `/organizations/reject-user/${id}`
+      );
       setPendingUsers((prev) => prev.filter((user) => user._id !== id));
       toast.error(response.data.message);
     } catch (error) {
@@ -83,7 +87,7 @@ const PendingContent = () => {
       {/* Header Section */}
       <div className="flex items-center justify-between px-4 py-3 bg-white rounded-lg shadow-md mb-6">
         <div className="flex items-center gap-4">
-          <Link to="/dashboard">
+          <Link to="/admin-dashboard">
             <FaArrowLeft className="h-6 w-6 text-gray-700 hover:text-gray-900" />
           </Link>
           <span className="text-2xl font-semibold">

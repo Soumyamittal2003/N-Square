@@ -13,16 +13,18 @@ const ProjectCard = ({ project }) => {
     mentorContributors,
     studentContributors,
   } = project;
+  // console.log(project);
 
   const [creatorName, setCreatorName] = useState("Loading...");
 
   useEffect(() => {
     if (createdBy?.firstName && createdBy?.lastName) {
       setCreatorName(`${createdBy.firstName} ${createdBy.lastName}`);
-    } else if (createdBy?._id) {
+    } else if (createdBy) {
       const fetchCreatorDetails = async () => {
         try {
-          const response = await axiosInstance.get(`/users/${createdBy._id}`);
+          const response = await axiosInstance.get(`/users/${createdBy}`);
+          console.log(response);
           if (response.data?.success) {
             const { firstName, lastName } = response.data.data;
             setCreatorName(`${firstName} ${lastName}`);

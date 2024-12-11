@@ -26,16 +26,28 @@ const ProjectDetail = () => {
   });
   const [isContributor, setIsContributor] = useState(false);
 
-  console.log(projectData);
-
   useEffect(() => {
     const fetchDonations = async () => {
       try {
         const response = await axiosInstance.get(
-          "https://n-square.onrender.com/api/network-next/v1/project/all-users-donation/6740b19434b812294a8701aa"
+          `/project/all-users-donation/${projectId}`
         );
-        console.log("Donation API Response:", response.data);
-        setDonationDetails(response.data.data || []);
+        const donations = response.data || [];
+
+        // Fetch user details for each donation
+        const donationsWithUserDetails = await Promise.all(
+          donations.map(async (donation) => {
+            const userResponse = await axiosInstance.get(
+              `/users/${donation._id}`
+            );
+            return {
+              ...donation,
+              user: userResponse.data.data,
+            };
+          })
+        );
+
+        setDonationDetails(donationsWithUserDetails);
       } catch (error) {
         console.error("Error fetching donations:", error);
         setDonationError("Failed to fetch donations.");
@@ -43,10 +55,9 @@ const ProjectDetail = () => {
         setDonationLoading(false);
       }
     };
-    console.log("Donation Details State:", donationDetails);
 
     fetchDonations();
-  }, [donationDetails]);
+  }, [projectId]);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -161,7 +172,7 @@ const ProjectDetail = () => {
 
     "Mentor/Contributor": (
       <div>
-        <h3 className="text-lg font-bold">Fund Donation</h3>
+        <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
         <div className="mt-4">
           <h4 className="text-md font-semibold">Mentors:</h4>
           {contributorDetails.mentorContributors.length > 0 ? (
@@ -286,8 +297,7 @@ const ProjectDetail = () => {
             )}
           </h3>
         </div>
-
-        <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
+        <h3 className="text-lg font-bold">Fund Donation</h3>
 
         {/* Loading State */}
         {donationLoading ? (
