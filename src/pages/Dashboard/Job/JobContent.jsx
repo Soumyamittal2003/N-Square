@@ -7,8 +7,9 @@ const JobContent = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userSkills, setUserSkills] = useState([]); // Track user skills
+  const [rolesFetched, setRolesFetched] = useState(false);
   const [userBookmarks, setUserBookmarks] = useState([]); // Track bookmarked jobs
+  const [userSkills, setUserSkills] = useState([]); // Track user skills
   const currentUserId = Cookies.get("id");
 
   const tabs = ["All", "For You"];
@@ -35,9 +36,7 @@ const JobContent = () => {
   useEffect(() => {
     const fetchUserSkills = async () => {
       try {
-        const response = await axiosInstance.get(
-          `https://n-square.onrender.com/api/network-next/v1/users/${currentUserId}`
-        );
+        const response = await axiosInstance.get(`/users/${currentUserId}`);
         if (response.data.success) {
           setUserSkills(
             response.data.data.skills.map((skill) => skill.skillName)
@@ -53,6 +52,87 @@ const JobContent = () => {
     }
   }, [currentUserId]);
 
+  // Fetch roles dynamically for each job's creator
+  useEffect(() => {
+    if (!rolesFetched && jobs.length > 0) {
+      const fetchRolesForJobs = async () => {
+        const updatedJobs = await Promise.all(
+          jobs.map(async (job) => {
+            if (!job.createdBy) return job;
+            try {
+              const { data } = await axiosInstance.get(
+                `/users/${job.createdBy}`
+              );
+              return {
+                ...job,
+                createdBy: {
+                  ...job.createdBy,
+                  role: data.data.role,
+                  firstName: data.data.firstName,
+                  lastName: data.data.lastName,
+                },
+              };
+            } catch (error) {
+              console.error(`Failed to fetch role for job ${job._id}:`, error);
+              return job;
+            }
+          })
+        );
+        setJobs(updatedJobs);
+        setRolesFetched(true);
+      };
+      fetchRolesForJobs();
+    }
+  }, [rolesFetched, jobs]);
+
+  // Handle like action
+  const handleLikePost = async (jobId) => {
+    try {
+      await axiosInstance.post(`/jobs/like/${jobId}`, {
+        userId: currentUserId,
+      });
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job._id === jobId
+            ? {
+                ...job,
+                likes: job.likes.includes(currentUserId)
+                  ? job.likes.filter((id) => id !== currentUserId)
+                  : [...job.likes, currentUserId],
+                dislikes: job.dislikes.filter((id) => id !== currentUserId),
+              }
+            : job
+        )
+      );
+    } catch (error) {
+      console.error(`Error liking job ${jobId}:`, error);
+    }
+  };
+
+  // Handle dislike action
+  const handleDislikePost = async (jobId) => {
+    try {
+      await axiosInstance.post(`/jobs/dislike/${jobId}`, {
+        userId: currentUserId,
+      });
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job._id === jobId
+            ? {
+                ...job,
+                dislikes: job.dislikes.includes(currentUserId)
+                  ? job.dislikes.filter((id) => id !== currentUserId)
+                  : [...job.dislikes, currentUserId],
+                likes: job.likes.filter((id) => id !== currentUserId),
+              }
+            : job
+        )
+      );
+    } catch (error) {
+      console.error(`Error disliking job ${jobId}:`, error);
+    }
+  };
+
   // Handle bookmark action
   const handleBookmarkJob = async (jobId) => {
     if (!currentUserId) {
@@ -64,7 +144,6 @@ const JobContent = () => {
       const response = await axiosInstance.patch(`/jobs/save-job/${jobId}`, {
         userId: currentUserId,
       });
-
       if (response.data.success) {
         setUserBookmarks((prevBookmarks) =>
           prevBookmarks.includes(jobId)
@@ -79,7 +158,32 @@ const JobContent = () => {
     }
   };
 
-  // Filter jobs based on the active tab
+  // Handle apply action
+  const handleApplyJob = async (jobId) => {
+    if (!currentUserId) {
+      console.error("User not logged in.");
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post(`/jobs/apply/${jobId}`, {
+        userId: currentUserId,
+      });
+      if (response.data.success) {
+        setJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job._id === jobId ? { ...job, isApplied: true } : job
+          )
+        );
+      } else {
+        console.error("Failed to apply for job:", jobId);
+      }
+    } catch (error) {
+      console.error(`Error applying for job ${jobId}:`, error);
+    }
+  };
+
+  // Filtering logic
   const filteredJobs = useMemo(() => {
     if (activeTab === "For You") {
       return jobs.filter((job) =>
@@ -140,7 +244,10 @@ const JobContent = () => {
               key={job._id}
               job={job}
               currentUserId={currentUserId}
+              onLikePost={handleLikePost}
+              onDislikePost={handleDislikePost}
               onBookmarkJob={handleBookmarkJob}
+              onApplyJob={handleApplyJob}
               bookmarks={userBookmarks}
             />
           ))}

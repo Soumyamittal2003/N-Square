@@ -1,4 +1,26 @@
+import { useEffect, useState } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
+import { toast } from "react-toastify";
+axiosInstance;
 const ProfileSection = ({ userData }) => {
+  const [organizationName, setOrganizationName] = useState("");
+  useEffect(() => {
+    const fetchOrganizationName = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/organizations/${userData.organization}`
+        );
+        console.log(response);
+        setOrganizationName(response.data.organization.name);
+      } catch (err) {
+        toast.error(err);
+      }
+    };
+
+    if (userData.organization) {
+      fetchOrganizationName();
+    }
+  }, [userData.organization]);
   return (
     <div className="relative">
       {/* Background Image */}
@@ -15,7 +37,7 @@ const ProfileSection = ({ userData }) => {
       {/* Organization Badge */}
       <div className="absolute top-2 inset-x-0 flex justify-center">
         <span className="bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
-          {userData.organization || "No Organization"}
+          {organizationName || "No Organization"}
         </span>
       </div>
 

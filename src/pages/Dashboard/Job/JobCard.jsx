@@ -76,7 +76,7 @@ const JobCard = ({
         <img
           src={jobphoto || "https://via.placeholder.com/150"}
           alt={title}
-          className="w-full h-[180px] object-cover"
+          className="w-full h-[180px] object-contain"
         />
       </div>
 

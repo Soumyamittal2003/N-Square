@@ -16,6 +16,7 @@ const UserProfile = () => {
   const [about, setAbout] = useState("");
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
+  const [organizationId, setOrganizationId] = useState("");
   const [tagLine, setTagLine] = useState("");
   const [role, setRole] = useState("");
   const [followers, setFollowers] = useState([]);
@@ -100,6 +101,7 @@ const UserProfile = () => {
           ]);
 
         const data = userResponse.data.data;
+        console.log(data);
         setUserData(data);
         setFirstName(data.firstName);
         setLastName(data.lastName);
@@ -111,7 +113,7 @@ const UserProfile = () => {
         setCertificationsAndLicenses(data.certificationsAndLicenses);
         setRole(data.role);
         setEmail(data.email);
-        setOrganization(data.organization);
+        setOrganizationId(data.organization);
         setPublicationsAndResearch(data.publicationsAndResearch);
         setFollowers(data.followers);
         setFollowing(data.following);
@@ -127,6 +129,27 @@ const UserProfile = () => {
 
     fetchUserData();
   }, [userData.backgroundimageUrl, userData.profileimageUrl, userId]);
+
+  useEffect(() => {
+    const fetchOrganizationName = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(
+          `/organizations/${organizationId}`
+        );
+        console.log(response);
+        setOrganization(response.data.organization.name);
+      } catch (err) {
+        toast.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (organizationId) {
+      fetchOrganizationName();
+    }
+  }, [organizationId]);
 
   // Update About Section
   const updateAbout = async () => {
