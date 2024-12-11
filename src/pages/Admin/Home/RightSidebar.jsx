@@ -9,6 +9,7 @@ const RightSidebar = () => {
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const currentUserId = Cookies.get("id");
+  const role = Cookies.get("role");
 
   // Fetch suggested users based on the current user ID
   useEffect(() => {
@@ -155,7 +156,9 @@ const RightSidebar = () => {
         )}
       </div>
 
+      {/* {(role !== "admin" ) && ( */}
       {/* Suggested Profiles Section */}
+      {role !== "admin" && (
       <div className="px-2 py-2 rounded-lg mt-4">
         <div className="flex justify-between items-center">
           <h3 className="font-bold text-lg">Suggested Profiles</h3>
@@ -202,7 +205,9 @@ const RightSidebar = () => {
             )}
           </div>
         )}
+        
       </div>
+      )}
     </div>
   );
 };
