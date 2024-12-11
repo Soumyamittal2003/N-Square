@@ -2,6 +2,7 @@ import briefcase from "../../../assets/icons/briefcase-01.svg";
 import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
+import Home1 from "../../../assets/icons/Home1.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
 import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
 import BulkEmailIcon from "../../../assets/icons/mail.svg";
@@ -109,7 +110,7 @@ const Sidebar = () => {
             <SidebarLink
               className="py-1 text-xl"
               to="/admin-dashboard/"
-              icon={Board}
+              icon={Home1}
               label="Home"
               activeLink={activeLink}
               handleClick={handleClick}
