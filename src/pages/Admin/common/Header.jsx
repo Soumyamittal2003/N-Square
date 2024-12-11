@@ -103,10 +103,10 @@ const Header = () => {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Job", path: "job" },
-    { name: "Event", path: "/dashboard/event" },
-    { name: "Project", path: "/dashboard/project" },
-    { name: "Story", path: "/dashboard/inspiring-story" },
+    { name: "Job", path: "/admin-dashboard/job" },
+    { name: "Event", path: "/admin-dashboard/event" },
+    { name: "Project", path: "/admin-dashboard/project" },
+    { name: "Story", path: "/admin-dashboard/inspiring-story" },
   ];
 
   const settingsOptions = [
