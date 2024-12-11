@@ -111,6 +111,16 @@ return (
           />
         )}
         {role === "admin" && (
+          <SidebarLink className="py-1 text-xl"
+            to="/admin-dashboard/pending-requests"
+            icon={Board}
+            label="Pending Requests"
+            activeLink={activeLink}
+            handleClick={handleClick}
+            linkKey="pending-requests"
+          />
+        )}
+        {role === "admin" && (
           <SidebarLink
             to="/dashboard/BulkEmail"
             icon={BulkEmailIcon}
