@@ -71,7 +71,7 @@ const Admin = () => {
           <Routes>
             {/* <Route path="/" element={<Home />} /> */}
             <Route
-              path="/"
+              path="Home"
               element={
                 <div>this is the home content of the admin dashboard</div>
               }
@@ -81,8 +81,7 @@ const Admin = () => {
             <Route path="/Project" element={<Project />} />
             <Route path="/Project/AboutProject" element={<AboutProject />} />
             <Route path="/Board" element={<Board />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/" element={<Navigate to="home" />} />
+            {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
             {/* <Route path="/" element={<Navigate to="home" />} /> */}
