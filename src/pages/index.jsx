@@ -1,4 +1,4 @@
-// import AuthPage from "./Auth/AuthPage";
+// import AuthPage from "./Auth/AuthPage"; // import AuthPage from "./Auth/AuthPage";
 import HomePage from "./HomePage/HomePage";
 import VerifyOTP from "./Auth/VerifyOTP";
 import Login from "./Auth/Login";
