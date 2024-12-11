@@ -8,6 +8,7 @@ import {
   FaChalkboardTeacher,
   FaCalendarAlt,
   FaCalendarCheck,
+  FaSearch,
 } from "react-icons/fa"; // Importing icons for tabs
 
 // Define API URL
@@ -21,6 +22,7 @@ const DashboardPage = () => {
   const [alumniData, setAlumniData] = useState([]);
   const [facultyData, setFacultyData] = useState([]); // Assuming faculty data will be added in the future
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search input
 
   // Fetch the data from the API
   useEffect(() => {
@@ -47,6 +49,18 @@ const DashboardPage = () => {
   // Function to safely join array values
   const safeJoin = (arr) => (arr && Array.isArray(arr) ? arr.join(", ") : "N/A");
 
+  // Function to format the date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Add 1 to month to get the correct month (0-indexed)
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}/${month}/${day} at ${hours}:${minutes}`;
+  };
+
   // Delete function
   const handleDelete = async (id, type) => {
     try {
@@ -71,6 +85,15 @@ const DashboardPage = () => {
     }
   };
 
+  // Filter data based on search term
+  const filterData = (data) => {
+    return data.filter((item) =>
+      `${item.firstName} ${item.lastName} ${item.email} ${item.phone} ${item.batch || ""} ${item.city || ""}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+  };
+
   // Function to render the list based on selected tab
   const renderList = () => {
     switch (selectedTab) {
@@ -84,11 +107,13 @@ const DashboardPage = () => {
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Batch</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Location</th>
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {studentsData.map((student) => (
+                {filterData(studentsData).map((student) => (
                   <tr
                     key={student._id}
                     className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
@@ -101,6 +126,8 @@ const DashboardPage = () => {
                       </span>
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">{student.phone}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">{student.batch || 'N/A'}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">{student.city || 'N/A'}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">
                       <button
                         className="text-red-500"
@@ -125,11 +152,13 @@ const DashboardPage = () => {
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Batch</th>
+                  <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Location</th>
                   <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {alumniData.map((alumni) => (
+                {filterData(alumniData).map((alumni) => (
                   <tr
                     key={alumni._id}
                     className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
@@ -142,6 +171,8 @@ const DashboardPage = () => {
                       </span>
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">{alumni.phone}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.batch || 'N/A'}</td>
+                    <td className="py-3 px-4 text-sm text-gray-600">{alumni.city || 'N/A'}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">
                       <button
                         className="text-red-500"
@@ -167,11 +198,13 @@ const DashboardPage = () => {
                     <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
                     <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
                     <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Phone Number</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Batch</th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Location</th>
                     <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {facultyData.map((faculty) => (
+                  {filterData(facultyData).map((faculty) => (
                     <tr
                       key={faculty._id}
                       className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
@@ -183,7 +216,9 @@ const DashboardPage = () => {
                           Active
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.phoneNumber}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.phone}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.batch || 'N/A'}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{faculty.city || 'N/A'}</td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         <button
                           className="text-red-500"
@@ -213,14 +248,16 @@ const DashboardPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {pastEvents.length > 0 ? (
-                  pastEvents.map((event) => (
+                {filterData(pastEvents).length > 0 ? (
+                  filterData(pastEvents).map((event) => (
                     <tr
                       key={event._id}
                       className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
                     >
                       <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {formatDate(event.date)} at {event.time}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
                     </tr>
                   ))
@@ -247,14 +284,16 @@ const DashboardPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {upcomingEvents.length > 0 ? (
-                  upcomingEvents.map((event) => (
+                {filterData(upcomingEvents).length > 0 ? (
+                  filterData(upcomingEvents).map((event) => (
                     <tr
                       key={event._id}
                       className="border-t border-gray-200 hover:bg-gray-100 transition-all duration-300"
                     >
                       <td className="py-3 px-4 text-sm text-gray-800">{event.title}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{event.date} at {event.time}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">
+                        {formatDate(event.date)} at {event.time}
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">{event.speaker}</td>
                     </tr>
                   ))
@@ -276,7 +315,18 @@ const DashboardPage = () => {
 
   return (
     <div className="p-8 space-y-6 bg-gray-50">
-      <div className="flex justify-between space-x-4 w-full">
+      <div className="flex justify-between items-center space-x-4 w-full">
+        {/* Global Search */}
+        <div className="flex items-center space-x-2 w-1/4">
+          <FaSearch className="text-gray-600 text-lg" />
+          <input
+            type="text"
+            className="py-2 px-4 w-full rounded-lg border border-gray-300"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         {/* Tab selection */}
         <div
           onClick={() => setSelectedTab("students")}

@@ -9,6 +9,7 @@ import Board from "./Board/Board";
 import Home from "./Home/Home";
 import BulkUpload from "./BulkUpload/BulkUpload";
 import BulkEmail from "./BulkEmail/Bulk";
+import Funds from "./Funds/Funds";
 // import Eventcontent from "./EventContent";
 // import AboutEvent from "./Event/AboutEvent";
 // import Home from "./Home/Home";
@@ -89,6 +90,8 @@ const Admin = () => {
             <Route path="pending-requests" element={<Pending />} />
             <Route path="/BulkUpload" element={<BulkUpload />} />
             <Route path="/BulkEmail" element={<BulkEmail />} />
+            <Route path="/Funds" element={<Funds />} />
+
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}

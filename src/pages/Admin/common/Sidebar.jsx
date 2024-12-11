@@ -2,7 +2,7 @@ import briefcase from "../../../assets/icons/briefcase-01.svg";
 import messageChat from "../../../assets/icons/message-chat-circle.svg";
 import helpCircle from "../../../assets/icons/help-circle.svg";
 import newPostLogo from "../../../assets/icons/newPostLogo.svg";
-import Home1 from "../../../assets/icons/Home1.svg";
+import Home1 from "../../../assets/icons/home1.svg";
 import Connections from "../../../assets/icons/user-logo.svg";
 import videoChatIcon from "../../../assets/icons/video-chat-icon.svg";
 import BulkEmailIcon from "../../../assets/icons/mail.svg";
@@ -263,7 +263,7 @@ const Sidebar = () => {
             </button>
           </Link>
         )}
-        <Link to="/dashboard/Funds">
+        <Link to="/admin-dashboard/Funds">
           <button className="mx-8 mt-5 w-[75%] py-1 px-3 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 text-white font-semibold text-center hover:from-teal-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg shadow-teal-400/50 hover:shadow-indigo-400/20">
             Funds Donations
           </button>
