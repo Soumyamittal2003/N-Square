@@ -76,7 +76,7 @@ const RegisterOrganization = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-white text-black font-sans">
+    <div className="max-h-screen flex flex-col items-center bg-white text-black font-sans">
       {/* Top Navigation Bar */}
       <div className="flex items-center justify-between w-full px-6 py-4 mx-auto">
         <Link to="/">
@@ -193,6 +193,19 @@ const RegisterOrganization = () => {
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
+      </div>
+      <div className="w-1/2 mx-auto px-6">
+        <div className="border-t border-gray-300 my-2"></div>
+        <div className="text-center text-gray-600 text-sm mb-6">
+          <div>
+            <Link
+              to="/organization-login"
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Login as organization
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
