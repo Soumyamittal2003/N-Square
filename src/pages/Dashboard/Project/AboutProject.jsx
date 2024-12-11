@@ -391,7 +391,7 @@ const ProjectDetail = () => {
                   projectData?.projectPhoto || "https://via.placeholder.com/100"
                 }
                 alt="Project Icon"
-                className="w-full h-full rounded-full object-cover"
+                className="w-full h-full rounded-full object-contain"
               />
             </div>
           </div>
