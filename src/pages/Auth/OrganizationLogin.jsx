@@ -57,13 +57,13 @@ const OrganizationLogin = () => {
     // Use toast.promise
     await toast
       .promise(
-        axiosInstance.post("/users/Login", {
+        axiosInstance.post("/organizations/login", {
           email,
           password,
         }),
         {
           pending: "Logging in",
-          success: "Login successful! Redirecting",
+          success: "Login successful!",
           error: {
             render({ data }) {
               // Access error data from the promise
@@ -75,13 +75,14 @@ const OrganizationLogin = () => {
         }
       )
       .then((response) => {
+        console.log(response);
         Cookies.set("token", response?.data?.token, { expires: 7 }); // expires in 7 days
-        Cookies.set("id", response?.data?.user?._id, { expires: 7 });
-        Cookies.set("role", response?.data?.user?.role, { expires: 7 });
+        Cookies.set("id", response?.data?._id, { expires: 7 });
+        Cookies.set("role", response?.data?.role, { expires: 7 });
 
         localStorage.setItem(
           "chat-app-current-user",
-          JSON.stringify(response?.data?.user)
+          JSON.stringify(response?.data)
         );
 
         setShowPopup(true); // Show popup on successful login
