@@ -10,7 +10,6 @@ const ProfileSection = ({ userData }) => {
         const response = await axiosInstance.get(
           `/organizations/${userData.organization}`
         );
-        console.log(response);
         setOrganizationName(response.data.organization.name);
       } catch (err) {
         toast.error(err);
