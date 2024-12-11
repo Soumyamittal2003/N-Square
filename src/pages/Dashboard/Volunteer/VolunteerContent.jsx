@@ -12,7 +12,9 @@ const VolunteerContent = () => {
   // Fetch the current user ID from localStorage
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+      const storedUser = JSON.parse(
+        localStorage.getItem("chat-app-current-user")
+      );
       if (storedUser && storedUser._id) {
         setCurrentUserId(storedUser._id);
       } else {
@@ -77,7 +79,6 @@ const VolunteerContent = () => {
     }
 
     try {
-      console.log("Applying for position:", positionId);
       const response = await axiosInstance.post(
         `/volunteer/apply-volunteer/${positionId}`,
         {

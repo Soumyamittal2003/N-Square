@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-
 const CreateReunion = ({ onClose }) => {
   const [mode, setMode] = useState(""); // Tracks Online or Offline mode
   const [formData, setFormData] = useState({
@@ -46,7 +45,7 @@ const CreateReunion = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    try{
+    try {
       if (formData.data.success === true) {
         toast.success("Reunion Event created successfully!");
       } else {
@@ -54,10 +53,8 @@ const CreateReunion = ({ onClose }) => {
       }
     } catch (error) {
       console.error("Error creating Reunion:", error);
-      alert("An error occurred");  
-
+      alert("An error occurred");
     }
-    console.log("Form Submitted: ", formData);
     onClose(); // Close popup after submission
   };
 

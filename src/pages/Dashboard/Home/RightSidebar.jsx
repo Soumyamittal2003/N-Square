@@ -9,16 +9,15 @@ const RightSidebar = () => {
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
 
-
-
   // Fetch the current user from local storage
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const storedUser = JSON.parse(localStorage.getItem("chat-app-current-user"));
+        const storedUser = JSON.parse(
+          localStorage.getItem("chat-app-current-user")
+        );
         if (storedUser && storedUser._id) {
           setCurrentUserId(storedUser._id);
-          console.log("Current user ID fetched successfully:", storedUser._id);
         } else {
           console.error("No current user found in localStorage");
         }
@@ -40,15 +39,11 @@ const RightSidebar = () => {
       }
 
       try {
-        console.log(`Fetching suggested users for user ID: ${currentUserId}`);
-
         const { data: suggestedResponse } = await axiosInstance.get(
           `/recommadation/suggested-users/${currentUserId}`
         );
 
         if (suggestedResponse.success && suggestedResponse.data.length > 0) {
-          console.log("Suggested user IDs fetched successfully:", suggestedResponse.data);
-
           const userPromises = suggestedResponse.data.map((id) =>
             axiosInstance.get(`/users/${id}`)
           );
@@ -63,7 +58,6 @@ const RightSidebar = () => {
             profileImageUrl: res.data.data.profileimageUrl,
           }));
 
-          console.log("Suggested profiles fetched successfully:", suggestedProfiles);
           setSuggestedUsers(suggestedProfiles);
         } else {
           console.warn("No suggested users found.");
@@ -84,15 +78,11 @@ const RightSidebar = () => {
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
       try {
-        console.log("Fetching upcoming events...");
-
         const { data: upcomingEventIds } = await axiosInstance.get(
           `/recommadation/upcoming-events`
         );
 
         if (upcomingEventIds && upcomingEventIds.length > 0) {
-          console.log("Upcoming event IDs fetched successfully:", upcomingEventIds);
-
           const eventPromises = upcomingEventIds.map((eventId) =>
             axiosInstance.get(`/event/${eventId}`)
           );
@@ -105,8 +95,6 @@ const RightSidebar = () => {
             description: res.data.event.eventDescription,
             tags: res.data.event.tagsTopic,
           }));
-
-          console.log("Upcoming events fetched successfully:", events);
           setUpcomingEvents(events);
         } else {
           console.warn("No upcoming events found.");
@@ -158,7 +146,7 @@ const RightSidebar = () => {
                       Read More
                     </p>
                     <div className="flex justify-between mt-1">
-                    <div className="flex flex-wrap gap-1 mt-1">
+                      <div className="flex flex-wrap gap-1 mt-1">
                         {event.tags.map((tag, index) => (
                           <span
                             key={index}
@@ -168,17 +156,19 @@ const RightSidebar = () => {
                           </span>
                         ))}
                       </div>
-                    <Link to="/dashboard/event/about-event">
-                      <button className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">
-                        Register
-                      </button>
+                      <Link to="/dashboard/event/about-event">
+                        <button className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">
+                          Register
+                        </button>
                       </Link>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center">No upcoming events found.</p>
+              <p className="text-gray-500 text-center">
+                No upcoming events found.
+              </p>
             )}
           </div>
         )}
@@ -188,7 +178,6 @@ const RightSidebar = () => {
       <div className="px-2 py-2 rounded-lg mt-4">
         <div className="flex justify-between items-center">
           <h3 className="font-bold text-lg">Suggested Profiles</h3>
-          
         </div>
 
         {loadingUsers ? (
@@ -202,7 +191,10 @@ const RightSidebar = () => {
                   className="grid bg-gradient-to-br from-gray-100 via-white to-gray-200 grid-cols-[50px_1fr] gap-2 border shadow-sm items-center rounded-lg px-4 py-2"
                 >
                   <img
-                    src={profile.profileImageUrl || "https://via.placeholder.com/50"}
+                    src={
+                      profile.profileImageUrl ||
+                      "https://via.placeholder.com/50"
+                    }
                     alt={`${profile.firstName} ${profile.lastName}`}
                     className="rounded-full w-12 h-12 object-cover"
                   />
@@ -218,14 +210,14 @@ const RightSidebar = () => {
                     <p className="text-sm text-gray-500 line-clamp-2">
                       {profile.tagLine || "No tagline available"}
                     </p>
-                    <p className="text-sm text-gray-500">
-                      {profile.role}
-                    </p>
+                    <p className="text-sm text-gray-500">{profile.role}</p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center">No suggested profiles found.</p>
+              <p className="text-gray-500 text-center">
+                No suggested profiles found.
+              </p>
             )}
           </div>
         )}
