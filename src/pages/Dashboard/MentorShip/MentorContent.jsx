@@ -56,7 +56,7 @@ const MentorContent = () => {
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
             onClick={() => navigate("find-group")}
           >
-            Find a Mentor Group
+            Find a Mentor Group/
           </button>
           {isMentor && (
             <button
@@ -68,7 +68,7 @@ const MentorContent = () => {
           )}
         </div>
 
-        {/* Mentor Profile Cards */}
+        {/* Mentfdfsdfor Profile Cards */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="bg-white shadow-lg rounded-lg p-6 text-center">
             <img src={pic} alt="Mentor" className="w-24 h-24 rounded-full mx-auto mb-4" />
