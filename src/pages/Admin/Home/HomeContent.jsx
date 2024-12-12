@@ -123,37 +123,45 @@ const HomeContent = () => {
 
       {/* Content Section */}
       <div className="w-11/12 bg-[#ffffff] mx-auto h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
-        {activeTab === "Posts" ? (
-          loadingPosts ? (
-            <div className="flex justify-center items-center">
-              <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
-            </div>
-          ) : posts.length > 0 ? (
-            posts.map((post) => (
-              <PostCard
-                key={post._id}
-                post={post}
-                user={users[post.createdBy]}
-                currentUserId={currentUserId}
-              />
-            ))
-          ) : (
-            <p className="text-gray-500 text-center">No posts available.</p>
-          )
-        ) : activeTab === "Events" ? (
-          loadingEvents ? (
-            <div className="flex justify-center items-center">
-              <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
-            </div>
-          ) : events.length > 0 ? (
-            events.map((event) => (
-              <EventCard key={event._id} event={event} currentUserId={currentUserId} />
-            ))
-          ) : (
-            <p className="text-gray-500 text-center">No events available.</p>
-          )
-        ) : null}
+  {activeTab === "Posts" ? (
+    loadingPosts ? (
+      <div className="flex justify-center items-center">
+        <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
       </div>
+    ) : posts.length > 0 ? (
+      posts.map((post) => (
+        <PostCard
+          key={post._id}
+          post={post}
+          user={users[post.createdBy]}
+          currentUserId={currentUserId}
+        />
+      ))
+    ) : (
+      <p className="text-gray-500 text-center">No posts available.</p>
+    )
+  ) : activeTab === "Events" ? (
+    loadingEvents ? (
+      <div className="flex justify-center items-center">
+        <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
+      </div>
+    ) : events.length > 0 ? (
+      <div className="flex flex-wrap gap-4">
+        {events.map((event) => (
+          <EventCard
+            key={event._id}
+            event={event}
+            currentUserId={currentUserId}
+            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4" // Adjust the width as per your requirement
+          />
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-500 text-center">No events available.</p>
+    )
+  ) : null}
+</div>
+
     </div>
   );
 };
