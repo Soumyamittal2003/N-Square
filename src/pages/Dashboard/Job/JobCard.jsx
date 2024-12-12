@@ -4,7 +4,6 @@ import bookmark from "../../../assets/icons/bookmark.svg";
 import bookmarked from "../../../assets/icons/bookmarked.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
-import { useNavigate } from "react-router-dom";
 
 const JobCard = ({
   job,
@@ -32,20 +31,21 @@ const JobCard = ({
     dislikes = [],
     isApplied = false,
   } = job;
+
   const [applied, setApplied] = useState(isApplied);
-  const navigate = useNavigate();
-
-  const handleApply = () => {
-    onApplyJob(_id);
-    setApplied(true);
-    navigate(`/applied-jobs/${_id}`);
-  };
-
   const [creatorName, setCreatorName] = useState("Loading...");
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const isLiked = likes.includes(currentUserId);
   const isDisliked = dislikes.includes(currentUserId);
+
+  useEffect(() => {
+    const savedApplied = localStorage.getItem('applied');
+    if (savedApplied === 'true') {
+      setApplied(true);
+    }
+  }, []);
+  
 
   useEffect(() => {
     if (createdBy?.firstName && createdBy?.lastName) {
@@ -68,6 +68,11 @@ const JobCard = ({
   useEffect(() => {
     setIsBookmarked(bookmarks.includes(_id));
   }, [bookmarks, _id]);
+
+  const handleApply = () => {
+    setApplied(true);
+    localStorage.setItem('applied', 'true');
+  };
 
   return (
     <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
@@ -138,7 +143,6 @@ const JobCard = ({
 
       {/* Bottom Section */}
       <div className="mt-6 flex justify-between items-center">
-        {/* Left Icons */}
         <div className="flex gap-4">
           {/* Bookmark Button */}
           <button
@@ -155,9 +159,7 @@ const JobCard = ({
           {/* Like Button */}
           <button
             onClick={() => onLikePost(_id)}
-            className={`flex items-center gap-2 ${
-              isLiked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-600 transition`}
+            className={`flex items-center gap-2 ${isLiked ? "text-blue-500" : "text-gray-600"} hover:text-blue-600 transition`}
           >
             <img src={arrowBlockUp} alt="like" className="w-6 h-6" />
             <span className="font-semibold">{likes.length}</span>
@@ -166,9 +168,7 @@ const JobCard = ({
           {/* Dislike Button */}
           <button
             onClick={() => onDislikePost(_id)}
-            className={`flex items-center gap-2 ${
-              isDisliked ? "text-blue-500" : "text-gray-600"
-            } hover:text-blue-600 transition`}
+            className={`flex items-center gap-2 ${isDisliked ? "text-blue-500" : "text-gray-600"} hover:text-blue-600 transition`}
           >
             <img src={arrowBlockdown} alt="dislike" className="w-6 h-6" />
             <span className="font-semibold">{dislikes.length}</span>

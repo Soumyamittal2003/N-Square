@@ -157,6 +157,7 @@ const JobContent = () => {
       console.error(`Error bookmarking job ${jobId}:`, error);
     }
   };
+  
 
   // Handle apply action
   const handleApplyJob = async (jobId) => {
