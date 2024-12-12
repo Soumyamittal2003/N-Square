@@ -92,9 +92,9 @@ const UserProfile = () => {
 const [allFunds, setAllFunds] = useState([]);
 const [donations, setDonations] = useState([]);
 
-const [userProjectDonations, setUserProjectDonations] = useState([]);
-const [projects, setProjects] = useState([]);
-const [projectDonations, setProjectDonations] = useState([]);
+// const [userProjectDonations, setUserProjectDonations] = useState([]);
+// const [projects, setProjects] = useState([]);
+// const [projectDonations, setProjectDonations] = useState([]);
 
 
   const [activeTab, setActiveTab] = useState("Posts");
@@ -232,41 +232,41 @@ const [projectDonations, setProjectDonations] = useState([]);
   
     fetchUserFundings();
   }, [userId]);
-  useEffect(() => {
-    const fetchUserProjectDonations = async () => {
-      try {
-        setLoading(true);
+  // useEffect(() => {
+  //   const fetchUserProjectDonations = async () => {
+  //     try {
+  //       setLoading(true);
   
-        // Fetch user donations to projects
-        const [donationsResponse, projectsResponse] = await Promise.all([
-          axiosInstance.get(`/project/user-wise-donation/${userId}`),
-          axiosInstance.get("/project/get-all-projects") // You can modify this as needed
-        ]);
+  //       // Fetch user donations to projects
+  //       const [donationsResponse, projectsResponse] = await Promise.all([
+  //         axiosInstance.get(`/project/user-wise-donation/${userId}`),
+  //         axiosInstance.get("/project/get-all-projects") // You can modify this as needed
+  //       ]);
   
-        setUserProjectDonations(donationsResponse.data || []);
-        setProjects(projectsResponse.data.projects || []);
+  //       setUserProjectDonations(donationsResponse.data || []);
+  //       setProjects(projectsResponse.data.projects || []);
   
-        // Match donations to projects
-        const matchedProjectDonations = donationsResponse.data.map((donation) => {
-          const matchedProject = projectsResponse.data.projects.find(
-            (project) => project._id === donation.projectID
-          );
-          return matchedProject
-            ? { ...matchedProject, donationAmount: donation.amount }
-            : null;
-        }).filter((projectDonation) => projectDonation !== null);
+  //       // Match donations to projects
+  //       const matchedProjectDonations = donationsResponse.data.map((donation) => {
+  //         const matchedProject = projectsResponse.data.projects.find(
+  //           (project) => project._id === donation.projectID
+  //         );
+  //         return matchedProject
+  //           ? { ...matchedProject, donationAmount: donation.amount }
+  //           : null;
+  //       }).filter((projectDonation) => projectDonation !== null);
   
-        setProjectDonations(matchedProjectDonations);
-      } catch (error) {
-        console.error("Error fetching project donation data:", error);
-        toast.error("Failed to fetch project donations.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       setProjectDonations(matchedProjectDonations);
+  //     } catch (error) {
+  //       console.error("Error fetching project donation data:", error);
+  //       toast.error("Failed to fetch project donations.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
   
-    fetchUserProjectDonations();
-  }, [userId]);
+  //   fetchUserProjectDonations();
+  // }, [userId]);
   
   
   // Update About Section
@@ -882,7 +882,7 @@ const [projectDonations, setProjectDonations] = useState([]);
     )}
 
     {/* Displaying Donations to Projects */}
-    {projectDonations.length > 0 ? (
+    {/* {projectDonations.length > 0 ? (
       <div>
         <h2 className="text-xl font-semibold mb-4">Donations to Projects</h2>
         {projectDonations.map((projectDonation) => (
@@ -918,7 +918,7 @@ const [projectDonations, setProjectDonations] = useState([]);
       </div>
     ) : (
       <p className="text-center text-gray-500">No donations to show for projects.</p>
-    )}
+    )} */}
   </div>
 )}
 
