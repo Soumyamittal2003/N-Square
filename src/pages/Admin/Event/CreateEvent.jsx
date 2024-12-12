@@ -3,6 +3,7 @@ import CheckmarkAnimation from "../../../assets/animations/checkmark.gif";
 import axiosInstance from "../../../utils/axiosinstance"; // Import the axios instance
 import { toast } from "react-toastify"; // Import toast for notifications
 
+
 const CreateEvent = ({ onClose }) => {
   const [step, setStep] = useState(1);
   const [tags, setTags] = useState([]);

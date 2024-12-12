@@ -37,7 +37,7 @@ const DonationContent = () => {
   };
 
   return (
-    <div className="flex flex-wrap gap-8 h-[calc(115vh-225px)] overflow-y-auto hide-scrollbar">
+    <div className=" flex flex-wrap gap-6 h-[calc(115vh-225px)] overflow-y-auto hide-scrollbar">
       {/* Conditionally render Cards only if funds are available */}
       {funds.length > 0 &&
         funds.map((fund) => (

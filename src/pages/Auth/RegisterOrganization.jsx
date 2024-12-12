@@ -9,10 +9,7 @@ import NetworkNext from "../../assets/icons/Network Next.svg";
 import Nsquare from "../../assets/icons/logo nsqaure 1.svg";
 
 const courseOptions = [
-  {
-    value: "Computer Science and Engineering",
-    label: "Computer Science and Engineering",
-  },
+  { value: "Computer Science and Engineering", label: "Computer Science and Engineering" },
   { value: "Business Administration", label: "Business Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Civil Engineering", label: "Civil Engineering" },
@@ -25,11 +22,12 @@ const courseOptions = [
   { value: "Economics", label: "Economics" },
   { value: "Fine Arts and Design", label: "Fine Arts and Design" },
 ];
- 
+
 const RegisterOrganization = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [emailError, setEmailError] = useState("");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,7 +40,23 @@ const RegisterOrganization = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "email") {
+      validateEmail(value);
+    }
+
     setFormData({ ...formData, [name]: value });
+  };
+
+  const validateEmail = (email) => {
+    // General regex for validating emails (allows different domains, including .ac.in, .com, etc.)
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address (e.g., example@gmail.com or admin@opju.ac.in).");
+    } else {
+      setEmailError("");
+    }
   };
 
   const handleCourseChange = (selectedOptions) => {
@@ -59,11 +73,17 @@ const RegisterOrganization = () => {
       return;
     }
 
+    if (emailError) {
+      toast.error("Please correct the errors in the form before submitting.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const payload = {
         name: formData.name,
         email: formData.email,
-        college_address: formData.collegeAddress,
+        college_address: formData.college_address,
         university_id: formData.university_id,
         courses: formData.courses.map((course) => course.value),
         password: formData.password,
@@ -74,9 +94,7 @@ const RegisterOrganization = () => {
       toast.success("Organization registered successfully!");
       navigate("/organization-login");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to register organization."
-      );
+      toast.error(error.response?.data?.message || "Failed to register organization.");
     } finally {
       setIsLoading(false);
     }
@@ -123,12 +141,13 @@ const RegisterOrganization = () => {
             placeholder="Enter Organization Email"
             required
           />
+          {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
 
           {/* College Address Field */}
           <input
             type="text"
-            name="collegeAddress"
-            value={formData.collegeAddress}
+            name="college_address"
+            value={formData.college_address}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black"
             placeholder="Enter your college address"
@@ -194,10 +213,7 @@ const RegisterOrganization = () => {
 
       {/* Footer Links */}
       <div className="text-center text-gray-600 text-sm mb-2">
-        <Link
-          to="/organization-login"
-          className="text-blue-600 font-medium hover:underline"
-        >
+        <Link to="/organization-login" className="text-blue-600 font-medium hover:underline">
           Login as organization
         </Link>
       </div>
