@@ -462,7 +462,7 @@ const UserDetail = () => {
                 name="enrollmentNumber"
                 type="text"
                 placeholder="Enter Enrollment Number"
-                value={formData.batch}
+                value={formData.enrollmentnumber}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg ${error.enrollmentnumber ? "border-red-500" : "border-gray-300"}`}
               />
