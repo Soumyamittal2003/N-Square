@@ -61,9 +61,7 @@ const Sidebar = () => {
     const fetchOrganizationName = async () => {
       if (id) {
         try {
-          const response = await axiosInstance.get(
-            `/organizations/${id}`
-          );
+          const response = await axiosInstance.get(`/organizations/${id}`);
           console.log(response.data.organization.name);
           setOrganizationName(response.data.organization.name);
         } catch (error) {
@@ -86,10 +84,9 @@ const Sidebar = () => {
     <div className="mx-4 mt-4 h-[calc(100vh-50px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       {/* Admin Control Section */}
       {role === "admin" && organizationName && (
-        <div className="absolute top-2 inset-x-0 text-2xl  flex justify-center">
+        <div className="  text-xl  flex justify-center">
           <span className="bg-white px-3 py-1 rounded-full text-xl font-semibold shadow-md">
             {organizationName}
-            
           </span>
         </div>
       )}
