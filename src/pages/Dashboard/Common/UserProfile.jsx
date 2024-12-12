@@ -5,6 +5,8 @@ import ProjectCard from "../Project/ProjectCard";
 import PostCard from "../Common/PostCard";
 import { FiEdit } from "react-icons/fi";
 import { useParams } from "react-router-dom";
+import EventCard from "../Event/EventCard";
+import JobCard from "../Job/JobCard";
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -23,6 +25,8 @@ const UserProfile = () => {
   const [following, setFollowing] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [userProjects, setUserProjects] = useState([]);
+  const [userEvent, setUserEvent] = useState([]);
+  const [userJobs, setUserJobs] = useState([]);
   const [education, setEducation] = useState([]);
   const [newEducation, setNewEducation] = useState({
     institution: "",
@@ -137,7 +141,6 @@ const UserProfile = () => {
         const response = await axiosInstance.get(
           `/organizations/${organizationId}`
         );
-        console.log(response);
         setOrganization(response.data.organization.name);
       } catch (err) {
         toast.error(err);
@@ -150,6 +153,42 @@ const UserProfile = () => {
       fetchOrganizationName();
     }
   }, [organizationId]);
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(
+          `/event/user/${userId}`
+        );
+        setUserEvent(response.data.events);
+      } catch (err) {
+        toast.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+      fetchEvent();
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(
+          `/jobs/user/${userId}`
+        );
+        setUserJobs(response.data.jobs)
+      } catch (err) {
+        toast.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+      fetchJobs();
+  }, [userId]);
 
   // Update About Section
   const updateAbout = async () => {
@@ -704,15 +743,34 @@ const UserProfile = () => {
             )}
             {activeTab === "Events" && (
               <div>
-                {/* Placeholder for events */}
-                <p className="text-center text-gray-500">No events to show.</p>
-              </div>
+              {userEvent.length > 0 ? (
+                userEvent.map((event) => (
+                  <EventCard key={event._id} event={event} />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">
+                  No Events to show.
+                </p>
+              )}
+            </div>
             )}
             {activeTab === "Job" && (
               <div>
-                {/* Placeholder for jobs */}
-                <p className="text-center text-gray-500">No jobs to show.</p>
-              </div>
+              {userJobs.length > 0 ? (
+                userJobs.map((job) => (
+                  <JobCard key={job._id} job={job} currentUserId={userId}
+                  onLikePost
+                  onDislikePost
+                  onBookmarkJob
+                  onApplyJob
+                  />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">
+                  No jobs to show.
+                </p>
+              )}
+            </div>
             )}
             {activeTab === "Donations" && (
               <div>
