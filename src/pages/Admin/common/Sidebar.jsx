@@ -30,6 +30,7 @@ const Sidebar = () => {
 
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
+  // Fetch organization name using the id from cookies
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -41,26 +42,41 @@ const Sidebar = () => {
         setLoading(false);
       }
     };
+    // useEffect(() => {
+    //   const organizationData = async () => {
+    //     try {
+    //       const response = await axiosInstance.get(/users/${id});
+    //       setUserData(response?.data?.data);
+    //     } catch (error) {
+    //       console.error("Error fetching user data:", error);
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   };
 
     if (id) fetchUserData();
   }, [id]);
 
   useEffect(() => {
     const fetchOrganizationName = async () => {
-      if (userData?.organization) {
+      if (id) {
         try {
           const response = await axiosInstance.get(
-            `/organizations/${userData.organization}`
+            `/organizations/${id}`
           );
+          console.log(response.data.organization.name);
           setOrganizationName(response.data.organization.name);
-        } catch (err) {
+        } catch (error) {
+          console.error("Error fetching organization name:", error);
           toast.error("Error fetching organization name");
+        } finally {
+          setLoading(false);
         }
       }
     };
 
     fetchOrganizationName();
-  }, [userData?.organization]);
+  }, [id]);
 
   const handleClick = (link) => {
     setActiveLink(link);
@@ -69,60 +85,19 @@ const Sidebar = () => {
   return (
     <div className="mx-4 mt-4 h-[calc(100vh-50px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       {/* Admin Control Section */}
-      
-      {organizationName && (
-        <div className="absolute top-2 inset-x-0 flex justify-center">
-          <span className="bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
+      {role === "admin" && organizationName && (
+        <div className="absolute top-2 inset-x-0 text-2xl  flex justify-center">
+          <span className="bg-white px-3 py-1 rounded-full text-xl font-semibold shadow-md">
             {organizationName}
+            
           </span>
         </div>
       )}
-      
       {role === "admin" && (
         <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
           <span className="mr-2">🛠</span> Admin Control Panel
         </div>
       )}
-
-      <div className="relative mb-15">
-        {role !== "admin" && (
-          <div className="absolute w-[214px] top-[180px] flex items-center shadow-lg justify-around p-1 border bg-white border-gray-300 rounded-2xl mx-4 py-1">
-            <Link
-              to="/dashboard/followers"
-              className={`text-center ${
-                activeLink === "followers"
-                  ? "text-black font-semibold"
-                  : "text-gray-600"
-              } hover:text-black`}
-              onClick={() => handleClick("followers")}
-            >
-              <div>
-                <span className="block text-lg font-semibold text-gray-800">
-                  {userData.followers.length}
-                </span>
-                <span className="text-sm text-gray-500">Followers</span>
-              </div>
-            </Link>
-            <div className="border-l border-gray-300 h-8"></div>
-            <Link
-              to="/dashboard/following"
-              className={`text-center ${
-                activeLink === "following"
-                  ? "text-black font-semibold"
-                  : "text-gray-600"
-              } hover:text-black`}
-              onClick={() => handleClick("following")}
-            >
-              <div>
-                <span className="block text-lg font-semibold text-gray-800">
-                  {userData.following.length}
-                </span>
-                <span className="text-sm text-gray-500">Following</span>
-              </div>
-            </Link>
-          </div>
-        )}
-      </div>
 
       {/* Navigation Links */}
       <div className="flex-grow relative flex flex-col overflow-auto hide-scrollbar">
@@ -180,17 +155,6 @@ const Sidebar = () => {
               linkKey="BulkUpload"
             />
           )}
-          {role !== "admin" && (
-            <SidebarLink
-              className="py-1"
-              to="/dashboard/connection"
-              icon={Connections}
-              label="Explore Connections"
-              activeLink={activeLink}
-              handleClick={handleClick}
-              linkKey="connection"
-            />
-          )}
 
           {role === "admin" && (
             <SidebarLink
@@ -212,28 +176,6 @@ const Sidebar = () => {
               linkKey="post"
             />
           </div>
-
-          {role !== "admin" && (
-            <SidebarLink
-              to="/dashboard/video-call"
-              icon={videoChatIcon}
-              label="Video Call"
-              activeLink={activeLink}
-              handleClick={handleClick}
-              linkKey="video-call"
-            />
-          )}
-
-          {role !== "admin" && (
-            <SidebarLink
-              to="/dashboard/applied-jobs"
-              icon={briefcase}
-              label="Job/Internship Applied"
-              activeLink={activeLink}
-              handleClick={handleClick}
-              linkKey="applied-jobs"
-            />
-          )}
 
           <SidebarLink
             to="/admin-dashboard/community"
