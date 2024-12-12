@@ -11,17 +11,19 @@ const HomeContent = () => {
   const [posts, setPosts] = useState([]);
   const [events, setEvents] = useState([]);
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [loadingJobs, setLoadingJobs] = useState(false);
   const [users, setUsers] = useState({}); // State to store user data
 
   const fetchCurrentUserId = JSON.parse(localStorage.getItem("chat-app-current-user"));
   const currentUserId = fetchCurrentUserId?._id;
 
-  const createdForId = Cookies.get("created_for");
+  const createdForId = Cookies.get("id");
 
   // Fetch posts data
   const fetchPosts = async () => {
-    setLoading(true);
+    setLoadingPosts(true);
     try {
       const response = await axiosInstance.get("/organizations/all-posts");
       const filteredPosts = response.data.posts.filter(
@@ -33,7 +35,7 @@ const HomeContent = () => {
       console.error("Error fetching posts:", error);
       toast.error("Failed to fetch posts.");
     } finally {
-      setLoading(false);
+      setLoadingPosts(false);
     }
   };
 
@@ -58,7 +60,7 @@ const HomeContent = () => {
 
   // Fetch events data
   const fetchEvents = async () => {
-    setLoading(true);
+    setLoadingEvents(true);
     try {
       const response = await axiosInstance.get("/organizations/all-events");
       const filteredEvents = response.data.events.filter(
@@ -69,13 +71,13 @@ const HomeContent = () => {
       console.error("Error fetching events:", error);
       toast.error("Failed to fetch events.");
     } finally {
-      setLoading(false);
+      setLoadingEvents(false);
     }
   };
 
   // Fetch jobs data
   const fetchJobs = async () => {
-    setLoading(true);
+    setLoadingJobs(true);
     try {
       const response = await axiosInstance.get("/organizations/all-jobs");
       const filteredJobs = response.data.jobs.filter(
@@ -86,16 +88,20 @@ const HomeContent = () => {
       console.error("Error fetching jobs:", error);
       toast.error("Failed to fetch jobs.");
     } finally {
-      setLoading(false);
+      setLoadingJobs(false);
     }
   };
 
+  // Reset data and fetch based on active tab
   useEffect(() => {
     if (activeTab === "Posts") {
+      setPosts([]);
       fetchPosts();
     } else if (activeTab === "Events") {
+      setEvents([]);
       fetchEvents();
     } else if (activeTab === "Jobs") {
+      setJobs([]);
       fetchJobs();
     }
   }, [activeTab]);
@@ -119,10 +125,12 @@ const HomeContent = () => {
 
       {/* Content Section */}
       <div className="w-11/12 bg-[#ffffff] mx-auto h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
-        {loading ? (
-          <p className="text-center text-gray-500">Loading...</p>
-        ) : activeTab === "Posts" ? (
-          posts.length > 0 ? (
+        {activeTab === "Posts" ? (
+          loadingPosts ? (
+            <div className="flex justify-center items-center">
+              <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
+            </div>
+          ) : posts.length > 0 ? (
             posts.map((post) => (
               <PostCard
                 key={post._id}
@@ -135,7 +143,11 @@ const HomeContent = () => {
             <p className="text-gray-500 text-center">No posts available.</p>
           )
         ) : activeTab === "Events" ? (
-          events.length > 0 ? (
+          loadingEvents ? (
+            <div className="flex justify-center items-center">
+              <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
+            </div>
+          ) : events.length > 0 ? (
             events.map((event) => (
               <EventCard key={event._id} event={event} currentUserId={currentUserId} />
             ))
@@ -143,7 +155,11 @@ const HomeContent = () => {
             <p className="text-gray-500 text-center">No events available.</p>
           )
         ) : activeTab === "Jobs" ? (
-          jobs.length > 0 ? (
+          loadingJobs ? (
+            <div className="flex justify-center items-center">
+              <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
+            </div>
+          ) : jobs.length > 0 ? (
             jobs.map((job) => (
               <JobCard key={job._id} job={job} currentUserId={currentUserId} />
             ))

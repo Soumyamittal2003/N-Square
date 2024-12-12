@@ -92,6 +92,11 @@ const UserProfile = () => {
 const [allFunds, setAllFunds] = useState([]);
 const [donations, setDonations] = useState([]);
 
+const [userProjectDonations, setUserProjectDonations] = useState([]);
+const [projects, setProjects] = useState([]);
+const [projectDonations, setProjectDonations] = useState([]);
+
+
   const [activeTab, setActiveTab] = useState("Posts");
 
   const [loading, setLoading] = useState(true);
@@ -227,6 +232,42 @@ const [donations, setDonations] = useState([]);
   
     fetchUserFundings();
   }, [userId]);
+  useEffect(() => {
+    const fetchUserProjectDonations = async () => {
+      try {
+        setLoading(true);
+  
+        // Fetch user donations to projects
+        const [donationsResponse, projectsResponse] = await Promise.all([
+          axiosInstance.get(`/project/user-wise-donation/${userId}`),
+          axiosInstance.get("/project/get-all-projects") // You can modify this as needed
+        ]);
+  
+        setUserProjectDonations(donationsResponse.data || []);
+        setProjects(projectsResponse.data.projects || []);
+  
+        // Match donations to projects
+        const matchedProjectDonations = donationsResponse.data.map((donation) => {
+          const matchedProject = projectsResponse.data.projects.find(
+            (project) => project._id === donation.projectID
+          );
+          return matchedProject
+            ? { ...matchedProject, donationAmount: donation.amount }
+            : null;
+        }).filter((projectDonation) => projectDonation !== null);
+  
+        setProjectDonations(matchedProjectDonations);
+      } catch (error) {
+        console.error("Error fetching project donation data:", error);
+        toast.error("Failed to fetch project donations.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchUserProjectDonations();
+  }, [userId]);
+  
   
   // Update About Section
   const updateAbout = async () => {
@@ -812,31 +853,75 @@ const [donations, setDonations] = useState([]);
             )}
             {activeTab === "Donations" && (
   <div>
+    {/* Displaying Donations to Funds */}
     {donations.length > 0 ? (
-      donations.map((donation) => (
-        <div
-          key={donation._id}
-          className="bg-gray-100 p-4 rounded-lg mb-2 flex items-center"
-        >
-          <img
-            src={donation.fundImage || donation.fundphoto}
-            alt={donation.title}
-            className="w-16 h-16 object-cover rounded-lg mr-4"
-          />
-          <div>
-            <h3 className="font-bold">{donation.title}</h3>
-            <p className="text-gray-700">{donation.description}</p>
-            <p className="font-semibold text-blue-500">
-              Amount Donated: ${donation.amount}
-            </p>
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Donations to Funds</h2>
+        {donations.map((donation) => (
+          <div
+            key={donation._id}
+            className="bg-gray-100 p-4 rounded-lg mb-4 flex items-center"
+          >
+            <img
+              src={donation.fundImage || donation.fundphoto}
+              alt={donation.title}
+              className="w-16 h-16 object-cover rounded-lg mr-4"
+            />
+            <div>
+              <h3 className="font-bold">{donation.title}</h3>
+              <p className="text-gray-700">{donation.description}</p>
+              <p className="font-semibold text-blue-500">
+                Amount Donated: ${donation.amount}
+              </p>
+            </div>
           </div>
-        </div>
-      ))
+        ))}
+      </div>
     ) : (
-      <p className="text-center text-gray-500">No donations to show.</p>
+      <p className="text-center text-gray-500">No donations to show for funds.</p>
+    )}
+
+    {/* Displaying Donations to Projects */}
+    {projectDonations.length > 0 ? (
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Donations to Projects</h2>
+        {projectDonations.map((projectDonation) => (
+          <div
+            key={projectDonation._id}
+            className="bg-gray-100 p-4 rounded-lg mb-4 flex items-center"
+          >
+            <img
+              src={projectDonation.projectPhoto}
+              alt={projectDonation.projectTopic}
+              className="w-16 h-16 object-cover rounded-lg mr-4"
+            />
+            <div>
+              <h3 className="font-bold">{projectDonation.projectTopic}</h3>
+              <p className="text-gray-700">{projectDonation.description}</p>
+              <p className="font-semibold text-blue-500">
+                Amount Donated: ${projectDonation.donationAmount}
+              </p>
+              <p className="text-gray-600">
+                Project Type: {projectDonation.projectType} | Department: {projectDonation.department}
+              </p>
+              <a
+                href={projectDonation.projectLinks.GitHub}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline"
+              >
+                GitHub Link
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p className="text-center text-gray-500">No donations to show for projects.</p>
     )}
   </div>
 )}
+
 
           </div>
         </div>
