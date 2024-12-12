@@ -89,13 +89,12 @@ const UserProfile = () => {
   const [isEditingBannerImage, setIsEditingBannerImage] = useState(false);
 
   const [userFundings, setUserFundings] = useState([]);
-const [allFunds, setAllFunds] = useState([]);
-const [donations, setDonations] = useState([]);
+  const [allFunds, setAllFunds] = useState([]);
+  const [donations, setDonations] = useState([]);
 
-// const [userProjectDonations, setUserProjectDonations] = useState([]);
-// const [projects, setProjects] = useState([]);
-// const [projectDonations, setProjectDonations] = useState([]);
-
+  // const [userProjectDonations, setUserProjectDonations] = useState([]);
+  // const [projects, setProjects] = useState([]);
+  // const [projectDonations, setProjectDonations] = useState([]);
 
   const [activeTab, setActiveTab] = useState("Posts");
 
@@ -167,9 +166,7 @@ const [donations, setDonations] = useState([]);
     const fetchEvent = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(
-          `/event/user/${userId}`
-        );
+        const response = await axiosInstance.get(`/event/user/${userId}`);
         setUserEvent(response.data.events);
       } catch (err) {
         toast.error(err);
@@ -178,17 +175,15 @@ const [donations, setDonations] = useState([]);
       }
     };
 
-      fetchEvent();
+    fetchEvent();
   }, [userId]);
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(
-          `/jobs/user/${userId}`
-        );
-        setUserJobs(response.data.jobs)
+        const response = await axiosInstance.get(`/jobs/user/${userId}`);
+        setUserJobs(response.data.jobs);
       } catch (err) {
         toast.error(err);
       } finally {
@@ -196,7 +191,7 @@ const [donations, setDonations] = useState([]);
       }
     };
 
-      fetchJobs();
+    fetchJobs();
   }, [userId]);
 
   useEffect(() => {
@@ -207,45 +202,46 @@ const [donations, setDonations] = useState([]);
           axiosInstance.get(`/funding/user-wise-funding/${userId}`),
           axiosInstance.get("/funding/get-all-funds"),
         ]);
-  
+
         setUserFundings(fundingResponse.data || []);
         setAllFunds(fundsResponse.data.funds || []);
-        
+
         // Match fund details with user's funding
-        const matchedDonations = fundingResponse.data.map((funding) => {
-          const matchedFund = fundsResponse.data.funds.find(
-            (fund) => fund._id === funding.fundID
-          );
-          return matchedFund
-            ? { ...matchedFund, amount: funding.amount }
-            : null;
-        }).filter((donation) => donation !== null);
-  
+        const matchedDonations = fundingResponse.data
+          .map((funding) => {
+            const matchedFund = fundsResponse.data.funds.find(
+              (fund) => fund._id === funding.fundID
+            );
+            return matchedFund
+              ? { ...matchedFund, amount: funding.amount }
+              : null;
+          })
+          .filter((donation) => donation !== null);
+
         setDonations(matchedDonations);
       } catch (error) {
         console.error("Error fetching funding data:", error);
-        toast.error("Failed to fetch donations.");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchUserFundings();
   }, [userId]);
   // useEffect(() => {
   //   const fetchUserProjectDonations = async () => {
   //     try {
   //       setLoading(true);
-  
+
   //       // Fetch user donations to projects
   //       const [donationsResponse, projectsResponse] = await Promise.all([
   //         axiosInstance.get(`/project/user-wise-donation/${userId}`),
   //         axiosInstance.get("/project/get-all-projects") // You can modify this as needed
   //       ]);
-  
+
   //       setUserProjectDonations(donationsResponse.data || []);
   //       setProjects(projectsResponse.data.projects || []);
-  
+
   //       // Match donations to projects
   //       const matchedProjectDonations = donationsResponse.data.map((donation) => {
   //         const matchedProject = projectsResponse.data.projects.find(
@@ -255,7 +251,7 @@ const [donations, setDonations] = useState([]);
   //           ? { ...matchedProject, donationAmount: donation.amount }
   //           : null;
   //       }).filter((projectDonation) => projectDonation !== null);
-  
+
   //       setProjectDonations(matchedProjectDonations);
   //     } catch (error) {
   //       console.error("Error fetching project donation data:", error);
@@ -264,11 +260,10 @@ const [donations, setDonations] = useState([]);
   //       setLoading(false);
   //     }
   //   };
-  
+
   //   fetchUserProjectDonations();
   // }, [userId]);
-  
-  
+
   // Update About Section
   const updateAbout = async () => {
     try {
@@ -822,67 +817,74 @@ const [donations, setDonations] = useState([]);
             )}
             {activeTab === "Events" && (
               <div>
-              {userEvent.length > 0 ? (
-                userEvent.map((event) => (
-                  <EventCard key={event._id} event={event} />
-                ))
-              ) : (
-                <p className="text-center text-gray-500">
-                  No Events to show.
-                </p>
-              )}
-            </div>
+                {userEvent.length > 0 ? (
+                  userEvent.map((event) => (
+                    <EventCard key={event._id} event={event} />
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500">
+                    No Events to show.
+                  </p>
+                )}
+              </div>
             )}
             {activeTab === "Job" && (
               <div>
-              {userJobs.length > 0 ? (
-                userJobs.map((job) => (
-                  <JobCard key={job._id} job={job} currentUserId={userId}
-                  onLikePost
-                  onDislikePost
-                  onBookmarkJob
-                  onApplyJob
-                  />
-                ))
-              ) : (
-                <p className="text-center text-gray-500">
-                  No jobs to show.
-                </p>
-              )}
-            </div>
+                {userJobs.length > 0 ? (
+                  userJobs.map((job) => (
+                    <JobCard
+                      key={job._id}
+                      job={job}
+                      currentUserId={userId}
+                      onLikePost
+                      onDislikePost
+                      onBookmarkJob
+                      onApplyJob
+                    />
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500">No jobs to show.</p>
+                )}
+              </div>
             )}
             {activeTab === "Donations" && (
-  <div>
-    {/* Displaying Donations to Funds */}
-    {donations.length > 0 ? (
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Donations to Funds</h2>
-        {donations.map((donation) => (
-          <div
-            key={donation._id}
-            className="bg-gray-100 p-4 rounded-lg mb-4 flex items-center"
-          >
-            <img
-              src={donation.fundImage || donation.fundphoto}
-              alt={donation.title}
-              className="w-16 h-16 object-cover rounded-lg mr-4"
-            />
-            <div>
-              <h3 className="font-bold">{donation.title}</h3>
-              <p className="text-gray-700">{donation.description}</p>
-              <p className="font-semibold text-blue-500">
-                Amount Donated: ${donation.amount}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <p className="text-center text-gray-500">No donations to show for funds.</p>
-    )}
+              <div>
+                {/* Displaying Donations to Funds */}
+                {donations.length > 0 ? (
+                  <div>
+                    <h2 className="text-xl font-semibold mb-4">
+                      Donations to Funds
+                    </h2>
+                    {donations.map((donation) => (
+                      <div
+                        key={donation._id}
+                        className="bg-gray-100 p-4 rounded-lg mb-4 flex items-center"
+                      >
+                        <img
+                          src={donation.fundImage || donation.fundphoto}
+                          alt={donation.title}
+                          className="w-16 h-16 object-cover rounded-lg mr-4"
+                        />
+                        <div>
+                          <h3 className="font-bold">{donation.title}</h3>
+                          <p className="text-gray-700">
+                            {donation.description}
+                          </p>
+                          <p className="font-semibold text-blue-500">
+                            Amount Donated: ${donation.amount}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500">
+                    No donations to show for funds.
+                  </p>
+                )}
 
-    {/* Displaying Donations to Projects */}
-    {/* {projectDonations.length > 0 ? (
+                {/* Displaying Donations to Projects */}
+                {/* {projectDonations.length > 0 ? (
       <div>
         <h2 className="text-xl font-semibold mb-4">Donations to Projects</h2>
         {projectDonations.map((projectDonation) => (
@@ -919,10 +921,8 @@ const [donations, setDonations] = useState([]);
     ) : (
       <p className="text-center text-gray-500">No donations to show for projects.</p>
     )} */}
-  </div>
-)}
-
-
+              </div>
+            )}
           </div>
         </div>
       </div>
