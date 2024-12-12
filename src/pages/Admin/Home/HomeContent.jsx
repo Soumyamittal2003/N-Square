@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../../utils/axiosinstance"; // Assuming axiosInstance is set up for API calls
+import axiosInstance from "../../../utils/axiosinstance";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import PostCard from "../common/PostCard";
@@ -12,11 +12,10 @@ const HomeContent = () => {
   const [events, setEvents] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState({}); // State to store user data
+  const [users, setUsers] = useState({});
 
   const fetchCurrentUserId = JSON.parse(localStorage.getItem("chat-app-current-user"));
   const currentUserId = fetchCurrentUserId?._id;
-
   const createdForId = Cookies.get("created_for");
 
   // Fetch posts data
@@ -103,7 +102,7 @@ const HomeContent = () => {
   return (
     <div className="w-3/4 mx-auto">
       {/* Tabs Section */}
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
+      <div className="flex justify-around px-4 py-1 bg-white rounded-2xl">
         {["Posts", "Events", "Jobs"].map((tab) => (
           <button
             key={tab}
@@ -118,7 +117,7 @@ const HomeContent = () => {
       </div>
 
       {/* Content Section */}
-      <div className="w-11/12 bg-[#ffffff] mx-auto h-[calc(100vh-150px)] overflow-y-auto hide-scrollbar">
+      <div className="w-[100%] bg-white hide-scrollbar p-5 rounded-lg ">
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : activeTab === "Posts" ? (
@@ -144,9 +143,15 @@ const HomeContent = () => {
           )
         ) : activeTab === "Jobs" ? (
           jobs.length > 0 ? (
-            jobs.map((job) => (
-              <JobCard key={job._id} job={job} currentUserId={currentUserId} />
-            ))
+            <div className="bg-white p-4 rounded-lg overflow-x-auto">
+              <div className="flex gap-6">
+                {jobs.map((job) => (
+                  <div className="flex-shrink-0">
+                    <JobCard key={job._id} job={job} currentUserId={currentUserId} />
+                  </div>
+                ))}
+              </div>
+            </div>
           ) : (
             <p className="text-gray-500 text-center">No jobs available.</p>
           )
