@@ -33,7 +33,7 @@ const UserDetail = () => {
     profileimageUrl: "",
     organization: "",
     batch: "",
-    enrollmentnumber:"",
+    enrollmentnumber: "",
   });
   const states = [
     "Andhra Pradesh",
@@ -99,19 +99,29 @@ const UserDetail = () => {
   }, []);
 
   // Handle Input Changes
-  const formatDateForInput = (isoDate) => {
-    if (!isoDate) return ""; // Handle empty date
-    const date = new Date(isoDate);
-    return date.toISOString().split("T")[0]; // Extract yyyy-MM-dd
-  };
-
   const handleChange = (e) => {
+    // Ensure e and e.target are defined before accessing properties
+    if (!e || !e.target) {
+      console.warn("Invalid event passed to handleChange");
+      return;
+    }
+
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value, // Store dob directly in yyyy-MM-dd format
-    }));
+    // Validation for first name and last name (letters only)
+    if (name === "firstName" || name === "lastName") {
+      if (/^[a-zA-Z]*$/.test(value)) {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    }
+    // Validation for phone number (numbers only, max 10 digits)
+    else if (name === "phone") {
+      if (/^\d{0,10}$/.test(value)) {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   // Handle Image Upload
@@ -133,11 +143,11 @@ const UserDetail = () => {
     if (!firstName) errors.firstName = "First Name is required.";
     if (!lastName) errors.lastName = "Last Name is required.";
     if (!phone) {
-      errors.phone = "Phone number is required.";
+      toast.errors.phone = "Phone number is required.";
     } else if (!/^\d{10}$/.test(phone)) {
       errors.phone = "Phone number must be exactly 10 digits.";
     }
-  
+
     if (!dob) errors.dob = "Date of Birth is required.";
     return errors;
   };
@@ -281,9 +291,8 @@ const UserDetail = () => {
                 placeholder="First Name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${
-                  error.firstName ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg ${error.firstName ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               <input
                 name="lastName"
@@ -291,9 +300,8 @@ const UserDetail = () => {
                 placeholder="Last Name"
                 value={formData.lastName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${
-                  error.lastName ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg ${error.lastName ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               <input
                 name="phone"
@@ -301,19 +309,17 @@ const UserDetail = () => {
                 placeholder="Mobile Number"
                 value={formData.phone}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${
-                  error.phone ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg ${error.phone ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               <input
                 name="dob"
                 type="date"
                 placeholder="Date of Birth"
-                value={formatDateForInput(formData.dob)} // Format dob for input display
+                value={handleChange(formData.dob)} // Format dob for input display
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${
-                  error.dob ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg ${error.dob ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               <select
                 name="organization"
