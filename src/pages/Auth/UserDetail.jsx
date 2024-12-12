@@ -33,6 +33,7 @@ const UserDetail = () => {
     profileimageUrl: "",
     organization: "",
     batch: "",
+    enrollmentnumber:"",
   });
   const states = [
     "Andhra Pradesh",
@@ -455,6 +456,15 @@ const UserDetail = () => {
                 value={formData.batch}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg ${error.batch ? "border-red-500" : "border-gray-300"}`}
+              />
+              <input
+                required
+                name="enrollmentNumber"
+                type="text"
+                placeholder="Enter Enrollment Number"
+                value={formData.batch}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border rounded-lg ${error.enrollmentnumber ? "border-red-500" : "border-gray-300"}`}
               />
               <div className="w-auto flex items-center h-4 text-neutral-400 text-xs font-normal">
                 <LuInfo className="mx-1" />
