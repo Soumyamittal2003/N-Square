@@ -10,6 +10,7 @@ import Home from "./Home/Home";
 import BulkUpload from "./BulkUpload/BulkUpload";
 import BulkEmail from "./BulkEmail/Bulk";
 import Funds from "./Funds/Funds";
+import Help from "./Help/Help";
 // import Eventcontent from "./EventContent";
 // import AboutEvent from "./Event/AboutEvent";
 // import Home from "./Home/Home";
@@ -93,6 +94,7 @@ const Admin = () => {
             <Route path="/BulkEmail" element={<BulkEmail />} />
             <Route path="/Funds" element={<Funds />} />
             <Route path="/Funds/:findId" element={<Donation />} />
+            <Route path="/Help" element={<Help />} />
 
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />

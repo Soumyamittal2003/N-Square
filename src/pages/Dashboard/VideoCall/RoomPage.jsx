@@ -1,13 +1,13 @@
-import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const RoomPage = () => {
-  const [roomId, setRoomId] = useState("");
-  const userId = Cookies.get("id");
-  const [userName, setUserName] = useState("User");
+  const [roomId, setRoomId] = useState('');
+  const userId = Cookies.get('id');
+  const [userName, setUserName] = useState('User');
   const meetingRef = useRef(null);
   const navigate = useNavigate();
   let zc; // Zego Cloud instance
@@ -16,30 +16,38 @@ const RoomPage = () => {
   useEffect(() => {
     const fetchUserName = async () => {
       try {
+        console.log('Fetching user data for user ID:', userId);
         const response = await axios.get(`/users/${userId}`);
-        const userData = response.data?.data;
-        if (userData) {
-          setUserName(`${userData.firstName} ${userData.lastName}`);
+
+        if (response.status === 200) {
+          const userData = response.data?.data;
+          console.log('User data:', userData);
+          if (userData) {
+            setUserName(`${userData.firstName} ${userData.lastName}`);
+            console.log('User name:', userName);
+          }
+        } else {
+          console.error('Error fetching user data:', response.statusText);
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error('Error fetching user data:', error);
       }
     };
 
     fetchUserName();
-  }, [userId]);
+  }, [userId, userName]);
 
   // Function to initialize Zego Cloud meeting
   const joinMeeting = async () => {
     if (!roomId) {
-      alert("Please enter a valid room ID.");
+      alert('Please enter a valid room ID.');
       return;
     }
 
-    console.log("Initializing Zego Cloud meeting with room ID:", roomId);
+    console.log('Initializing Zego Cloud meeting with room ID:', roomId);
 
     const appID = 661628401; // Replace with your Zego Cloud app ID
-    const serverSecret = "9b99792e893708ef250012276bdef8ab"; // Replace with your Zego Cloud server secret
+    const serverSecret = '9b99792e893708ef250012276bdef8ab'; // Replace with your Zego Cloud server secret
 
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
@@ -61,9 +69,9 @@ const RoomPage = () => {
       turnOnMicrophoneWhenJoining: true,
       showUserJoinAndLeave: true,
       onLeaveRoom: () => {
-        console.log("User has left the room.");
+        console.log('User has left the room.');
         zc.destroy();
-        navigate("/"); // Redirect to the homepage or another page
+        navigate('/'); // Redirect to the homepage or another page
       },
     });
   };
@@ -71,7 +79,7 @@ const RoomPage = () => {
   useEffect(() => {
     return () => {
       if (zc) {
-        console.log("Destroying Zego Cloud instance...");
+        console.log('Destroying Zego Cloud instance...');
         zc.destroy();
       }
     };
@@ -84,7 +92,9 @@ const RoomPage = () => {
 
       {/* Room Container */}
       <div className="relative z-10 h-[80vh] w-full max-w-4xl bg-white shadow-2xl rounded-3xl flex flex-col p-8 items-center">
-        <h2 className="text-3xl font-bold mb-6 text-blue-700">Welcome, {userName}</h2>
+        <h2 className="text-3xl font-bold mb-6 text-blue-700">
+          Welcome, {userName}
+        </h2>
 
         <div className="flex flex-col md:flex-row w-full gap-4 items-center justify-center mb-6">
           <input
@@ -102,10 +112,7 @@ const RoomPage = () => {
           </button>
         </div>
 
-        <div
-          ref={meetingRef}
-          className="w-full h-[60vh] bg-gray-200 rounded-lg overflow-hidden"
-        ></div>
+        <div ref={meetingRef} className="w-full h-[60vh] bg-gray-200 rounded-lg overflow-hidden"></div>
       </div>
     </div>
   );
