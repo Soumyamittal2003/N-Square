@@ -2,7 +2,7 @@ import { useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import * as XLSX from "xlsx"; // You'll need to install xlsx package for this
+import * as XLSX from "xlsx"; // Ensure the 'xlsx' package is installed
 
 const BulkUploadContent = () => {
   const [file, setFile] = useState(null);
@@ -23,13 +23,13 @@ const BulkUploadContent = () => {
     const reader = new FileReader();
     reader.onload = () => {
       const arrayBuffer = reader.result;
-      const workBook = XLSX.read(arrayBuffer, { type: "array" }); // Changed to 'array' for ArrayBuffer
-      const sheetName = workBook.SheetNames[0]; // Assuming the first sheet
+      const workBook = XLSX.read(arrayBuffer, { type: "array" });
+      const sheetName = workBook.SheetNames[0];
       const sheet = workBook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(sheet);
       setData(jsonData);
     };
-    reader.readAsArrayBuffer(file); // Using readAsArrayBuffer instead of readAsBinaryString
+    reader.readAsArrayBuffer(file);
   };
 
   const handleFetch = async () => {
@@ -52,6 +52,33 @@ const BulkUploadContent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const downloadSample = () => {
+    const sampleData = [
+      {
+        FirstName: "",
+        LastName: "",
+        Email: "",
+        Password: "",
+        Role: "",
+        PhoneNumber: "",
+        Address: "",
+        Gender: "",
+        Dob: "",
+        State: "",
+        City: "",
+        ZipCode: "",
+        Origination: "",
+      },
+    ];
+
+    const workSheet = XLSX.utils.json_to_sheet(sampleData);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "SampleData");
+
+    // Generate and download the Excel file
+    XLSX.writeFile(workBook, "sample_bulk_upload.xlsx");
   };
 
   return (
@@ -87,7 +114,7 @@ const BulkUploadContent = () => {
           {/* Download Sample Button */}
           <button
             className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-md text-lg"
-            //onClick={downloadSample}
+            onClick={downloadSample}
           >
             Download Sample 📥
           </button>
@@ -98,7 +125,7 @@ const BulkUploadContent = () => {
             onClick={handleFetch}
             disabled={loading}
           >
-            {loading ? "Fetching..." : "Fetch Data 📥"}
+            {loading ? "Uploading..." : "Upload Data 📥"}
           </button>
         </div>
       </div>

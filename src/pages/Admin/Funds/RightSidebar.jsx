@@ -51,8 +51,8 @@ const RightSidebar = () => {
   ];
 
   return (
-    <div className="w-1/3 mt-4 bg-white px-4 md-auto ">
-      <div className="absolute top-6 right-10 mx-auto">
+    <div className="mt-4 bg-white px-4  ">
+      <div className="absolute top-6 right-10 ">
         {/* Reunion Button */}
         {(role === "admin") && (
           <button
