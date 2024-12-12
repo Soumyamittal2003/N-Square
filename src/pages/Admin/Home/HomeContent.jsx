@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance"; // Assuming axiosInstance is set up for API calls
 import { toast } from "react-toastify";
-import Cookies from "js-cookie"; // Import js-cookie to access cookies
-import PostCard from "../common/PostCard"; // Component to display posts
-import EventCard from "../Event/EventCard"; // Component to display events
-import JobCard from "../JOb/JobCard"; // Component to display jobs
+import Cookies from "js-cookie";
+import PostCard from "../common/PostCard";
+import EventCard from "../Event/EventCard";
+import JobCard from "../Job/JobCard";
 
 const HomeContent = () => {
-  const [activeTab, setActiveTab] = useState("Posts"); // Active tab (Posts, Events, Jobs)
-  const [posts, setPosts] = useState([]); // State to hold posts data
-  const [events, setEvents] = useState([]); // State to hold events data
-  const [jobs, setJobs] = useState([]); // State to hold jobs data
-  const [loading, setLoading] = useState(false); // Loading state
-  const fetchCurrentUserId = localStorage.getItem("chat-app-current-user");
+  const [activeTab, setActiveTab] = useState("Posts");
+  const [posts, setPosts] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState({}); // State to store user data
+
+  const fetchCurrentUserId = JSON.parse(localStorage.getItem("chat-app-current-user"));
   const currentUserId = fetchCurrentUserId?._id;
 
-  // Get the created_for ID from cookies
   const createdForId = Cookies.get("created_for");
 
   // Fetch posts data
@@ -27,11 +28,31 @@ const HomeContent = () => {
         (post) => post.created_for === createdForId
       );
       setPosts(filteredPosts);
+      await fetchUsersForPosts(filteredPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
       toast.error("Failed to fetch posts.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch user details for each post
+  const fetchUsersForPosts = async (posts) => {
+    const userIds = [...new Set(posts.map((post) => post.createdBy))];
+    const userDetails = {};
+
+    try {
+      await Promise.all(
+        userIds.map(async (id) => {
+          const response = await axiosInstance.get(`/users/${id}`);
+          userDetails[id] = response.data.data;
+        })
+      );
+      setUsers(userDetails);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      toast.error("Failed to fetch user details.");
     }
   };
 
@@ -69,7 +90,6 @@ const HomeContent = () => {
     }
   };
 
-  // Fetch data when the active tab changes
   useEffect(() => {
     if (activeTab === "Posts") {
       fetchPosts();
@@ -107,6 +127,7 @@ const HomeContent = () => {
               <PostCard
                 key={post._id}
                 post={post}
+                user={users[post.createdBy]}
                 currentUserId={currentUserId}
               />
             ))
@@ -116,11 +137,7 @@ const HomeContent = () => {
         ) : activeTab === "Events" ? (
           events.length > 0 ? (
             events.map((event) => (
-              <EventCard
-                key={event._id}
-                event={event}
-                currentUserId={currentUserId}
-              />
+              <EventCard key={event._id} event={event} currentUserId={currentUserId} />
             ))
           ) : (
             <p className="text-gray-500 text-center">No events available.</p>
@@ -128,11 +145,7 @@ const HomeContent = () => {
         ) : activeTab === "Jobs" ? (
           jobs.length > 0 ? (
             jobs.map((job) => (
-              <JobCard
-                key={job._id}
-                job={job}
-                currentUserId={currentUserId}
-              />
+              <JobCard key={job._id} job={job} currentUserId={currentUserId} />
             ))
           ) : (
             <p className="text-gray-500 text-center">No jobs available.</p>
