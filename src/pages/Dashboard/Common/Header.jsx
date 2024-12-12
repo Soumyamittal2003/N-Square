@@ -116,7 +116,7 @@ const Header = () => {
       icon: setting1,
     },
     { name: "Account Preference", path: "/account-preference", icon: setting2 },
-    { name: "Account Activity", path: "/account-activity", icon: setting3 },
+    { name: "Social Media Account", path: "/social-media", icon: setting3 },
     { name: "Post Saved", path: "/post-saved", icon: setting4 },
     { name: "Download", path: "/download", icon: setting5 },
     { name: "My Jobs", path: "/my-jobs", icon: setting6 },
@@ -137,11 +137,117 @@ const Header = () => {
     { text: "Your post was liked by 10 people", time: "1 hour ago" },
     { text: "Event reminder: Trading Webinar", time: "Yesterday" },
   ];
+  // Modal Component for Social Media Account
+  const SocialMediaModal = ({ onClose }) => {
+    const [socialMedia, setSocialMedia] = useState("");
+
+    const handleUpdate = () => {
+      // Perform update action here (e.g., API call)
+      toast.success("Social Media account updated successfully!");
+      onClose();
+    };
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+          <h2 className="text-xl font-bold mb-4">
+            Update profile through social media link
+          </h2>
+          {/* <input
+            type="text"
+            placeholder="Enter your social media link"
+            value={socialMedia}
+            onChange={(e) => setSocialMedia(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg mb-4 focus:outline-none"
+          /> */}
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleUpdate}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const closeAllMenus = () => {
     setShowSearchMenu(false);
     setShowNotificationsMenu(false);
     setShowSettingsMenu(false);
+  };
+  const SettingsModal = ({ settingsOptions }) => {
+    const navigate = useNavigate();
+    const [showSocialMediaModal, setShowSocialMediaModal] = useState(false);
+
+    return (
+      <>
+        <div className="absolute top-full right-12 mt-2 w-72 bg-white shadow-lg rounded-lg z-20">
+          <ul className="py-2">
+            {settingsOptions.map((option) => (
+              <li key={option.name}>
+                {option.name === "Social Media Account" ? (
+                  <button
+                    onClick={() => setShowSocialMediaModal(true)}
+                    className="flex items-center w-full px-4 py-1 my-2 font-semibold text-md text-black hover:text-gray-600"
+                  >
+                    <img
+                      src={option.icon}
+                      alt={option.name}
+                      className="px-2 mx-2"
+                    />
+                    {option.name}
+                  </button>
+                ) : (
+                  <Link
+                    to={option.path}
+                    className="flex items-center px-4 py-1 my-2 font-semibold text-md text-black hover:text-gray-600"
+                  >
+                    <img
+                      src={option.icon}
+                      alt={option.name}
+                      className="px-2 mx-2"
+                    />
+                    {option.name}
+                  </Link>
+                )}
+              </li>
+            ))}
+            <li>
+              <button
+                onClick={() => {
+                  Cookies.remove("token", { path: "/" });
+                  Cookies.remove("id", { path: "/" });
+                  Cookies.remove("role", { path: "/" });
+                  toast.success("Logged out successfully!");
+                  navigate("/login"); // Redirect after logout
+                }}
+                className="flex w-[90%] items-center m-2 px-4 py-2 font-semibold text-md text-black hover:text-gray-600"
+              >
+                <img
+                  src={logouticon}
+                  alt="logout-button"
+                  className="p-2 mx-2"
+                />
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        {showSocialMediaModal && (
+          <SocialMediaModal onClose={() => setShowSocialMediaModal(false)} />
+        )}
+      </>
+    );
   };
 
   const handleClickOutside = useCallback((event) => {
