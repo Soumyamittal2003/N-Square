@@ -11,7 +11,7 @@ const HomeContent = () => {
   const fetchCurrentUserId = localStorage.getItem("chat-app-current-user");
   const currentUserId = fetchCurrentUserId?._id;
 
-  const tabs = ["Posts", "Projects", "Events", "Jobs", "Story"];
+  const tabs = ["Posts", "Events"];
 
   // Generic fetch function for different types of content
   const fetchData = async (endpoint) => {
