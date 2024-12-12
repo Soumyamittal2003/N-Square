@@ -1,6 +1,7 @@
 import axiosInstance from "../../../utils/axiosinstance";
 import { useEffect, useState } from "react";
 import FundsCard from "./FundsCard";
+import Cookies from "js-cookie";
 
 const DonationContent = () => {
   const [funds, setFunds] = useState([]); // Manage funds state
@@ -9,12 +10,12 @@ const DonationContent = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/funding/get-all-funds");
-        console.log(response);
-        // if (response.data.success) {
-        //   setFunds(response.data.funds);
-        // } else {
-        //   console.error("Error fetching funding data:", response.data);
-        // }
+        console.log(response.data.funds);
+        if (response.data.success === true) {
+          setFunds(response.data.funds);
+        } else {
+          console.error("Error fetching funding data:", response.data);
+        }
       } catch (error) {
         console.error("Error fetching funding data:", error);
       }
@@ -39,9 +40,9 @@ const DonationContent = () => {
       {funds.length > 0 &&
         funds.map((fund) => (
           <FundsCard
-            key={fund._id}
+            key={funds._id}
             fund={fund}
-            currentUserId={"12345"}
+            currentUserId={Cookies.get("id")}
             onDonate={handleDonate}
             onEditFund={handleEditFund}
           />
