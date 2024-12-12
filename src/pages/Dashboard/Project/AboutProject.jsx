@@ -356,6 +356,7 @@ const ProjectDetail = () => {
             </h1>
           </div>
           <div className="flex space-x-4">
+          {projectData.createdBy !== userId &&
             <button
               onClick={toggleContributor}
               className={`px-4 py-2 border font-semibold text-sm rounded-lg ${
@@ -371,14 +372,15 @@ const ProjectDetail = () => {
                   : role === "faculty" || role === "alumni"
                     ? "Contribute as Mentor"
                     : "Contribute"}
-            </button>
-            <div className="flex items-center">
+            </button>}
+            {projectData.createdBy !== userId && <div className="flex items-center">
               <Link to={`/dashboard/project/donate/${projectId}`}>
                 <button>
                   <TbCoinRupee className="h-10 w-10 bg-yellow-500 rounded-full text-white p-2" />
                 </button>
               </Link>
-            </div>
+            </div>}
+            
             {projectData.createdBy === userId && (
               <Link to={`/dashboard/project/edit/${projectId}`}>
                 <button>
