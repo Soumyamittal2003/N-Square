@@ -2,23 +2,25 @@ import { useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import * as XLSX from "xlsx"; // Ensure the 'xlsx' package is installed
+import * as XLSX from "xlsx";
 
 const BulkUploadContent = () => {
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Handle file input change
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
     if (uploadedFile && uploadedFile.name.endsWith(".xlsx")) {
       setFile(uploadedFile);
       parseExcel(uploadedFile);
     } else {
-      toast.error("Please upload a valid Excel file.");
+      toast.error("Please upload a valid Excel file (.xlsx).");
     }
   };
 
+  // Parse the Excel file and extract data
   const parseExcel = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -32,53 +34,38 @@ const BulkUploadContent = () => {
     reader.readAsArrayBuffer(file);
   };
 
-  const handleFetch = async () => {
-    if (!data.length) {
-      toast.error("No data to fetch. Please upload a file.");
+  // Handle file upload and send to backend API
+  const handleUpload = async () => {
+    if (!file) {
+      toast.error("Please upload an Excel file first.");
       return;
     }
 
     setLoading(true);
 
+    const formData = new FormData();
+    formData.append("file", file); // Append the file to the FormData object
+
     try {
       const response = await axiosInstance.post(
-        "/organization/fetch-email-data",
-        { data }
+        "http://localhost:5000/api/network-next/v1/organizations/bulk-register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      toast.success(response.data.message || "Data fetched successfully!");
+
+      toast.success(response.data.message || "Bulk registration successful!");
     } catch (error) {
-      console.error("Error fetching data:", error);
-      toast.error(error.response?.data?.message || "Failed to fetch data.");
+      console.error("Error uploading file:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to upload file. Please try again."
+      );
     } finally {
       setLoading(false);
     }
-  };
-
-  const downloadSample = () => {
-    const sampleData = [
-      {
-        FirstName: "",
-        LastName: "",
-        Email: "",
-        Password: "",
-        Role: "",
-        PhoneNumber: "",
-        Address: "",
-        Gender: "",
-        Dob: "",
-        State: "",
-        City: "",
-        ZipCode: "",
-        Origination: "",
-      },
-    ];
-
-    const workSheet = XLSX.utils.json_to_sheet(sampleData);
-    const workBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workBook, workSheet, "SampleData");
-
-    // Generate and download the Excel file
-    XLSX.writeFile(workBook, "sample_bulk_upload.xlsx");
   };
 
   return (
@@ -103,7 +90,7 @@ const BulkUploadContent = () => {
         {data.length > 0 && (
           <div className="mb-5">
             <h3 className="text-xl font-bold text-gray-700">Uploaded Data:</h3>
-            <pre className="text-sm text-gray-600">
+            <pre className="text-sm text-gray-600 overflow-auto max-h-60">
               {JSON.stringify(data, null, 2)}
             </pre>
           </div>
@@ -114,18 +101,18 @@ const BulkUploadContent = () => {
           {/* Download Sample Button */}
           <button
             className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-md text-lg"
-            onClick={downloadSample}
+            onClick={() => downloadSample()}
           >
             Download Sample 📥
           </button>
 
-          {/* Fetch Button */}
+          {/* Upload Button */}
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-md text-lg"
-            onClick={handleFetch}
+            onClick={handleUpload}
             disabled={loading}
           >
-            {loading ? "Uploading..." : "Upload Data 📥"}
+            {loading ? "Uploading..." : "Upload Data 📤"}
           </button>
         </div>
       </div>

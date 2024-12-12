@@ -49,6 +49,7 @@ const Donation = () => {
       });
   }, [userId]);
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -57,12 +58,25 @@ const Donation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { amount } = formData;
-    if (amount && amount > 0) {
-      await checkoutHandler(amount);
-    } else {
+    const amountNumber = parseFloat(amount);
+
+    if (!amountNumber || amountNumber <= 0) {
       alert("Please enter a valid amount greater than zero.");
+      return;
     }
-  };
+
+    if (amountNumber < 50) {
+      alert("The minimum donation amount is ₹50.");
+      return;
+    }
+
+    if (amountNumber > 10000) {
+      alert("The maximum donation amount is ₹10,000.");
+      return;
+    }
+
+    await checkoutHandler(amountNumber);
+  }; 
 
   const checkoutHandler = async (amount) => {
     try {
