@@ -29,24 +29,28 @@ const ProjectDetail = () => {
   console.log(projectData);
 
   useEffect(() => {
-    const fetchDonations = async () => {
+    const fetchProjectDetails = async () => {
       try {
-        const response = await axiosInstance.get(
-          "https://n-square.onrender.com/api/network-next/v1/project/all-users-donation/6740b19434b812294a8701aa"
+        const response = await axiosInstance.get(`/project/${projectId}`);
+        setProjectData(response.data);
+
+        // Fetch donation details with user information
+        const donations = await Promise.all(
+          response.data.donations.map(async (donation) => {
+            const userResponse = await axiosInstance.get(`/users/${donation.userId}`);
+            return { ...donation, user: userResponse.data.data }; // Combine donation and user data
+          })
         );
-        console.log("Donation API Response:", response.data);
-        setDonationDetails(response.data.data || []);
-      } catch (error) {
-        console.error("Error fetching donations:", error);
-        setDonationError("Failed to fetch donations.");
+        setDonationDetails(donations);
+      } catch (err) {
+        setError("Failed to load project details. Please try again later.");
       } finally {
-        setDonationLoading(false);
+        setLoading(false);
       }
     };
-    console.log("Donation Details State:", donationDetails);
 
-    fetchDonations();
-  }, [donationDetails]);
+    fetchProjectDetails();
+  }, [projectId]);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -289,10 +293,10 @@ const ProjectDetail = () => {
 
         <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
 
-        {/* Loading State */}
-        {donationLoading ? (
-          <p className="mt-4">Loading donations...</p>
-        ) : donationError ? (
+        {/* Donation section */}
+      <div className="mt-8">
+        <h3 className="text-lg font-bold">Mentorship & Collaboration</h3>
+        {donationError ? (
           <p className="mt-4 text-red-500">{donationError}</p>
         ) : (
           <div className="mt-4">
@@ -307,15 +311,13 @@ const ProjectDetail = () => {
                     <div className="flex items-center">
                       <img
                         src={
-                          donation.user?.profileimageUrl ||
+                          donation.donor?.profileimageUrl ||
                           "https://via.placeholder.com/40"
                         }
-                        alt={donation.user?.firstName || "User"}
+                        alt={donation.donorName || "User"}
                         className="w-8 h-8 rounded-full mr-3"
                       />
-                      <p>
-                        {donation.user?.firstName} {donation.user?.lastName}
-                      </p>
+                      <p>{donation.donorName || "Unknown Donor"}</p>
                     </div>
                     <span className="text-sm font-medium">
                       ₹{donation.amount || 0}
@@ -326,11 +328,14 @@ const ProjectDetail = () => {
             ) : (
               <p>No donations available.</p>
             )}
+        
           </div>
         )}
       </div>
+    </div>
     ),
   };
+  
 
   return (
     <div className="min-h-screen p-6">
