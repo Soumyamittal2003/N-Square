@@ -1,20 +1,20 @@
-import axios from "axios";
+import axiosInstance from "../../../utils/axiosinstance";
+import { useEffect, useState } from "react";
 import FundsCard from "./FundsCard";
 
 const DonationContent = () => {
-  const [funds, setFunds] = React.useState([]); // Manage funds state
+  const [funds, setFunds] = useState([]); // Manage funds state
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://n-square.onrender.com/api/network-next/v1/funding/get-all-funds"
-        );
-        if (response.data.success) {
-          setFunds(response.data.funds);
-        } else {
-          console.error("Error fetching funding data:", response.data);
-        }
+        const response = await axiosInstance.get("/funding/get-all-funds");
+        console.log(response);
+        // if (response.data.success) {
+        //   setFunds(response.data.funds);
+        // } else {
+        //   console.error("Error fetching funding data:", response.data);
+        // }
       } catch (error) {
         console.error("Error fetching funding data:", error);
       }
