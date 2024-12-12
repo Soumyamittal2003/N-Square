@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../../utils/axiosinstance";
+import axiosInstance from "../../../utils/axiosinstance"; // Assuming axiosInstance is set up for API calls
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import PostCard from "../common/PostCard";
 import EventCard from "../Event/EventCard";
-import JobCard from "../Job/JobCard";
+// import JobCard from "../Job/JobCard";
 
 const HomeContent = () => {
   const [activeTab, setActiveTab] = useState("Posts");
   const [posts, setPosts] = useState([]);
   const [events, setEvents] = useState([]);
-  const [jobs, setJobs] = useState([]);
+  // const [jobs, setJobs] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [loadingEvents, setLoadingEvents] = useState(false);
-  const [loadingJobs, setLoadingJobs] = useState(false);
+  // const [loadingJobs, setLoadingJobs] = useState(false);
   const [users, setUsers] = useState({}); // State to store user data
 
   const fetchCurrentUserId = JSON.parse(localStorage.getItem("chat-app-current-user"));
@@ -76,21 +76,22 @@ const HomeContent = () => {
   };
 
   // Fetch jobs data
-  const fetchJobs = async () => {
-    setLoadingJobs(true);
-    try {
-      const response = await axiosInstance.get("/organizations/all-jobs");
-      const filteredJobs = response.data.jobs.filter(
-        (job) => job.created_for === createdForId
-      );
-      setJobs(filteredJobs);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-      toast.error("Failed to fetch jobs.");
-    } finally {
-      setLoadingJobs(false);
-    }
-  };
+  // const fetchJobs = async () => {
+  //   setLoadingJobs(true);
+  //   try {
+  //     const response = await axiosInstance.get("/organizations/all-jobs");
+  //     console.log(response)
+  //     const filteredJobs = response.data.jobs.filter(
+  //       (job) => job.created_for === createdForId
+  //     );
+  //     setJobs(filteredJobs);
+  //   } catch (error) {
+  //     console.error("Error fetching jobs:", error);
+  //     toast.error("Failed to fetch jobs.");
+  //   } finally {
+  //     setLoadingJobs(false);
+  //   }
+  // };
 
   // Reset data and fetch based on active tab
   useEffect(() => {
@@ -100,17 +101,14 @@ const HomeContent = () => {
     } else if (activeTab === "Events") {
       setEvents([]);
       fetchEvents();
-    } else if (activeTab === "Jobs") {
-      setJobs([]);
-      fetchJobs();
-    }
+    } 
   }, [activeTab]);
 
   return (
     <div className="w-3/4 mx-auto">
       {/* Tabs Section */}
-      <div className="flex justify-around px-4 py-1 bg-white rounded-2xl">
-        {["Posts", "Events", "Jobs"].map((tab) => (
+      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
+        {["Posts", "Events"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -153,18 +151,6 @@ const HomeContent = () => {
             ))
           ) : (
             <p className="text-gray-500 text-center">No events available.</p>
-          )
-        ) : activeTab === "Jobs" ? (
-          loadingJobs ? (
-            <div className="flex justify-center items-center">
-              <div className="spinner-border animate-spin border-t-2 border-b-2 border-gray-500 w-8 h-8 rounded-full"></div>
-            </div>
-          ) : jobs.length > 0 ? (
-            jobs.map((job) => (
-              <JobCard key={job._id} job={job} currentUserId={currentUserId} />
-            ))
-          ) : (
-            <p className="text-gray-500 text-center">No jobs available.</p>
           )
         ) : null}
       </div>
