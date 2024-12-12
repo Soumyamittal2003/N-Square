@@ -12,7 +12,7 @@ const JobCard = ({
   onDislikePost,
   onBookmarkJob,
   onApplyJob,
-  bookmarks,
+  // bookmarks,
 }) => {
   const {
     _id,
@@ -65,9 +65,9 @@ const JobCard = ({
     }
   }, [createdBy]);
 
-  useEffect(() => {
-    setIsBookmarked(bookmarks.includes(_id));
-  }, [bookmarks, _id]);
+  // useEffect(() => {
+  //   setIsBookmarked(bookmarks.includes(_id));
+  // }, [bookmarks, _id]);
 
   const handleApply = () => {
     setApplied(true);
