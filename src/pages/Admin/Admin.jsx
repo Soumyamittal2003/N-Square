@@ -45,8 +45,8 @@ import CommunityContent from "./Community/MentorContent";
 //import MentorContent from "./MentorShip/MentorContent";
 import CommunityFindGroup from "./Community/FindGroup";
 // import FindGroup from "./MentorShip/FindGroup";
-// import RoomPage from "./VideoCall/RoomPage";
-// import ConferenceRoom from "./VideoCall/RoomPage";
+//import RoomPage from "./VideoCall/RoomPage";
+import ConferenceRoom from "./VideoCall/RoomPage";
 import Pending from "./Pending/pending";
 import Donation from "./Funds/Donation";
 
@@ -95,7 +95,7 @@ const Admin = () => {
             <Route path="/Funds" element={<Funds />} />
             <Route path="/Funds/:findId" element={<Donation />} />
             <Route path="/Help" element={<Help />} />
-
+            <Route path="Conference-call" element={<ConferenceRoom />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />
             <Route path="Event/EventContent" element={<Eventcontent />} /> */}
