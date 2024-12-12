@@ -48,7 +48,7 @@ const BulkUploadContent = () => {
 
     try {
       const response = await axiosInstance.post(
-        "/organizations/bulk-register",
+        "http://localhost:5000/api/network-next/v1/organizations/bulk-register",
         formData,
         {
           headers: {
