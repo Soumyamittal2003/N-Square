@@ -88,6 +88,10 @@ const UserProfile = () => {
   const [isEditingProfileImage, setIsEditingProfileImage] = useState(false);
   const [isEditingBannerImage, setIsEditingBannerImage] = useState(false);
 
+  const [userFundings, setUserFundings] = useState([]);
+const [allFunds, setAllFunds] = useState([]);
+const [donations, setDonations] = useState([]);
+
   const [activeTab, setActiveTab] = useState("Posts");
 
   const [loading, setLoading] = useState(true);
@@ -190,6 +194,40 @@ const UserProfile = () => {
       fetchJobs();
   }, [userId]);
 
+  useEffect(() => {
+    const fetchUserFundings = async () => {
+      try {
+        setLoading(true);
+        const [fundingResponse, fundsResponse] = await Promise.all([
+          axiosInstance.get(`/funding/user-wise-funding/${userId}`),
+          axiosInstance.get("/funding/get-all-funds"),
+        ]);
+  
+        setUserFundings(fundingResponse.data || []);
+        setAllFunds(fundsResponse.data.funds || []);
+        
+        // Match fund details with user's funding
+        const matchedDonations = fundingResponse.data.map((funding) => {
+          const matchedFund = fundsResponse.data.funds.find(
+            (fund) => fund._id === funding.fundID
+          );
+          return matchedFund
+            ? { ...matchedFund, amount: funding.amount }
+            : null;
+        }).filter((donation) => donation !== null);
+  
+        setDonations(matchedDonations);
+      } catch (error) {
+        console.error("Error fetching funding data:", error);
+        toast.error("Failed to fetch donations.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchUserFundings();
+  }, [userId]);
+  
   // Update About Section
   const updateAbout = async () => {
     try {
@@ -773,13 +811,33 @@ const UserProfile = () => {
             </div>
             )}
             {activeTab === "Donations" && (
-              <div>
-                {/* Placeholder for jobs */}
-                <p className="text-center text-gray-500">
-                  No Donations to show.
-                </p>
-              </div>
-            )}
+  <div>
+    {donations.length > 0 ? (
+      donations.map((donation) => (
+        <div
+          key={donation._id}
+          className="bg-gray-100 p-4 rounded-lg mb-2 flex items-center"
+        >
+          <img
+            src={donation.fundImage || donation.fundphoto}
+            alt={donation.title}
+            className="w-16 h-16 object-cover rounded-lg mr-4"
+          />
+          <div>
+            <h3 className="font-bold">{donation.title}</h3>
+            <p className="text-gray-700">{donation.description}</p>
+            <p className="font-semibold text-blue-500">
+              Amount Donated: ${donation.amount}
+            </p>
+          </div>
+        </div>
+      ))
+    ) : (
+      <p className="text-center text-gray-500">No donations to show.</p>
+    )}
+  </div>
+)}
+
           </div>
         </div>
       </div>
