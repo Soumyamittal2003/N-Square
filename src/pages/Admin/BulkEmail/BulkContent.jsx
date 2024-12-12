@@ -1,45 +1,70 @@
-import { useState, useEffect } from 'react';
-//import axios from 'axios';
-import axiosInstance from '../../../utils/axiosinstance';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Select from 'react-select';
-import Cookies from 'js-cookie';
+import { useState, useEffect } from "react";
+import axiosInstance from "../../../utils/axiosinstance";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Select from "react-select";
+import Cookies from "js-cookie";
 
 const BulkContent = () => {
-  const [recipientType, setRecipientType] = useState('');
-  const [batch, setBatch] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
+  const [recipientType, setRecipientType] = useState("");
+  const [batch, setBatch] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [universityId, setUniversityId] = useState('');
+  const [universityId, setUniversityId] = useState("");
+  const [organizationEmail, setOrganizationEmail] = useState("");
 
   // Fetch university_id from cookies on component mount
   useEffect(() => {
-    const id = Cookies.get('id');
+    const id = Cookies.get("id");
     if (id) {
       setUniversityId(id);
+      fetchOrganizationDetails(id);
     } else {
-      toast.error('University ID not found in cookies.');
+      toast.error("University ID not found in cookies.");
     }
   }, []);
 
+  // Function to fetch organization details by ID
+  const fetchOrganizationDetails = async (id) => {
+    try {
+      const response = await axiosInstance.get(
+        `/organizations/${id}`
+      );
+
+      if (response.data && response.data.organization) {
+        const email = response.data.organization.email;
+        setOrganizationEmail(email);
+      } else {
+        toast.error("Organization details not found.");
+      }
+    } catch (error) {
+      console.error("Error fetching organization details:", error);
+      toast.error("Failed to fetch organization details.");
+    }
+  };
+
   // Options for the recipient selection dropdown
   const recipientOptions = [
-    { value: 'student', label: 'Student' },
-    { value: 'alumni', label: 'Alumni' },
-    { value: 'faculty', label: 'Faculty' }
+    { value: "student", label: "Student" },
+    { value: "alumni", label: "Alumni" },
+    { value: "faculty", label: "Faculty" },
   ];
 
   // Handle the form submission
   const handleSend = async () => {
     if (!recipientType || !subject || !message) {
-      toast.error('Please fill in all fields and select a recipient.');
+      toast.error("Please fill in all fields and select a recipient.");
       return;
     }
 
-    if ((recipientType === 'student' || recipientType === 'alumni') && !batch) {
-      toast.error('Please provide a batch name.');
+    if ((recipientType === "student" || recipientType === "alumni") && !batch) {
+      toast.error("Please provide a batch name.");
+      return;
+    }
+
+    if (!organizationEmail) {
+      toast.error("Organization email not found. Please try again.");
       return;
     }
 
@@ -48,23 +73,26 @@ const BulkContent = () => {
     try {
       // Prepare the payload
       const payload = {
-        batch: batch || '',
+        batch: batch || "",
         subject,
         message,
         university_id: universityId,
-        role: recipientType
+        role: recipientType,
+        email: organizationEmail, // Add organization email to the payload
       };
 
       // Send POST request to the backend API
       const response = await axiosInstance.post(
-        '/organization/send-bulk-email',
+        "/organization/send-bulk-email",
         payload
       );
 
-      toast.success(response.data.message || 'Bulk email sent successfully!');
+      toast.success(response.data.message || "Bulk email sent successfully!");
     } catch (error) {
-      console.error('Error sending bulk email:', error);
-      toast.error(error.response?.data?.message || 'Failed to send bulk email.');
+      console.error("Error sending bulk email:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to send bulk email."
+      );
     } finally {
       setLoading(false);
     }
@@ -77,10 +105,14 @@ const BulkContent = () => {
       <div className="max-h-[500px] overflow-y-auto hide-scrollbar">
         {/* Recipient Field */}
         <div className="mb-5">
-          <label className="block mb-2 font-bold text-gray-700">Select Recipient</label>
+          <label className="block mb-2 font-bold text-gray-700">
+            Select Recipient
+          </label>
           <Select
             options={recipientOptions}
-            value={recipientOptions.find(option => option.value === recipientType)}
+            value={recipientOptions.find(
+              (option) => option.value === recipientType
+            )}
             onChange={(selected) => setRecipientType(selected.value)}
             placeholder="Select a recipient..."
             className="react-select-container"
@@ -89,7 +121,7 @@ const BulkContent = () => {
         </div>
 
         {/* Batch Field (conditionally rendered for Student and Alumni) */}
-        {(recipientType === 'student' || recipientType === 'alumni') && (
+        {(recipientType === "student" || recipientType === "alumni") && (
           <div className="mb-5">
             <label className="block mb-2 font-bold text-gray-700">Batch</label>
             <input
@@ -133,7 +165,7 @@ const BulkContent = () => {
             onClick={handleSend}
             disabled={loading}
           >
-            {loading ? 'Sending...' : 'Send Bulk Email 📤'}
+            {loading ? "Sending..." : "Send Bulk Email 📤"}
           </button>
         </div>
       </div>
