@@ -224,7 +224,7 @@ const [donations, setDonations] = useState([]);
         setDonations(matchedDonations);
       } catch (error) {
         console.error("Error fetching funding data:", error);
-        toast.error("Failed to fetch donations.");
+        //toast.error("Failed to fetch donations.");
       } finally {
         setLoading(false);
       }

@@ -181,13 +181,13 @@ const Sidebar = () => {
             handleClick={handleClick}
             linkKey="community"
           />
-          <SidebarLink
+          {/* <SidebarLink
             to="/admin-dashboard/mentorship"
             label="Mentorship"
             activeLink={activeLink}
             handleClick={handleClick}
             linkKey="mentorship"
-          />
+          /> */}
           <hr className="border-gray-300 py-1 mt-2" />
           <SidebarLink
             to="/admin-dashboard/help"
