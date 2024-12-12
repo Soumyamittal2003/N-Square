@@ -1,9 +1,10 @@
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 const CreateProject = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     projectType: "",
     projectPhoto: null,
@@ -148,7 +149,7 @@ const CreateProject = () => {
       toast.error("Error creating project. Please try again.");
     } finally {
       setIsLoading(false);
-      // navigate("project details")
+      navigate("/dashhboard");
     }
   };
 
