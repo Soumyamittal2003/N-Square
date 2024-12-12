@@ -190,7 +190,7 @@ const Sidebar = () => {
           />
           <hr className="border-gray-300 py-1 mt-2" />
           <SidebarLink
-            to="/dashboard/help"
+            to="/admin-dashboard/help"
             icon={helpCircle}
             label="Help"
             activeLink={activeLink}
