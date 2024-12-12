@@ -38,7 +38,7 @@ const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
       {/* Fund Image with Edit Button */}
       <div className="relative rounded-lg overflow-hidden">
         <img
-          src={fund.fundImage || fundImagePlaceholder}
+          src={fund.fundImage}
           alt={fund.title}
           className="w-full h-[180px] object-cover"
         />
@@ -66,13 +66,13 @@ const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
               e.preventDefault();
               handleNavigate();
             }}
-          >
-           
-          </a>
+          ></a>
         </p>
         <p className="text-xs text-gray-500 mt-3">
           Fund Received:{" "}
-          <span className="text-gray-700 font-medium">${fund.goalAmount}</span>
+          <span className="text-gray-700 font-medium">
+            ${fund.currentAmount}
+          </span>
         </p>
       </div>
 

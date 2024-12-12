@@ -36,6 +36,7 @@ import CommunityFindGroup from "./Community/FindGroup";
 import FindGroup from "./MentorShip/FindGroup";
 import RoomPage from "./VideoCall/RoomPage";
 import ConferenceRoom from "./VideoCall/RoomPage";
+import FundDonation from "./Funds/Donation";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -70,6 +71,7 @@ const Dashboard = () => {
             <Route path="help" element={<Help />} />
             <Route path="feed" element={<Feed />} />
             <Route path="funds" element={<Funds />} />
+            <Route path="funds/:fundId" element={<FundDonation />} />
             <Route path="event" element={<Event />} />
             <Route path="event/about-event" element={<AboutEvent />} />
             <Route path="my-events" element={<MyEvent />} />

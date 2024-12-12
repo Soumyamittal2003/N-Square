@@ -47,6 +47,7 @@ import CommunityFindGroup from "./Community/FindGroup";
 // import RoomPage from "./VideoCall/RoomPage";
 // import ConferenceRoom from "./VideoCall/RoomPage";
 import Pending from "./Pending/pending";
+import Donation from "./Funds/Donation";
 
 const Admin = () => {
   useEffect(() => {
@@ -91,6 +92,7 @@ const Admin = () => {
             <Route path="/BulkUpload" element={<BulkUpload />} />
             <Route path="/BulkEmail" element={<BulkEmail />} />
             <Route path="/Funds" element={<Funds />} />
+            <Route path="/Funds/:findId" element={<Donation />} />
 
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/Event/about" element={<AboutEvent />} />

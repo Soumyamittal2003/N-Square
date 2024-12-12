@@ -1,11 +1,12 @@
 import axiosInstance from "../../../utils/axiosinstance";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FundsCard from "./FundsCard";
 import Cookies from "js-cookie";
 
 const DonationContent = () => {
   const [funds, setFunds] = useState([]); // Manage funds state
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,6 +26,7 @@ const DonationContent = () => {
   }, []); // Empty dependency array to fetch data only once
 
   const handleDonate = (fundId) => {
+    navigate(`/admin-dashboard/Funds/${fundId}`);
     console.log(`Donating to fund with ID: ${fundId}`);
     // Implement your donation logic here
   };
