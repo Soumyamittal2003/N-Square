@@ -21,7 +21,7 @@ const OrganizationLogin = () => {
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
-      navigate("/dashboard"); // Redirect to dashboard if token exists
+      navigate("/admin-dashboard"); // Redirect to dashboard if token exists
     }
   }, [navigate]);
 
