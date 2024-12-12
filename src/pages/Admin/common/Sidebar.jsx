@@ -30,37 +30,27 @@ const Sidebar = () => {
 
   const togglePopup = () => setIsPopupOpen((prev) => !prev);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axiosInstance.get(`/users/${id}`);
-        setUserData(response?.data?.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) fetchUserData();
-  }, [id]);
-
+  // Fetch organization name using the id from cookies
   useEffect(() => {
     const fetchOrganizationName = async () => {
-      if (userData?.organization) {
+      if (id) {
         try {
           const response = await axiosInstance.get(
-            `/organizations/${userData.organization}`
+            `/organizations/${id}`
           );
+          console.log(response.data.organization.name);
           setOrganizationName(response.data.organization.name);
-        } catch (err) {
+        } catch (error) {
+          console.error("Error fetching organization name:", error);
           toast.error("Error fetching organization name");
+        } finally {
+          setLoading(false);
         }
       }
     };
 
     fetchOrganizationName();
-  }, [userData?.organization]);
+  }, [id]);
 
   const handleClick = (link) => {
     setActiveLink(link);
@@ -69,15 +59,14 @@ const Sidebar = () => {
   return (
     <div className="mx-4 mt-4 h-[calc(100vh-50px)] rounded-l shadow-lg border border-gray-300 overflow-hidden flex flex-col max-h-full">
       {/* Admin Control Section */}
-      
-      {organizationName && (
-        <div className="absolute top-2 inset-x-0 flex justify-center">
-          <span className="bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
+      {role === "admin" && organizationName && (
+        <div className="absolute top-2 inset-x-0 text-2xl  flex justify-center">
+          <span className="bg-white px-3 py-1 rounded-full text-xl font-semibold shadow-md">
             {organizationName}
+            
           </span>
         </div>
       )}
-      
       {role === "admin" && (
         <div className="p-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-extrabold text-l uppercase tracking-wide shadow-lg rounded-t-xl flex items-center justify-center">
           <span className="mr-2">🛠</span> Admin Control Panel

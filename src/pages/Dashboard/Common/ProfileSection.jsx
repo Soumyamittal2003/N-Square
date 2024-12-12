@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
 import { toast } from "react-toastify";
-axiosInstance;
+
 const ProfileSection = ({ userData }) => {
   const [organizationName, setOrganizationName] = useState("");
   useEffect(() => {
