@@ -149,7 +149,7 @@ const CreateProject = () => {
       toast.error("Error creating project. Please try again.");
     } finally {
       setIsLoading(false);
-      navigate("/dashhboard");
+      navigate("/admin-dashboard");
     }
   };
 
