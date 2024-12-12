@@ -69,6 +69,18 @@ const UserDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
+  const generateGraduationYears = () => {
+    const startYear = 2015;
+    const endYear = 2030;
+    const years = [];
+    for (let year = startYear; year <= endYear; year++) {
+      years.push(year);
+    }
+    return years;
+  };
+
+  const graduationYears = generateGraduationYears();
+
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -120,8 +132,12 @@ const UserDetail = () => {
     const errors = {};
     if (!firstName) errors.firstName = "First Name is required.";
     if (!lastName) errors.lastName = "Last Name is required.";
-    if (!phone || isNaN(phone))
-      errors.phone = "Valid phone number is required.";
+    if (!phone) {
+      errors.phone = "Phone number is required.";
+    } else if (!/^\d{10}$/.test(phone)) {
+      errors.phone = "Phone number must be exactly 10 digits.";
+    }
+  
     if (!dob) errors.dob = "Date of Birth is required.";
     return errors;
   };
@@ -448,18 +464,25 @@ const UserDetail = () => {
                   <span className="ml-2">Faculty</span>
                 </label>
               </div>
-              <input
+              <select
                 required
                 name="batch"
-                type="text"
-                placeholder="Year of graduation"
                 value={formData.batch}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg ${error.batch ? "border-red-500" : "border-gray-300"}`}
-              />
+              >
+                <option value="" disabled>
+                  Select Year of Graduation
+                </option>
+                {graduationYears.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
               <input
                 required
-                name="enrollmentNumber"
+                name="enrollmentnumber"
                 type="text"
                 placeholder="Enter Enrollment Number"
                 value={formData.enrollmentnumber}
