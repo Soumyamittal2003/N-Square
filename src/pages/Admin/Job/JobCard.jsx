@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosinstance";
-import bookmark from "../../../assets/icons/bookmark.svg";
-import bookmarked from "../../../assets/icons/bookmarked.svg";
+// import bookmark from "../../../assets/icons/bookmark.svg";
+// import bookmarked from "../../../assets/icons/bookmarked.svg";
 import arrowBlockUp from "../../../assets/icons/arrow-block-up.svg";
 import arrowBlockdown from "../../../assets/icons/arrow-block-down.svg";
 import { useNavigate } from "react-router-dom";
@@ -11,9 +11,9 @@ const JobCard = ({
   currentUserId,
   onLikePost,
   onDislikePost,
-  onBookmarkJob,
+  // onBookmarkJob,
   onApplyJob,
-  bookmarks,
+  // bookmarks,
 }) => {
   const {
     _id,
@@ -42,7 +42,7 @@ const JobCard = ({
   };
 
   const [creatorName, setCreatorName] = useState("Loading...");
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  // const [isBookmarked, setIsBookmarked] = useState(false);
 
   const isLiked = likes.includes(currentUserId);
   const isDisliked = dislikes.includes(currentUserId);
@@ -65,9 +65,9 @@ const JobCard = ({
     }
   }, [createdBy]);
 
-  useEffect(() => {
-    setIsBookmarked(bookmarks.includes(_id));
-  }, [bookmarks, _id]);
+  // useEffect(() => {
+  //   setIsBookmarked(bookmarks.includes(_id));
+  // }, [bookmarks, _id]);
 
   return (
     <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
@@ -141,7 +141,7 @@ const JobCard = ({
         {/* Left Icons */}
         <div className="flex gap-4">
           {/* Bookmark Button */}
-          <button
+          {/* <button
             onClick={() => onBookmarkJob(_id)}
             className="p-2 rounded-full bg-gray-100 hover:bg-blue-200 transition"
           >
@@ -150,7 +150,7 @@ const JobCard = ({
               alt="bookmark"
               className="w-6 h-6"
             />
-          </button>
+          </button> */}
 
           {/* Like Button */}
           <button

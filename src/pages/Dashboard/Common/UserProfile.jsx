@@ -28,6 +28,7 @@ const UserProfile = () => {
   const [userEvent, setUserEvent] = useState([]);
   const [userJobs, setUserJobs] = useState([]);
   const [education, setEducation] = useState([]);
+
   const [newEducation, setNewEducation] = useState({
     institution: "",
     degree: "",
@@ -37,7 +38,24 @@ const UserProfile = () => {
     grade: "",
   });
   const [isEditingEducation, setIsEditingEducation] = useState(false);
-
+  const [socialMediaLinks, setSocialMediaLinks] = useState([
+    {
+      facebook: "",
+      instagram: "",
+      twitter: "",
+      linkedin: "",
+      github: "",
+    },
+  ]);
+  const [newSocialMediaLinks, setNewSocialMediaLinks] = useState({
+    facebook: "",
+    instagram: "",
+    twitter: "",
+    linkedin: "",
+    github: "",
+  });
+  
+  const [isEditingSocialMediaLinks, setIsEditingSocialMediaLinks] = useState(false);
   const [experience, setExperience] = useState([]);
   const [newExperience, setNewExperience] = useState({
     title: "",
@@ -115,6 +133,7 @@ const UserProfile = () => {
         setEducation(data.education);
         setExperience(data.experience);
         setCertificationsAndLicenses(data.certificationsAndLicenses);
+        setSocialMediaLinks(data.socialMediaLinks );
         setRole(data.role);
         setEmail(data.email);
         setOrganizationId(data.organization);
@@ -274,6 +293,18 @@ const UserProfile = () => {
       toast.error("Failed to update certifications.");
     }
   };
+  const updateSocialMediaLinks = async () => {
+    try {
+      await axiosInstance.put(`/users/update/${userId}`, {
+        socialMediaLinks,
+      });
+      toast.success("Social media links updated successfully!");
+      setIsEditingSocialMediaLinks(false);
+    } catch (error) {
+      console.error("Error updating links:", error);
+      toast.error("Failed to update links.");
+    }
+  };
 
   // Handle Input Change for About Section
   const handleInputChange = (e) => {
@@ -342,6 +373,23 @@ const UserProfile = () => {
       grade: "",
     }); // Reset input fields
     toast.success("Education added successfully!");
+  };
+  const handleAddSocialMediaLinks = () => {
+    // Validate required fields (e.g., at least one field should be filled)
+    if (!Object.values(newSocialMediaLinks).some((link) => link)) {
+      toast.error("Please fill at least one social media link!");
+      return;
+    }
+  
+    setSocialMediaLinks((prev) => [...prev, { ...newSocialMediaLinks }]);
+    setNewSocialMediaLinks({
+      facebook: "",
+      instagram: "",
+      twitter: "",
+      linkedin: "",
+      github: "",
+    });
+    toast.success("Social media links added successfully!");
   };
   const removeEducation = (index) => {
     setEducation((prev) => prev.filter((_, i) => i !== index));
@@ -877,6 +925,45 @@ const UserProfile = () => {
                 )}
               </button>
             </div>
+            <div className="socialMediaLinks relative flex flex-col items-start justify-start">
+  <h2 className="mr-2 font-semibold mb-2">Social Media Links</h2>
+
+  {socialMediaLinks && socialMediaLinks.length > 0 ? (
+    <ul className="list-none pl-0 space-y-2">
+      {socialMediaLinks.map((linkSet, index) => (
+        <li key={index} className="flex flex-col space-y-1">
+          {Object.entries(linkSet)
+            .filter(([platform]) => platform !== "_id") // Exclude the "_id" key
+            .map(([platform, link]) =>
+              link ? (
+                <div key={platform} className="flex items-center">
+                  <span className="font-medium capitalize mr-1">{platform}:</span>
+                  <a
+                    href={link.startsWith("http") ? link : `https://${link}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline hover:text-blue-800"
+                  >
+                    {link}
+                  </a>
+                </div>
+              ) : null
+            )}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p className="text-gray-500">No social media links available.</p>
+  )}
+
+  <button
+    onClick={isEditingSocialMediaLinks ? updateSocialMediaLinks : () => setIsEditingSocialMediaLinks(true)}
+    className="absolute top-0 right-0 bg-gray-50 px-2 text-sm py-1 text-black rounded-md"
+  >
+    {isEditingSocialMediaLinks ? <span>Save</span> : <FiEdit className="text-black" />}
+  </button>
+</div>
+
           </div>
           <div className="Skills  p-2  ">
             <div className="SkillsSection relative mt-6">
