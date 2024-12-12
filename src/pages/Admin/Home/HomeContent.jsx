@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../../utils/axiosinstance"; // Assuming axiosInstance is set up for API calls
+import axiosInstance from "../../../utils/axiosinstance";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import PostCard from "../common/PostCard";
@@ -109,7 +109,7 @@ const HomeContent = () => {
   return (
     <div className="w-3/4 mx-auto">
       {/* Tabs Section */}
-      <div className="flex border border-gray-300 justify-around bg-white rounded-2xl shadow-lg px-4 py-1 m-4">
+      <div className="flex justify-around px-4 py-1 bg-white rounded-2xl">
         {["Posts", "Events", "Jobs"].map((tab) => (
           <button
             key={tab}
