@@ -13,7 +13,7 @@ const JobCard = ({
   onDislikePost,
   onBookmarkJob,
   onApplyJob,
-  bookmarks,
+  // bookmarks,
 }) => {
   const {
     _id,
@@ -65,9 +65,9 @@ const JobCard = ({
     }
   }, [createdBy]);
 
-  useEffect(() => {
-    setIsBookmarked(bookmarks.includes(_id));
-  }, [bookmarks, _id]);
+  // useEffect(() => {
+  //   setIsBookmarked(bookmarks.includes(_id));
+  // }, [bookmarks, _id]);
 
   return (
     <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
