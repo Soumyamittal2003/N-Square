@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import editIcon from "../../../assets/icons/edit.svg";
 import { toast } from "react-toastify";
 
-const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
+const FundCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -34,53 +34,56 @@ const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
   };
 
   return (
-    <div className="w-full max-w-[340px] border rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-green-50 p-6 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2 relative">
-      {/* Fund Image with Edit Button */}
-      <div className="relative rounded-lg overflow-hidden">
+    <div className="w-full max-w-[280px] border rounded-2xl shadow-lg bg-gradient-to-br from-white to-blue-50 p-4 flex flex-col justify-between hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2">
+      {/* Fund Image */}
+      <div className="relative rounded-md overflow-hidden">
         <img
           src={fund.fundImage}
           alt={fund.title}
-          className="w-full h-[180px] object-cover"
+          className="w-full h-[160px] object-cover rounded-md transition-transform duration-300 hover:scale-105"
         />
-        {/* Edit Button */}
-        <button
-          onClick={handleEditFund}
-          className="absolute top-3 right-3 bg-gray-300 text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md hover:bg-green-700 transition"
-          title="Edit Fund"
-        >
-          <img src={editIcon} alt="Edit" className="w-4 h-4" />
-        </button>
       </div>
 
       {/* Fund Details */}
-      <div className="mt-4">
-        <h4 className="text-lg font-bold text-gray-800">{fund.title}</h4>
-        <p className="text-sm text-gray-700 mt-3">
-          {fund.description?.length > 120
-            ? `${fund.description.slice(0, 120)}...`
+      <div className="h-full mt-3 flex flex-col justify-between">
+        <h4 className="text-lg font-bold text-gray-800 mb-1">{fund.title}</h4>
+        <p className="text-sm text-gray-600 mb-2">
+          {fund.description?.length > 100
+            ? `${fund.description.slice(0, 100)}...`
             : fund.description || "No description available."}
           <a
             href="#"
-            className="text-green-600 font-medium hover:underline ml-1"
+            className="text-blue-500 font-medium hover:underline ml-1"
             onClick={(e) => {
               e.preventDefault();
               handleNavigate();
             }}
-          ></a>
+          >
+            Read More
+          </a>
         </p>
-        <p className="text-xs text-gray-500 mt-3">
-          Fund Received:{" "}
-          <span className="text-gray-700 font-medium">
-            ${fund.currentAmount}
-          </span>
+        <p className="text-sm text-gray-700 mb-4">
+          <span className="font-semibold text-green-600">Fund Received:</span>{" "}
+          <span className="font-bold">${fund.currentAmount}</span>
         </p>
       </div>
 
       {/* Bottom Section */}
-      <div className="mt-6 flex justify-center">
+      <div className="flex justify-between items-center">
+        {/* Edit Button */}
+        <button
+          onClick={handleEditFund}
+          className="p-2 rounded-full bg-gray-100 hover:bg-blue-300 transition"
+        >
+          <img src={editIcon} alt="edit" className="w-5 h-5" />
+        </button>
+
+        {/* Donate Button */}
         <button
           onClick={handleDonate}
-          className="w-3/4 px-5 py-3 text-white bg-green-600 hover:bg-green-700 rounded-xl transition"
+          className={`px-4 py-2 text-white rounded-lg ${
+            loading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+          } transition duration-300 shadow-md`}
           disabled={loading}
         >
           {loading ? "Donating..." : "Donate"}
@@ -90,4 +93,4 @@ const FundsCard = ({ fund, currentUserId, onDonate, onEditFund }) => {
   );
 };
 
-export default FundsCard;
+export default FundCard;
