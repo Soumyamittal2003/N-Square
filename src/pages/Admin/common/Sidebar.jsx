@@ -34,7 +34,7 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(`/users/${id}`);
+        const response = await axiosInstance.get(`/organizations/${id}`);
         setUserData(response?.data?.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -85,7 +85,7 @@ const Sidebar = () => {
       {/* Admin Control Section */}
       {role === "admin" && organizationName && (
         <div className="  text-xl  flex justify-center">
-          <span className="bg-white px-3 py-1 rounded-full text-xl font-semibold shadow-md">
+          <span className="bg-white px-3 py-1 items-center justify-center text-xl font-semibold shadow-md">
             {organizationName}
           </span>
         </div>
